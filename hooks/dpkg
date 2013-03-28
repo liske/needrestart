@@ -1,0 +1,31 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+my $FN = shift;
+
+my $pid = open(HDPKG, '-|');
+defined($pid) || die "Can't fork: $!\n";
+
+if($pid == 0) {
+    close(STDIN);
+    close(STDERR);
+
+    exec('dpkg-query', '--search', $FN);
+    exit;
+}
+
+my @pkgs;
+while(<HDPKG>) {
+    chomp;
+
+    next if(/^local diversion/);
+    next unless(/:/);
+
+    next unless(/([^:]+): $FN$/);
+
+    push(@pkgs, $1);
+}
+
+print "R: ",join(', ', @pkgs),"\n";
