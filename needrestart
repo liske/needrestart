@@ -1,0 +1,66 @@
+#!/usr/bin/perl
+
+# snr - Services needing restart?
+#
+# Authors:
+#   Thomas Liske <thomas@fiasko-nw.net>
+#
+# Copyright Holder:
+#   2013 (C) Thomas Liske [http://fiasko-nw.net/~thomas/]
+#
+# License:
+#   This program is free software; you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation; either version 2 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with this package; if not, write to the Free Software
+#   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+#
+
+use warnings;
+use strict;
+
+# where to find /proc
+my $PROC = '/proc';
+
+# inspect only pids
+for my $pid (map {/^$PROC\/(\d+)$/ ? ($1) : ()} <$PROC/*>) {
+    # read file mappings (Linux 2.0+)
+    open(HMAP, '<', "$PROC/$pid/maps") || next;
+    my $restart = 0;
+    while(<HMAP>) {
+	chomp;
+	my ($maddr, $mperm, $moffset, $mdev, $minode, $path) = split(/\s+/);
+
+	# skip special handles and non-executable mappings
+	next unless($minode != 0 && $path ne '' && $mperm =~ /x/);
+
+	# get on-disk info
+	my ($sdev, $sinode) = stat($path);
+	last unless(defined($sinode));
+	$sdev = sprintf("%02x:%02x", $sdev >> 8, $sdev & 0xff);
+
+	# compare maps content vs. on-disk
+	if($mdev ne $sdev || $minode ne $sinode) {
+	    $restart++;
+	    last;
+	}
+    }
+    close(HMAP);
+
+    # restart needed?
+    next unless($restart);
+
+    # get executable (Linux 2.2+)
+    my $bin = readlink("$PROC/$pid/exe");
+    next unless(defined($bin));
+
+    print "$bin\n";
+}
