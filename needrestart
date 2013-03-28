@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# snr - Services needing restart?
+# needrestart - Restart services after library updates.
 #
 # Authors:
 #   Thomas Liske <thomas@fiasko-nw.net>
