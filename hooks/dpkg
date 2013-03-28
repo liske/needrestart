@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# needrestart - Restart services after library updates.
+# needrestart - Restart daemons after library updates.
 #
 # Authors:
 #   Thomas Liske <thomas@fiasko-nw.net>
