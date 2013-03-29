@@ -32,21 +32,26 @@
 use strict;
 use warnings;
 
-my $FN = shift;
+sub fork_dpkg(@) {
+    my $pid = open(HDPKG, '-|');
+    defined($pid) || die "Can't fork: $!\n";
 
-my $pid = open(HDPKG, '-|');
-defined($pid) || die "Can't fork: $!\n";
+    if($pid == 0) {
+	close(STDIN);
+	close(STDERR);
 
-if($pid == 0) {
-    close(STDIN);
-    close(STDERR);
+	exec(@_);
+	exit;
+    }
 
-    exec('dpkg-query', '--search', $FN);
-    exit;
+    \*HDPKG
 }
 
+my $FN = shift;
+my $psearch = fork_dpkg(qq(dpkg-query --search $FN));
+
 my @pkgs;
-while(<HDPKG>) {
+while(<$psearch>) {
     chomp;
 
     next if(/^local diversion/);
@@ -56,5 +61,14 @@ while(<HDPKG>) {
 
     push(@pkgs, $1);
 }
+close($psearch);
 
-print "R: ",join(', ', @pkgs),"\n";
+foreach my $pkg (@pkgs) {
+    print "PACKAGE|",join(', ', @pkgs),"\n";
+
+    my $plist = fork_dpkg(qq(dpkg-query --listfiles $pkg));
+    while(<$plist>) {
+	print "RC|$1\n" if(m@^/etc/init.d/(.+)$@);
+    }
+    close($plist);
+}
