@@ -43,6 +43,8 @@ sub fork_pipe(@) {
 	close(STDIN);
 	close(STDERR) unless($opt_v);
 
+	undef $ENV{LANG};
+
 	exec(@_);
 	exit;
     }
@@ -56,6 +58,8 @@ my $psearch = fork_pipe(qq(rpmquery --file $FN));
 my @pkgs;
 while(<$psearch>) {
     chomp;
+
+    next if(/^file .+ is not owned by any package/);
 
     push(@pkgs, $_);
 }
