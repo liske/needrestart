@@ -24,18 +24,32 @@
 #   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 #
 
+use Getopt::Std;
+
 use warnings;
 use strict;
 
-# where to find /proc
-my $PROC = '/proc';
+my %nrconf = (
+    procfs => '/proc',
+    verbose => 0,
+    hook_d => '/etc/needrestart/hook.d',
+);
+
+our $opt_c = '/etc/needrestart/needrestart.conf';
+our $opt_v;
+getopts('c:v');
+
+die "ERROR: Could not read config file '$opt_c'!\n" unless(-r $opt_c);
+
+eval `cat "$opt_c"`;
+die "\n" if($@);
 
 warn "WARNING: This program should be run as root!\n" if($< != 0);
 
 # inspect only pids
-for my $pid (map {/^$PROC\/(\d+)$/ ? ($1) : ()} <$PROC/*>) {
+for my $pid (map {/^$nrconf{procfs}\/(\d+)$/ ? ($1) : ()} <$nrconf{procfs}/*>) {
     # read file mappings (Linux 2.0+)
-    open(HMAP, '<', "$PROC/$pid/maps") || next;
+    open(HMAP, '<', "$nrconf{procfs}/$pid/maps") || next;
     my $restart = 0;
     while(<HMAP>) {
 	chomp;
@@ -61,7 +75,7 @@ for my $pid (map {/^$PROC\/(\d+)$/ ? ($1) : ()} <$PROC/*>) {
     next unless($restart);
 
     # get executable (Linux 2.2+)
-    my $bin = readlink("$PROC/$pid/exe");
+    my $bin = readlink("$nrconf{procfs}/$pid/exe");
     next unless(defined($bin));
 
     print "$bin\n";
