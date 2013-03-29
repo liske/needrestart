@@ -28,8 +28,13 @@
 # It might work with programs which are not installed via an (supported)
 # package manager like dpkg or rpm.
 
+use Getopt::Std;
+
 use strict;
 use warnings;
+
+our $opt_v;
+getopts('c:v');
 
 sub check_rc($) {
     my $bn = shift;

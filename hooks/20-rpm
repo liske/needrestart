@@ -27,8 +27,13 @@
 # This RPM hook tries to find the run-level scripts of the package's binary
 # which has old libraries in use.
 
+use Getopt::Std:
+
 use strict;
 use warnings;
+
+our $opt_v;
+getopts('c:v');
 
 sub fork_pipe(@) {
     my $pid = open(HPIPE, '-|');
@@ -36,7 +41,7 @@ sub fork_pipe(@) {
 
     if($pid == 0) {
 	close(STDIN);
-	close(STDERR);
+	close(STDERR) unless($opt_v);
 
 	exec(@_);
 	exit;
