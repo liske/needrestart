@@ -1,0 +1,56 @@
+#!/usr/bin/perl
+
+# needrestart - Restart daemons after library updates.
+#
+# Authors:
+#   Thomas Liske <thomas@fiasko-nw.net>
+#
+# Copyright Holder:
+#   2013 (C) Thomas Liske [http://fiasko-nw.net/~thomas/]
+#
+# License:
+#   This program is free software; you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation; either version 2 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with this package; if not, write to the Free Software
+#   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+#
+
+# This fallback hook tries the guess the rc script name from the binary name.
+# It might work with programs which are not installed via an (supported)
+# package manager like dpkg or rpm.
+
+use strict;
+use warnings;
+
+sub check_rc($) {
+    my $bn = shift;
+    my $rc = "/etc/init.d/$bn";
+
+    return ($bn) if(-x $rc);
+
+    return ();
+}
+
+my $FN = shift;
+
+$FN =~ m@/(([^/]+)d?)$@;
+
+my @rc;
+push(@rc, check_rc($1));
+push(@rc, check_rc($2)) if($1 ne $2);
+
+if($#rc > -1) {
+    print "none|PACKAGE|\n";
+    foreach my $rc (@rc) {
+	print "none|RC|$rc\n";
+    }
+}
