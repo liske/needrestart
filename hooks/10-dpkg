@@ -32,8 +32,8 @@
 use strict;
 use warnings;
 
-sub fork_dpkg(@) {
-    my $pid = open(HDPKG, '-|');
+sub fork_pipe(@) {
+    my $pid = open(HPIPE, '-|');
     defined($pid) || die "Can't fork: $!\n";
 
     if($pid == 0) {
@@ -44,11 +44,11 @@ sub fork_dpkg(@) {
 	exit;
     }
 
-    \*HDPKG
+    \*HPIPE
 }
 
 my $FN = shift || die "Usage: $0 <filename>\n";
-my $psearch = fork_dpkg(qq(dpkg-query --search $FN));
+my $psearch = fork_pipe(qq(dpkg-query --search $FN));
 
 my @pkgs;
 while(<$psearch>) {
@@ -68,7 +68,7 @@ exit(0) unless($#pkgs > -1);
 foreach my $pkg (@pkgs) {
     print "dpkg|PACKAGE|$pkg\n";
 
-    my $plist = fork_dpkg(qq(dpkg-query --listfiles $pkg));
+    my $plist = fork_pipe(qq(dpkg-query --listfiles $pkg));
     while(<$plist>) {
 	print "dpkg|RC|$1\n" if(m@^/etc/init.d/(.+)$@);
     }
