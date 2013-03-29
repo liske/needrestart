@@ -30,6 +30,8 @@ use strict;
 # where to find /proc
 my $PROC = '/proc';
 
+warn "WARNING: This program should be run as root!\n" if($< != 0);
+
 # inspect only pids
 for my $pid (map {/^$PROC\/(\d+)$/ ? ($1) : ()} <$PROC/*>) {
     # read file mappings (Linux 2.0+)
