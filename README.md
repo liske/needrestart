@@ -1,7 +1,16 @@
 About
 -----
-```needrestart``` checks which daemons need to be restarted after library
-upgrades. It is inspired by ```checkrestart(1)``` from the ```debian-goodies```
+*needrestart* checks which daemons need to be restarted after library
+upgrades. It is inspired by ```checkrestart(1)``` from the *debian-goodies*
 package.
 
-It does not rely on ```lsof``` and is implemented in pure perl.
+It does not rely on *lsof* as *checkrestart* does.
+
+
+Install
+-------
+
+*needrestart* is a small *Perl* script and requires the following packages:
+* Term::Query
+
+It requires Debian's *run-parts* variant.
