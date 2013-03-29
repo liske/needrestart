@@ -68,11 +68,11 @@ close($psearch);
 exit(0) unless($#pkgs > -1);
 
 foreach my $pkg (@pkgs) {
-    print "rpm|PACKAGE|$pkg\n";
+    print "PACKAGE|$pkg\n";
 
     my $plist = fork_pipe(qq(rpmquery --filesbypkg $pkg));
     while(<$plist>) {
-	print "rpm|RC|$2\n" if(m@^\S+\s+/etc(/rc\.d)?/init\.d/(.+)$@);
+	print "RC|$2\n" if(m@^\S+\s+/etc(/rc\.d)?/init\.d/(.+)$@);
     }
     close($plist);
 }

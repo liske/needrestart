@@ -71,11 +71,11 @@ close($psearch);
 exit(0) unless($#pkgs > -1);
 
 foreach my $pkg (@pkgs) {
-    print "dpkg|PACKAGE|$pkg\n";
+    print "PACKAGE|$pkg\n";
 
     my $plist = fork_pipe(qq(dpkg-query --listfiles $pkg));
     while(<$plist>) {
-	print "dpkg|RC|$1\n" if(m@^/etc/init.d/(.+)$@);
+	print "RC|$1\n" if(m@^/etc/init.d/(.+)$@);
     }
     close($plist);
 }
