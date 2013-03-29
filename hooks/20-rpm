@@ -27,7 +27,7 @@
 # This RPM hook tries to find the run-level scripts of the package's binary
 # which has old libraries in use.
 
-use Getopt::Std:
+use Getopt::Std;
 
 use strict;
 use warnings;
