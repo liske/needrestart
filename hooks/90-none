@@ -48,9 +48,11 @@ my @rc;
 push(@rc, check_rc($1));
 push(@rc, check_rc($2)) if($1 ne $2);
 
-if($#rc > -1) {
-    print "none|PACKAGE|\n";
-    foreach my $rc (@rc) {
-	print "none|RC|$rc\n";
-    }
+exit(0) unless($#rc > -1);
+
+print "none|PACKAGE|\n";
+foreach my $rc (@rc) {
+    print "none|RC|$rc\n";
 }
+
+exit(1);
