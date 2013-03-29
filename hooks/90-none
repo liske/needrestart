@@ -40,7 +40,7 @@ sub check_rc($) {
     return ();
 }
 
-my $FN = shift;
+my $FN = shift || die "Usage: $0 <filename>\n";
 
 $FN =~ m@/(([^/]+)d?)$@;
 

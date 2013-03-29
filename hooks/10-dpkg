@@ -47,7 +47,7 @@ sub fork_dpkg(@) {
     \*HDPKG
 }
 
-my $FN = shift;
+my $FN = shift || die "Usage: $0 <filename>\n";
 my $psearch = fork_dpkg(qq(dpkg-query --search $FN));
 
 my @pkgs;
