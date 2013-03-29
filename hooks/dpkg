@@ -64,11 +64,11 @@ while(<$psearch>) {
 close($psearch);
 
 foreach my $pkg (@pkgs) {
-    print "PACKAGE|",join(', ', @pkgs),"\n";
+    print "dpkg|PACKAGE|",join(', ', @pkgs),"\n";
 
     my $plist = fork_dpkg(qq(dpkg-query --listfiles $pkg));
     while(<$plist>) {
-	print "RC|$1\n" if(m@^/etc/init.d/(.+)$@);
+	print "dpkg|RC|$1\n" if(m@^/etc/init.d/(.+)$@);
     }
     close($plist);
 }
