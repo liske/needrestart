@@ -32,6 +32,47 @@ use strict;
 
 $|++;
 
+$Getopt::Std::STANDARD_HELP_VERSION++;
+
+sub HELP_MESSAGE {
+    print <<USG;
+Usage:
+
+  needrestart [-vn] [-c <cfg>] [-r <mode>]
+
+    -v		be more verbose
+    -n		set default answer to 'no'
+    -c <cfg>	config filename
+    -r <mode>	set restart mode
+	l	(l)ist only
+	i	(i)nteractive restart
+	a	(a)utomaticly restart
+
+USG
+}
+
+sub VERSION_MESSAGE {
+    print <<LIC;
+
+needrestart 0.2 - Restart daemons after library updates.
+
+Authors:
+  Thomas Liske <thomas\@fiasko-nw.net>
+
+Copyright Holder:
+  2013 (C) Thomas Liske [http://fiasko-nw.net/~thomas/]
+
+Upstream:
+  https://github.com/liske/needrestart
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+LIC
+}
+
 my %nrconf = (
     procfs => '/proc',
     verbose => 0,
