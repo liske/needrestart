@@ -37,6 +37,7 @@ my %nrconf = (
     verbose => 0,
     hook_d => '/etc/needrestart/hook.d',
     restart => 'i',
+    defno => 0,
 );
 
 our $opt_c = '/etc/needrestart/needrestart.conf';
@@ -45,7 +46,8 @@ our $opt_r = $nrconf{restart};
 our $opt_l;
 our $opt_i;
 our $opt_a;
-getopts('c:vr:lia');
+our $opt_n;
+getopts('c:vr:lian');
 
 die "ERROR: Could not read config file '$opt_c'!\n" unless(-r $opt_c);
 
@@ -68,6 +70,8 @@ elsif($opt_i) {
 elsif($opt_a) {
     $nrconf{restart} = 'a';
 }
+
+$nrconf{defno}++ if($opt_n);
 
 warn "WARNING: This program should be run as root!\n" if($< != 0);
 
@@ -154,7 +158,7 @@ foreach my $pkg (keys %restart) {
 
 	my $r = 0;
 	if($nrconf{restart} eq 'i') {
-	    $r = query("Restart $rc?", 'N') eq 'yes';
+	    $r = query("Restart $rc?", ($nrconf{defno} ? 'N' : 'Y')) eq 'yes';
 	}
 	elsif($nrconf{restart} eq 'a') {
 	    print "auto-restart $rc\n";
