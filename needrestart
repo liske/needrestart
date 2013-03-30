@@ -42,7 +42,10 @@ my %nrconf = (
 our $opt_c = '/etc/needrestart/needrestart.conf';
 our $opt_v;
 our $opt_r = $nrconf{restart};
-getopts('c:vr:');
+our $opt_l;
+our $opt_i;
+our $opt_a;
+getopts('c:vr:lia');
 
 die "ERROR: Could not read config file '$opt_c'!\n" unless(-r $opt_c);
 
@@ -52,6 +55,19 @@ die "\n" if($@);
 $nrconf{verbose}++ if($opt_v);
 die "Hook directory '$nrconf{hook_d}' is invalid!\n" unless(-d $nrconf{hook_d});
 die "ERROR: Unknown 'restart' option!\n" unless($opt_r =~ /^(l|i|a)$/);
+
+die "You must not specify -l, -i or -a simultanously!\n"
+    if(($opt_l && $opt_i) || ($opt_l && $opt_a) || ($opt_i && $opt_a));
+
+if($opt_l) {
+    $nrconf{restart} = 'l';
+}
+elsif($opt_i) {
+    $nrconf{restart} = 'i';
+}
+elsif($opt_a) {
+    $nrconf{restart} = 'a';
+}
 
 warn "WARNING: This program should be run as root!\n" if($< != 0);
 
