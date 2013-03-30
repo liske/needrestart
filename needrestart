@@ -129,7 +129,7 @@ unless(scalar %restart) {
     exit 0;
 }
 
-print "Some services needed to restart:\n";
+print "Services needed to be restarted:\n";
 foreach my $pkg (keys %restart) {
     print "\n$pkg:\n";
 
