@@ -51,7 +51,7 @@ die "\n" if($@);
 
 $nrconf{verbose}++ if($opt_v);
 die "Hook directory '$nrconf{hook_d}' is invalid!\n" unless(-d $nrconf{hook_d});
-die "ERROR: Unknown 'restart' option!\n" unless($opt_r =~ /^(i|a)$/);
+die "ERROR: Unknown 'restart' option!\n" unless($opt_r =~ /^(l|i|a)$/);
 
 warn "WARNING: This program should be run as root!\n" if($< != 0);
 
@@ -143,6 +143,9 @@ foreach my $pkg (keys %restart) {
 	elsif($nrconf{restart} eq 'a') {
 	    print "auto-restart $rc\n";
 	    $r++;
+	}
+	else {
+	    print "$rc\n";
 	}
 
 	system("/etc/init.d/$rc", 'restart') if($r);
