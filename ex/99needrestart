@@ -4,4 +4,4 @@
 # for pending service restarts.
 #
 
-DPkg::Post-Invoke {"test -e /usr/sbin/needrestart && /usr/sbin/needrestart"; };
+DPkg::Post-Invoke {"test -e /usr/sbin/needrestart && /usr/sbin/needrestart || true"; };
