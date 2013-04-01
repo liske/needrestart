@@ -136,6 +136,7 @@ for my $pid (map {/^$nrconf{procfs}\/(\d+)$/ ? ($1) : ()} <$nrconf{procfs}/*>) {
 
 	# compare maps content vs. on-disk
 	if($mdev ne $sdev || $minode ne $sinode) {
+	    print STDERR "#$pid uses obsolete $path\n" if($nrconf{verbose});
 	    $restart++;
 	    last;
 	}
@@ -149,23 +150,30 @@ for my $pid (map {/^$nrconf{procfs}\/(\d+)$/ ? ($1) : ()} <$nrconf{procfs}/*>) {
     my $bin = readlink("$nrconf{procfs}/$pid/exe");
     next unless(defined($bin));
 
-    my @run = ("--arg=$bin", '--exit-on-error', '--', "$nrconf{hook_d}");
-    unshift(@run, qw(--verbose --arg=-v)) if($nrconf{verbose});
-    unshift(@run, 'run-parts');
+    unless(-x $bin && $bin =~ / \(deleted\)$/) {
+	$bin =~ s/ \(deleted\)$//;
+	print STDERR "#$pid binary $bin is obsolete, too\n" if($nrconf{verbose});
+    }
 
-    my $prun = fork_pipe(@run);
+    my $pkg;
+    foreach my $hook (sort <$nrconf{hook_d}/*>) {
+	print STDERR "#$pid running $hook\n" if($nrconf{verbose});
 
-    my $pkg = "<UNPACKAGED>";
-    while(<$prun>) {
-	chomp;
-	my @v = split(/\|/);
+	my $prun = fork_pipe($hook, ($nrconf{verbose} ? qw(-v) : ()), $bin);
+	while(<$prun>) {
+	    chomp;
+	    my @v = split(/\|/);
 
-	if($v[0] eq 'PACKAGE' && $v[1]) {
-	    $pkg = $v[1];
-	    next;
+	    if($v[0] eq 'PACKAGE' && $v[1]) {
+		$pkg = $v[1];
+		print STDERR "#$pid package: $v[1]\n" if($nrconf{verbose});
+		next;
+	    }
+
+	    $restart{$pkg}->{$v[1]}++ if($v[0] eq 'RC');
 	}
 
-	$restart{$pkg}->{$v[1]}++ if($v[0] eq 'RC');
+	last if(defined($pkg));
     }
 }
 
