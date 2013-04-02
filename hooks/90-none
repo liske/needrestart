@@ -55,8 +55,8 @@ push(@rc, check_rc($2)) if($1 ne $2);
 
 exit(0) unless($#rc > -1);
 
-print "PACKAGE|\n";
 foreach my $rc (@rc) {
+    print "PACKAGE|$rc\n";
     print "RC|$rc\n";
 }
 
