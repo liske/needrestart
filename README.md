@@ -10,7 +10,4 @@ It does not rely on *lsof* as *checkrestart* does.
 Install
 -------
 
-*needrestart* is a small *Perl* script and requires the following packages:
-* Term::Query
-
-It requires Debian's *run-parts* variant.
+*needrestart* is a small self-contained *Perl* script.

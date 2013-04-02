@@ -25,7 +25,6 @@
 #
 
 use Getopt::Std;
-use Term::Query qw(query);
 
 use warnings;
 use strict;
@@ -113,6 +112,22 @@ sub fork_pipe(@) {
     }
 
     \*HPIPE
+}
+
+sub query($$) {
+    my($query, $def) = @_;
+    my @def = ($def eq 'Y' ? qw(yes no) : qw(no yes));
+
+    my $i;
+    do {
+	print "$query [", ($def eq 'Y' ? 'Yn' : 'yN'), '] ';;
+	$i = lc(<STDIN>);
+	chomp($i);
+	$i =~ s/^\s+//;
+	$i =~ s/\s+$//;
+    } while(!( ($i) = map { (substr($_, 0, length($i)) eq $i ? ($_) : ())} @def ));
+
+    return $i;
 }
 
 my %restart;

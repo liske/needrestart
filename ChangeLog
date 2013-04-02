@@ -3,6 +3,7 @@ needrestart (0.2) unstable; urgency=low
   * Support (l)ist only, (i)nteractive restart and
     (a)utomaticly restart modes.
   * Supply apt.conf.d script to call needrestart on every upgrade.
+  * Drop Term::Query dependency.
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
