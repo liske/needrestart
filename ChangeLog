@@ -5,6 +5,8 @@ needrestart (0.2) unstable; urgency=low
   * Supply apt.conf.d script to call needrestart on every upgrade.
   * Drop dependency on (Debian's) run-parts.
   * Drop Term::Query dependency.
+  * Ignore rc scripts to be run in other run-levels.
+  * Add batch mode.
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 

@@ -46,6 +46,7 @@ Usage:
 	l	(l)ist only
 	i	(i)nteractive restart
 	a	(a)utomaticly restart
+    -b		enable batch mode
 
 USG
 }
@@ -84,7 +85,8 @@ our $opt_c = '/etc/needrestart/needrestart.conf';
 our $opt_v;
 our $opt_r = $nrconf{restart};
 our $opt_n;
-getopts('c:vr:n');
+our $opt_b;
+getopts('c:vr:nb');
 
 die "ERROR: Could not read config file '$opt_c'!\n" unless(-r $opt_c);
 
@@ -98,6 +100,11 @@ die "ERROR: Unknown restart option '$opt_r'!\n" unless($opt_r =~ /^(l|i|a)$/);
 $nrconf{defno}++ if($opt_n);
 
 warn "WARNING: This program should be run as root!\n" if($< != 0);
+
+# get current runlevel, fallback to '2'
+my $runlevel = `who -r` || '';
+chomp($runlevel);
+$runlevel = 2 unless($runlevel =~ s/^.+run-level (\S)\s.+$/$1/);
 
 sub fork_pipe(@) {
     my $pid = open(HPIPE, '-|');
@@ -128,6 +135,31 @@ sub query($$) {
     } while(!( ($i) = map { (substr($_, 0, length($i)) eq $i ? ($_) : ())} @def ));
 
     return $i;
+}
+
+sub parse_lsbinit($) {
+    my $rc = '/etc/init.d/'.shift;
+    my %lsb;
+
+    open(HLSB, '<', $rc) || die "Can't open $rc: $!\n";
+    my $found;
+    while(my $line = <HLSB>) {
+	unless($found) {
+	    $found++ if($line =~ /^### BEGIN INIT INFO/);
+	    next;
+	}
+	elsif($line =~ /^### END INIT INFO/) {
+	    last;
+	}
+
+	chomp($line);
+	$lsb{$1} = $2 if($line =~ /^# ([^:]+):\s+(.+)$/);
+    }
+    close(HLSB);
+
+    print STDERR "WARNING: $rc has no LSB tags!\n" unless(%lsb);
+
+    return %lsb;
 }
 
 my %restart;
@@ -185,7 +217,21 @@ for my $pid (map {/^$nrconf{procfs}\/(\d+)$/ ? ($1) : ()} <$nrconf{procfs}/*>) {
 		next;
 	    }
 
-	    $restart{$pkg}->{$v[1]}++ if($v[0] eq 'RC');
+	    if($v[0] eq 'RC') {
+		my %lsb = parse_lsbinit($v[1]);
+		# -=[ HACK HACK HACK ]=-
+		# In the run-levels S and 1 no daemons are being started (normaly).
+		# We don't call any rc script not started in the current run-level.
+		# If the script has no LSB tags we consider to call it later - they
+		# are broken anyway.
+		if(!%lsb || $lsb{'Default-Start'} =~ /$runlevel/) {
+		# -=[ HACK HACK HACK ]=-
+		    $restart{$pkg}->{$v[1]}++
+		}
+		else {
+		    print STDERR "#$pid rc script $v[1] should not start in the current run-level($runlevel)\n" if($nrconf{verbose});
+		}
+	    }
 	}
 
 	last if(defined($pkg));
@@ -193,12 +239,17 @@ for my $pid (map {/^$nrconf{procfs}\/(\d+)$/ ? ($1) : ()} <$nrconf{procfs}/*>) {
 }
 
 unless(scalar %restart) {
-    print "No services needed to be restarted.\n";
+    print "No services needed to be restarted.\n" unless($opt_b);
     exit 0;
 }
 
-print "Services needed to be restarted:\n";
+print "Services needed to be restarted:\n" unless($opt_b);
 foreach my $pkg (keys %restart) {
+    if($opt_b) {
+	print "NEEDRESTART: $pkg\n";
+	next;
+    }
+
     print "\n$pkg:\n";
 
     foreach my $rc (keys %{$restart{$pkg}}) {
