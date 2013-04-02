@@ -8,7 +8,7 @@ needrestart (0.2) unstable; urgency=low
   * Ignore rc scripts to be run in other run-levels.
   * Add batch mode.
 
- -- Thomas Liske <thomas@fiasko-nw.net>  
+ -- Thomas Liske <thomas@fiasko-nw.net>  Tue, 02 Apr 2013 21:51:48 +0200
 
 needrestart (0.1) unstable; urgency=low
 
