@@ -45,7 +45,7 @@ Usage:
     -r <mode>	set restart mode
 	l	(l)ist only
 	i	(i)nteractive restart
-	a	(a)utomaticly restart
+	a	(a)utomatically restart
     -b		enable batch mode
 
 USG
