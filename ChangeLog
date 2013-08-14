@@ -1,3 +1,10 @@
+needrestart (0.3) unstable; urgency=low
+
+  * Fix typo reported by Patrick Matthäi.
+  * Add man page provided by Patrick Matthäi (Debian).
+
+ -- Thomas Liske <thomas@fiasko-nw.net>  
+
 needrestart (0.2) unstable; urgency=low
 
   * Support (l)ist only, (i)nteractive restart and
