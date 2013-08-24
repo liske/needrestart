@@ -43,8 +43,6 @@ sub fork_pipe(@) {
 	close(STDIN);
 	close(STDERR) unless($opt_v);
 
-	undef $ENV{LANG};
-
 	exec(@_);
 	exit;
     }

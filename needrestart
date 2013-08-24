@@ -115,6 +115,7 @@ sub fork_pipe(@) {
 	close(STDERR) unless($nrconf{verbose});
 
 	undef $ENV{LANG};
+
 	exec(@_);
 	exit;
     }
