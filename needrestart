@@ -176,6 +176,13 @@ for my $pid (map {/^$nrconf{procfs}\/(\d+)$/ ? ($1) : ()} <$nrconf{procfs}/*>) {
 	# skip special handles and non-executable mappings
 	next unless($minode != 0 && $path ne '' && $mperm =~ /x/);
 
+	# check for non-existing libs
+	unless(-e $path) {
+	    print STDERR "#$pid uses non-existing $path\n" if($nrconf{verbose});
+	    $restart++;
+	    last;
+	}
+
 	# get on-disk info
 	my ($sdev, $sinode) = stat($path);
 	last unless(defined($sinode));

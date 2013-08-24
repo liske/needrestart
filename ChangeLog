@@ -2,6 +2,7 @@ needrestart (0.3) unstable; urgency=low
 
   * Fix typo reported by Patrick Matthäi.
   * Add man page provided by Patrick Matthäi (Debian).
+  * Offer restart on non-existing mappings.
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
