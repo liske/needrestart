@@ -250,7 +250,7 @@ for my $pid (map {/^$nrconf{procfs}\/(\d+)$/ ? ($1) : ()} <$nrconf{procfs}/*>) {
     }
 }
 
-print "NEEDRESTART-VER:$VERSION\n";
+print "NEEDRESTART-VER: $VERSION\n";
 
 unless(scalar %restart) {
     print "No services needed to be restarted.\n" unless($opt_b);
@@ -260,7 +260,7 @@ unless(scalar %restart) {
 print "Services needed to be restarted:\n" unless($opt_b);
 foreach my $pkg (keys %restart) {
     if($opt_b) {
-	print "NEEDRESTART-PKG:$pkg\n";
+	print "NEEDRESTART-PKG: $pkg\n";
 	next;
     }
 
