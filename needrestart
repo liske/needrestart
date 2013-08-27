@@ -250,7 +250,7 @@ for my $pid (map {/^$nrconf{procfs}\/(\d+)$/ ? ($1) : ()} <$nrconf{procfs}/*>) {
     }
 }
 
-print "NEEDRESTART-VER: $VERSION\n";
+print "NEEDRESTART-VER: $VERSION\n" if($opt_b);
 
 unless(scalar %restart) {
     print "No services needed to be restarted.\n" unless($opt_b);
