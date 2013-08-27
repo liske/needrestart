@@ -29,8 +29,9 @@ use Getopt::Std;
 use warnings;
 use strict;
 
-$|++;
+my $VERSION = '0.3';
 
+$|++;
 $Getopt::Std::STANDARD_HELP_VERSION++;
 
 sub HELP_MESSAGE {
@@ -54,7 +55,7 @@ USG
 sub VERSION_MESSAGE {
     print <<LIC;
 
-needrestart 0.2 - Restart daemons after library updates.
+needrestart $VERSION - Restart daemons after library updates.
 
 Authors:
   Thomas Liske <thomas\@fiasko-nw.net>
@@ -249,6 +250,8 @@ for my $pid (map {/^$nrconf{procfs}\/(\d+)$/ ? ($1) : ()} <$nrconf{procfs}/*>) {
     }
 }
 
+print "NEEDRESTART-VER:$VERSION\n";
+
 unless(scalar %restart) {
     print "No services needed to be restarted.\n" unless($opt_b);
     exit 0;
@@ -257,7 +260,7 @@ unless(scalar %restart) {
 print "Services needed to be restarted:\n" unless($opt_b);
 foreach my $pkg (keys %restart) {
     if($opt_b) {
-	print "NEEDRESTART: $pkg\n";
+	print "NEEDRESTART-PKG:$pkg\n";
 	next;
     }
 
