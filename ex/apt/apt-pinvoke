@@ -4,6 +4,7 @@ RUNDIR=/var/run/needrestart
 
 # dpkg had an error... exit silently
 if [ -e "$RUNDIR/errored" ]; then
+    echo "needrestart is being skipped since dpkg has failed"
     rm -f "$RUNDIR/errored"
     exit 0
 fi
