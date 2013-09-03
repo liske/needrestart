@@ -5,6 +5,7 @@ needrestart (0.3) unstable; urgency=low
   * Offer restart on non-existing mappings.
   * Add PacMan hook.
   * Be more fault-tolerant in batch mode.
+  * Use a more sophisticated apt/dpkg trigger.
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
