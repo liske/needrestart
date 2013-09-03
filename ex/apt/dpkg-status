@@ -8,13 +8,13 @@ touched=0
 errored=0
 
 while read tag p0 p1 p2 p3 pp; do
-    if [ "$tag" = 'status' -a "$p1" = 'unpacked' ]; then
+    if [ "$tag" = 'status:' -a "$p1" = 'unpacked' ]; then
 	if [ "$touched" = 0 ]; then
 	    touch "$RUNDIR/unpacked"
 	    touched=1
 	fi
     else
-	if [ "$tag" = 'status' -a "$p1" = ':' -a "$p2" = 'error' -a "$p3" = ':' ]; then
+	if [ "$tag" = 'status:' -a "$p1" = ':' -a "$p2" = 'error' -a "$p3" = ':' ]; then
 	    if [ "$errored" = 0 ]; then
 		touch "$RUNDIR/errored"
 		errored=1
