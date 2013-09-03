@@ -8,7 +8,7 @@ if [ -e "$RUNDIR/errored" ]; then
     exit 0
 fi
 
-if [ -e "$RUNDIR/touched" ]; then
-    rm -f "$RUNDIR/touched"
+if [ -e "$RUNDIR/unpacked" ]; then
+    rm -f "$RUNDIR/unpacked"
     exec /usr/sbin/needrestart
 fi
