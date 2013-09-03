@@ -1,7 +1,9 @@
 # needrestart - Restart daemons after library updates.
 #
 # Call needrestart after package upgrades/installations and check
-# for pending service restarts.
+# for pending service restarts. This is a quite simple approach,
+# a more sophisticated approach can be found in the $SOURCES/ex/apt/
+# directory.
 #
 
-DPkg::Post-Invoke {"test -e /usr/sbin/needrestart && /usr/sbin/needrestart || true"; };
+DPkg::Post-Invoke {"test -x /usr/sbin/needrestart && /usr/sbin/needrestart || true"; };
