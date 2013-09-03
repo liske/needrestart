@@ -1,0 +1,14 @@
+#!/bin/sh
+
+RUNDIR=/var/run/needrestart
+
+# dpkg had an error... exit silently
+if [ -e "$RUNDIR/errored" ]; then
+    rm -f "$RUNDIR/errored"
+    exit 0
+fi
+
+if [ -e "$RUNDIR/touched" ]; then
+    rm -f "$RUNDIR/touched"
+    exec /usr/sbin/needrestart
+fi

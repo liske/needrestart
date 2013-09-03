@@ -1,0 +1,7 @@
+# needrestart - Restart daemons after library updates.
+#
+# Scan for (successfully) installed packages,
+# triggers needrestart in apt's Dpkg::Post-Invoke
+# hook.
+
+status-logger=/usr/lib/needrestart/dpkg-status
