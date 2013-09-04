@@ -6,6 +6,8 @@ needrestart (0.3) unstable; urgency=low
   * Add PacMan hook.
   * Be more fault-tolerant in batch mode.
   * Use a more sophisticated apt/dpkg trigger.
+  * Fix ignored -r command line parameter.
+    (Debian Bug#721809 by Axel Beckert <abe@debian.org>)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 

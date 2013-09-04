@@ -270,10 +270,10 @@ foreach my $pkg (keys %restart) {
 	print " - ";
 
 	my $r = 0;
-	if($nrconf{restart} eq 'i') {
+	if($opt_r eq 'i') {
 	    $r = query("Restart $rc?", ($nrconf{defno} ? 'N' : 'Y')) eq 'yes';
 	}
-	elsif($nrconf{restart} eq 'a') {
+	elsif($opt_r eq 'a') {
 	    print "auto-restart $rc\n";
 	    $r++;
 	}
