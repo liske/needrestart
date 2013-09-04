@@ -8,6 +8,8 @@ needrestart (0.3) unstable; urgency=low
   * Use a more sophisticated apt/dpkg trigger.
   * Fix ignored -r command line parameter.
     (Debian Bug#721809 by Axel Beckert <abe@debian.org>)
+  * Ignore forked/detached daemon childs (pidfile heuristic).
+    (Debian Bug#721810 by Axel Beckert <abe@debian.org>)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 

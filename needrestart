@@ -160,9 +160,23 @@ sub parse_lsbinit($) {
 	chomp($line);
 	$lsb{$1} = $2 if($line =~ /^# ([^:]+):\s+(.+)$/);
     }
-    close(HLSB);
 
-    print STDERR "WARNING: $rc has no LSB tags!\n" unless(%lsb);
+    unless($found) {
+	print STDERR "WARNING: $rc has no LSB tags!\n" unless(%lsb);
+	return undef;
+    }
+
+    # pid file heuristic
+    $found = 0;
+    my %pidfiles;
+    while(my $line = <HLSB>) {
+	if($line =~ m@(\S*/run/[^/]+.pid)@ && -r $1) {
+	    $pidfiles{$1}++;
+	    $found++;
+	}
+    }
+    $lsb{pidfiles} = [keys %pidfiles] if($found);
+    close(HLSB);
 
     return %lsb;
 }
@@ -231,14 +245,34 @@ for my $pid (map {/^$nrconf{procfs}\/(\d+)$/ ? ($1) : ()} <$nrconf{procfs}/*>) {
 
 	    if($v[0] eq 'RC') {
 		my %lsb = parse_lsbinit($v[1]);
-		# -=[ HACK HACK HACK ]=-
+
+		unless(%lsb) {
+		    # If the script has no LSB tags we consider to call it later - they
+		    # are broken anyway.
+		    $restart{$pkg}->{$v[1]}++
+		}
 		# In the run-levels S and 1 no daemons are being started (normaly).
 		# We don't call any rc script not started in the current run-level.
-		# If the script has no LSB tags we consider to call it later - they
-		# are broken anyway.
-		if(!%lsb || $lsb{'Default-Start'} =~ /$runlevel/) {
-		# -=[ HACK HACK HACK ]=-
-		    $restart{$pkg}->{$v[1]}++
+		elsif($lsb{'Default-Start'} =~ /$runlevel/) {
+		    # If a pidfile has been found, try to look for the daemon and ignore
+		    # any forked/detached childs (just a heuristic due Debian Bug#721810).
+		    if(exists($lsb{pidfiles})) {
+			foreach my $pidfile (@{ $lsb{pidfiles} }) {
+			    open(HPID, '<', "$pidfile") || next;
+			    my $p = <HPID>;
+			    close(HPID);
+
+			    if(int($p) == $pid) {
+				print STDERR "#$pid has been started by $v[1] - triggering\n" if($nrconf{verbose});
+				$restart{$pkg}->{$v[1]}++;
+				last;
+			    }
+			}
+		    }
+		    else {
+			print STDERR "no pidfile reference found at $v[1] - triggering\n" if($nrconf{verbose});
+			$restart{$pkg}->{$v[1]}++
+		    }
 		}
 		else {
 		    print STDERR "#$pid rc script $v[1] should not start in the current run-level($runlevel)\n" if($nrconf{verbose});
