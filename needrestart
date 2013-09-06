@@ -112,7 +112,6 @@ chomp($runlevel);
 $runlevel = 2 unless($runlevel =~ s/^.+run-level (\S)\s.+$/$1/);
 
 # get UI
-use NeedRestart::UI::stdio;
 my $ui = ($opt_b ? NeedRestart::UI->new() : needrestart_ui($opt_v));
 die "Error: no UI class available!\n" unless(defined($ui));
 
