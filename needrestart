@@ -299,11 +299,11 @@ $ui->progress_fin(1);
 print "NEEDRESTART-VER: $VERSION\n" if($opt_b);
 
 unless(scalar %restart) {
-    print "No services needed to be restarted.\n" unless($opt_b);
+    $ui->notice('No services needed to be restarted.') unless($opt_b);
     exit 0;
 }
 
-print "Services needed to be restarted:\n" unless($opt_b);
+$ui->query_prep('Services needed to be restarted:') unless($opt_b);
 foreach my $pkg (keys %restart) {
     if($opt_b) {
 	print "NEEDRESTART-PKG: $pkg\n";
