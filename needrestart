@@ -133,22 +133,6 @@ sub fork_pipe(@) {
     \*HPIPE
 }
 
-sub query($$) {
-    my($query, $def) = @_;
-    my @def = ($def eq 'Y' ? qw(yes no) : qw(no yes));
-
-    my $i;
-    do {
-	print "$query [", ($def eq 'Y' ? 'Yn' : 'yN'), '] ';;
-	$i = lc(<STDIN>);
-	chomp($i);
-	$i =~ s/^\s+//;
-	$i =~ s/\s+$//;
-    } while(!( ($i) = map { (substr($_, 0, length($i)) eq $i ? ($_) : ())} @def ));
-
-    return $i;
-}
-
 sub parse_lsbinit($) {
     my $rc = '/etc/init.d/'.shift;
     my %lsb;
@@ -303,30 +287,25 @@ unless(scalar %restart) {
     exit 0;
 }
 
-$ui->query_prep('Services needed to be restarted:') unless($opt_b);
-foreach my $pkg (keys %restart) {
-    if($opt_b) {
-	print "NEEDRESTART-PKG: $pkg\n";
-	next;
+if($opt_b || $opt_r ne 'i') {
+    $ui->notice('Services to be restarted:');
+    foreach my $pkg (keys %restart) {
+	if($opt_b) {
+	    print "NEEDRESTART-PKG: $pkg\n";
+	    next;
+	}
+
+	print "\n$pkg:\n" unless($opt_r eq 'a');
+	foreach my $rc (keys %{$restart{$pkg}}) {
+	    if($opt_r eq 'a') {
+		system("/etc/init.d/$rc", 'restart');
+	    }
+	    else {
+		print "- $rc\n";
+	    }
+	}
     }
-
-    print "\n$pkg:\n";
-
-    foreach my $rc (keys %{$restart{$pkg}}) {
-	print " - ";
-
-	my $r = 0;
-	if($opt_r eq 'i') {
-	    $r = query("Restart $rc?", ($nrconf{defno} ? 'N' : 'Y')) eq 'yes';
-	}
-	elsif($opt_r eq 'a') {
-	    print "auto-restart $rc\n";
-	    $r++;
-	}
-	else {
-	    print "$rc\n";
-	}
-
-	system("/etc/init.d/$rc", 'restart') if($r);
-    }
+}
+else {
+    $ui->query_pkgs('Services to be restarted:', $nrconf{defno}, \%restart, sub { system('/etc/init.d/'.shift, 'restart'); });
 }

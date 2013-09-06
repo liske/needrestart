@@ -74,16 +74,42 @@ sub query_prep($$) {
     my $self = shift;
     my $out = shift;
 
+    $self->SUPER::progress_prep($out);
+
     print "$out\n";
 }
 
-sub query_pkg($$$) {
-    my $self = shift;
+sub _query($$) {
+    my($query, $def) = @_;
+    my @def = ($def eq 'Y' ? qw(yes no) : qw(no yes));
 
-    die;
+    my $i;
+    do {
+	print "$query [", ($def eq 'Y' ? 'Yn' : 'yN'), '] ';;
+	$i = lc(<STDIN>);
+	chomp($i);
+	$i =~ s/^\s+//;
+	$i =~ s/\s+$//;
+    } while(!( ($i) = map { (substr($_, 0, length($i)) eq $i ? ($_) : ())} @def ));
+
+    return $i;
 }
 
-sub query_run($) {
+sub query_pkgs($$) {
+    my $self = shift;
+    my $out = shift;
+    my $def = shift;
+    my $pkgs = shift;
+    my $cb = shift;
+
+    print "$out\n";
+    foreach my $pkg (sort keys %$pkgs) {
+	print "\n$pkg:\n";
+
+	foreach my $rc (keys %{ $pkgs->{$pkg} }) {
+	    &$cb($rc) if(_query("Restart $rc?", ($def ? 'N' : 'Y')) eq 'yes');
+	}
+    }
 }
 
 1;

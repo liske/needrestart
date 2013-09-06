@@ -50,16 +50,22 @@ sub notice($$) {
 }
 
 
-sub query_prep($) {
-}
-
-sub query_pkg($$$) {
+sub query_prep($$) {
     my $self = shift;
 
-    die;
+    $self->{pkgs} = { };
 }
 
-sub query_run($) {
+sub query_pkg($$$$) {
+    my $self = shift;
+    my $pkg = shift;
+    my $rc = shift;
+    my $cb = shift;
+
+    $self->{pkgs}->{$pkg}->{$rc} = $cb;
+}
+
+sub query_run($$) {
 }
 
 1;
