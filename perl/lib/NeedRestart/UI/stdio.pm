@@ -39,9 +39,9 @@ sub progress_prep($$$) {
 
     $self->SUPER::progress_prep($max, $out);
 
-    print "$out:\n";
-
     $|++;
+
+    print "$out";
 }
 
 sub progress_step($$) {
