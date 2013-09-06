@@ -62,7 +62,19 @@ sub progress_fin($) {
 }
 
 
-sub query_prep($) {
+sub notice($$) {
+    my $self = shift;
+    my $out = shift;
+
+    print "$out\n";
+}
+
+
+sub query_prep($$) {
+    my $self = shift;
+    my $out = shift;
+
+    print "$out\n";
 }
 
 sub query_pkg($$$) {
@@ -71,7 +83,7 @@ sub query_pkg($$$) {
     die;
 }
 
-sub query_fin($) {
+sub query_run($) {
 }
 
 1;

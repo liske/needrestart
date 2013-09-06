@@ -46,6 +46,10 @@ sub progress_fin($) {
 }
 
 
+sub notice($$) {
+}
+
+
 sub query_prep($) {
 }
 
@@ -55,7 +59,7 @@ sub query_pkg($$$) {
     die;
 }
 
-sub query_fin($) {
+sub query_run($) {
 }
 
 1;
