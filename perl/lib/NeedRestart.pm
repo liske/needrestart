@@ -52,12 +52,18 @@ our @EXPORT_OK = qw(
 
 our %EXPORT_TAGS = (
     ui => [qw(
+	NEEDRESTART_PRIO_LOW
+	NEEDRESTART_PRIO_MEDIUM
+	NEEDRESTART_PRIO_HIGH
+
 	needrestart_ui_register
 	needrestart_ui_init
     )],
 );
 
 our $VERSION = '0.3';
+
+my %UIs;
 
 sub needrestart_ui_register($$) {
     my $pkg = shift;
@@ -80,7 +86,11 @@ sub needrestart_ui {
     my $debug = shift;
 
     needrestart_ui_init($debug) unless(%UIs);
-    return sort { $UIs{$a} <=> $UIs{$b} } keys %UIs;
+    my ($ui) = sort { $UIs{$a} <=> $UIs{$b} } keys %UIs;
+
+    print STDERR "Using UI '$ui'...\n" if($debug);
+
+    return $ui->new();
 }
 
 1;
