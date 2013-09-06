@@ -86,7 +86,7 @@ sub needrestart_ui {
     my $debug = shift;
 
     needrestart_ui_init($debug) unless(%UIs);
-    my ($ui) = sort { $UIs{$a} <=> $UIs{$b} } keys %UIs;
+    my ($ui) = sort { $UIs{$b} <=> $UIs{$a} } keys %UIs;
 
     print STDERR "Using UI '$ui'...\n" if($debug);
 
