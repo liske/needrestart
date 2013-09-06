@@ -70,15 +70,6 @@ sub notice($$) {
 }
 
 
-sub query_prep($$) {
-    my $self = shift;
-    my $out = shift;
-
-    $self->SUPER::progress_prep($out);
-
-    print "$out\n";
-}
-
 sub _query($$) {
     my($query, $def) = @_;
     my @def = ($def eq 'Y' ? qw(yes no) : qw(no yes));
@@ -95,7 +86,7 @@ sub _query($$) {
     return $i;
 }
 
-sub query_pkgs($$) {
+sub query_pkgs($$$$$) {
     my $self = shift;
     my $out = shift;
     my $def = shift;
