@@ -25,6 +25,7 @@
 #
 
 use Getopt::Std;
+use NeedRestart;
 
 use warnings;
 use strict;
@@ -72,6 +73,7 @@ the Free Software Foundation; either version 2 of the License, or
 (at your option) any later version.
 
 LIC
+#/
 }
 
 my %nrconf = (
@@ -108,6 +110,11 @@ warn "WARNING: This program should be run as root!\n" if($< != 0);
 my $runlevel = `who -r` || '';
 chomp($runlevel);
 $runlevel = 2 unless($runlevel =~ s/^.+run-level (\S)\s.+$/$1/);
+
+# get UI
+use NeedRestart::UI::stdio;
+my $ui = ($opt_b ? NeedRestart::UI->new() : needrestart_ui($opt_v));
+die "Error: no UI class available!\n" unless(defined($ui));
 
 sub fork_pipe(@) {
     my $pid = open(HPIPE, '-|');
@@ -184,7 +191,11 @@ sub parse_lsbinit($) {
 my %restart;
 
 # inspect only pids
-for my $pid (map {/^$nrconf{procfs}\/(\d+)$/ ? ($1) : ()} <$nrconf{procfs}/*>) {
+my @pids = sort { $a <=> $b} map {/^$nrconf{procfs}\/(\d+)$/ ? ($1) : ()} <$nrconf{procfs}/*>;
+$ui->progress_prep($#pids + 1, 'Scanning processes');
+for my $pid (@pids) {
+    $ui->progress_step(1);
+
     # read file mappings (Linux 2.0+)
     open(HMAP, '<', "$nrconf{procfs}/$pid/maps") || next;
     my $restart = 0;
@@ -283,6 +294,7 @@ for my $pid (map {/^$nrconf{procfs}\/(\d+)$/ ? ($1) : ()} <$nrconf{procfs}/*>) {
 	last if(defined($pkg));
     }
 }
+$ui->progress_fin(1);
 
 print "NEEDRESTART-VER: $VERSION\n" if($opt_b);
 
