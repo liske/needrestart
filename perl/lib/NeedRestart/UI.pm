@@ -27,6 +27,11 @@ package NeedRestart::UI;
 use strict;
 use warnings;
 
+sub new() {
+    my $class = shift;
+
+    return bless {}, $class;
+}
 
 sub progress_prep($$$) {
     my $self = shift;
