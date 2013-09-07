@@ -61,7 +61,7 @@ our %EXPORT_TAGS = (
     )],
 );
 
-our $VERSION = '0.3';
+our $VERSION = '@PACKAGE_VERSION@';
 
 my %UIs;
 
