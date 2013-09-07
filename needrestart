@@ -282,7 +282,7 @@ $ui->progress_fin(1);
 print "NEEDRESTART-VER: $VERSION\n" if($opt_b);
 
 unless(scalar %restart) {
-    $ui->notice('No services needed to be restarted.') unless($opt_b);
+    $ui->notice('No services required to be restarted.') unless($opt_b);
     exit 0;
 }
 
