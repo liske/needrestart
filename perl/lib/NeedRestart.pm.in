@@ -76,7 +76,7 @@ sub needrestart_ui_init($) {
     my $debug = shift;
 
     # autoload IV modules
-    foreach my $module (findsubmod __PACKAGE__::UI) {
+    foreach my $module (findsubmod NeedRestart::UI) {
 	eval "use $module;";
 	warn "Error loading $module: $@\n" if($@ && $debug);
     }
