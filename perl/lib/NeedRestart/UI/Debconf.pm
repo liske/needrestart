@@ -50,8 +50,8 @@ sub progress_prep($$$) {
 
     $|++;
 
-    db_subst('needrestart/ui-progress_title', 'OUT', $out);
-    db_progress('START', 0, $max, 'needrestart/ui-progress_title');
+    subst('needrestart/ui-progress_title', 'OUT', $out);
+    progress('START', 0, $max, 'needrestart/ui-progress_title');
 
     print "$out";
 }
@@ -61,8 +61,8 @@ sub progress_step($$) {
     my $s = shift;
 
     foreach my $i (1..$s) {
-	db_progress('STEP', 1);
-	db_progress('INFO', 'needrestart/ui-progress_info');
+	progress('STEP', 1);
+	progress('INFO', 'needrestart/ui-progress_info');
     }
 }
 
