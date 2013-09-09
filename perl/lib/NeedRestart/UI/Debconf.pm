@@ -34,7 +34,7 @@ use Debconf::Client::ConfModule ':all';
 version(’2.0’);
 capb;
 
-needrestart_ui_register(__PACKAGE__, NEEDRESTART_PRIO_MEDIUM);
+needrestart_ui_register(__PACKAGE__, NEEDRESTART_PRIO_HIGH);
 
 sub new() {
     my $class = shift;
