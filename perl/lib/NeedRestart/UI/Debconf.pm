@@ -29,9 +29,9 @@ use warnings;
 
 use parent qw(NeedRestart::UI);
 use NeedRestart qw(:ui);
-use Debconf::Client::ConfModule ':all';
+use Debconf::Client::ConfModule qw(:all);
 
-version(’2.0’);
+version('2.0');
 capb;
 
 needrestart_ui_register(__PACKAGE__, NEEDRESTART_PRIO_HIGH);
