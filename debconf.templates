@@ -1,0 +1,13 @@
+
+Template: needrestart/ui-progress_title
+Type: text
+Description: ${OUT}
+
+Template: needrestart/ui-progress_info
+Type: text
+Description: Inspecting ${BIN}...
+
+Template: needrestart/ui-multiselect
+Type: multiselect
+Choices: ${PKGS}
+Description: ${QUERY}
