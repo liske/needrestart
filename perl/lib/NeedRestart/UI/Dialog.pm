@@ -54,11 +54,8 @@ sub progress_prep($$$) {
 
 sub progress_step($$) {
     my $self = shift;
-    my $s = shift;
 
-    foreach my $i (1..$s) {
-	print ".";
-    }
+    print '.';
 }
 
 sub progress_fin($) {

@@ -177,50 +177,50 @@ my %restart;
 my @pids = sort { $a <=> $b} map {/^$nrconf{procfs}\/(\d+)$/ ? ($1) : ()} <$nrconf{procfs}/*>;
 $ui->progress_prep($#pids + 1, 'Scanning processes');
 for my $pid (@pids) {
-    $ui->progress_step(1);
-
-    # read file mappings (Linux 2.0+)
-    open(HMAP, '<', "$nrconf{procfs}/$pid/maps") || next;
     my $restart = 0;
-    while(<HMAP>) {
-	chomp;
-	my ($maddr, $mperm, $moffset, $mdev, $minode, $path) = split(/\s+/);
 
-	# skip special handles and non-executable mappings
-	next unless($minode != 0 && $path ne '' && $mperm =~ /x/);
-
-	# check for non-existing libs
-	unless(-e $path) {
-	    print STDERR "#$pid uses non-existing $path\n" if($nrconf{verbose});
-	    $restart++;
-	    last;
-	}
-
-	# get on-disk info
-	my ($sdev, $sinode) = stat($path);
-	last unless(defined($sinode));
-	$sdev = sprintf("%02x:%02x", $sdev >> 8, $sdev & 0xff);
-
-	# compare maps content vs. on-disk
-	if($mdev ne $sdev || $minode ne $sinode) {
-	    print STDERR "#$pid uses obsolete $path\n" if($nrconf{verbose});
-	    $restart++;
-	    last;
-	}
-    }
-    close(HMAP);
-
-    # restart needed?
-    next unless($restart);
-
+    $ui->progress_step("A $pid");
     # get executable (Linux 2.2+)
     my $bin = readlink("$nrconf{procfs}/$pid/exe");
     next unless(defined($bin));
 
-    unless(-x $bin && $bin =~ / \(deleted\)$/) {
-	$bin =~ s/ \(deleted\)$//;
-	print STDERR "#$pid binary $bin is obsolete, too\n" if($nrconf{verbose});
+    $bin =~ s/ \(deleted\)$//;
+    $ui->progress_step($bin);
+
+    # read file mappings (Linux 2.0+)
+    unless($restart) {
+	open(HMAP, '<', "$nrconf{procfs}/$pid/maps") || next;
+	while(<HMAP>) {
+	    chomp;
+	    my ($maddr, $mperm, $moffset, $mdev, $minode, $path) = split(/\s+/);
+	    
+	    # skip special handles and non-executable mappings
+	    next unless($minode != 0 && $path ne '' && $mperm =~ /x/);
+	    
+	    # check for non-existing libs
+	    unless(-e $path) {
+		print STDERR "#$pid uses non-existing $path\n" if($nrconf{verbose});
+		$restart++;
+		last;
+	    }
+	    
+	    # get on-disk info
+	    my ($sdev, $sinode) = stat($path);
+	    last unless(defined($sinode));
+	    $sdev = sprintf("%02x:%02x", $sdev >> 8, $sdev & 0xff);
+	    
+	    # compare maps content vs. on-disk
+	    if($mdev ne $sdev || $minode ne $sinode) {
+		print STDERR "#$pid uses obsolete $path\n" if($nrconf{verbose});
+		$restart++;
+		last;
+	    }
+	}
+	close(HMAP);
     }
+
+    # restart needed?
+    next unless($restart);
 
     my $pkg;
     foreach my $hook (sort <$nrconf{hook_d}/*>) {

@@ -54,20 +54,16 @@ sub progress_prep($$$) {
     $|++;
 
     subst('needrestart/ui-progress', 'OUT', $out);
-    progress('START', 0, $max, 'needrestart/ui-progress');
+    progress('START', 0, $max, 'needrestart/ui-progress_title');
 }
 
 sub progress_step($$) {
     my $self = shift;
-    my $s = shift;
+    my $bin = shift;
 
-    foreach my $i (1..$s) {
-	progress('STEP', 1);
-	my @chars = ("A".."Z", "a".."z");
-	my $t .= $chars[rand @chars] for 1..8;
-	subst('needrestart/ui-progress_info', 'OUT', $t);
-	progress('INFO', 'needrestart/ui-progress');
-    }
+    progress('STEP', 1);
+    subst('needrestart/ui-progress_info', 'BIN', $bin);
+    progress('INFO', 'needrestart/ui-progress_info');
 }
 
 sub progress_fin($) {
