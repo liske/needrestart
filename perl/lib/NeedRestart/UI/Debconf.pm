@@ -39,6 +39,9 @@ needrestart_ui_register(__PACKAGE__, NEEDRESTART_PRIO_HIGH);
 sub new() {
     my $class = shift;
 
+    my ($rc, $msg) = x_loadtemplatefile("debconf.templates");
+    die "Debconf: $msg\n" if($rc);
+
     return bless {}, $class;
 }
 
@@ -50,10 +53,8 @@ sub progress_prep($$$) {
 
     $|++;
 
-    subst('needrestart/ui-progress_title', 'OUT', $out);
-    progress('START', 0, $max, 'needrestart/ui-progress_title');
-
-    print "$out";
+    subst('needrestart/ui-progress', 'OUT', $out);
+    progress('START', 0, $max, 'needrestart/ui-progress');
 }
 
 sub progress_step($$) {
@@ -62,7 +63,10 @@ sub progress_step($$) {
 
     foreach my $i (1..$s) {
 	progress('STEP', 1);
-	progress('INFO', 'needrestart/ui-progress_info');
+	my @chars = ("A".."Z", "a".."z");
+	my $t .= $chars[rand @chars] for 1..8;
+	subst('needrestart/ui-progress_info', 'OUT', $t);
+	progress('INFO', 'needrestart/ui-progress');
     }
 }
 
