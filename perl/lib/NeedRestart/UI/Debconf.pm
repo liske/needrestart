@@ -51,8 +51,6 @@ sub progress_prep($$$) {
 
     $self->SUPER::progress_prep($max, $out);
 
-    $|++;
-
     subst('needrestart/ui-progress', 'OUT', $out);
     progress('START', 0, $max, 'needrestart/ui-progress_title');
 }
@@ -69,9 +67,8 @@ sub progress_step($$) {
 sub progress_fin($) {
     my $self = shift;
 
-    print "\n";
-
-    $|--;
+    unregister('needrestart/ui-progress_title');
+    unregister('needrestart/ui-progress_info');
 }
 
 
