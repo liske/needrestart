@@ -1,10 +1,9 @@
-clean:
-	
-
 all:
-	
+	cd perl && perl Makefile.PL PREFIX=$(DESTDIR) INSTALLDIRS=vendor 
+	cd perl && $(MAKE)
 
-install:
+install: all
+	cd perl && $(MAKE) install
 	mkdir -p "$(DESTDIR)/etc/needrestart/hook.d"
 	cp ex/needrestart.conf "$(DESTDIR)/etc/needrestart/"
 	cp hooks/* "$(DESTDIR)/etc/needrestart/hook.d/"
@@ -15,3 +14,6 @@ install:
 	
 	mkdir -p "$(DESTDIR)/usr/sbin"
 	cp needrestart "$(DESTDIR)/usr/sbin/"
+
+clean:
+	[ ! -f perl/Makefile ] || ( cd perl && $(MAKE) realclean ) 
