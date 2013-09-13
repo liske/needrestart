@@ -1,7 +1,7 @@
 
 Template: needrestart/ui-progress_title
 Type: text
-Description: Looking for processes...
+Description: Looking for required restarts...
 
 Template: needrestart/ui-progress_info
 Type: text
