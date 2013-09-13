@@ -118,8 +118,8 @@ sub query_pkgs($$$$$) {
 
     stop;
 
-    # Debconf kills STDOUT... fallback to STDERR
-    open(STDOUT, '>&2');
+    # Debconf kills STDOUT... try to restore it
+    open(STDOUT, '> /dev/tty') || open(STDOUT, '>&2');
 
     # get selected rc.d script
     my @s = split(/, /, $s);
