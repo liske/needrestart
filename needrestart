@@ -246,7 +246,7 @@ for my $pid (@pids) {
 		    $restart{$pkg}->{$v[1]}++
 		}
 		# In the run-levels S and 1 no daemons are being started (normaly).
-		# We don't call any rc script not started in the current run-level.
+		# We don't call any rc.d script not started in the current run-level.
 		elsif($lsb{'Default-Start'} =~ /$runlevel/) {
 		    # If a pidfile has been found, try to look for the daemon and ignore
 		    # any forked/detached childs (just a heuristic due Debian Bug#721810).
@@ -269,7 +269,7 @@ for my $pid (@pids) {
 		    }
 		}
 		else {
-		    print STDERR "#$pid rc script $v[1] should not start in the current run-level($runlevel)\n" if($nrconf{verbose});
+		    print STDERR "#$pid rc.d script $v[1] should not start in the current run-level($runlevel)\n" if($nrconf{verbose});
 		}
 	    }
 	}

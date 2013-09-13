@@ -121,14 +121,14 @@ sub query_pkgs($$$$$) {
     # Debconf kills STDOUT... fallback to STDERR
     open(STDOUT, '>&2');
 
-    # get selected rc script
+    # get selected rc.d script
     my @s = split(/, /, $s);
 
     if($#s == -1) {
 	print STDERR "No rc scripts should be restarted...\n";
     }
 
-    # restart each selected RC script
+    # restart each selected rc.d script
     &$cb($_) for @s;
 }
 
