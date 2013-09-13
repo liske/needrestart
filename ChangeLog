@@ -5,12 +5,14 @@ needrestart (0.3) unstable; urgency=low
   * Offer restart on non-existing mappings.
   * Add PacMan hook.
   * Be more fault-tolerant in batch mode.
-  * Use a more sophisticated apt/dpkg trigger.
+  * Provide a more sophisticated apt/dpkg trigger.
   * Fix ignored -r command line parameter.
     (Debian Bug#721809 by Axel Beckert <abe@debian.org>)
   * Ignore forked/detached daemon childs (pidfile heuristic).
     (Debian Bug#721810 by Axel Beckert <abe@debian.org>)
   * Use autoconf/automake.
+  * Provide modular UI including debconf and dialog based
+    frontends.
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
