@@ -40,7 +40,7 @@ sub dcres(@) {
     my ($rc, @bulk) = @_;
 
     if($rc != 0) {
-	clear;
+	stop;
 
 	die "Debconf: $bulk[0]\n";
     }
@@ -78,8 +78,6 @@ sub progress_step($$) {
 sub progress_fin($) {
     my $self = shift;
 
-    clear;
-
     unregister('needrestart/ui-progress_title');
     unregister('needrestart/ui-progress_info');
 }
@@ -92,6 +90,8 @@ sub notice($$) {
 #    $self->{dialog}->msgbox(title => 'Notice', text => $out);
 #    $stop++;
 #    dcres(0, "notice");
+
+    stop;
 }
 
 
@@ -111,9 +111,9 @@ sub query_pkgs($$$$$) {
     dcres( input('critical', 'needrestart/ui-query_pkgs') );
     dcres( go );
 
-    clear;
-
     my ($s) = dcres(get('needrestart/ui-query_pkgs'));
+
+    stop;
 
     # get selected rc script
     my @s = split(/, /, $s);
