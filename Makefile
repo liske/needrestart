@@ -15,8 +15,8 @@ install: all
 	    mkdir -p "$(DESTDIR)/usr/lib/needrestart" && cp ex/apt/dpkg-status ex/apt/apt-pinvoke "$(DESTDIR)/usr/lib/needrestart" || true
 	
 	which debconf > /dev/null && \
-	    mkdir -p "$(DESTDIR)/usr/share/debconf" && \
-	    cp ex/debconf/needrestart.templates "$(DESTDIR)/usr/share/debconf/" || true
+	    mkdir -p "$(DESTDIR)/usr/share/needrestart" && \
+	    cp ex/debconf/needrestart.templates "$(DESTDIR)/usr/share/needrestart/" || true
 	
 	mkdir -p "$(DESTDIR)/usr/sbin"
 	cp needrestart "$(DESTDIR)/usr/sbin/"

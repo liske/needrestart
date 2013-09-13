@@ -31,6 +31,10 @@ use parent qw(NeedRestart::UI);
 use NeedRestart qw(:ui);
 use Debconf::Client::ConfModule qw(:all);
 
+use constant {
+    DCTMPL => '/usr/share/needrestart/needrestart.templates',
+};
+
 version('2.0');
 capb;
 
@@ -51,7 +55,7 @@ sub dcres(@) {
 sub new() {
     my $class = shift;
 
-    dcres( x_loadtemplatefile("debconf.templates") );
+    dcres( x_loadtemplatefile(DCTMPL) ) if(-r DCTMPL);
 
     return bless {}, $class;
 }
