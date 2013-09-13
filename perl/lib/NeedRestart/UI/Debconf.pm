@@ -110,6 +110,7 @@ sub query_pkgs($$$$$) {
     dcres( subst('needrestart/ui-query_pkgs', 'OUT', $out) );
     dcres( subst('needrestart/ui-query_pkgs', 'PKGS', join(', ', @l)) );
     dcres( fset('needrestart/ui-query_pkgs', 'seen', 0) );
+    dcres( settitle('needrestart/ui-query_pkgs_title') );
     dcres( input('critical', 'needrestart/ui-query_pkgs') );
     dcres( go );
 

@@ -7,8 +7,11 @@ Template: needrestart/ui-progress_info
 Type: text
 Description: Inspecting ${BIN}...
 
+Template: needrestart/ui-query_pkgs_title
+Type: title
+Description: Daemons using orphaned libraries
+
 Template: needrestart/ui-query_pkgs
 Type: multiselect
 Choices: ${PKGS}
-Description: Packages using orphaned libraries
- Which of them should be restartet?
+Description: Which rc scripts should be restartet?
