@@ -13,6 +13,7 @@ needrestart (0.3) unstable; urgency=low
   * Use autoconf/automake.
   * Provide modular UI including debconf and dialog based
     frontends.
+  * Ignore binaries due blacklist config option.
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 

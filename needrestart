@@ -82,6 +82,7 @@ my %nrconf = (
     hook_d => '/etc/needrestart/hook.d',
     restart => 'i',
     defno => 0,
+    blacklist => [],
 );
 
 our $opt_c = '/etc/needrestart/needrestart.conf';
@@ -186,6 +187,9 @@ for my $pid (@pids) {
 
     $bin =~ s/ \(deleted\)$//;
     $ui->progress_step($bin);
+
+    # ignore blacklisted binaries
+    next if(grep { $bin =~ /$_/; } @{$nrconf{blacklist}});
 
     # read file mappings (Linux 2.0+)
     unless($restart) {
