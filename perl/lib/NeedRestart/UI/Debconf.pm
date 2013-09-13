@@ -89,11 +89,12 @@ sub notice($$) {
     my $self = shift;
     my $out = shift;
 
-#    $self->{dialog}->msgbox(title => 'Notice', text => $out);
-#    $stop++;
-#    dcres(0, "notice");
-
     stop;
+
+    # Debconf kills STDOUT... try to restore it
+    open(STDOUT, '> /dev/tty') || open(STDOUT, '>&2');
+
+    print "$out\n";
 }
 
 
