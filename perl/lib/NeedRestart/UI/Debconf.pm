@@ -118,6 +118,9 @@ sub query_pkgs($$$$$) {
 
     stop;
 
+    # Debconf kills STDOUT... fallback to STDERR
+    open(STDOUT, '>&2');
+
     # get selected rc script
     my @s = split(/, /, $s);
 
