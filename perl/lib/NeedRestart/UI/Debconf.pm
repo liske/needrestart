@@ -78,6 +78,8 @@ sub progress_step($$) {
 sub progress_fin($) {
     my $self = shift;
 
+    dcres( progress('STOP') );
+
     unregister('needrestart/ui-progress_title');
     unregister('needrestart/ui-progress_info');
 }
