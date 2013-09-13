@@ -36,11 +36,22 @@ capb;
 
 needrestart_ui_register(__PACKAGE__, NEEDRESTART_PRIO_HIGH);
 
+sub dcres(@) {
+    my ($rc, @bulk) = @_;
+
+    if($rc != 0) {
+	clear;
+
+	die "Debconf: $bulk[0]\n";
+    }
+
+    return @bulk;
+}
+
 sub new() {
     my $class = shift;
 
-    my ($rc, $msg) = x_loadtemplatefile("debconf.templates");
-    die "Debconf: $msg\n" if($rc);
+    dcres( x_loadtemplatefile("debconf.templates") );
 
     return bless {}, $class;
 }
@@ -51,21 +62,23 @@ sub progress_prep($$$) {
 
     $self->SUPER::progress_prep($max, $out);
 
-    subst('needrestart/ui-progress', 'OUT', $out);
-    progress('START', 0, $max, 'needrestart/ui-progress_title');
+    dcres( subst('needrestart/ui-progress_title', 'OUT', $out) );
+    dcres( progress('START', 0, $max, 'needrestart/ui-progress_title') );
 }
 
 sub progress_step($$) {
     my $self = shift;
     my $bin = shift;
 
-    progress('STEP', 1);
-    subst('needrestart/ui-progress_info', 'BIN', $bin);
-    progress('INFO', 'needrestart/ui-progress_info');
+    dcres( progress('STEP', 1) );
+    dcres( subst('needrestart/ui-progress_info', 'BIN', $bin) );
+    dcres( progress('INFO', 'needrestart/ui-progress_info') );
 }
 
 sub progress_fin($) {
     my $self = shift;
+
+    clear;
 
     unregister('needrestart/ui-progress_title');
     unregister('needrestart/ui-progress_info');
@@ -77,6 +90,8 @@ sub notice($$) {
     my $out = shift;
 
 #    $self->{dialog}->msgbox(title => 'Notice', text => $out);
+#    $stop++;
+#    dcres(0, "notice");
 }
 
 
@@ -88,13 +103,23 @@ sub query_pkgs($$$$$) {
     my $cb = shift;
 
     # prepare checklist array
-#    my @l = map { my $p = $_; map { ("$_", ["from $p", ($def ? 0 : 1)]) } sort keys %{ $pkgs->{$p} }} sort keys %$pkgs;
+    my @l = map { my $p = $_; map { ($_) } sort keys %{ $pkgs->{$p} }} sort keys %$pkgs;
+
+    dcres( subst('needrestart/ui-query_pkgs', 'OUT', $out) );
+    dcres( subst('needrestart/ui-query_pkgs', 'PKGS', join(', ', @l)) );
+    dcres( fset('needrestart/ui-query_pkgs', 'seen', 0) );
+    dcres( input('critical', 'needrestart/ui-query_pkgs') );
+    dcres( go );
+
+    clear;
+
+    my ($s) = dcres(get('needrestart/ui-query_pkgs'));
 
     # get selected rc script
-#    my @s = $self->{dialog}->checklist(text => $out, list => \@l);
+    my @s = split(/, /, $s);
 
     # restart each selected RC script
-#    &$cb($_) for @s;
+    &$cb($_) for @s;
 }
 
 1;

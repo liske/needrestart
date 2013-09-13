@@ -1,13 +1,14 @@
 
 Template: needrestart/ui-progress_title
 Type: text
-Description: ${OUT}
+Description: Looking for processes...
 
 Template: needrestart/ui-progress_info
 Type: text
 Description: Inspecting ${BIN}...
 
-Template: needrestart/ui-multiselect
+Template: needrestart/ui-query_pkgs
 Type: multiselect
 Choices: ${PKGS}
-Description: ${QUERY}
+Description: Packages using orphaned libraries
+ Which of them should be restartet?
