@@ -121,6 +121,10 @@ sub query_pkgs($$$$$) {
     # get selected rc script
     my @s = split(/, /, $s);
 
+    if($#s == -1) {
+	print STDERR "No rc scripts should be restarted...\n";
+    }
+
     # restart each selected RC script
     &$cb($_) for @s;
 }
