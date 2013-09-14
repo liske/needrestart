@@ -10,7 +10,6 @@ needrestart (0.3) unstable; urgency=low
     (Debian Bug#721809 by Axel Beckert <abe@debian.org>)
   * Ignore forked/detached daemon childs (pidfile heuristic).
     (Debian Bug#721810 by Axel Beckert <abe@debian.org>)
-  * Use autoconf/automake.
   * Provide modular UI including debconf and dialog based
     frontends.
   * Ignore binaries due blacklist config option.
