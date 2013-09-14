@@ -15,7 +15,7 @@ needrestart (0.3) unstable; urgency=low
     frontends.
   * Ignore binaries due blacklist config option.
 
- -- Thomas Liske <thomas@fiasko-nw.net>  
+ -- Thomas Liske <thomas@fiasko-nw.net>  Sat, 14 Sep 2013 12:55:16 +0200
 
 needrestart (0.2) unstable; urgency=low
 
