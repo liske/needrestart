@@ -1,7 +1,7 @@
 
 Template: needrestart/ui-progress_title
 Type: text
-Description: Looking for required restarts...
+Description: Looking for daemons to restart
 
 Template: needrestart/ui-progress_info
 Type: text
