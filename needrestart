@@ -26,6 +26,7 @@
 
 use Getopt::Std;
 use NeedRestart;
+use NeedRestart::UI;
 
 use warnings;
 use strict;
