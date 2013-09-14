@@ -83,9 +83,6 @@ sub progress_fin($) {
     my $self = shift;
 
     dcres( progress('STOP') );
-
-    unregister('needrestart/ui-progress_title');
-    unregister('needrestart/ui-progress_info');
 }
 
 
@@ -105,12 +102,14 @@ sub notice($$) {
 sub query_pkgs($$$$$) {
     my $self = shift;
     my $out = shift;
-    my $def = shift;
+    my $defno = shift;
     my $pkgs = shift;
     my $cb = shift;
 
     # prepare checklist array
     my @l = map { my $p = $_; map { ($_) } sort keys %{ $pkgs->{$p} }} sort keys %$pkgs;
+
+    dcres(set('needrestart/ui-query_pkgs', join(', ', ($defno ? () : @l) )));
 
     dcres( subst('needrestart/ui-query_pkgs', 'OUT', $out) );
     dcres( subst('needrestart/ui-query_pkgs', 'PKGS', join(', ', @l)) );

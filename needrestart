@@ -85,12 +85,18 @@ my %nrconf = (
     blacklist => [],
 );
 
+# backup ARGV (required for Debconf)
+my @argv = @ARGV;
+
 our $opt_c = '/etc/needrestart/needrestart.conf';
 our $opt_v;
 our $opt_r = $nrconf{restart};
 our $opt_n;
 our $opt_b;
 getopts('c:vr:nb');
+
+# restore ARGV
+@ARGV = @argv;
 
 die "ERROR: Could not read config file '$opt_c'!\n" unless(-r $opt_c || $opt_b);
 
