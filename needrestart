@@ -31,8 +31,6 @@ use NeedRestart::UI;
 use warnings;
 use strict;
 
-my $VERSION = '0.3';
-
 $|++;
 $Getopt::Std::STANDARD_HELP_VERSION++;
 
@@ -59,7 +57,7 @@ USG
 sub VERSION_MESSAGE {
     print <<LIC;
 
-needrestart $VERSION - Restart daemons after library updates.
+needrestart $NeedRestart::VERSION - Restart daemons after library updates.
 
 Authors:
   Thomas Liske <thomas\@fiasko-nw.net>
@@ -295,7 +293,7 @@ for my $pid (@pids) {
 }
 $ui->progress_fin(1);
 
-print "NEEDRESTART-VER: $VERSION\n" if($opt_b);
+print "NEEDRESTART-VER: $NeedRestart::VERSION\n" if($opt_b);
 
 unless(scalar %restart) {
     $ui->notice('No services required to be restarted.') unless($opt_b);
