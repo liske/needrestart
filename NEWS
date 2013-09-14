@@ -1,6 +1,15 @@
 Changes in 0.3
 ==============
 
+blacklisting
+------------
+
+It might be a bad idea to (auto) restart certain daemons. Therefor
+a new config option is available to ignore binaries by matching
+a regex. The supplied default configuration ignores dbus, NetworkManager
+and various display managers.
+
+
 user interface
 --------------
 
