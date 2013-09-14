@@ -50,6 +50,8 @@ Usage:
 	i	(i)nteractive restart
 	a	(a)utomatically restart
     -b		enable batch mode
+    --help      show this help
+    --version   show version information
 
 USG
 }
@@ -94,7 +96,10 @@ our $opt_v;
 our $opt_r = $nrconf{restart};
 our $opt_n;
 our $opt_b;
-getopts('c:vr:nb');
+unless(getopts('c:vr:nb')) {
+    HELP_MESSAGE;
+    exit 1;
+}
 
 # restore ARGV
 @ARGV = @argv;
