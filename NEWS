@@ -1,0 +1,27 @@
+Changes in 0.3
+==============
+
+user interface
+--------------
+
+The old basic user interface has been replace by a modular approach.
+User interfaces are now implemented in the NeedRestart::UI::* packages.
+
+New UI packages can ne added by putting them into perl's search path.
+Using Module::Find to load any NeedRestart::UID::* package. Packagese
+failing to load are ignored.
+
+The following UI implementations are shipped:
+* NeedRestart::UI::Debconf	- use Debian's debconf frontend
+* NeedRestart::UI::Dialog	- use UI::Dialog
+* NeedRestart::UI::stdio	- the simple old UI
+
+
+sophisticated apt/dpkg trigger
+------------------------------
+
+The new apt/dpkg trigger only runs needrestart if there was a package
+unpacked by dpkg and no error has occured during the dpkg run.
+
+The scripts and config files required for the apt and dpkg integration
+are installed by default.
