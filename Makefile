@@ -1,5 +1,5 @@
 all:
-	cd perl && perl Makefile.PL PREFIX=$(DESTDIR) INSTALLDIRS=vendor 
+	cd perl && perl Makefile.PL PREFIX=$(PREFIX) INSTALLDIRS=vendor 
 	cd perl && $(MAKE)
 
 install: all
