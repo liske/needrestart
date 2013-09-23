@@ -14,4 +14,4 @@ Description: Daemons using orphaned libraries
 Template: needrestart/ui-query_pkgs
 Type: multiselect
 Choices: ${PKGS}
-Description: Which rc.d scripts should be restartet?
+Description: Which rc.d scripts should be restarted?
