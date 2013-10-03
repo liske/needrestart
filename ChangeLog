@@ -1,3 +1,13 @@
+needrestart (0.4) unstable; urgency=low
+
+  * Fix spelling:
+    - typo in debconf template (s/restartet/restarted/;)
+      (Debian Bug#723935 by Axel Beckert <abe@debian.org>)
+    - debconf template title (s/orphaned/outdated/;)
+      (Debian Bug#723935 by Justin B Rye <justin.byam.rye@gmail.com>)
+
+ -- Thomas Liske <thomas@fiasko-nw.net>  
+
 needrestart (0.3) unstable; urgency=low
 
   * Fix typo reported by Patrick Matthäi.
