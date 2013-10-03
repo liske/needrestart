@@ -9,7 +9,7 @@ Description: Inspecting ${BIN}...
 
 Template: needrestart/ui-query_pkgs_title
 Type: title
-Description: Daemons using orphaned libraries
+Description: Daemons using outdated libraries
 
 Template: needrestart/ui-query_pkgs
 Type: multiselect
