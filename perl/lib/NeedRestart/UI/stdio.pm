@@ -46,8 +46,9 @@ sub progress_prep($$$) {
 
 sub progress_step($$) {
     my $self = shift;
+    my $bin = shift;
 
-    print '.';
+    print '.' if($bin);
 }
 
 sub progress_fin($) {
