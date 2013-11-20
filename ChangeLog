@@ -5,8 +5,17 @@ needrestart (0.4) unstable; urgency=low
       (Debian Bug#723935 by Axel Beckert <abe@debian.org>)
     - debconf template title (s/orphaned/outdated/;)
       (Debian Bug#723935 by Justin B Rye <justin.byam.rye@gmail.com>)
+  * Fix progress bar increase to grow up to 100%:
+    - binaries where counted twice
+    - kernel threads did not increase progress
+  * Demand restart of deleted binaries.
   * Add sudo binary to example blacklist.
     (Debian Bug#725937 by Jim Barber <jim.barber@ddihealth.com>)
+  * Drop version number from man page.
+    (Debian Bug#729997 by Raf Czlonka <rafal.czlonka@gmail.com>)
+  * NeedRestart::UI::Debconf: Fix return code handling if readline
+    is used as debconf frontend.
+    (Debian Bug#729997 by Raf Czlonka <rafal.czlonka@gmail.com>)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
