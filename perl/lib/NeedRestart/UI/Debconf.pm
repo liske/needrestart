@@ -74,7 +74,7 @@ sub progress_step($$) {
     my $self = shift;
     my $bin = shift;
 
-    dcres( progress('STEP', 1) );
+    progress('STEP', 1);
     dcres( subst('needrestart/ui-progress_info', 'BIN', ($bin ? $bin : '')) );
     dcres( progress('INFO', 'needrestart/ui-progress_info') );
 }
