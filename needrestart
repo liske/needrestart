@@ -192,10 +192,13 @@ for my $pid (@pids) {
 
     # get executable (Linux 2.2+)
     my $bin = readlink("$nrconf{procfs}/$pid/exe");
-    next unless(defined($bin));
 
-    $bin =~ s/ \(deleted\)$//;
+    # orphaned binary
+    $restart++ if (defined($bin) && $bin =~ s/ \(deleted\)$//);
     $ui->progress_step($bin);
+
+    # ignore kernel threads
+    next unless(defined($bin));
 
     # ignore blacklisted binaries
     next if(grep { $bin =~ /$_/; } @{$nrconf{blacklist}});
