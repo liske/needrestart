@@ -190,7 +190,6 @@ $ui->progress_prep($#pids + 1, 'Scanning processes');
 for my $pid (@pids) {
     my $restart = 0;
 
-    $ui->progress_step("A $pid");
     # get executable (Linux 2.2+)
     my $bin = readlink("$nrconf{procfs}/$pid/exe");
     next unless(defined($bin));
