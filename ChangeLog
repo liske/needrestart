@@ -17,7 +17,7 @@ needrestart (0.4) unstable; urgency=low
     is used as debconf frontend.
     (Debian Bug#729997 by Raf Czlonka <rafal.czlonka@gmail.com>)
 
- -- Thomas Liske <thomas@fiasko-nw.net>  
+ -- Thomas Liske <thomas@fiasko-nw.net>  Thu, 28 Nov 2013 19:30:06 +0100
 
 needrestart (0.3) unstable; urgency=low
 

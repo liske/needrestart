@@ -31,6 +31,6 @@ frontends
 *needrestart* uses a modular aproach based on perl packages providing
 the user interface. The following frontends are shipped:
 
-* *NeedRestart::UI::Debconf* uses *debconf*
-* *NeedRestart::UI::Debconf* uses *UI::Dialog*
+* *NeedRestart::UI::Debconf* using *debconf*
+* *NeedRestart::UI::Debconf* using *UI::Dialog*
 * *NeedRestart::UI::stdio* fallback using stdio interaction
