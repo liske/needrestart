@@ -5,11 +5,11 @@ about
 -----
 
 *needrestart* checks which daemons need to be restarted after library
-upgrades. It is inspired by ```checkrestart(1)``` from the *debian-goodies*
+upgrades. It is inspired by *checkrestart* from the *debian-goodies*
 package.
 
 There are some hook scripts in the ``ex/`` directory (to be used with
-```apt(1)``` and ```dpkg(1)```). The scripts will call *needrestart*
+*apt* and *dpkg*. The scripts will call *needrestart*
 after any package installation/upgrades.
 
 
@@ -20,9 +20,9 @@ package managers
 binaries requiring a restart. The shipped hooks support the following
 package managers:
 
-* dpkg
-* rpm
-* pacman
+* *dpkg*
+* *rpm*
+* *pacman*
 
 
 frontends
@@ -31,6 +31,6 @@ frontends
 *needrestart* uses a modular aproach based on perl packages providing
 the user interface. The following frontends are shipped:
 
-* ``NeedRestart::UI::Debconf`` uses ```debconf(1)```
-* ``NeedRestart::UI::Debconf`` uses ```UI::Dialog(3pm)```
-* ``NeedRestart::UI::stdio`` fallback using stdio interaction
+* *NeedRestart::UI::Debconf* uses *debconf*
+* *NeedRestart::UI::Debconf* uses *UI::Dialog*
+* *NeedRestart::UI::stdio* fallback using stdio interaction
