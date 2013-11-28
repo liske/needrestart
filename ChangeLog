@@ -6,7 +6,7 @@ needrestart (0.4) unstable; urgency=low
     - debconf template title (s/orphaned/outdated/;)
       (Debian Bug#723935 by Justin B Rye <justin.byam.rye@gmail.com>)
   * Fix progress bar increase to grow up to 100%:
-    - binaries where counted twice
+    - binaries were counted twice
     - kernel threads did not increase progress
   * Demand restart of deleted binaries.
   * Add sudo binary to example blacklist.
