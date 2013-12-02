@@ -1,6 +1,9 @@
 needrestart (0.5) unstable; urgency=low
 
   * Ignore mapped files in /tmp.
+  * Handle LSB tags case insensitivly.
+    (Debian Bug#731165 by Christian Ionescu-Idbohrn
+     <cristian.ionescu-idbohrn@axis.com>)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 

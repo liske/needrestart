@@ -159,7 +159,7 @@ sub parse_lsbinit($) {
 	}
 
 	chomp($line);
-	$lsb{$1} = $2 if($line =~ /^# ([^:]+):\s+(.+)$/);
+	$lsb{lc($1)} = $2 if($line =~ /^# ([^:]+):\s+(.+)$/);
     }
 
     unless($found) {
@@ -258,14 +258,14 @@ for my $pid (@pids) {
 	    if($v[0] eq 'RC') {
 		my %lsb = parse_lsbinit($v[1]);
 
-		unless(%lsb) {
+		unless(%lsb && exists($lsb{'default-start'})) {
 		    # If the script has no LSB tags we consider to call it later - they
 		    # are broken anyway.
 		    $restart{$pkg}->{$v[1]}++
 		}
 		# In the run-levels S and 1 no daemons are being started (normaly).
 		# We don't call any rc.d script not started in the current run-level.
-		elsif($lsb{'Default-Start'} =~ /$runlevel/) {
+		elsif($lsb{'default-start'} =~ /$runlevel/) {
 		    # If a pidfile has been found, try to look for the daemon and ignore
 		    # any forked/detached childs (just a heuristic due Debian Bug#721810).
 		    if(exists($lsb{pidfiles})) {
