@@ -215,9 +215,11 @@ for my $pid (@pids) {
 	    
 	    # check for non-existing libs
 	    unless(-e $path) {
-		print STDERR "#$pid uses non-existing $path\n" if($nrconf{verbose});
-		$restart++;
-		last;
+		unless($path =~ m@^/tmp/@) {
+		    print STDERR "#$pid uses non-existing $path\n" if($nrconf{verbose});
+		    $restart++;
+		    last;
+		}
 	    }
 	    
 	    # get on-disk info

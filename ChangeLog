@@ -1,3 +1,9 @@
+needrestart (0.5) unstable; urgency=low
+
+  * Ignore mapped files in /tmp.
+
+ -- Thomas Liske <thomas@fiasko-nw.net>  
+
 needrestart (0.4) unstable; urgency=low
 
   * Fix spelling:
