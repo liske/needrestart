@@ -8,7 +8,7 @@ needrestart (0.5) unstable; urgency=low
     after removing needrestart.
     (Debian Bug#732461 by Andreas Beckmann <anbe@debian.org>)
 
- -- Thomas Liske <thomas@fiasko-nw.net>  
+ -- Thomas Liske <thomas@fiasko-nw.net>  Thu, 02 Jan 2014 19:55:49 +0100
 
 needrestart (0.4) unstable; urgency=low
 
