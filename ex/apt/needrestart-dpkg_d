@@ -4,4 +4,4 @@
 # triggers needrestart in apt's Dpkg::Post-Invoke
 # hook.
 
-status-logger=/usr/lib/needrestart/dpkg-status
+status-logger=(test -x /usr/lib/needrestart/dpkg-status && /usr/lib/needrestart/dpkg-status || cat > /dev/null)

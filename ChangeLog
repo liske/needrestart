@@ -4,6 +4,9 @@ needrestart (0.5) unstable; urgency=low
   * Handle LSB tags case insensitivly.
     (Debian Bug#731165 by Christian Ionescu-Idbohrn
      <cristian.ionescu-idbohrn@axis.com>)
+  * Prevent config file in dpkg.cfg.d to break dpkg
+    after removing needrestart.
+    (Debian Bug#732461 by Andreas Beckmann <anbe@debian.org>)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
