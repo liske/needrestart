@@ -2,6 +2,7 @@ needrestart (0.6) unstable; urgency=low
 
   * Add lightdm to blacklist.
     (Debian Bug#735027 by Michael Gilbert <mgilbert@debian.org>)
+  * Print eval exception message on config file errors.
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
