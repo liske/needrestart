@@ -106,7 +106,7 @@ die "ERROR: Could not read config file '$opt_c'!\n" unless(-r $opt_c || $opt_b);
 
 unless($opt_b) {
     eval `cat "$opt_c"`;
-    die "\n" if($@);
+    die "$@\n" if($@);
 }
 
 $nrconf{verbose}++ if($opt_v);
