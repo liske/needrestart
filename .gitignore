@@ -1,0 +1,7 @@
+autom4te.cache/
+man/Makefile
+perl/MYMETA.json
+perl/MYMETA.yml
+perl/Makefile
+perl/blib/
+perl/pm_to_blib
