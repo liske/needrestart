@@ -3,6 +3,8 @@ needrestart (0.6) unstable; urgency=low
   * Add lightdm to blacklist.
     (Debian Bug#735027 by Michael Gilbert <mgilbert@debian.org>)
   * Print eval exception message on config file errors.
+  * Use systemd if available.
+  * Change batch processing output.
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
