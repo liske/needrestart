@@ -84,12 +84,12 @@ sub query_pkgs($$$$$) {
     my $cb = shift;
 
     # prepare checklist array
-    my @l = map { my $p = $_; map { ("$_", ["from $p", ($def ? 0 : 1)]) } sort keys %{ $pkgs->{$p} }} sort keys %$pkgs;
+    my @l = sort keys %$pkgs;
 
     # get selected rc.d script
     my @s = $self->{dialog}->checklist(text => $out, list => \@l);
 
-    # restart each selected rc.d script
+    # restart each selected service
     &$cb($_) for @s;
 }
 
