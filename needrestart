@@ -34,6 +34,8 @@ use strict;
 $|++;
 $Getopt::Std::STANDARD_HELP_VERSION++;
 
+my $is_systemd = -d qq(/run/systemd/system);
+
 sub HELP_MESSAGE {
     print <<USG;
 Usage:
@@ -182,6 +184,8 @@ sub parse_lsbinit($) {
     return %lsb;
 }
 
+print STDERR "detected systemd\n" if($nrconf{verbose} && $is_systemd);
+
 my %restart;
 
 # inspect only pids
@@ -239,6 +243,18 @@ for my $pid (@pids) {
 
     # restart needed?
     next unless($restart);
+
+    if($is_systemd) {
+	my $systemctl = fork_pipe(qq(/bin/systemctl), qq(status), $pid);
+	my $ret = <$systemctl>;
+	close($systemctl);
+
+	if(defined($ret) && $ret =~ /^([^.]+)\.service /) {
+	    print STDERR "#$pid is $1.service\n" if($nrconf{verbose});
+	    $restart{$1}->{$1}++;
+	    next;
+	}
+    }
 
     my $pkg;
     foreach my $hook (sort <$nrconf{hook_d}/*>) {
