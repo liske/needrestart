@@ -13,16 +13,19 @@ There are some hook scripts in the ``ex/`` directory (to be used with
 after any package installation/upgrades.
 
 
-package managers
-----------------
+restarting services
+-------------------
 
-*needrestart* uses hooks to identify the corresponding rc script of
-binaries requiring a restart. The shipped hooks support the following
-package managers:
+*needrestart* supports but does not require systemd (available since v0.6).
+If systemd is not available or does not return a service name *needrestart*
+uses hooks to identify the corresponding System V init script. The shipped
+hooks support the following package managers:
 
 * *dpkg*
 * *rpm*
 * *pacman*
+
+The *service* command is used to run the tradiditional System V init script.
 
 
 frontends
