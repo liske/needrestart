@@ -3,6 +3,12 @@ needrestart (0.6) unstable; urgency=low
   * Add lightdm to blacklist.
     (Debian Bug#735027 by Michael Gilbert <mgilbert@debian.org>)
   * Print eval exception message on config file errors.
+  * Use systemd if available.
+    (Debian Bug#731028 by Paul Wise <pabs@debian.org>)
+  * Use service to run traditional SysV scripts.
+  * Change batch processing output.
+  * Print full restart commands in list mode.
+    (Debian Bug#731028 by Paul Wise <pabs@debian.org>)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 

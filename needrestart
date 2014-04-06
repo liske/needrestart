@@ -34,6 +34,8 @@ use strict;
 $|++;
 $Getopt::Std::STANDARD_HELP_VERSION++;
 
+my $is_systemd = -d qq(/run/systemd/system);
+
 sub HELP_MESSAGE {
     print <<USG;
 Usage:
@@ -63,7 +65,7 @@ Authors:
   Thomas Liske <thomas\@fiasko-nw.net>
 
 Copyright Holder:
-  2013 (C) Thomas Liske [http://fiasko-nw.net/~thomas/]
+  2013 - 2014 (C) Thomas Liske [http://fiasko-nw.net/~thomas/]
 
 Upstream:
   https://github.com/liske/needrestart
@@ -182,6 +184,21 @@ sub parse_lsbinit($) {
     return %lsb;
 }
 
+print STDERR "detected systemd\n" if($nrconf{verbose} && $is_systemd);
+
+my @systemd_restart;
+sub restart_cmd($) {
+    my $rc = shift;
+
+    if($rc =~ /.+\.service$/) {
+	push(@systemd_restart, $rc);
+	();
+    }
+    else {
+	(qq(service), $rc, qq(restart));
+    }
+}
+
 my %restart;
 
 # inspect only pids
@@ -240,6 +257,18 @@ for my $pid (@pids) {
     # restart needed?
     next unless($restart);
 
+    if($is_systemd) {
+	my $systemctl = fork_pipe(qq(systemctl), qq(-n), qq(0), qq(--full), qq(status), $pid);
+	my $ret = <$systemctl>;
+	close($systemctl);
+
+	if(defined($ret) && $ret =~ /^([^.]+\.service) /) {
+	    print STDERR "#$pid is $1\n" if($nrconf{verbose});
+	    $restart{$1}++;
+	    next;
+	}
+    }
+
     my $pkg;
     foreach my $hook (sort <$nrconf{hook_d}/*>) {
 	print STDERR "#$pid running $hook\n" if($nrconf{verbose});
@@ -261,7 +290,7 @@ for my $pid (@pids) {
 		unless(%lsb && exists($lsb{'default-start'})) {
 		    # If the script has no LSB tags we consider to call it later - they
 		    # are broken anyway.
-		    $restart{$pkg}->{$v[1]}++
+		    $restart{$v[1]}++
 		}
 		# In the run-levels S and 1 no daemons are being started (normaly).
 		# We don't call any rc.d script not started in the current run-level.
@@ -276,14 +305,14 @@ for my $pid (@pids) {
 
 			    if(int($p) == $pid) {
 				print STDERR "#$pid has been started by $v[1] - triggering\n" if($nrconf{verbose});
-				$restart{$pkg}->{$v[1]}++;
+				$restart{$v[1]}++;
 				last;
 			    }
 			}
 		    }
 		    else {
 			print STDERR "no pidfile reference found at $v[1] - triggering\n" if($nrconf{verbose});
-			$restart{$pkg}->{$v[1]}++
+			$restart{$v[1]}++
 		    }
 		}
 		else {
@@ -306,23 +335,47 @@ unless(scalar %restart) {
 
 if($opt_b || $opt_r ne 'i') {
     $ui->notice('Services to be restarted:');
-    foreach my $pkg (keys %restart) {
+
+    foreach my $rc (keys %restart) {
+	my @cmd = restart_cmd($rc);
+
 	if($opt_b) {
-	    print "NEEDRESTART-PKG: $pkg\n";
+	    print "NEEDRESTART-SVC: $rc\n";
 	    next;
 	}
 
-	print "\n$pkg:\n" unless($opt_r eq 'a');
-	foreach my $rc (keys %{$restart{$pkg}}) {
-	    if($opt_r eq 'a') {
-		system("/etc/init.d/$rc", 'restart');
-	    }
-	    else {
-		print "- $rc\n";
-	    }
+	next unless($#cmd > -1);
+
+	if($opt_r eq 'a') {
+	    system(@cmd);
+	}
+	else {
+	    print join(' ', @cmd)."\n";
+	}
+    }
+
+    unless($opt_b && $#systemd_restart > -1) {
+	my @cmd = (qq(systemctl), qq(restart), @systemd_restart);
+	if($opt_r eq 'a') {
+	    print "Restarting services using systemd...\n";
+	    system(@cmd);
+	}
+	else {
+	    print join(' ', @cmd)."\n";
 	}
     }
 }
 else {
-    $ui->query_pkgs('Services to be restarted:', $nrconf{defno}, \%restart, sub { system('/etc/init.d/'.shift, 'restart'); });
+    my $o = 0;
+
+    $ui->query_pkgs('Services to be restarted:', $nrconf{defno}, \%restart,
+		    sub {
+			my @cmd = restart_cmd(shift);
+			system(@cmd) if($#cmd > -1);
+		    });
+
+    if($#systemd_restart > -1) {
+	print "Restarting services using systemd...\n";
+	system(qq(systemctl), qq(restart), @systemd_restart);
+    }
 }

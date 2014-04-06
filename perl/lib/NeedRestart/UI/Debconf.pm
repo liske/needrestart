@@ -107,7 +107,7 @@ sub query_pkgs($$$$$) {
     my $cb = shift;
 
     # prepare checklist array
-    my @l = map { my $p = $_; map { ($_) } sort keys %{ $pkgs->{$p} }} sort keys %$pkgs;
+    my @l = sort keys %$pkgs;
 
     dcres(set('needrestart/ui-query_pkgs', join(', ', ($defno ? () : @l) )));
 
@@ -129,10 +129,10 @@ sub query_pkgs($$$$$) {
     my @s = split(/, /, $s);
 
     if($#s == -1) {
-	print STDERR "No rc scripts should be restarted...\n";
+	print STDERR "No services should be restarted...\n";
     }
 
-    # restart each selected rc.d script
+    # restart each selected service script
     &$cb($_) for @s;
 }
 

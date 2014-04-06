@@ -1,3 +1,16 @@
+Changes in 0.6
+==============
+
+systemd support
+---------------
+
+If needrestart detects a running systemd it is used as primary source
+to identify service names. This speedups the detection significantly.
+
+The traditional detection using package managers is still used if systemd
+is not running or systemctl does not return a service name for a PID.
+
+
 Changes in 0.3
 ==============
 

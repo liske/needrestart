@@ -92,12 +92,8 @@ sub query_pkgs($$$$$) {
     my $cb = shift;
 
     print "$out\n";
-    foreach my $pkg (sort keys %$pkgs) {
-	print "\n$pkg:\n";
-
-	foreach my $rc (keys %{ $pkgs->{$pkg} }) {
-	    &$cb($rc) if(_query("Restart $rc?", ($def ? 'N' : 'Y')) eq 'yes');
-	}
+    foreach my $rc (sort keys %$pkgs) {
+	&$cb($rc) if(_query("Restart $rc?", ($def ? 'N' : 'Y')) eq 'yes');
     }
 }
 
