@@ -10,7 +10,7 @@ needrestart (0.6) unstable; urgency=low
   * Print full restart commands in list mode.
     (Debian Bug#731028 by Paul Wise <pabs@debian.org>)
 
- -- Thomas Liske <thomas@fiasko-nw.net>  
+ -- Thomas Liske <thomas@fiasko-nw.net>  Mon, 07 Apr 2014 22:52:18 +0200
 
 needrestart (0.5) unstable; urgency=low
 
