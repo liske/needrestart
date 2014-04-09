@@ -1,3 +1,10 @@
+needrestart (0.7) unstable; urgency=low
+
+  * Support GNU formatted device ids.
+    (github issue #1 by Phillip Berndt [@phillipberndt])
+
+ -- Thomas Liske <thomas@fiasko-nw.net>  
+
 needrestart (0.6) unstable; urgency=low
 
   * Add lightdm to blacklist.
