@@ -210,12 +210,14 @@ for my $pid (@pids) {
     # get executable (Linux 2.2+)
     my $bin = readlink("$nrconf{procfs}/$pid/exe");
 
-    # orphaned binary
-    $restart++ if (defined($bin) && $bin =~ s/ \(deleted\)$//);
     $ui->progress_step($bin);
 
     # ignore kernel threads
     next unless(defined($bin));
+
+    # orphaned binary
+    $restart++ if (defined($bin) && $bin =~ s/ \(deleted\)$//);  # Linux
+    $restart++ if (defined($bin) && $bin =~ s/^\(deleted\)//);   # Linux VServer
 
     # ignore blacklisted binaries
     next if(grep { $bin =~ /$_/; } @{$nrconf{blacklist}});

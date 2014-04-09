@@ -1,5 +1,7 @@
 needrestart (0.7) unstable; urgency=low
 
+  * Handle Linux VServer naming convention on deleted binaries.
+    (Thanks to Phillip Berndt [@phillipberndt])
   * Support GNU formatted device ids.
     (github issue #1 by Phillip Berndt [@phillipberndt])
 
