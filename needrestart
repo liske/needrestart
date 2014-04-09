@@ -203,7 +203,8 @@ my %restart;
 
 # inspect only pids
 my @pids = sort { $a <=> $b} map {/^$nrconf{procfs}\/(\d+)$/ ? ($1) : ()} <$nrconf{procfs}/*>;
-$ui->progress_prep($#pids + 1, 'Scanning processes');
+$ui->progress_prep($#pids + 1, 'Scanning processes 1/2');
+my %stage2;
 for my $pid (@pids) {
     my $restart = 0;
 
@@ -263,6 +264,14 @@ for my $pid (@pids) {
 
     # restart needed?
     next unless($restart);
+
+    $stage2{$pid} = $bin;
+}
+
+$ui->progress_prep(scalar %stage2, 'Scanning processes 2/2');
+foreach my $pid (sort {$a <=> $b} keys %stage2) {
+    my $bin = $stage2{$pid};
+    $ui->progress_step($bin);
 
     if($is_systemd) {
 	my $systemctl = fork_pipe(qq(systemctl), qq(-n), qq(0), qq(--full), qq(status), $pid);
