@@ -390,7 +390,7 @@ if($opt_b || $opt_r ne 'i') {
 	}
     }
 
-    unless($opt_b && $#systemd_restart > -1) {
+    unless($opt_b || $#systemd_restart == -1) {
 	my @cmd = (qq(systemctl), qq(restart), @systemd_restart);
 	if($opt_r eq 'a') {
 	    print "Restarting services using systemd...\n";
