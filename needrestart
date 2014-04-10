@@ -265,7 +265,27 @@ for my $pid (@pids) {
     # restart needed?
     next unless($restart);
 
-    $stage2{$pid} = $bin;
+    # find parent process
+    open(HSTAT, '<', "$nrconf{procfs}/$pid/stat") || next;
+    my $stat = <HSTAT>;
+    close(HSTAT);
+    if($stat =~ /^\d+ \(.+\) [RSDZTW] (\d+) / && $1 != $pid) {
+	my $ppid = $1;
+	print STDERR "#$pid is a child of #$ppid\n" if($nrconf{verbose});
+
+	unless(exists($stage2{$ppid})) {
+	    my $bin = readlink("$nrconf{procfs}/$ppid/exe");
+
+	    # ignore kernel threads
+	    next unless(defined($bin));
+
+	    $stage2{$ppid} = $bin;
+	}
+    }
+    else {
+	print STDERR "#$pid is not a child\n" if($nrconf{verbose});
+	$stage2{$pid} = $bin;
+    }
 }
 
 $ui->progress_prep(scalar %stage2, 'Scanning processes 2/2');
