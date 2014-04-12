@@ -32,6 +32,9 @@ use Getopt::Std;
 use strict;
 use warnings;
 
+system("type pacman 1> /dev/null 2> /dev/null");
+exit 0 if ($? != -1 && $? >> 8);
+
 our $opt_v;
 getopts('c:v');
 
