@@ -9,6 +9,8 @@ needrestart (0.7) unstable; urgency=low
     (fixes detecting  apache2's rc script).
   * Improve rc script detection by using a two pass
     analysis.
+  * Fallback to NeedRestart::UI::stdio while being verbose.
+    (Debian Bug#744000 by Paul Wise <pabs@debian.org>)
   * Add default UI configuration option.
     (Debian Bug#744001 by Paul Wise <pabs@debian.org>)
 
