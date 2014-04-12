@@ -269,7 +269,7 @@ for my $pid (@pids) {
     open(HSTAT, '<', "$nrconf{procfs}/$pid/stat") || next;
     my $stat = <HSTAT>;
     close(HSTAT);
-    if($stat =~ /^\d+ \(.+\) [RSDZTW] (\d+) / && $1 != $pid) {
+    if($stat =~ /^\d+ \(.+\) [RSDZTW] (\d+) / && $1 != $pid && $1 != 1) {
 	my $ppid = $1;
 	print STDERR "#$pid is a child of #$ppid\n" if($nrconf{verbose});
 
