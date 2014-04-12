@@ -309,6 +309,7 @@ foreach my $pid (sort {$a <=> $b} keys %stage2) {
     foreach my $hook (sort <$nrconf{hook_d}/*>) {
 	print STDERR "#$pid running $hook\n" if($nrconf{verbose});
 
+	my $found = 0;
 	my $prun = fork_pipe($hook, ($nrconf{verbose} ? qw(-v) : ()), $bin);
 	while(<$prun>) {
 	    chomp;
@@ -326,7 +327,8 @@ foreach my $pid (sort {$a <=> $b} keys %stage2) {
 		unless(%lsb && exists($lsb{'default-start'})) {
 		    # If the script has no LSB tags we consider to call it later - they
 		    # are broken anyway.
-		    $restart{$v[1]}++
+		    $restart{$v[1]}++;
+		    $found++;
 		}
 		# In the run-levels S and 1 no daemons are being started (normaly).
 		# We don't call any rc.d script not started in the current run-level.
@@ -342,13 +344,15 @@ foreach my $pid (sort {$a <=> $b} keys %stage2) {
 			    if(int($p) == $pid) {
 				print STDERR "#$pid has been started by $v[1] - triggering\n" if($nrconf{verbose});
 				$restart{$v[1]}++;
+				$found++;
 				last;
 			    }
 			}
 		    }
 		    else {
 			print STDERR "no pidfile reference found at $v[1] - triggering\n" if($nrconf{verbose});
-			$restart{$v[1]}++
+			$restart{$v[1]}++;
+			$found++;
 		    }
 		}
 		else {
@@ -357,7 +361,7 @@ foreach my $pid (sort {$a <=> $b} keys %stage2) {
 	    }
 	}
 
-	last if(defined($pkg));
+	last if($found);
     }
 }
 $ui->progress_fin(1);
