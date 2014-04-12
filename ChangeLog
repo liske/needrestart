@@ -4,6 +4,11 @@ needrestart (0.7) unstable; urgency=low
     (Thanks to Phillip Berndt [@phillipberndt])
   * Support GNU formatted device ids.
     (github issue #1 by Phillip Berndt [@phillipberndt])
+  * Hooks: Use only available package managers.
+  * Hooks: Ignore hooks not returning any rc scripts
+    (fixes detecting  apache2's rc script).
+  * Improve rc script detection by using a two pass
+    analysis.
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
