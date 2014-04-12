@@ -72,13 +72,20 @@ sub needrestart_ui_register($$) {
     $UIs{$pkg} = $prio;
 }
 
-sub needrestart_ui_init($) {
+sub needrestart_ui_init($$) {
     my $debug = shift;
+    my $prefui = shift;
 
-    # autoload IV modules
+    # load prefered UI module
+    if(defined($prefui)) {
+	return if(eval "use $prefui; 1;");
+    }
+
+    # autoload UI modules
     foreach my $module (findsubmod NeedRestart::UI) {
-	eval "use $module;";
-	warn "Error loading $module: $@\n" if($@ && $debug);
+	unless(eval "use $module; 1;") {
+	    warn "Error loading $module: $@\n" if($@ && $debug);
+	}
     }
 }
 
@@ -86,11 +93,8 @@ sub needrestart_ui {
     my $debug = shift;
     my $prefui = shift;
 
-    needrestart_ui_init($debug) unless(%UIs);
-    my ($ui) = (
-	defined($prefui) && exists($UIs{$prefui}) ? $prefui :
-	sort { $UIs{$b} <=> $UIs{$a} } keys %UIs
-    );
+    needrestart_ui_init($debug, $prefui) unless(%UIs);
+    my ($ui) = sort { $UIs{$b} <=> $UIs{$a} } keys %UIs;
 
     return undef unless($ui);
 
