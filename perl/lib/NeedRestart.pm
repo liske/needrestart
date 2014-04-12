@@ -84,9 +84,13 @@ sub needrestart_ui_init($) {
 
 sub needrestart_ui {
     my $debug = shift;
+    my $prefui = shift;
 
     needrestart_ui_init($debug) unless(%UIs);
-    my ($ui) = sort { $UIs{$b} <=> $UIs{$a} } keys %UIs;
+    my ($ui) = (
+	defined($prefui) && exists($UIs{$prefui}) ? $prefui :
+	sort { $UIs{$b} <=> $UIs{$a} } keys %UIs
+    );
 
     return undef unless($ui);
 
