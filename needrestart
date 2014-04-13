@@ -248,18 +248,18 @@ for my $pid (@pids) {
 	    # get on-disk info
 	    my ($sdev, $sinode) = stat($path);
 	    last unless(defined($sinode));
-		my @sdevs = (
-			# glibc gnu_dev_* definition from sysmacros.h
-			sprintf("%02x:%02x", (($sdev >> 8) & 0xfff) | (($sdev >> 32) & ~0xfff), (($sdev & 0xff) | (($sdev >> 12) & ~0xff))),
-			# Traditional definition of major(3) and minor(3)
-			sprintf("%02x:%02x", $sdev >> 8, $sdev & 0xff)
+	    my @sdevs = (
+		# glibc gnu_dev_* definition from sysmacros.h
+		sprintf("%02x:%02x", (($sdev >> 8) & 0xfff) | (($sdev >> 32) & ~0xfff), (($sdev & 0xff) | (($sdev >> 12) & ~0xff))),
+		# Traditional definition of major(3) and minor(3)
+		sprintf("%02x:%02x", $sdev >> 8, $sdev & 0xff)
 		);
 	    
 	    # compare maps content vs. on-disk
-		unless($mdev ~~ @sdevs && $minode eq $sinode) {
-			print STDERR "#$pid uses obsolete $path\n" if($nrconf{verbose});
-			$restart++;
-			last;
+	    unless($minode eq $sinode && grep {$mdev eq $_} @sdevs) {
+		print STDERR "#$pid uses obsolete $path\n" if($nrconf{verbose});
+		$restart++;
+		last;
 	    }
 	}
 	close(HMAP);
