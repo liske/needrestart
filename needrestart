@@ -292,86 +292,88 @@ for my $pid (@pids) {
 }
 $ui->progress_fin(1);
 
-$ui->progress_prep(scalar %stage2, 'Scanning candidates');
-foreach my $pid (sort {$a <=> $b} keys %stage2) {
-    my $bin = $stage2{$pid};
-    $ui->progress_step($bin);
+if(scalar %stage2) {
+    $ui->progress_prep(scalar %stage2, 'Scanning candidates');
+    foreach my $pid (sort {$a <=> $b} keys %stage2) {
+	my $bin = $stage2{$pid};
+	$ui->progress_step($bin);
 
-    # ignore blacklisted binaries
-    next if(grep { $bin =~ /$_/; } @{$nrconf{blacklist}});
+	# ignore blacklisted binaries
+	next if(grep { $bin =~ /$_/; } @{$nrconf{blacklist}});
 
-    if($is_systemd) {
-	my $systemctl = fork_pipe(qq(systemctl), qq(-n), qq(0), qq(--full), qq(status), $pid);
-	my $ret = <$systemctl>;
-	close($systemctl);
+	if($is_systemd) {
+	    my $systemctl = fork_pipe(qq(systemctl), qq(-n), qq(0), qq(--full), qq(status), $pid);
+	    my $ret = <$systemctl>;
+	    close($systemctl);
 
-	if(defined($ret) && $ret =~ /^([^.]+\.service) /) {
-	    print STDERR "#$pid is $1\n" if($nrconf{verbose});
-	    $restart{$1}++;
-	    next;
-	}
-    }
-
-    my $pkg;
-    foreach my $hook (sort <$nrconf{hook_d}/*>) {
-	print STDERR "#$pid running $hook\n" if($nrconf{verbose});
-
-	my $found = 0;
-	my $prun = fork_pipe($hook, ($nrconf{verbose} ? qw(-v) : ()), $bin);
-	while(<$prun>) {
-	    chomp;
-	    my @v = split(/\|/);
-
-	    if($v[0] eq 'PACKAGE' && $v[1]) {
-		$pkg = $v[1];
-		print STDERR "#$pid package: $v[1]\n" if($nrconf{verbose});
+	    if(defined($ret) && $ret =~ /^([^.]+\.service) /) {
+		print STDERR "#$pid is $1\n" if($nrconf{verbose});
+		$restart{$1}++;
 		next;
 	    }
+	}
 
-	    if($v[0] eq 'RC') {
-		my %lsb = parse_lsbinit($v[1]);
+	my $pkg;
+	foreach my $hook (sort <$nrconf{hook_d}/*>) {
+	    print STDERR "#$pid running $hook\n" if($nrconf{verbose});
 
-		unless(%lsb && exists($lsb{'default-start'})) {
-		    # If the script has no LSB tags we consider to call it later - they
-		    # are broken anyway.
-		    $restart{$v[1]}++;
-		    $found++;
+	    my $found = 0;
+	    my $prun = fork_pipe($hook, ($nrconf{verbose} ? qw(-v) : ()), $bin);
+	    while(<$prun>) {
+		chomp;
+		my @v = split(/\|/);
+
+		if($v[0] eq 'PACKAGE' && $v[1]) {
+		    $pkg = $v[1];
+		    print STDERR "#$pid package: $v[1]\n" if($nrconf{verbose});
+		    next;
 		}
-		# In the run-levels S and 1 no daemons are being started (normaly).
-		# We don't call any rc.d script not started in the current run-level.
-		elsif($lsb{'default-start'} =~ /$runlevel/) {
-		    # If a pidfile has been found, try to look for the daemon and ignore
-		    # any forked/detached childs (just a heuristic due Debian Bug#721810).
-		    if(exists($lsb{pidfiles})) {
-			foreach my $pidfile (@{ $lsb{pidfiles} }) {
-			    open(HPID, '<', "$pidfile") || next;
-			    my $p = <HPID>;
-			    close(HPID);
 
-			    if(int($p) == $pid) {
-				print STDERR "#$pid has been started by $v[1] - triggering\n" if($nrconf{verbose});
-				$restart{$v[1]}++;
-				$found++;
-				last;
-			    }
-			}
-		    }
-		    else {
-			print STDERR "no pidfile reference found at $v[1] - triggering\n" if($nrconf{verbose});
+		if($v[0] eq 'RC') {
+		    my %lsb = parse_lsbinit($v[1]);
+
+		    unless(%lsb && exists($lsb{'default-start'})) {
+			# If the script has no LSB tags we consider to call it later - they
+			# are broken anyway.
 			$restart{$v[1]}++;
 			$found++;
 		    }
-		}
-		else {
-		    print STDERR "#$pid rc.d script $v[1] should not start in the current run-level($runlevel)\n" if($nrconf{verbose});
+		    # In the run-levels S and 1 no daemons are being started (normaly).
+		    # We don't call any rc.d script not started in the current run-level.
+		    elsif($lsb{'default-start'} =~ /$runlevel/) {
+			# If a pidfile has been found, try to look for the daemon and ignore
+			# any forked/detached childs (just a heuristic due Debian Bug#721810).
+			if(exists($lsb{pidfiles})) {
+			    foreach my $pidfile (@{ $lsb{pidfiles} }) {
+				open(HPID, '<', "$pidfile") || next;
+				my $p = <HPID>;
+				close(HPID);
+
+				if(int($p) == $pid) {
+				    print STDERR "#$pid has been started by $v[1] - triggering\n" if($nrconf{verbose});
+				    $restart{$v[1]}++;
+				    $found++;
+				    last;
+				}
+			    }
+			}
+			else {
+			    print STDERR "no pidfile reference found at $v[1] - triggering\n" if($nrconf{verbose});
+			    $restart{$v[1]}++;
+			    $found++;
+			}
+		    }
+		    else {
+			print STDERR "#$pid rc.d script $v[1] should not start in the current run-level($runlevel)\n" if($nrconf{verbose});
+		    }
 		}
 	    }
-	}
 
-	last if($found);
+	    last if($found);
+	}
     }
+    $ui->progress_fin(1);
 }
-$ui->progress_fin(1);
 
 print "NEEDRESTART-VER: $NeedRestart::VERSION\n" if($opt_b);
 
