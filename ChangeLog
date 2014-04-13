@@ -6,7 +6,9 @@ needrestart (0.7) unstable; urgency=low
     (github issue #1 by Phillip Berndt [@phillipberndt])
   * Hooks: Use only available package managers.
   * Hooks: Ignore hooks not returning any rc scripts
-    (fixes detecting  apache2's rc script).
+    (fixes detecting apache2's rc script).
+  * Hooks: Prefer rc scripts w/ matching pid
+    (fixes calling unnecessary rc scripts like libvirt-guests).
   * Improve rc script detection by using a two pass
     analysis.
   * Fallback to NeedRestart::UI::stdio while being verbose.

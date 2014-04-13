@@ -319,6 +319,7 @@ if(scalar %stage2) {
 
 	    my $found = 0;
 	    my $prun = fork_pipe($hook, ($nrconf{verbose} ? qw(-v) : ()), $bin);
+	    my @nopids;
 	    while(<$prun>) {
 		chomp;
 		my @v = split(/\|/);
@@ -335,8 +336,8 @@ if(scalar %stage2) {
 		    unless(%lsb && exists($lsb{'default-start'})) {
 			# If the script has no LSB tags we consider to call it later - they
 			# are broken anyway.
-			$restart{$v[1]}++;
-			$found++;
+			print STDERR "no LSB headers found at $v[1]\n" if($nrconf{verbose});
+			push(@nopids, $v[1]);
 		    }
 		    # In the run-levels S and 1 no daemons are being started (normaly).
 		    # We don't call any rc.d script not started in the current run-level.
@@ -358,15 +359,22 @@ if(scalar %stage2) {
 			    }
 			}
 			else {
-			    print STDERR "no pidfile reference found at $v[1] - triggering\n" if($nrconf{verbose});
-			    $restart{$v[1]}++;
-			    $found++;
+ 			    print STDERR "no pidfile reference found at $v[1]\n" if($nrconf{verbose});
+			    push(@nopids, $v[1]);
 			}
 		    }
 		    else {
 			print STDERR "#$pid rc.d script $v[1] should not start in the current run-level($runlevel)\n" if($nrconf{verbose});
 		    }
 		}
+	    }
+
+	    # No perfect hit - call any rc scripts instead.
+	    if(!$found && $#nopids > -1) {
+		foreach my $rc (@nopids) {
+		    $restart{$rc}++;
+		}
+		$found++;
 	    }
 
 	    last if($found);
