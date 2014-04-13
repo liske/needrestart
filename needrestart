@@ -297,6 +297,9 @@ foreach my $pid (sort {$a <=> $b} keys %stage2) {
     my $bin = $stage2{$pid};
     $ui->progress_step($bin);
 
+    # ignore blacklisted binaries
+    next if(grep { $bin =~ /$_/; } @{$nrconf{blacklist}});
+
     if($is_systemd) {
 	my $systemctl = fork_pipe(qq(systemctl), qq(-n), qq(0), qq(--full), qq(status), $pid);
 	my $ret = <$systemctl>;

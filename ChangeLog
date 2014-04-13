@@ -13,6 +13,8 @@ needrestart (0.7) unstable; urgency=low
     (Debian Bug#744000 by Paul Wise <pabs@debian.org>)
   * Add default UI configuration option.
     (Debian Bug#744001 by Paul Wise <pabs@debian.org>)
+  * Apply blacklist while processing parent processes.
+    (Debian Bug#744002 by Paul Wise <pabs@debian.org>)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
