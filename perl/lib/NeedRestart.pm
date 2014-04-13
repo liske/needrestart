@@ -100,7 +100,7 @@ sub needrestart_ui {
 
     print STDERR "Using UI '$ui'...\n" if($debug);
 
-    return $ui->new();
+    return $ui->new($debug);
 }
 
 1;

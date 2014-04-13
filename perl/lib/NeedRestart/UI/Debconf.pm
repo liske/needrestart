@@ -52,12 +52,15 @@ sub dcres(@) {
     return @bulk;
 }
 
-sub new() {
+sub new {
     my $class = shift;
+    my $debug = shift;
 
     dcres( x_loadtemplatefile(DCTMPL) ) if(-r DCTMPL);
 
-    return bless {}, $class;
+    return bless {
+	debug => $debug
+    }, $class;
 }
 
 sub progress_prep($$$) {

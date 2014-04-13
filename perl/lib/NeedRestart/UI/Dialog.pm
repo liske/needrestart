@@ -33,10 +33,12 @@ use UI::Dialog;
 
 needrestart_ui_register(__PACKAGE__, NEEDRESTART_PRIO_MEDIUM);
 
-sub new() {
+sub new {
     my $class = shift;
+    my $debug = shift;
 
     return bless {
+	debug => $debug,
 	dialog => new UI::Dialog(backtitle => 'needrestart'),
     }, $class;
 }

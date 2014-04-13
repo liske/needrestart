@@ -42,19 +42,20 @@ sub progress_prep($$$) {
     $|++;
 
     print "$out";
+    print "\n" if($self->{debug});
 }
 
 sub progress_step($$) {
     my $self = shift;
     my $bin = shift;
 
-    print '.' if($bin);
+    print '.' if($bin && !$self->{debug});
 }
 
 sub progress_fin($) {
     my $self = shift;
 
-    print "\n";
+    print "\n" if(!$self->{debug});
 
     $|--;
 }
