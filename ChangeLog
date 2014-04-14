@@ -1,5 +1,7 @@
-needrestart (0.7) unstable; urgency=low
+needrestart (0.7) unstable; urgency=medium
 
+  * Improved rc script detection, e.g.: previous releases failed to
+    detect apache2's init script after upgrading libssl1.0.0.
   * Handle Linux VServer naming convention on deleted binaries.
     (Thanks to Phillip Berndt [@phillipberndt])
   * Support GNU formatted device ids.
@@ -19,7 +21,7 @@ needrestart (0.7) unstable; urgency=low
     (Debian Bug#744002 by Paul Wise <pabs@debian.org>)
   * Apply Debian's 01-makefile-fix.diff upstream.
 
- -- Thomas Liske <thomas@fiasko-nw.net>  
+ -- Thomas Liske <thomas@fiasko-nw.net>  Mon, 14 Apr 2014 21:50:15 +0200
 
 needrestart (0.6) unstable; urgency=low
 
