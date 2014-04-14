@@ -1,6 +1,6 @@
 #!/bin/sh
 
-RUNDIR=/var/run/needrestart
+RUNDIR=/run/needrestart
 
 mkdir -p "$RUNDIR"
 

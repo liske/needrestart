@@ -1,6 +1,6 @@
 #!/bin/sh
 
-RUNDIR=/var/run/needrestart
+RUNDIR=/run/needrestart
 
 # dpkg had an error... exit silently
 if [ -e "$RUNDIR/errored" ]; then
