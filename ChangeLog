@@ -17,6 +17,7 @@ needrestart (0.7) unstable; urgency=low
     (Debian Bug#744001 by Paul Wise <pabs@debian.org>)
   * Apply blacklist while processing parent processes.
     (Debian Bug#744002 by Paul Wise <pabs@debian.org>)
+  * Apply Debian's 01-makefile-fix.diff upstream.
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
