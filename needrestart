@@ -292,8 +292,8 @@ for my $pid (@pids) {
 }
 $ui->progress_fin(1);
 
-if(scalar %stage2) {
-    $ui->progress_prep(scalar %stage2, 'Scanning candidates');
+if(scalar keys %stage2) {
+    $ui->progress_prep(scalar keys %stage2, 'Scanning candidates');
     foreach my $pid (sort {$a <=> $b} keys %stage2) {
 	my $bin = $stage2{$pid};
 	$ui->progress_step($bin);
