@@ -1,3 +1,11 @@
+needrestart (0.8) unstable; urgency=low
+
+  * Fix non-numeric argument on progress_prep call.
+    (Debian Bug#744961 by Cristian Ionescu-Idbohrn
+    <cristian.ionescu-idbohrn@axis.com>)
+
+ -- Thomas Liske <thomas@fiasko-nw.net>  
+
 needrestart (0.7) unstable; urgency=medium
 
   * Improved rc script detection, e.g.: previous releases failed to
