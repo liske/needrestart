@@ -49,7 +49,7 @@ our @EXPORT = qw(
 our @EXPORT_OK = qw(
     needrestart_ui_register
     needrestart_ui_init
-    needrestart_srclang_register
+    needrestart_scrlang_register
 );
 
 our %EXPORT_TAGS = (
@@ -62,7 +62,7 @@ our %EXPORT_TAGS = (
 	needrestart_ui_init
     )],
     scrlang => [qw(
-	needrestart_srclang_register
+	needrestart_scrlang_register
     )],
 );
 
@@ -117,9 +117,28 @@ sub needrestart_scrlang_register($) {
     $ScrLangs{$pkg}++;
 }
 
-sub needrestart_scrlang_check($) {
-    my $self = shift;
+sub needrestart_scrlang_init($) {
+    my $debug = shift;
 
+    # autoload ScrLang modules
+    foreach my $module (findsubmod NeedRestart::ScrLang) {
+	unless(eval "use $module; 1;") {
+	    warn "Error loading $module: $@\n" if($@ && $debug);
+	}
+    }
+}
+
+sub needrestart_scrlang_check($$$) {
+    my $debug = shift;
+    my $pid = shift;
+    my $bin = shift;
+
+$debug++;
+
+    needrestart_scrlang_init($debug) unless(%ScrLangs);
+
+    foreach my $scrlang (keys %ScrLangs) {
+    }
 }
 
 1;

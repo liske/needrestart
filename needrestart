@@ -266,6 +266,10 @@ for my $pid (@pids) {
 	close(HMAP);
     }
 
+    unless($restart) {
+	$restart++ if(needrestart_scrlang_check($nrconf{verbose}, $pid, $bin));
+    }
+
     # restart needed?
     next unless($restart);
 
