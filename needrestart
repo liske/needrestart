@@ -27,6 +27,7 @@
 use Getopt::Std;
 use NeedRestart;
 use NeedRestart::UI;
+use NeedRestart::ScrLang;
 
 use warnings;
 use strict;

@@ -43,11 +43,13 @@ our @EXPORT = qw(
     NEEDRESTART_PRIO_HIGH
 
     needrestart_ui
+    needrestart_scrlang_check
 );
 
 our @EXPORT_OK = qw(
     needrestart_ui_register
     needrestart_ui_init
+    needrestart_srclang_register
 );
 
 our %EXPORT_TAGS = (
@@ -58,6 +60,9 @@ our %EXPORT_TAGS = (
 
 	needrestart_ui_register
 	needrestart_ui_init
+    )],
+    scrlang => [qw(
+	needrestart_srclang_register
     )],
 );
 
@@ -101,6 +106,20 @@ sub needrestart_ui {
     print STDERR "Using UI '$ui'...\n" if($debug);
 
     return $ui->new($debug);
+}
+
+
+my %ScrLangs;
+
+sub needrestart_scrlang_register($) {
+    my $pkg = shift;
+
+    $ScrLangs{$pkg}++;
+}
+
+sub needrestart_scrlang_check($) {
+    my $self = shift;
+
 }
 
 1;
