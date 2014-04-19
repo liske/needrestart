@@ -22,17 +22,17 @@
 #   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 #
 
-package NeedRestart::ScrLang::Perl;
+package NeedRestart::Interp::Perl;
 
 use strict;
 use warnings;
 
-use parent qw(NeedRestart::ScrLang);
-use NeedRestart qw(:scrlang);
+use parent qw(NeedRestart::Interp);
+use NeedRestart qw(:interp);
 use NeedRestart::Utils;
 use Module::ScanDeps;
 
-needrestart_scrlang_register(__PACKAGE__);
+needrestart_interp_register(__PACKAGE__);
 
 sub isa {
     my $self = shift;

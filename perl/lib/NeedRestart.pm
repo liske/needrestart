@@ -44,13 +44,13 @@ our @EXPORT = qw(
     NEEDRESTART_PRIO_HIGH
 
     needrestart_ui
-    needrestart_scrlang_check
+    needrestart_interp_check
 );
 
 our @EXPORT_OK = qw(
     needrestart_ui_register
     needrestart_ui_init
-    needrestart_scrlang_register
+    needrestart_interp_register
 );
 
 our %EXPORT_TAGS = (
@@ -62,8 +62,8 @@ our %EXPORT_TAGS = (
 	needrestart_ui_register
 	needrestart_ui_init
     )],
-    scrlang => [qw(
-	needrestart_scrlang_register
+    interp => [qw(
+	needrestart_interp_register
     )],
 );
 
@@ -110,40 +110,40 @@ sub needrestart_ui {
 }
 
 
-my %ScrLangs;
+my %Interps;
 
-sub needrestart_scrlang_register($) {
+sub needrestart_interp_register($) {
     my $pkg = shift;
 
-    $ScrLangs{$pkg} = new $pkg();
+    $Interps{$pkg} = new $pkg();
 }
 
-sub needrestart_scrlang_init($) {
+sub needrestart_interp_init($) {
     my $debug = shift;
 
-    # autoload ScrLang modules
-    foreach my $module (findsubmod NeedRestart::ScrLang) {
+    # autoload Interp modules
+    foreach my $module (findsubmod NeedRestart::Interp) {
 	unless(eval "use $module; 1;") {
 	    warn "Error loading $module: $@\n" if($@ && $debug);
 	}
     }
 }
 
-sub needrestart_scrlang_check($$$) {
+sub needrestart_interp_check($$$) {
     my $debug = shift;
     my $pid = shift;
     my $bin = shift;
 
 $debug++;
 
-    needrestart_scrlang_init($debug) unless(%ScrLangs);
+    needrestart_interp_init($debug) unless(%Interps);
 
-    foreach my $scrlang (keys %ScrLangs) {
-	if($scrlang->isa($pid, $bin)) {
-	    print STDERR "#$pid is a $scrlang\n" if($debug);
+    foreach my $interp (keys %Interps) {
+	if($interp->isa($pid, $bin)) {
+	    print STDERR "#$pid is a $interp\n" if($debug);
 
 	    my $ps = nr_ptable_pid($pid);
-	    my %files = $scrlang->files($pid);
+	    my %files = $interp->files($pid);
 
 	    if(grep {$_ > $ps->start} values %files) {
 		if($debug) {

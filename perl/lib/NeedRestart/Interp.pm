@@ -22,25 +22,28 @@
 #   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 #
 
-package NeedRestart::ScrLang::Python;
+package NeedRestart::Interp;
 
 use strict;
 use warnings;
 
-use parent qw(NeedRestart::ScrLang);
-use NeedRestart qw(:scrlang);
+sub new {
+    my $class = shift;
+    my $debug = shift;
 
+    return bless {
+	debug => $debug,
+    }, $class;
+}
 
-needrestart_scrlang_register(__PACKAGE__);
-
-sub isa {
+sub isa($$) {
     my $self = shift;
-    my $pid = shift;
-    my $bin = shift;
-
-    return 1 if($bin =~ m@/usr/(local/)?bin/python@);
 
     return 0;
+}
+
+sub files($$) {
+    return ();
 }
 
 1;

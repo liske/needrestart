@@ -27,7 +27,7 @@
 use Getopt::Std;
 use NeedRestart;
 use NeedRestart::UI;
-use NeedRestart::ScrLang;
+use NeedRestart::Interp;
 
 use warnings;
 use strict;
@@ -267,7 +267,7 @@ for my $pid (@pids) {
     }
 
     unless($restart) {
-	$restart++ if(needrestart_scrlang_check($nrconf{verbose}, $pid, $bin));
+	$restart++ if(needrestart_interp_check($nrconf{verbose}, $pid, $bin));
     }
 
     # restart needed?

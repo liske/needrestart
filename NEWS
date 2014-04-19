@@ -1,11 +1,11 @@
 Changes in 0.8
 ==============
 
-ScrLang
--------
+interpreters (Perl et. al.)
+---------------------------
 
 Needrestart tries to detect if interpreters are using old source files.
-There are special scanner packages (NeedRestart::ScrLang::*) which implements
+There are special scanner packages (NeedRestart::Interp::*) which implements
 the interpreter specific detection. Since most interpreter languages allow
 dynamic source code loading (eval) it is possible to not detect outdated
 used source code.
