@@ -1,3 +1,16 @@
+Changes in 0.8
+==============
+
+ScrLang
+-------
+
+Needrestart tries to detect if interpreters are using old source files.
+There are special scanner packages (NeedRestart::ScrLang::*) which implements
+the interpreter specific detection. Since most interpreter languages allow
+dynamic source code loading (eval) it is possible to not detect outdated
+used source code.
+
+
 Changes in 0.6
 ==============
 
