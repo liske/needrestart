@@ -33,4 +33,14 @@ use NeedRestart qw(:scrlang);
 
 needrestart_scrlang_register(__PACKAGE__);
 
+sub isa {
+    my $self = shift;
+    my $pid = shift;
+    my $bin = shift;
+
+    return 1 if($bin =~ m@/usr/(local/)?bin/python@);
+
+    return 0;
+}
+
 1;

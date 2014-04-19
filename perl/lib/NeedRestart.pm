@@ -114,7 +114,7 @@ my %ScrLangs;
 sub needrestart_scrlang_register($) {
     my $pkg = shift;
 
-    $ScrLangs{$pkg}++;
+    $ScrLangs{$pkg} = new $pkg();
 }
 
 sub needrestart_scrlang_init($) {
@@ -138,6 +138,9 @@ $debug++;
     needrestart_scrlang_init($debug) unless(%ScrLangs);
 
     foreach my $scrlang (keys %ScrLangs) {
+	if($scrlang->isa($pid, $bin)) {
+	    print STDERR "#$pid is a $scrlang\n" if($debug);
+	}
     }
 }
 
