@@ -5,3 +5,4 @@ perl/MYMETA.yml
 perl/Makefile
 perl/blib/
 perl/pm_to_blib
+*~
