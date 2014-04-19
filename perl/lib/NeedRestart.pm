@@ -27,6 +27,7 @@ package NeedRestart;
 use strict;
 use warnings;
 use Module::Find;
+use NeedRestart::Utils;
 
 use constant {
     NEEDRESTART_PRIO_LOW	=> 1,
@@ -140,8 +141,23 @@ $debug++;
     foreach my $scrlang (keys %ScrLangs) {
 	if($scrlang->isa($pid, $bin)) {
 	    print STDERR "#$pid is a $scrlang\n" if($debug);
+
+	    my $ps = nr_ptable_pid($pid);
+	    my %files = $scrlang->files($pid);
+
+	    if(grep {$_ > $ps->start} values %files) {
+		if($debug) {
+		    print STDERR "#$pid uses obsolete script file(s):";
+		    print STDERR join("\n#$pid =>", '', map {($files{$_} > $ps->start ? $_ : ())} keys %files);
+		    print STDERR "\n";
+		}
+
+		return 1;
+	    }
 	}
     }
+
+    return 0;
 }
 
 1;

@@ -22,44 +22,68 @@
 #   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 #
 
-package NeedRestart::ScrLang::Perl;
+package NeedRestart::Utils;
 
 use strict;
 use warnings;
 
-use parent qw(NeedRestart::ScrLang);
-use NeedRestart qw(:scrlang);
-use NeedRestart::Utils;
-use Module::ScanDeps;
+use Proc::ProcessTable;
 
-needrestart_scrlang_register(__PACKAGE__);
+require Exporter;
+our @ISA = qw(Exporter);
 
-sub isa {
-    my $self = shift;
+our @EXPORT = qw(
+    nr_ptable_pid
+    nr_parse_cmd
+    nr_stat
+);
+
+my %ptable = map {$_->pid => $_} @{ new Proc::ProcessTable(enable_ttys => 0)->table };
+
+sub nr_ptable_pid($) {
     my $pid = shift;
-    my $bin = shift;
 
-    return 1 if($bin =~ m@/usr/(local/)?bin/perl@);
-
-    return 0;
+    return $ptable{$pid};
 }
 
-sub files {
-    my $self = shift;
+sub nr_parse_cmd($) {
     my $pid = shift;
 
-    my @cmdline = nr_parse_cmd($pid);
-    my $src = $cmdline[1];
+    open(HCMD, '<', "$main::nrconf{procfs}/$pid/cmdline") || return ();
+    local $/ = "\000";
+    my @cmdline = <HCMD>;
+    close(HCMD);
 
-    my $href = scan_deps(
-	files => [$src],
-	recurse => 1,
-    );
+    return @cmdline;
+}
 
-    return map {
-	my $stat = nr_stat($href->{$_}->{file});
-	$href->{$_}->{file} => ( defined($stat) ? $stat->{ctime} : undef );
-    } keys %$href;
+my %stat;
+sub nr_stat($) {
+    my $fn = shift;
+
+    return $stat{$fn} if(exists($stat{$fn}));
+
+    my @stat = stat($fn);
+
+    return undef unless($#stat > -1);
+
+    $stat{$fn} = {
+	dev => $stat[0],
+	ino => $stat[1],
+	mode => $stat[2],
+	nlink => $stat[3],
+	uid => $stat[4],
+	gid => $stat[5],
+	rdev => $stat[6],
+	size => $stat[7],
+	atime => $stat[8],
+	mtime => $stat[9],
+	ctime => $stat[10],
+	blksize => $stat[11],
+	blocks => $stat[12],
+    };
+
+    return $stat{$fn};
 }
 
 1;

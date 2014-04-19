@@ -80,7 +80,7 @@ LIC
 #/
 }
 
-my %nrconf = (
+our %nrconf = (
     procfs => '/proc',
     verbose => 0,
     hook_d => '/etc/needrestart/hook.d',
