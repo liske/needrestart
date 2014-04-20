@@ -33,12 +33,17 @@ require Exporter;
 our @ISA = qw(Exporter);
 
 our @EXPORT = qw(
+    nr_ptable
     nr_ptable_pid
     nr_parse_cmd
     nr_stat
 );
 
 my %ptable = map {$_->pid => $_} @{ new Proc::ProcessTable(enable_ttys => 0)->table };
+
+sub nr_ptable() {
+    return \%ptable;
+}
 
 sub nr_ptable_pid($) {
     my $pid = shift;

@@ -28,6 +28,7 @@ use Getopt::Std;
 use NeedRestart;
 use NeedRestart::UI;
 use NeedRestart::Interp;
+use NeedRestart::Utils;
 
 use warnings;
 use strict;
@@ -206,26 +207,24 @@ sub restart_cmd($) {
 my %restart;
 
 # inspect only pids
-my @pids = sort { $a <=> $b} map {/^$nrconf{procfs}\/(\d+)$/ ? ($1) : ()} <$nrconf{procfs}/*>;
-$ui->progress_prep($#pids + 1, 'Scanning processes');
+my $ptable = nr_ptable();
+$ui->progress_prep(scalar keys %$ptable, 'Scanning processes');
 my %stage2;
-for my $pid (@pids) {
+for my $pid (sort {$a <=> $b} keys %$ptable) {
     my $restart = 0;
 
     # get executable (Linux 2.2+)
-    my $bin = readlink("$nrconf{procfs}/$pid/exe");
-
-    $ui->progress_step($bin);
+    $ui->progress_step($ptable->{$pid}->{exec});
 
     # ignore kernel threads
-    next unless(defined($bin));
+    next unless(defined($ptable->{$pid}->{exec}));
 
     # orphaned binary
-    $restart++ if (defined($bin) && $bin =~ s/ \(deleted\)$//);  # Linux
-    $restart++ if (defined($bin) && $bin =~ s/^\(deleted\)//);   # Linux VServer
+    $restart++ if (defined($ptable->{$pid}->{exec}) && $ptable->{$pid}->{exec} =~ s/ \(deleted\)$//);  # Linux
+    $restart++ if (defined($ptable->{$pid}->{exec}) && $ptable->{$pid}->{exec} =~ s/^\(deleted\)//);   # Linux VServer
 
     # ignore blacklisted binaries
-    next if(grep { $bin =~ /$_/; } @{$nrconf{blacklist}});
+    next if(grep { $ptable->{$pid}->{exec} =~ /$_/; } @{$nrconf{blacklist}});
 
     # read file mappings (Linux 2.0+)
     unless($restart) {
@@ -267,7 +266,7 @@ for my $pid (@pids) {
     }
 
     unless($restart) {
-	$restart++ if(needrestart_interp_check($nrconf{verbose}, $pid, $bin));
+	$restart++ if(needrestart_interp_check($nrconf{verbose}, $pid, $ptable->{$pid}->{exec}));
     }
 
     # restart needed?
@@ -282,17 +281,15 @@ for my $pid (@pids) {
 	print STDERR "#$pid is a child of #$ppid\n" if($nrconf{verbose});
 
 	unless(exists($stage2{$ppid})) {
-	    my $bin = readlink("$nrconf{procfs}/$ppid/exe");
-
 	    # ignore kernel threads
-	    next unless(defined($bin));
+	    next unless(defined($ptable->{$pid}->{exec}));
 
-	    $stage2{$ppid} = $bin;
+	    $stage2{$ppid} = $ptable->{$pid}->{exec};
 	}
     }
     else {
 	print STDERR "#$pid is not a child\n" if($nrconf{verbose});
-	$stage2{$pid} = $bin;
+	$stage2{$pid} = $ptable->{$pid}->{exec};
     }
 }
 $ui->progress_fin(1);
@@ -300,11 +297,10 @@ $ui->progress_fin(1);
 if(scalar keys %stage2) {
     $ui->progress_prep(scalar keys %stage2, 'Scanning candidates');
     foreach my $pid (sort {$a <=> $b} keys %stage2) {
-	my $bin = $stage2{$pid};
-	$ui->progress_step($bin);
+	$ui->progress_step($ptable->{$pid}->{exec});
 
 	# ignore blacklisted binaries
-	next if(grep { $bin =~ /$_/; } @{$nrconf{blacklist}});
+	next if(grep { $ptable->{$pid}->{exec} =~ /$_/; } @{$nrconf{blacklist}});
 
 	if($is_systemd) {
 	    my $systemctl = fork_pipe(qq(systemctl), qq(-n), qq(0), qq(--full), qq(status), $pid);
@@ -323,7 +319,7 @@ if(scalar keys %stage2) {
 	    print STDERR "#$pid running $hook\n" if($nrconf{verbose});
 
 	    my $found = 0;
-	    my $prun = fork_pipe($hook, ($nrconf{verbose} ? qw(-v) : ()), $bin);
+	    my $prun = fork_pipe($hook, ($nrconf{verbose} ? qw(-v) : ()), $ptable->{$pid}->{exec});
 	    my @nopids;
 	    while(<$prun>) {
 		chomp;
