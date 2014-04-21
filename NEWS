@@ -10,7 +10,7 @@ the interpreter specific detection. Since most interpreter languages allow
 dynamic source code loading (eval) and we are using a home made source
 parcing there is a reasonable possibility to miss outdated source files.
 
-More informations: README.Interp.md
+More informations: README.Interp
 
 
 Changes in 0.6
