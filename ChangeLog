@@ -3,6 +3,9 @@ needrestart (0.8) unstable; urgency=low
   * Fix non-numeric argument on progress_prep call.
     (Debian Bug#744961 by Cristian Ionescu-Idbohrn
     <cristian.ionescu-idbohrn@axis.com>)
+  * Feature: interpreter support enables needrestart to look for obsolete
+    source files in scripting languages:
+    - Perl: using Module::ScanDeps
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
