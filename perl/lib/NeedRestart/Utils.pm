@@ -36,7 +36,10 @@ our @EXPORT = qw(
     nr_ptable
     nr_ptable_pid
     nr_parse_cmd
+    nr_parse_env
     nr_stat
+    nr_fork_pipe
+    nr_fork_pipe2
 );
 
 my %ptable = map {$_->pid => $_} @{ new Proc::ProcessTable(enable_ttys => 0)->table };
@@ -54,13 +57,27 @@ sub nr_ptable_pid($) {
 sub nr_parse_cmd($) {
     my $pid = shift;
 
-    open(HCMD, '<', "$main::nrconf{procfs}/$pid/cmdline") || return ();
+    my $fh;
+    open($fh, '<', "$main::nrconf{procfs}/$pid/cmdline") || return ();
     local $/ = "\000";
-    my @cmdline = <HCMD>;
+    my @cmdline = <$fh>;
     chomp(@cmdline);
-    close(HCMD);
+    close($fh);
 
     return @cmdline;
+}
+
+sub nr_parse_env($) {
+    my $pid = shift;
+
+    my $fh;
+    open($fh, '<', "$main::nrconf{procfs}/$pid/environ") || return ();
+    local $/ = "\000";
+    my @env = <$fh>;
+    chomp(@env);
+    close($fh);
+
+    return map { (/^([^=]+)=(.*)$/ ? ($1, $2) : ()) } @env;
 }
 
 my %stat;
@@ -90,6 +107,49 @@ sub nr_stat($) {
     };
 
     return $stat{$fn};
+}
+
+sub nr_fork_pipe($@) {
+    my $debug = shift;
+
+    my $pid = open(HPIPE, '-|');
+    defined($pid) || die "Can't fork: $!\n";
+
+    if($pid == 0) {
+	close(STDIN);
+	close(STDERR) unless($debug);
+
+	undef $ENV{LANG};
+
+	exec(@_);
+	exit;
+    }
+
+    \*HPIPE
+}
+
+sub nr_fork_pipe2($@) {
+    my $debug = shift;
+
+    my ($pread, $fhwrite);
+    pipe($pread, $fhwrite) || die "Can't pipe: $!\n";
+
+    my $fhread;
+    my $pid = open($fhread, '-|');
+    defined($pid) || die "Can't fork: $!\n";
+
+    if($pid == 0) {
+	open(STDIN, '<&', $pread) || die "Can't dup stdin: $!\n";
+	close(STDERR) unless($debug);
+
+	undef $ENV{LANG};
+
+	exec(@_);
+	exit;
+    }
+    close($pread);
+
+    return ($fhread, $fhwrite);
 }
 
 1;
