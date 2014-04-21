@@ -75,7 +75,7 @@ sub files {
 	(/^\s*import\s+(\S+)/ ? ($1 => 1) : (/^\s*from\s+(\S+)\s+import\s+/ ? ($1 => 1) : ()))
     } <$fh>;
     close($fh);
-    print STDERR "#$pid  modules: ".join(' ', keys %modules)."\n";
+    print STDERR "#$pid  modules: ".join(' ', keys %modules)."\n" if($self->{debug});
 
     my @files = ($src);
     # scan module files

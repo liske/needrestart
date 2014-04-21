@@ -111,20 +111,21 @@ sub needrestart_ui {
 
 
 my %Interps;
+my $idebug;
 
 sub needrestart_interp_register($) {
     my $pkg = shift;
 
-    $Interps{$pkg} = new $pkg();
+    $Interps{$pkg} = new $pkg($idebug);
 }
 
 sub needrestart_interp_init($) {
-    my $debug = shift;
+    $idebug = shift;
 
     # autoload Interp modules
     foreach my $module (findsubmod NeedRestart::Interp) {
 	unless(eval "use $module; 1;") {
-	    warn "Error loading $module: $@\n" if($@ && $debug);
+	    warn "Error loading $module: $@\n" if($@ && $idebug);
 	}
     }
 }
@@ -134,13 +135,11 @@ sub needrestart_interp_check($$$) {
     my $pid = shift;
     my $bin = shift;
 
-$debug++;
-
     needrestart_interp_init($debug) unless(%Interps);
 
-    foreach my $interp (keys %Interps) {
+    foreach my $interp (values %Interps) {
 	if($interp->isa($pid, $bin)) {
-	    print STDERR "#$pid is a $interp\n" if($debug);
+	    print STDERR "#$pid is a ".(ref $interp)."\n" if($debug);
 
 	    my $ps = nr_ptable_pid($pid);
 	    my %files = $interp->files($pid);
