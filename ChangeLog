@@ -6,6 +6,7 @@ needrestart (0.8) unstable; urgency=low
   * Feature: interpreter support enables needrestart to look for obsolete
     source files in scripting languages:
     - Perl: using Module::ScanDeps
+    - Python: using home made source file scanning
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
