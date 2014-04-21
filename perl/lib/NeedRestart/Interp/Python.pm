@@ -28,8 +28,10 @@ use strict;
 use warnings;
 
 use parent qw(NeedRestart::Interp);
+use Cwd;
+use Getopt::Std;
 use NeedRestart qw(:interp);
-
+use NeedRestart::Utils;
 
 needrestart_interp_register(__PACKAGE__);
 
@@ -41,6 +43,81 @@ sub isa {
     return 1 if($bin =~ m@/usr/(local/)?bin/python@);
 
     return 0;
+}
+
+sub files {
+    my $self = shift;
+    my $pid = shift;
+    my $ptable = nr_ptable_pid($pid);
+    my $cwd = getcwd();
+    chdir($ptable->{cwd});
+
+    # get original ARGV
+    (my $bin, local @ARGV) = nr_parse_cmd($pid);
+
+    # eat Python's command line options
+    my %opts;
+    getopt('BdEhim:ORQ:sStuvVW:x3?c:', \%opts);
+
+    # extract source file
+    my $src = $ARGV[0];
+    unless(-r $src) {
+	chdir($cwd);
+	print STDERR "#$pid source file not found, skipping\n" if($self->{debug});
+	print STDERR "#$pid  reduced ARGV: ".join(' ', @ARGV)."\n" if($self->{debug});
+	return ();
+    }
+
+    my $fh;
+    open($fh, '<', $src) || return ();
+    # find used modules
+    my %modules = map {
+	(/^\s*import\s+(\S+)/ ? ($1 => 1) : (/^\s*from\s+(\S+)\s+import\s+/ ? ($1 => 1) : ()))
+    } <$fh>;
+    close($fh);
+    print STDERR "#$pid  modules: ".join(' ', keys %modules)."\n";
+
+    my @files = ($src);
+    # scan module files
+    if(scalar keys %modules) {
+	my %e = nr_parse_env($pid);
+	local %ENV;
+	if(exists($e{PYTHONPATH})) {
+	    $ENV{PYTHONPATH} = $e{PYTHONPATH};
+	}
+	elsif(exists($ENV{PYTHONPATH})) {
+	    delete($ENV{PYTHONPATH});
+	}
+
+	# get include path
+	my ($pyread, $pywrite) = nr_fork_pipe2(1, $ptable->{exec}, '-');
+	print $pywrite "import sys\nprint sys.path";
+	close($pywrite);
+	my ($path) = <$pyread>;
+	close($pyread);
+
+	# look for module source files
+	chomp($path);
+	$path =~ s/^\['//;
+	$path =~ s/'\$//;
+	foreach my $module (keys %modules) {
+	    $module =~ s@\.@/@g;
+	    $module .= '.py';
+
+	    foreach my $p (split("', '", $path)) {
+		my $fn = ($p ne '' ? "$p/" : '').$module;
+		push(@files, $fn) if(-e $fn);
+	    }
+	}
+    }
+
+    my %ret = map {
+	my $stat = nr_stat($_);
+	$_ => ( defined($stat) ? $stat->{ctime} : undef );
+    } @files;
+
+    chdir($cwd);
+    return %ret;
 }
 
 1;
