@@ -57,6 +57,7 @@ sub nr_parse_cmd($) {
     open(HCMD, '<', "$main::nrconf{procfs}/$pid/cmdline") || return ();
     local $/ = "\000";
     my @cmdline = <HCMD>;
+    chomp(@cmdline);
     close(HCMD);
 
     return @cmdline;
