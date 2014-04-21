@@ -28,6 +28,7 @@ use strict;
 use warnings;
 
 use parent qw(NeedRestart::Interp);
+use Getopt::Std;
 use NeedRestart qw(:interp);
 use NeedRestart::Utils;
 use Module::ScanDeps;
@@ -48,8 +49,20 @@ sub files {
     my $self = shift;
     my $pid = shift;
 
-    my @cmdline = nr_parse_cmd($pid);
-    my $src = $cmdline[1];
+    # get original ARGV
+    (my $bin, local @ARGV) = nr_parse_cmd($pid);
+
+    # eat Perl's command line options
+    my %opts;
+    getopt('sTtuUWXhvV:cwdt:D:pnaF:l:0:I:m:M:fC:Sx:i:eE:', \%opts);
+
+    # extract source file
+    my $src = $ARGV[0];
+    unless(-r $src) {
+	print STDERR "#$pid source file not found, skipping\n" if($self->{debug});
+	print STDERR "#$pid  reduced ARGV: ".join(' ', @ARGV)."\n" if($self->{debug});
+	return ();
+    }
 
     my $href = scan_deps(
 	files => [$src],
