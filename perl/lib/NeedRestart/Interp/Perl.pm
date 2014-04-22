@@ -69,6 +69,17 @@ sub files {
 	return ();
     }
 
+    # prepare include path environment variable
+    my %e = nr_parse_env($pid);
+    local %ENV;
+    if(exists($e{PERL5LIB})) {
+	$ENV{PERL5LIB} = $e{PERL5LIB};
+    }
+    elsif(exists($ENV{PERL5LIB})) {
+	delete($ENV{PERL5LIB});
+    }
+
+    @Module::ScanDeps::IncludeLibs = (exists($opts{I}) ? ($opts{I}) : ());
     my $href = scan_deps(
 	files => [$src],
 	recurse => 1,
