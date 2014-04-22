@@ -28,6 +28,7 @@ use strict;
 use warnings;
 
 use parent qw(NeedRestart::Interp);
+use Cwd;
 use Getopt::Std;
 use NeedRestart qw(:interp);
 use NeedRestart::Utils;
@@ -48,6 +49,9 @@ sub isa {
 sub files {
     my $self = shift;
     my $pid = shift;
+    my $ptable = nr_ptable_pid($pid);
+    my $cwd = getcwd();
+    chdir($ptable->{cwd});
 
     # get original ARGV
     (my $bin, local @ARGV) = nr_parse_cmd($pid);
@@ -59,6 +63,7 @@ sub files {
     # extract source file
     my $src = $ARGV[0];
     unless(-r $src) {
+	chdir($cwd);
 	print STDERR "#$pid source file not found, skipping\n" if($self->{debug});
 	print STDERR "#$pid  reduced ARGV: ".join(' ', @ARGV)."\n" if($self->{debug});
 	return ();
@@ -69,10 +74,13 @@ sub files {
 	recurse => 1,
     );
 
-    return map {
+    my %ret = map {
 	my $stat = nr_stat($href->{$_}->{file});
 	$href->{$_}->{file} => ( defined($stat) ? $stat->{ctime} : undef );
     } keys %$href;
+
+    chdir($cwd);
+    return %ret;
 }
 
 1;
