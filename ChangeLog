@@ -7,6 +7,7 @@ needrestart (0.8) unstable; urgency=low
     source files in scripting languages:
     - Perl: using Module::ScanDeps
     - Python: using home made source file scanning
+    - Ruby: using home made source file scanning
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
