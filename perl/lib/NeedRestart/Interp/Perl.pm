@@ -61,6 +61,11 @@ sub files {
     getopt('sTtuUWXhvV:cwdt:D:pnaF:l:0:I:m:M:fC:Sx:i:eE:', \%opts);
 
     # extract source file
+    unless($#ARGV > -1) {
+	chdir($cwd);
+	print STDERR "#$pid  could not get a source file, skipping\n" if($self->{debug});
+	return ();
+    }
     my $src = $ARGV[0];
     unless(-r $src) {
 	chdir($cwd);
