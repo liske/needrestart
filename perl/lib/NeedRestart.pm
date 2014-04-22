@@ -147,7 +147,7 @@ sub needrestart_interp_check($$$) {
 	    if(grep {$_ > $ps->start} values %files) {
 		if($debug) {
 		    print STDERR "#$pid uses obsolete script file(s):";
-		    print STDERR join("\n#$pid =>", '', map {($files{$_} > $ps->start ? $_ : ())} keys %files);
+		    print STDERR join("\n#$pid  ", '', map {($files{$_} > $ps->start ? $_ : ())} keys %files);
 		    print STDERR "\n";
 		}
 
