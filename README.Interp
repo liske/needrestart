@@ -20,16 +20,27 @@ NeedRestart::Interp::Perl
 Recognized binaries:	/usr/(local/)?bin/perl
 Find source file by:	command line interpretation
 
-We are using Module::ScanDeps to find used packages. This should work on
+We are using `Module::ScanDeps` to find used packages. This should work on
 any static loaded packages, dynamic stuff will fail.
 
 
 NeedRestart::Interp::Python
--------------------------
+---------------------------
 
 Recognized binaries:	/usr/(local/)?bin/python.*
 Find source file by:	command line interpretation
 
 The source file is scanned for 'import' and 'from' lines. All paths in
-*sys.path* are scanned for the module files. This should work on any
+`sys.path` are scanned for the module files. This should work on any
+static loaded modules.
+
+
+NeedRestart::Interp::Ruby
+-------------------------
+
+Recognized binaries:	/usr/(local/)?bin/ruby.*
+Find source file by:	command line interpretation
+
+The source file is scanned for 'load' and 'require' lines. All paths in
+`$:` are scanned for the module files. This should work on any
 static loaded modules.
