@@ -116,7 +116,7 @@ sub files {
     }
     
     # get include path
-    my ($pyread, $pywrite) = nr_fork_pipe2(1, $ptable->{exec}, '-');
+    my ($pyread, $pywrite) = nr_fork_pipe2($self->{debug}, $ptable->{exec}, '-');
     print $pywrite "import sys\nprint sys.path";
     close($pywrite);
     my ($path) = <$pyread>;
