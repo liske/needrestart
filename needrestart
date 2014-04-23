@@ -385,58 +385,69 @@ if(scalar keys %stage2) {
     $ui->progress_fin(1);
 }
 
-nr_kernel_check(1);
+my ($kversion, $kmessage) = nr_kernel_check($nrconf{verbose});
 
 print "NEEDRESTART-VER: $NeedRestart::VERSION\n" if($opt_b);
 
 unless(scalar %restart) {
     $ui->notice('No services required to be restarted.') unless($opt_b);
-    exit 0;
-}
-
-if($opt_b || $opt_r ne 'i') {
-    $ui->notice('Services to be restarted:');
-
-    foreach my $rc (keys %restart) {
-	my @cmd = restart_cmd($rc);
-
-	if($opt_b) {
-	    print "NEEDRESTART-SVC: $rc\n";
-	    next;
-	}
-
-	next unless($#cmd > -1);
-
-	if($opt_r eq 'a') {
-	    system(@cmd);
-	}
-	else {
-	    print join(' ', @cmd)."\n";
-	}
-    }
-
-    unless($opt_b || $#systemd_restart == -1) {
-	my @cmd = (qq(systemctl), qq(restart), @systemd_restart);
-	if($opt_r eq 'a') {
-	    print "Restarting services using systemd...\n";
-	    system(@cmd);
-	}
-	else {
-	    print join(' ', @cmd)."\n";
-	}
-    }
 }
 else {
-    my $o = 0;
+    if($opt_b || $opt_r ne 'i') {
+	$ui->notice('Services to be restarted:');
+	
+	foreach my $rc (keys %restart) {
+	    my @cmd = restart_cmd($rc);
+	    
+	    if($opt_b) {
+		print "NEEDRESTART-SVC: $rc\n";
+		next;
+	    }
+	    
+	    next unless($#cmd > -1);
+	    
+	    if($opt_r eq 'a') {
+		system(@cmd);
+	    }
+	    else {
+		print join(' ', @cmd)."\n";
+	    }
+	}
+	
+	unless($opt_b || $#systemd_restart == -1) {
+	    my @cmd = (qq(systemctl), qq(restart), @systemd_restart);
+	    if($opt_r eq 'a') {
+		print "Restarting services using systemd...\n";
+		system(@cmd);
+	    }
+	    else {
+		print join(' ', @cmd)."\n";
+	}
+	}
+    }
+    else {
+	my $o = 0;
 
-    $ui->query_pkgs('Services to be restarted:', $nrconf{defno}, \%restart,
-		    sub {
-			my @cmd = restart_cmd(shift);
-			system(@cmd) if($#cmd > -1);
-		    });
-
-    if($#systemd_restart > -1) {
-	print "Restarting services using systemd...\n";
-	system(qq(systemctl), qq(restart), @systemd_restart);
+	$ui->query_pkgs('Services to be restarted:', $nrconf{defno}, \%restart,
+			sub {
+			    my @cmd = restart_cmd(shift);
+			    system(@cmd) if($#cmd > -1);
+			});
+	
+	if($#systemd_restart > -1) {
+	    print "Restarting services using systemd...\n";
+	    system(qq(systemctl), qq(restart), @systemd_restart);
+	}
     }
 }
+
+if(defined($kversion)) {
+    if($opt_b) {
+	print "NEEDRESTART-KVERSION: $kversion\n";
+	print "NEEDRESTART-REBOOT: $kmessage\n" if(defined($kmessage));
+    }
+    else {
+	$ui->notice( ($kmessage ? $kmessage : 'Running kernel seems to be up-to-date.') );
+    }
+}
+

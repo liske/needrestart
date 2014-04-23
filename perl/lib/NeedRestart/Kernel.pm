@@ -74,21 +74,16 @@ sub nr_kernel_check($) {
 	}
     }
 
-    unless(scalar keys %kernels) {
-	warn "Did not find any kernel images (/boot/vmlinu*)!\n";
-	return ($kversion, undef);
-    }
+    return (undef, "Did not find any kernel images (/boot/vmlinu*)!")
+	unless(scalar keys %kernels);
 
     my ($eversion) = reverse nsort keys %kernels;
     print STDERR "Expected kernel version: $eversion\n" if($debug);
 
-    return ($kversion, qq(Current kernel image file not found ($kversion)!))
+    return ($kversion, qq(Running kernel has a ABI compatible upgrade pending.))
 	if(!exists($kernels{$kversion}));
 
-    return ($kversion, qq(Current kernel has a ABI compatible upgrade pending!))
-	if(!exists($kernels{$kversion}));
-
-    return ($kversion, qq(Running not the expected kernel version ($kversion < $eversion)!))
+    return ($kversion, qq(Running not the expected kernel version $eversion.))
 	if($kversion ne $eversion);
 
     return ($kversion, undef);
