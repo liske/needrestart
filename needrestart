@@ -28,6 +28,7 @@ use Getopt::Std;
 use NeedRestart;
 use NeedRestart::UI;
 use NeedRestart::Interp;
+use NeedRestart::Kernel;
 use NeedRestart::Utils;
 
 use warnings;
@@ -383,6 +384,8 @@ if(scalar keys %stage2) {
     }
     $ui->progress_fin(1);
 }
+
+nr_kernel_check(1);
 
 print "NEEDRESTART-VER: $NeedRestart::VERSION\n" if($opt_b);
 
