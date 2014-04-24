@@ -8,6 +8,8 @@ needrestart (0.8) unstable; urgency=low
     - Perl: using Module::ScanDeps
     - Python: using home made source file scanning
     - Ruby: using home made source file scanning
+  * Feature: detect running on obsolete kernels
+    (Debian Bug#745270 by Paul Wise <pabs@debian.org>)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
