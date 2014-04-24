@@ -83,7 +83,6 @@ LIC
 }
 
 our %nrconf = (
-    procfs => '/proc',
     verbose => 0,
     hook_d => '/etc/needrestart/hook.d',
     restart => 'i',
@@ -229,7 +228,7 @@ for my $pid (sort {$a <=> $b} keys %$ptable) {
 
     # read file mappings (Linux 2.0+)
     unless($restart) {
-	open(HMAP, '<', "$nrconf{procfs}/$pid/maps") || next;
+	open(HMAP, '<', "/proc/$pid/maps") || next;
 	while(<HMAP>) {
 	    chomp;
 	    my ($maddr, $mperm, $moffset, $mdev, $minode, $path) = split(/\s+/);
@@ -274,7 +273,7 @@ for my $pid (sort {$a <=> $b} keys %$ptable) {
     next unless($restart);
 
     # find parent process
-    open(HSTAT, '<', "$nrconf{procfs}/$pid/stat") || next;
+    open(HSTAT, '<', "/proc/$pid/stat") || next;
     my $stat = <HSTAT>;
     close(HSTAT);
     if($stat =~ /^\d+ \(.+\) [RSDZTW] (\d+) / && $1 != $pid && $1 != 1) {

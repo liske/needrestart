@@ -58,7 +58,7 @@ sub nr_parse_cmd($) {
     my $pid = shift;
 
     my $fh;
-    open($fh, '<', "$main::nrconf{procfs}/$pid/cmdline") || return ();
+    open($fh, '<', "/proc/$pid/cmdline") || return ();
     local $/ = "\000";
     my @cmdline = <$fh>;
     chomp(@cmdline);
@@ -71,7 +71,7 @@ sub nr_parse_env($) {
     my $pid = shift;
 
     my $fh;
-    open($fh, '<', "$main::nrconf{procfs}/$pid/environ") || return ();
+    open($fh, '<', "/proc/$pid/environ") || return ();
     local $/ = "\000";
     my @env = <$fh>;
     chomp(@env);
