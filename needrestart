@@ -88,6 +88,7 @@ our %nrconf = (
     restart => 'i',
     defno => 0,
     blacklist => [],
+    kernelhints => 1,
 );
 
 # backup ARGV (required for Debconf)
@@ -384,7 +385,7 @@ if(scalar keys %stage2) {
     $ui->progress_fin(1);
 }
 
-my ($kversion, $kmessage) = nr_kernel_check($nrconf{verbose});
+my ($kversion, $kmessage) = ($nrconf{kernelhints} || $opt_b ? nr_kernel_check($nrconf{verbose}) : ());
 
 print "NEEDRESTART-VER: $NeedRestart::VERSION\n" if($opt_b);
 
@@ -443,10 +444,9 @@ else {
 if(defined($kversion)) {
     if($opt_b) {
 	print "NEEDRESTART-KVERSION: $kversion\n";
-	print "NEEDRESTART-REBOOT: $kmessage\n" if(defined($kmessage));
+	print "NEEDRESTART-KPENDING: $kmessage\n" if(defined($kmessage));
     }
     else {
 	$ui->notice( ($kmessage ? $kmessage : 'Running kernel seems to be up-to-date.') );
     }
 }
-
