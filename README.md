@@ -35,7 +35,6 @@ frontends
 the user interface. The following frontends are shipped:
 
 * *NeedRestart::UI::Debconf* using *debconf*
-* *NeedRestart::UI::Dialog* using *UI::Dialog*
 * *NeedRestart::UI::stdio* fallback using stdio interaction
 
 
