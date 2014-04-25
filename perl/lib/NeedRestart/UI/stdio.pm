@@ -33,11 +33,9 @@ use NeedRestart qw(:ui);
 
 needrestart_ui_register(__PACKAGE__, NEEDRESTART_PRIO_LOW);
 
-sub progress_prep($$$) {
+sub progress_prep($$$$) {
     my $self = shift;
-    my ($max, $out) = @_;
-
-    $self->SUPER::progress_prep($max, $out);
+    my ($max, $out, $pass) = @_;
 
     $|++;
 

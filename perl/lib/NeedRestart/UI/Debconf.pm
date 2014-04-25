@@ -63,14 +63,11 @@ sub new {
     }, $class;
 }
 
-sub progress_prep($$$) {
+sub progress_prep($$$$) {
     my $self = shift;
-    my ($max, $out) = @_;
+    my ($max, $out, $pass) = @_;
 
-    $self->SUPER::progress_prep($max, $out);
-
-    dcres( subst('needrestart/ui-progress_title', 'OUT', $out) );
-    dcres( progress('START', 0, $max, 'needrestart/ui-progress_title') );
+    dcres( progress('START', 0, $max, "needrestart/ui-progress_title$pass") );
 }
 
 sub progress_step($$) {

@@ -43,11 +43,9 @@ sub new {
     }, $class;
 }
 
-sub progress_prep($$$) {
+sub progress_prep($$$$) {
     my $self = shift;
-    my ($max, $out) = @_;
-
-    $self->SUPER::progress_prep($max, $out);
+    my ($max, $out, $pass) = @_;
 
     $|++;
 

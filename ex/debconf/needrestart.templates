@@ -1,7 +1,10 @@
-
-Template: needrestart/ui-progress_title
+Template: needrestart/ui-progress_title1
 Type: text
-Description: Looking for daemons to restart
+Description: Scanning processes...
+
+Template: needrestart/ui-progress_title2
+Type: text
+Description: Scanning candidates...
 
 Template: needrestart/ui-progress_info
 Type: text
@@ -14,4 +17,4 @@ Description: Daemons using outdated libraries
 Template: needrestart/ui-query_pkgs
 Type: multiselect
 Choices: ${PKGS}
-Description: Which rc.d scripts should be restarted?
+Description: Which services should be restarted?

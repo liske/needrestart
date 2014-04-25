@@ -36,10 +36,7 @@ sub new {
     }, $class;
 }
 
-sub progress_prep($$$) {
-    my $self = shift;
-
-    $self->{max} = shift;
+sub progress_prep($$$$) {
 }
 
 sub progress_step($$) {
