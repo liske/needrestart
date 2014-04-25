@@ -18,3 +18,11 @@ Template: needrestart/ui-query_pkgs
 Type: multiselect
 Choices: ${PKGS}
 Description: Which services should be restarted?
+
+Template: needrestart/ui-kernel_announce
+Type: note
+Description: Running kernel version:\n  ${KVERSION}\n\nDiagnostics:\n  ${KMESSAGE}\n\nYou should consider to reboot this machine to activate the pending kernel upgrade. You need to reboot MANUALLY!
+
+Template: needrestart/ui-kernel_title
+Type: title
+Description: Pending kernel upgrade

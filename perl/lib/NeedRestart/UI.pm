@@ -46,6 +46,10 @@ sub progress_fin($) {
 }
 
 
+sub announce {
+}
+
+
 sub notice($$) {
 }
 

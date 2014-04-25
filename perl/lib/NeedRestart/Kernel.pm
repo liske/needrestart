@@ -65,7 +65,7 @@ sub nr_kernel_check($) {
 	my $iversion = $verstr;
 	$iversion =~ s/\s.+$//;
 
-	$kernels{$iversion} = 1;
+#	$kernels{$iversion} = 1;
 	foreach my $token (split(/ /, $verstr)) {
 	    if(index($kverstr, $token) == -1) {
 		$kernels{$iversion} = 0;

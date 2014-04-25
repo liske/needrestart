@@ -389,6 +389,21 @@ my ($kversion, $kmessage) = ($nrconf{kernelhints} || $opt_b ? nr_kernel_check($n
 
 print "NEEDRESTART-VER: $NeedRestart::VERSION\n" if($opt_b);
 
+if(defined($kversion)) {
+    if($opt_b) {
+	print "NEEDRESTART-KVERSION: $kversion\n";
+	print "NEEDRESTART-KPENDING: $kmessage\n" if(defined($kmessage));
+    }
+    else {
+	if($kmessage) {
+	    $ui->announce($kversion, $kmessage);
+	}
+	else {
+	    $ui->notice('Running kernel seems to be up-to-date.');
+	}
+    }
+}
+
 unless(scalar %restart) {
     $ui->notice('No services required to be restarted.') unless($opt_b);
 }
@@ -438,15 +453,5 @@ else {
 	    print "Restarting services using systemd...\n";
 	    system(qq(systemctl), qq(restart), @systemd_restart);
 	}
-    }
-}
-
-if(defined($kversion)) {
-    if($opt_b) {
-	print "NEEDRESTART-KVERSION: $kversion\n";
-	print "NEEDRESTART-KPENDING: $kmessage\n" if(defined($kmessage));
-    }
-    else {
-	$ui->notice( ($kmessage ? $kmessage : 'Running kernel seems to be up-to-date.') );
     }
 }

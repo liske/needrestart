@@ -86,16 +86,25 @@ sub progress_fin($) {
 }
 
 
-sub notice($$) {
+sub announce {
+    my $self = shift;
+    my $kversion = shift;
+    my $kmessage = shift;
+
+    dcres( subst('needrestart/ui-kernel_announce', 'KVERSION', $kversion) );
+    dcres( subst('needrestart/ui-kernel_announce', 'KMESSAGE', $kmessage) );
+    dcres( fset('needrestart/ui-kernel_announce', 'seen', 0) );
+    dcres( settitle('needrestart/ui-kernel_title') );
+    dcres( input('critical', 'needrestart/ui-kernel_announce') );
+    dcres( go );
+}
+
+
+sub notice {
     my $self = shift;
     my $out = shift;
 
-    stop;
-
-    # Debconf kills STDOUT... try to restore it
-    open(STDOUT, '> /dev/tty') || open(STDOUT, '>&2');
-
-    print "$out\n";
+    print STDERR "$out\n";
 }
 
 

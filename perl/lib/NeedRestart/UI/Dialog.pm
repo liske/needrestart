@@ -4,7 +4,7 @@
 #   Thomas Liske <thomas@fiasko-nw.net>
 #
 # Copyright Holder:
-#   2013 (C) Thomas Liske [http://fiasko-nw.net/~thomas/]
+#   2013 - 2014 (C) Thomas Liske [http://fiasko-nw.net/~thomas/]
 #
 # License:
 #   This program is free software; you can redistribute it and/or modify
@@ -65,6 +65,15 @@ sub progress_fin($) {
     print "\n";
 
     $|--;
+}
+
+
+sub announce {
+    my $self = shift;
+    my $kversion = shift;
+    my $kmessage = shift;
+
+    $self->{dialog}->msgbox(title => 'Pending kernel upgrade', text => "Running kernel version:\n  ${kversion}\n\nDiagnostics:\n  ${kmessage}\n\nYou should consider to reboot this machine to activate the pending kernel upgrade. You need to reboot MANUALLY! [Return]\n");
 }
 
 
