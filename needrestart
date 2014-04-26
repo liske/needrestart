@@ -134,23 +134,6 @@ $runlevel = 2 unless($runlevel =~ s/^.+run-level (\S)\s.+$/$1/);
 my $ui = ($opt_b ? NeedRestart::UI->new() : needrestart_ui($nrconf{verbose}, $nrconf{ui}));
 die "Error: no UI class available!\n" unless(defined($ui));
 
-sub fork_pipe(@) {
-    my $pid = open(HPIPE, '-|');
-    defined($pid) || die "Can't fork: $!\n";
-
-    if($pid == 0) {
-	close(STDIN);
-	close(STDERR) unless($nrconf{verbose});
-
-	undef $ENV{LANG};
-
-	exec(@_);
-	exit;
-    }
-
-    \*HPIPE
-}
-
 sub parse_lsbinit($) {
     my $rc = '/etc/init.d/'.shift;
     my %lsb;
@@ -304,7 +287,7 @@ if(scalar keys %stage2) {
 	next if(grep { $ptable->{$pid}->{exec} =~ /$_/; } @{$nrconf{blacklist}});
 
 	if($is_systemd) {
-	    my $systemctl = fork_pipe(qq(systemctl), qq(-n), qq(0), qq(--full), qq(status), $pid);
+	    my $systemctl = nr_fork_pipe($nrconf{verbose}, qq(systemctl), qq(-n), qq(0), qq(--full), qq(status), $pid);
 	    my $ret = <$systemctl>;
 	    close($systemctl);
 
@@ -320,7 +303,7 @@ if(scalar keys %stage2) {
 	    print STDERR "#$pid running $hook\n" if($nrconf{verbose});
 
 	    my $found = 0;
-	    my $prun = fork_pipe($hook, ($nrconf{verbose} ? qw(-v) : ()), $ptable->{$pid}->{exec});
+	    my $prun = nr_fork_pipe($nrconf{verbose}, $hook, ($nrconf{verbose} ? qw(-v) : ()), $ptable->{$pid}->{exec});
 	    my @nopids;
 	    while(<$prun>) {
 		chomp;
