@@ -115,8 +115,8 @@ eval `cat "$opt_c"`;
 die "$@\n" if($@);
 
 # fallback to stdio on verbose mode
-$nrconf{ui} = qq(NeedRestart::UI::stdio) if($opt_v);
 $nrconf{verbose}++ if($opt_v);
+$nrconf{ui} = qq(NeedRestart::UI::stdio) if($nrconf{verbose});
 
 die "Hook directory '$nrconf{hook_d}' is invalid!\n" unless(-d $nrconf{hook_d} || $opt_b);
 die "ERROR: Unknown restart option '$opt_r'!\n" unless($opt_r =~ /^(l|i|a)$/);
@@ -131,7 +131,7 @@ chomp($runlevel);
 $runlevel = 2 unless($runlevel =~ s/^.+run-level (\S)\s.+$/$1/);
 
 # get UI
-my $ui = ($opt_b ? NeedRestart::UI->new() : needrestart_ui($opt_v, $nrconf{ui}));
+my $ui = ($opt_b ? NeedRestart::UI->new() : needrestart_ui($nrconf{verbose}, $nrconf{ui}));
 die "Error: no UI class available!\n" unless(defined($ui));
 
 sub fork_pipe(@) {
