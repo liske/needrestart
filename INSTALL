@@ -1,0 +1,17 @@
+Prerequisites
+=============
+
+Perl
+----
+
+Module::Find
+Module::ScanDeps
+Proc::ProcessTable
+Sort::Naturally
+
+
+Misc
+----
+
+debconf (on Debian derivates)
+binutils (providing `strings`)
