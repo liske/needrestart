@@ -97,7 +97,7 @@ my @argv = @ARGV;
 
 our $opt_c = '/etc/needrestart/needrestart.conf';
 our $opt_v;
-our $opt_r = $nrconf{restart};
+our $opt_r;
 our $opt_n;
 our $opt_b;
 unless(getopts('c:vr:nb')) {
@@ -119,6 +119,7 @@ $nrconf{verbose}++ if($opt_v);
 $nrconf{ui} = qq(NeedRestart::UI::stdio) if($nrconf{verbose});
 
 die "Hook directory '$nrconf{hook_d}' is invalid!\n" unless(-d $nrconf{hook_d} || $opt_b);
+$opt_r = $nrconf{restart} unless(defined($opt_r));
 die "ERROR: Unknown restart option '$opt_r'!\n" unless($opt_r =~ /^(l|i|a)$/);
 
 $nrconf{defno}++ if($opt_n);
