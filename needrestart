@@ -88,6 +88,7 @@ our %nrconf = (
     restart => 'i',
     defno => 0,
     blacklist => [],
+    interpscan => 1,
     kernelhints => 1,
 );
 
@@ -266,7 +267,7 @@ for my $pid (sort {$a <=> $b} keys %$ptable) {
 	close(HMAP);
     }
 
-    unless($restart) {
+    unless($restart || !$nrconf{interpscan}) {
 	$restart++ if(needrestart_interp_check($nrconf{verbose}, $pid, $ptable->{$pid}->{exec}));
     }
 
