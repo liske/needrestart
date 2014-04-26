@@ -67,7 +67,7 @@ sub files {
 	return ();
     }
     my $src = $ARGV[0];
-    unless(-r $src) {
+    unless(-r $src && -f $src) {
 	chdir($cwd);
 	print STDERR "#$pid source file not found, skipping\n" if($self->{debug});
 	print STDERR "#$pid  reduced ARGV: ".join(' ', @ARGV)."\n" if($self->{debug});

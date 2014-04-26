@@ -71,7 +71,7 @@ sub _scan($$$$$) {
 
 	    foreach my $p (@$path) {
 		my $fn = ($p ne '' ? "$p/" : '').$module;
-		&_scan($debug, $pid, $fn, $files, $path) if(!exists($files->{$fn}) && -e $fn);
+		&_scan($debug, $pid, $fn, $files, $path) if(!exists($files->{$fn}) && -r $fn && -f $fn);
 	    }
 	}
     }
@@ -98,7 +98,7 @@ sub files {
 	return ();
     }
     my $src = $ARGV[0];
-    unless(-r $src) {
+    unless(-r $src && -f $src) {
 	chdir($cwd);
 	print STDERR "#$pid source file not found, skipping\n" if($self->{debug});
 	print STDERR "#$pid  reduced ARGV: ".join(' ', @ARGV)."\n" if($self->{debug});
