@@ -257,11 +257,8 @@ for my $pid (sort {$a <=> $b} keys %$ptable) {
     next unless($restart);
 
     # find parent process
-    open(HSTAT, '<', "/proc/$pid/stat") || next;
-    my $stat = <HSTAT>;
-    close(HSTAT);
-    if($stat =~ /^\d+ \(.+\) [RSDZTW] (\d+) / && $1 != $pid && $1 != 1) {
-	my $ppid = $1;
+    my $ppid = $ptable->{$pid}->{ppid};
+    if($ppid != $pid && $ppid > 1) {
 	print STDERR "#$pid is a child of #$ppid\n" if($nrconf{verbose});
 
 	unless(exists($stage2{$ppid})) {
