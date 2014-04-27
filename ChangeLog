@@ -10,8 +10,11 @@ needrestart (0.8) unstable; urgency=low
     - Ruby: using home made source file scanning
   * Feature: detect running on obsolete kernels
     (Debian Bug#745270 by Paul Wise <pabs@debian.org>)
+  * NeedRestart::UI::Dialog: has been dropped
+  * NeedRestart::UI::stdio: add mass processing
+  * Several small bugfixes.
 
- -- Thomas Liske <thomas@fiasko-nw.net>  
+ -- Thomas Liske <thomas@fiasko-nw.net>  Sun, 27 Apr 2014 10:15:35 +0200
 
 needrestart (0.7) unstable; urgency=medium
 
