@@ -78,17 +78,26 @@ sub notice($$) {
 
 
 sub _query($$) {
+    my $self = shift;
     my($query, $def) = @_;
-    my @def = ($def eq 'Y' ? qw(yes no) : qw(no yes));
+    my @def = ($def eq 'Y' ? qw(yes no all skip) : qw(no yes all skip));
 
     my $i;
     do {
-	print "$query [", ($def eq 'Y' ? 'Yn' : 'yN'), '] ';;
+	print "$query [", ($def eq 'Y' ? 'Ynas' : 'yNas'), '] ';
+	if($self->{stdio_same}) {
+	    print "$self->{stdio_same}\n";
+	    return $self->{stdio_same};
+	}
+
 	$i = lc(<STDIN>);
 	chomp($i);
 	$i =~ s/^\s+//;
 	$i =~ s/\s+$//;
     } while(!( ($i) = map { (substr($_, 0, length($i)) eq $i ? ($_) : ())} @def ));
+
+    return ($self->{stdio_same} = 'yes') if($i eq 'all');
+    return ($self->{stdio_same} = 'no') if($i eq 'skip');
 
     return $i;
 }
@@ -100,9 +109,11 @@ sub query_pkgs($$$$$) {
     my $pkgs = shift;
     my $cb = shift;
 
+    delete($self->{stdio_same});
+
     print "$out\n";
     foreach my $rc (sort keys %$pkgs) {
-	&$cb($rc) if(_query("Restart $rc?", ($def ? 'N' : 'Y')) eq 'yes');
+	&$cb($rc) if($self->_query("Restart $rc?", ($def ? 'N' : 'Y')) eq 'yes');
     }
 }
 
