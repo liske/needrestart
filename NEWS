@@ -13,6 +13,21 @@ parcing there is a reasonable possibility to miss outdated source files.
 More informations: README.Interp
 
 
+kernel upgrades
+---------------
+
+Needrestart tries to detect if an pending kernel upgrade is available. It
+will only suggest a reboot.
+
+More informations: README.Kernel
+
+
+UI
+--
+
+The UI implementation NeedRestart::UI::Dialog has been dropped.
+
+
 Changes in 0.6
 ==============
 
