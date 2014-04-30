@@ -89,7 +89,7 @@ sub files {
 
     # eat Python's command line options
     my %opts;
-    getopt('BdEhim:ORQ:sStuvVW:x3?c:', \%opts);
+    getopts('BdEhim:ORQ:sStuvVW:x3?c:', \%opts);
 
     # extract source file
     unless($#ARGV > -1) {
