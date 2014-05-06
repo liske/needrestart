@@ -1,3 +1,12 @@
+needrestart (0.9) unstable; urgency=low
+
+  * Several small bugfixes:
+    - [Interp] initial source file detection broken due using getopt
+      instead of getopts
+      (Debian Bug#746363 by Axel Beckert <abe@debian.org>)
+
+ -- Thomas Liske <thomas@fiasko-nw.net>  
+
 needrestart (0.8) unstable; urgency=low
 
   * Fix non-numeric argument on progress_prep call.

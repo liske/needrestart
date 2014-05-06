@@ -86,7 +86,7 @@ sub files {
 
     # eat Ruby's command line options
     my %opts;
-    getopt('SUacdlnpswvy0:C:E:F:I:K:T:W:e:i:r:x:e:d:', \%opts);
+    getopts('SUacdlnpswvy0:C:E:F:I:K:T:W:e:i:r:x:e:d:', \%opts);
 
     # extract source file
     unless($#ARGV > -1) {

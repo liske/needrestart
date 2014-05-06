@@ -58,7 +58,7 @@ sub files {
 
     # eat Perl's command line options
     my %opts;
-    getopt('sTtuUWXhvV:cwdt:D:pnaF:l:0:I:m:M:fC:Sx:i:eE:', \%opts);
+    getopts('sTtuUWXhvV:cwdt:D:pnaF:l:0:I:m:M:fC:Sx:i:eE:', \%opts);
 
     # extract source file
     unless($#ARGV > -1) {
