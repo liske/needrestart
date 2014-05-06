@@ -37,6 +37,7 @@ our @EXPORT = qw(
     nr_ptable_pid
     nr_parse_cmd
     nr_parse_env
+    nr_readlink
     nr_stat
     nr_fork_pipe
     nr_fork_pipe2
@@ -78,6 +79,17 @@ sub nr_parse_env($) {
     close($fh);
 
     return map { (/^([^=]+)=(.*)$/ ? ($1, $2) : ()) } @env;
+}
+
+my %readlink;
+sub nr_readlink($) {
+    my $pid = shift;
+
+    return $readlink{$pid} if(exists($readlink{$pid}));
+
+    my $fn = "/proc/$pid/exe";
+
+    return ($readlink{$pid} = readlink($fn));
 }
 
 my %stat;

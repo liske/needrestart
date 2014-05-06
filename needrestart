@@ -197,19 +197,20 @@ $ui->progress_prep(scalar keys %$ptable, 'Scanning processes', 1);
 my %stage2;
 for my $pid (sort {$a <=> $b} keys %$ptable) {
     my $restart = 0;
+    my $exe = nr_readlink($pid);
 
     # get executable (Linux 2.2+)
-    $ui->progress_step($ptable->{$pid}->{exec});
+    $ui->progress_step($exe);
 
     # ignore kernel threads
-    next unless(defined($ptable->{$pid}->{exec}));
+    next unless(defined($exe));
 
     # orphaned binary
-    $restart++ if (defined($ptable->{$pid}->{exec}) && $ptable->{$pid}->{exec} =~ s/ \(deleted\)$//);  # Linux
-    $restart++ if (defined($ptable->{$pid}->{exec}) && $ptable->{$pid}->{exec} =~ s/^\(deleted\)//);   # Linux VServer
+    $restart++ if (defined($exe) && $exe =~ s/ \(deleted\)$//);  # Linux
+    $restart++ if (defined($exe) && $exe =~ s/^\(deleted\)//);   # Linux VServer
 
     # ignore blacklisted binaries
-    next if(grep { $ptable->{$pid}->{exec} =~ /$_/; } @{$nrconf{blacklist}});
+    next if(grep { $exe =~ /$_/; } @{$nrconf{blacklist}});
 
     # read file mappings (Linux 2.0+)
     unless($restart) {
@@ -251,7 +252,7 @@ for my $pid (sort {$a <=> $b} keys %$ptable) {
     }
 
     unless($restart || !$nrconf{interpscan}) {
-	$restart++ if(needrestart_interp_check($nrconf{verbose}, $pid, $ptable->{$pid}->{exec}));
+	$restart++ if(needrestart_interp_check($nrconf{verbose}, $pid, $exe));
     }
 
     # restart needed?
@@ -263,15 +264,16 @@ for my $pid (sort {$a <=> $b} keys %$ptable) {
 	print STDERR "#$pid is a child of #$ppid\n" if($nrconf{verbose});
 
 	unless(exists($stage2{$ppid})) {
+	    my $pexe = nr_readlink($ppid);
 	    # ignore kernel threads
-	    next unless(defined($ptable->{$pid}->{exec}));
+	    next unless(defined($pexe));
 
-	    $stage2{$ppid} = $ptable->{$pid}->{exec};
+	    $stage2{$ppid} = $pexe;
 	}
     }
     else {
 	print STDERR "#$pid is not a child\n" if($nrconf{verbose});
-	$stage2{$pid} = $ptable->{$pid}->{exec};
+	$stage2{$pid} = $exe;
     }
 }
 $ui->progress_fin(1);
@@ -279,10 +281,14 @@ $ui->progress_fin(1);
 if(scalar keys %stage2) {
     $ui->progress_prep(scalar keys %stage2, 'Scanning candidates', 2);
     foreach my $pid (sort {$a <=> $b} keys %stage2) {
-	$ui->progress_step($ptable->{$pid}->{exec});
+	my $exe = nr_readlink($pid);
+	$exe =~ s/ \(deleted\)$//;  # Linux
+	$exe =~ s/^\(deleted\)//;   # Linux VServer
+
+	$ui->progress_step($exe);
 
 	# ignore blacklisted binaries
-	next if(grep { $ptable->{$pid}->{exec} =~ /$_/; } @{$nrconf{blacklist}});
+	next if(grep { $exe =~ /$_/; } @{$nrconf{blacklist}});
 
 	if($is_systemd) {
 	    my $systemctl = nr_fork_pipe($nrconf{verbose}, qq(systemctl), qq(-n), qq(0), qq(--full), qq(status), $pid);
@@ -301,7 +307,7 @@ if(scalar keys %stage2) {
 	    print STDERR "#$pid running $hook\n" if($nrconf{verbose});
 
 	    my $found = 0;
-	    my $prun = nr_fork_pipe($nrconf{verbose}, $hook, ($nrconf{verbose} ? qw(-v) : ()), $ptable->{$pid}->{exec});
+	    my $prun = nr_fork_pipe($nrconf{verbose}, $hook, ($nrconf{verbose} ? qw(-v) : ()), $exe);
 	    my @nopids;
 	    while(<$prun>) {
 		chomp;
