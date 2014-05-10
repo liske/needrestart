@@ -28,13 +28,47 @@ use strict;
 use warnings;
 use NeedRestart::Utils;
 use Sort::Naturally;
+use Fcntl qw(SEEK_SET);
 
 require Exporter;
 our @ISA = qw(Exporter);
 
 our @EXPORT = qw(
     nr_kernel_check
+    nr_kernel_version_x86
 );
+
+sub nr_kernel_version_x86($$) {
+    my $debug = shift;
+    my $fn = shift;
+
+    my $fh;
+    unless(open($fh, '<', $fn)) {
+	print STDERR "Could not open kernel image ($fn): $!\n" if($debug);
+	return undef;
+    }
+    binmode($fh);
+
+    my $buf;
+
+    # get kernel_version address from header
+    seek($fh, 0x20e, SEEK_SET);
+    read($fh, $buf, 2);
+    my $offset = unpack 'v', $buf;
+
+    # get kernel_version string
+    seek($fh, 0x200 + $offset, SEEK_SET);
+    read($fh, $buf, 128);
+    close($fh);
+
+    $buf =~ s/\000.*$//;
+    unless($buf =~ /^\d+\.\d+/) {
+	print STDERR "Got garbage from kernel image header ($fn): '$buf'\n" if($debug);
+	return undef;
+    }
+
+    return $buf;
+}
 
 sub nr_kernel_check($) {
     my $debug = shift;
