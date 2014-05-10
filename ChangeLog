@@ -2,10 +2,16 @@ needrestart (0.9) unstable; urgency=medium
 
   * Fix "uninitialized value" by apparent kernel threads.
     (Debian Bug#746363 by Axel Beckert <abe@debian.org>)
+  * Read kernel version from x86 kernel boot header and handle
+    uncompressed kernel images.
+    (Debian Bug#746550 by Axel Beckert <abe@debian.org>)
   * Several small bugfixes:
     - [Interp] initial source file detection broken due using getopt
       instead of getopts
       (Debian Bug#746363 by Axel Beckert <abe@debian.org>)
+    - [UI] fix newlines in Debconf template
+    - [UI] fix "No such file or directory" triggered by stdio
+      (Debian Bug#746550 by Axel Beckert <abe@debian.org>)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
