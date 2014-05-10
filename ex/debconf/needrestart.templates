@@ -21,7 +21,13 @@ Description: Which services should be restarted?
 
 Template: needrestart/ui-kernel_announce
 Type: note
-Description: Running kernel version:\n  ${KVERSION}\n\nDiagnostics:\n  ${KMESSAGE}\n\nYou should consider to reboot this machine to activate the pending kernel upgrade. You need to reboot MANUALLY!
+Description: Running kernel version:
+   ${KVERSION}
+ 
+ Diagnostics:
+   ${KMESSAGE}
+ 
+ You should consider to reboot this machine to activate the pending kernel upgrade. You need to reboot MANUALLY!
 
 Template: needrestart/ui-kernel_title
 Type: title
