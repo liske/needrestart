@@ -62,8 +62,10 @@ sub nr_kernel_version_x86($$) {
     close($fh);
 
     $buf =~ s/\000.*$//;
+    return undef if($debug eq '');
+
     unless($buf =~ /^\d+\.\d+/) {
-	print STDERR "Got garbage from kernel image header ($fn): '$buf'\n" if($debug);
+	print STDERR "nr_kernel_version_x86: Got garbage from kernel image header ($fn): '$buf'\n" if($debug);
 	return undef;
     }
 
@@ -81,21 +83,33 @@ sub nr_kernel_check($) {
     my $kversion = $kverstr;
     $kversion =~ s/^[\D]+(\S+)\s.+$/$1/;
 
-    print STDERR "Scanning kernel images\nRunning kernel version: $kversion\n" if($debug);
+    print STDERR "nr_kernel_check: Scanning kernel images...\nnr_kernel_check: Running kernel version: $kversion\n" if($debug);
 
     my %kernels;
     foreach my $fn (</boot/vmlinu*>) {
 	my $stat = nr_stat($fn);
 
 	if($stat->{size} < 1000000) {
-	    print STDERR " $fn: seems to be to small\n" if($debug);
+	    print STDERR "nr_kernel_check: $fn seems to be to small\n" if($debug);
 	    next;
 	}
 
-	my $fh = nr_fork_pipe($debug, qw(strings -n 48), $fn);
-        my ($verstr) = grep { /^\d\.\d+\S*\s/ } <$fh>;
-	close($fh);
+	my $verstr = nr_kernel_version_x86($debug, $fn);
+	unless(defined($verstr)) {
+	    my $fh = nr_fork_pipe($debug, qw(strings -n 48), $fn);
+	    ($verstr) = grep { /^(Linux version )?\d\.\d+\S*\s/ } <$fh>;
+	    close($fh);
+
+	    unless(defined($verstr)) {
+		print STDERR "nr_kernel_check: Could not get version string from $fn.\n" if($debug);
+		next;
+	    }
+	}
+
+	$verstr =~ s/^Linux version //;
 	chomp($verstr);
+	print STDERR "nr_kernel_check: $fn => $verstr\n" if($debug);
+
 	my $iversion = $verstr;
 	$iversion =~ s/\s.+$//;
 
