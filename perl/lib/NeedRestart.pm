@@ -67,7 +67,7 @@ our %EXPORT_TAGS = (
     )],
 );
 
-our $VERSION = '0.8';
+our $VERSION = '0.9';
 
 my %UIs;
 
