@@ -209,6 +209,7 @@ for my $pid (sort {$a <=> $b} keys %$ptable) {
     # orphaned binary
     $restart++ if (defined($exe) && $exe =~ s/ \(deleted\)$//);  # Linux
     $restart++ if (defined($exe) && $exe =~ s/^\(deleted\)//);   # Linux VServer
+    print STDERR "$LOGPREF #$pid uses obsolete binary $exe\n" if($restart && $nrconf{verbose});
 
     # ignore blacklisted binaries
     next if(grep { $exe =~ /$_/; } @{$nrconf{blacklist}});
