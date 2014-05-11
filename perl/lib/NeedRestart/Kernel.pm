@@ -129,11 +129,11 @@ sub nr_kernel_check($) {
     my ($eversion) = reverse nsort keys %kernels;
     print STDERR "$LOGPREF Expected kernel version: $eversion\n" if($debug);
 
-    return ($kversion, qq(Running kernel has a ABI compatible upgrade pending.))
-	if(!exists($kernels{$kversion}));
-
     return ($kversion, qq(Running not the expected kernel version $eversion.))
 	if($kversion ne $eversion);
+
+    return ($kversion, qq(Running kernel has a ABI compatible upgrade pending.))
+	unless($kernels{$kversion});
 
     return ($kversion, undef);
 }
