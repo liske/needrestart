@@ -14,4 +14,3 @@ Misc
 ----
 
 debconf (on Debian derivates)
-binutils (providing `strings`)
