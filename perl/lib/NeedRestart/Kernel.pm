@@ -63,7 +63,7 @@ sub nr_kernel_version_x86($$) {
     close($fh);
 
     $buf =~ s/\000.*$//;
-    return undef if($debug eq '');
+    return undef if($buf eq '');
 
     unless($buf =~ /^\d+\.\d+/) {
 	print STDERR "nr_kernel_version_x86: Got garbage from kernel image header ($fn): '$buf'\n" if($debug);
