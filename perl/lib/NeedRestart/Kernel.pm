@@ -27,6 +27,7 @@ package NeedRestart::Kernel;
 use strict;
 use warnings;
 use NeedRestart::Utils;
+use NeedRestart::Strings;
 use Sort::Naturally;
 use Fcntl qw(SEEK_SET);
 
@@ -83,7 +84,7 @@ sub nr_kernel_check($) {
     my $kversion = $kverstr;
     $kversion =~ s/^[\D]+(\S+)\s.+$/$1/;
 
-    print STDERR "nr_kernel_check: Scanning kernel images...\nnr_kernel_check: Running kernel version: $kversion\n" if($debug);
+    print STDERR "nr_kernel_check: Scanning kernel images...\nnr_kernel_check: Running kernel version: $kversion => $kverstr\n" if($debug);
 
     my %kernels;
     foreach my $fn (</boot/vmlinu*>) {
@@ -96,9 +97,7 @@ sub nr_kernel_check($) {
 
 	my $verstr = nr_kernel_version_x86($debug, $fn);
 	unless(defined($verstr)) {
-	    my $fh = nr_fork_pipe($debug, qw(strings -n 48), $fn);
-	    ($verstr) = grep { /^(Linux version )?\d\.\d+\S*\s/ } <$fh>;
-	    close($fh);
+	    $verstr = nr_strings($debug, qr/^(Linux version )?\d\.\d+\S*\s/, $fn);
 
 	    unless(defined($verstr)) {
 		print STDERR "nr_kernel_check: Could not get version string from $fn.\n" if($debug);
