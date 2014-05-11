@@ -34,6 +34,8 @@ use NeedRestart qw(:interp);
 use NeedRestart::Utils;
 use Module::ScanDeps;
 
+my $LOGPREF = '[Perl]';
+
 needrestart_interp_register(__PACKAGE__);
 
 sub isa {
@@ -63,14 +65,14 @@ sub files {
     # extract source file
     unless($#ARGV > -1) {
 	chdir($cwd);
-	print STDERR "#$pid  could not get a source file, skipping\n" if($self->{debug});
+	print STDERR "$LOGPREF #$pid: could not get a source file, skipping\n" if($self->{debug});
 	return ();
     }
     my $src = $ARGV[0];
     unless(-r $src && -f $src) {
 	chdir($cwd);
-	print STDERR "#$pid source file not found, skipping\n" if($self->{debug});
-	print STDERR "#$pid  reduced ARGV: ".join(' ', @ARGV)."\n" if($self->{debug});
+	print STDERR "$LOGPREF #$pid: source file not found, skipping\n" if($self->{debug});
+	print STDERR "$LOGPREF #$pid:  reduced ARGV: ".join(' ', @ARGV)."\n" if($self->{debug});
 	return ();
     }
 

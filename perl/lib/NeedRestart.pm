@@ -68,6 +68,7 @@ our %EXPORT_TAGS = (
 );
 
 our $VERSION = '0.9';
+my $LOGPREF = '[Core]';
 
 my %UIs;
 
@@ -104,7 +105,7 @@ sub needrestart_ui {
 
     return undef unless($ui);
 
-    print STDERR "Using UI '$ui'...\n" if($debug);
+    print STDERR "$LOGPREF Using UI '$ui'...\n" if($debug);
 
     return $ui->new($debug);
 }
@@ -139,15 +140,15 @@ sub needrestart_interp_check($$$) {
 
     foreach my $interp (values %Interps) {
 	if($interp->isa($pid, $bin)) {
-	    print STDERR "#$pid is a ".(ref $interp)."\n" if($debug);
+	    print STDERR "$LOGPREF #$pid is a ".(ref $interp)."\n" if($debug);
 
 	    my $ps = nr_ptable_pid($pid);
 	    my %files = $interp->files($pid);
 
 	    if(grep {$_ > $ps->start} values %files) {
 		if($debug) {
-		    print STDERR "#$pid uses obsolete script file(s):";
-		    print STDERR join("\n#$pid  ", '', map {($files{$_} > $ps->start ? $_ : ())} keys %files);
+		    print STDERR "$LOGPREF #$pid uses obsolete script file(s):";
+		    print STDERR join("\n$LOGPREF #$pid  ", '', map {($files{$_} > $ps->start ? $_ : ())} keys %files);
 		    print STDERR "\n";
 		}
 

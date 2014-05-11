@@ -39,13 +39,15 @@ our @EXPORT = qw(
     nr_kernel_version_x86
 );
 
+my $LOGPREF = '[Kernel]';
+
 sub nr_kernel_version_x86($$) {
     my $debug = shift;
     my $fn = shift;
 
     my $fh;
     unless(open($fh, '<', $fn)) {
-	print STDERR "Could not open kernel image ($fn): $!\n" if($debug);
+	print STDERR "$LOGPREF Could not open kernel image ($fn): $!\n" if($debug);
 	return undef;
     }
     binmode($fh);
@@ -66,7 +68,7 @@ sub nr_kernel_version_x86($$) {
     return undef if($buf eq '');
 
     unless($buf =~ /^\d+\.\d+/) {
-	print STDERR "nr_kernel_version_x86: Got garbage from kernel image header ($fn): '$buf'\n" if($debug);
+	print STDERR "$LOGPREF Got garbage from kernel image header ($fn): '$buf'\n" if($debug);
 	return undef;
     }
 
@@ -84,14 +86,14 @@ sub nr_kernel_check($) {
     my $kversion = $kverstr;
     $kversion =~ s/^[\D]+(\S+)\s.+$/$1/;
 
-    print STDERR "nr_kernel_check: Scanning kernel images...\nnr_kernel_check: Running kernel version: $kversion => $kverstr\n" if($debug);
+    print STDERR "$LOGPREF Scanning kernel images...\n$LOGPREF Running kernel version: $kversion => $kverstr\n" if($debug);
 
     my %kernels;
     foreach my $fn (</boot/vmlinu*>) {
 	my $stat = nr_stat($fn);
 
 	if($stat->{size} < 1000000) {
-	    print STDERR "nr_kernel_check: $fn seems to be to small\n" if($debug);
+	    print STDERR "$LOGPREF $fn seems to be to small\n" if($debug);
 	    next;
 	}
 
@@ -100,14 +102,14 @@ sub nr_kernel_check($) {
 	    $verstr = nr_strings($debug, qr/^(Linux version )?\d\.\d+\S*\s/, $fn);
 
 	    unless(defined($verstr)) {
-		print STDERR "nr_kernel_check: Could not get version string from $fn.\n" if($debug);
+		print STDERR "$LOGPREF Could not get version string from $fn.\n" if($debug);
 		next;
 	    }
 	}
 
 	$verstr =~ s/^Linux version //;
 	chomp($verstr);
-	print STDERR "nr_kernel_check: $fn => $verstr\n" if($debug);
+	print STDERR "$LOGPREF $fn => $verstr\n" if($debug);
 
 	my $iversion = $verstr;
 	$iversion =~ s/\s.+$//;
@@ -125,7 +127,7 @@ sub nr_kernel_check($) {
 	unless(scalar keys %kernels);
 
     my ($eversion) = reverse nsort keys %kernels;
-    print STDERR "Expected kernel version: $eversion\n" if($debug);
+    print STDERR "$LOGPREF Expected kernel version: $eversion\n" if($debug);
 
     return ($kversion, qq(Running kernel has a ABI compatible upgrade pending.))
 	if(!exists($kernels{$kversion}));

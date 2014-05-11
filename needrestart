@@ -37,6 +37,7 @@ use strict;
 $|++;
 $Getopt::Std::STANDARD_HELP_VERSION++;
 
+my $LOGPREF = '[main]';
 my $is_systemd = -d qq(/run/systemd/system);
 
 sub HELP_MESSAGE {
@@ -174,7 +175,7 @@ sub parse_lsbinit($) {
     return %lsb;
 }
 
-print STDERR "detected systemd\n" if($nrconf{verbose} && $is_systemd);
+print STDERR "$LOGPREF detected systemd\n" if($nrconf{verbose} && $is_systemd);
 
 my @systemd_restart;
 sub restart_cmd($) {
@@ -225,7 +226,7 @@ for my $pid (sort {$a <=> $b} keys %$ptable) {
 	    # check for non-existing libs
 	    unless(-e $path) {
 		unless($path =~ m@^/tmp/@) {
-		    print STDERR "#$pid uses non-existing $path\n" if($nrconf{verbose});
+		    print STDERR "$LOGPREF #$pid uses non-existing $path\n" if($nrconf{verbose});
 		    $restart++;
 		    last;
 		}
@@ -243,7 +244,7 @@ for my $pid (sort {$a <=> $b} keys %$ptable) {
 	    
 	    # compare maps content vs. on-disk
 	    unless($minode eq $sinode && grep {$mdev eq $_} @sdevs) {
-		print STDERR "#$pid uses obsolete $path\n" if($nrconf{verbose});
+		print STDERR "$LOGPREF #$pid uses obsolete $path\n" if($nrconf{verbose});
 		$restart++;
 		last;
 	    }
@@ -261,7 +262,7 @@ for my $pid (sort {$a <=> $b} keys %$ptable) {
     # find parent process
     my $ppid = $ptable->{$pid}->{ppid};
     if($ppid != $pid && $ppid > 1) {
-	print STDERR "#$pid is a child of #$ppid\n" if($nrconf{verbose});
+	print STDERR "$LOGPREF #$pid is a child of #$ppid\n" if($nrconf{verbose});
 
 	unless(exists($stage2{$ppid})) {
 	    my $pexe = nr_readlink($ppid);
@@ -272,7 +273,7 @@ for my $pid (sort {$a <=> $b} keys %$ptable) {
 	}
     }
     else {
-	print STDERR "#$pid is not a child\n" if($nrconf{verbose});
+	print STDERR "$LOGPREF #$pid is not a child\n" if($nrconf{verbose});
 	$stage2{$pid} = $exe;
     }
 }
@@ -296,7 +297,7 @@ if(scalar keys %stage2) {
 	    close($systemctl);
 
 	    if(defined($ret) && $ret =~ /^([^.]+\.service) /) {
-		print STDERR "#$pid is $1\n" if($nrconf{verbose});
+		print STDERR "$LOGPREF #$pid is $1\n" if($nrconf{verbose});
 		$restart{$1}++;
 		next;
 	    }
@@ -304,7 +305,7 @@ if(scalar keys %stage2) {
 
 	my $pkg;
 	foreach my $hook (sort <$nrconf{hook_d}/*>) {
-	    print STDERR "#$pid running $hook\n" if($nrconf{verbose});
+	    print STDERR "$LOGPREF #$pid running $hook\n" if($nrconf{verbose});
 
 	    my $found = 0;
 	    my $prun = nr_fork_pipe($nrconf{verbose}, $hook, ($nrconf{verbose} ? qw(-v) : ()), $exe);
@@ -315,7 +316,7 @@ if(scalar keys %stage2) {
 
 		if($v[0] eq 'PACKAGE' && $v[1]) {
 		    $pkg = $v[1];
-		    print STDERR "#$pid package: $v[1]\n" if($nrconf{verbose});
+		    print STDERR "$LOGPREF #$pid package: $v[1]\n" if($nrconf{verbose});
 		    next;
 		}
 
@@ -325,7 +326,7 @@ if(scalar keys %stage2) {
 		    unless(%lsb && exists($lsb{'default-start'})) {
 			# If the script has no LSB tags we consider to call it later - they
 			# are broken anyway.
-			print STDERR "no LSB headers found at $v[1]\n" if($nrconf{verbose});
+			print STDERR "$LOGPREF no LSB headers found at $v[1]\n" if($nrconf{verbose});
 			push(@nopids, $v[1]);
 		    }
 		    # In the run-levels S and 1 no daemons are being started (normaly).
@@ -340,7 +341,7 @@ if(scalar keys %stage2) {
 				close(HPID);
 
 				if(int($p) == $pid) {
-				    print STDERR "#$pid has been started by $v[1] - triggering\n" if($nrconf{verbose});
+				    print STDERR "$LOGPREF #$pid has been started by $v[1] - triggering\n" if($nrconf{verbose});
 				    $restart{$v[1]}++;
 				    $found++;
 				    last;
@@ -348,12 +349,12 @@ if(scalar keys %stage2) {
 			    }
 			}
 			else {
- 			    print STDERR "no pidfile reference found at $v[1]\n" if($nrconf{verbose});
+ 			    print STDERR "$LOGPREF no pidfile reference found at $v[1]\n" if($nrconf{verbose});
 			    push(@nopids, $v[1]);
 			}
 		    }
 		    else {
-			print STDERR "#$pid rc.d script $v[1] should not start in the current run-level($runlevel)\n" if($nrconf{verbose});
+			print STDERR "$LOGPREF #$pid rc.d script $v[1] should not start in the current run-level($runlevel)\n" if($nrconf{verbose});
 		    }
 		}
 	    }
