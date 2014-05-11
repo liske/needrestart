@@ -13,8 +13,9 @@ needrestart (0.9) unstable; urgency=medium
     - [UI] fix newlines in Debconf template
     - [UI] fix "No such file or directory" triggered by stdio
       (Debian Bug#746550 by Axel Beckert <abe@debian.org>)
+    - [Interp] Use source file instead of /proc/<pid>/exe to find package.
 
- -- Thomas Liske <thomas@fiasko-nw.net>  Sun, 11 May 2014 21:27:15 +0200
+ -- Thomas Liske <thomas@fiasko-nw.net>  Sun, 11 May 2014 22:48:42 +0200
 
 needrestart (0.8) unstable; urgency=low
 
