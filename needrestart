@@ -285,6 +285,10 @@ if(scalar keys %stage2) {
 	my $exe = nr_readlink($pid);
 	$exe =~ s/ \(deleted\)$//;  # Linux
 	$exe =~ s/^\(deleted\)//;   # Linux VServer
+	print STDERR "$LOGPREF #$pid exe => $exe\n" if($nrconf{verbose});
+
+	# try to find interpreter source file
+	($exe) = (needrestart_interp_source($nrconf{verbose}, $pid, $exe), $exe);
 
 	$ui->progress_step($exe);
 

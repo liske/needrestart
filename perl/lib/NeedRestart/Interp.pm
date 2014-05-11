@@ -42,6 +42,10 @@ sub isa($$) {
     return 0;
 }
 
+sub source($$) {
+    return ();
+}
+
 sub files($$) {
     return ();
 }

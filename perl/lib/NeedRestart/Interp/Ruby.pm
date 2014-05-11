@@ -28,7 +28,7 @@ use strict;
 use warnings;
 
 use parent qw(NeedRestart::Interp);
-use Cwd;
+use Cwd qw(abs_path getcwd);
 use Getopt::Std;
 use NeedRestart qw(:interp);
 use NeedRestart::Utils;
@@ -74,6 +74,38 @@ sub _scan($$$$$) {
 	    }
 	}
     }
+}
+
+sub source {
+    my $self = shift;
+    my $pid = shift;
+    my $ptable = nr_ptable_pid($pid);
+    my $cwd = getcwd();
+    chdir($ptable->{cwd});
+
+    # get original ARGV
+    (my $bin, local @ARGV) = nr_parse_cmd($pid);
+
+    # eat Ruby's command line options
+    my %opts;
+    getopts('SUacdlnpswvy0:C:E:F:I:K:T:W:e:i:r:x:e:d:', \%opts);
+
+    # extract source file
+    unless($#ARGV > -1) {
+	chdir($cwd);
+	print STDERR "$LOGPREF #$pid: could not get a source file, skipping\n" if($self->{debug});
+	return undef;
+    }
+
+    my $src = abs_path($ARGV[0]);
+    chdir($cwd);
+    unless(-r $src && -f $src) {
+	print STDERR "$LOGPREF #$pid: source file '$src' not found, skipping\n" if($self->{debug});
+	print STDERR "$LOGPREF #$pid:  reduced ARGV: ".join(' ', @ARGV)."\n" if($self->{debug});
+	return undef;
+    }
+
+    return $src;
 }
 
 sub files {

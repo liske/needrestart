@@ -45,6 +45,7 @@ our @EXPORT = qw(
 
     needrestart_ui
     needrestart_interp_check
+    needrestart_interp_source
 );
 
 our @EXPORT_OK = qw(
@@ -158,6 +159,28 @@ sub needrestart_interp_check($$$) {
     }
 
     return 0;
+}
+
+sub needrestart_interp_source($$$) {
+    my $debug = shift;
+    my $pid = shift;
+    my $bin = shift;
+
+    needrestart_interp_init($debug) unless(%Interps);
+
+    foreach my $interp (values %Interps) {
+	if($interp->isa($pid, $bin)) {
+	    print STDERR "$LOGPREF #$pid is a ".(ref $interp)."\n" if($debug);
+
+	    my $src = $interp->source($pid);
+	    print STDERR "$LOGPREF #$pid source is ".(defined($src) ? $src : 'UNKNOWN')."\n" if($debug);
+
+	    return ($src) if(defined($src));;
+	    return ();
+	}
+    }
+
+    return ();
 }
 
 1;
