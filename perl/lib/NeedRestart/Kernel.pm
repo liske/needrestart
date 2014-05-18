@@ -89,7 +89,7 @@ sub nr_kernel_check($) {
     print STDERR "$LOGPREF Scanning kernel images...\n$LOGPREF Running kernel version: $kversion => $kverstr\n" if($debug);
 
     my %kernels;
-    foreach my $fn (</boot/vmlinu*>) {
+    foreach my $fn (reverse nsort </boot/vmlinu*>) {
 	my $stat = nr_stat($fn);
 
 	if($stat->{size} < 1000000) {
