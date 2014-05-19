@@ -64,7 +64,7 @@ sub announce {
     my $kversion = shift;
     my $kmessage = shift;
 
-    print "Pending kernel upgrade!\n\nRunning kernel version:\n  ${kversion}\n\nDiagnostics:\n  ${kmessage}\n\nYou should consider to reboot this machine to activate the pending kernel upgrade. You need to reboot MANUALLY! [Return]\n";
+    print "Pending kernel upgrade!\n\nRunning kernel version:\n  ${kversion}\n\nDiagnostics:\n  ${kmessage}\n\nRestarting the system to load the new kernel will not be handled automatically, so you should consider rebooting. [Return]\n";
     <STDIN>;
 }
 

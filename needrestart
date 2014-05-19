@@ -398,7 +398,7 @@ if(defined($kversion)) {
 }
 
 unless(scalar %restart) {
-    $ui->notice('No services required to be restarted.') unless($opt_b);
+    $ui->notice('No services need to be restarted.') unless($opt_b);
 }
 else {
     if($opt_b || $opt_r ne 'i') {

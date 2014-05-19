@@ -93,7 +93,7 @@ sub nr_kernel_check($) {
 	my $stat = nr_stat($fn);
 
 	if($stat->{size} < 1000000) {
-	    print STDERR "$LOGPREF $fn seems to be to small\n" if($debug);
+	    print STDERR "$LOGPREF $fn seems to be too small\n" if($debug);
 	    next;
 	}
 
@@ -129,10 +129,10 @@ sub nr_kernel_check($) {
     my ($eversion) = reverse nsort keys %kernels;
     print STDERR "$LOGPREF Expected kernel version: $eversion\n" if($debug);
 
-    return ($kversion, qq(Running not the expected kernel version $eversion.))
+    return ($kversion, qq(Not running the expected kernel version $eversion.))
 	if($kversion ne $eversion);
 
-    return ($kversion, qq(Running kernel has a ABI compatible upgrade pending.))
+    return ($kversion, qq(Running kernel has an ABI compatible upgrade pending.))
 	unless($kernels{$kversion});
 
     return ($kversion, undef);

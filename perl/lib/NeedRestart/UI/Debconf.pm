@@ -138,7 +138,7 @@ sub query_pkgs($$$$$) {
     my @s = split(/, /, $s);
 
     if($#s == -1) {
-	print STDERR "No services should be restarted...\n";
+	print STDERR "No services need to be restarted...\n";
     }
 
     # restart each selected service script
