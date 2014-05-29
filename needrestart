@@ -233,6 +233,9 @@ for my $pid (sort {$a <=> $b} keys %$ptable) {
 		}
 	    }
 	    
+	    # kFreeBSD: /proc/<pid>/maps does not contain device IDs
+	    last if($mdev eq '00:00');
+	    
 	    # get on-disk info
 	    my ($sdev, $sinode) = stat($path);
 	    last unless(defined($sinode));
