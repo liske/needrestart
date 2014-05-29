@@ -1,3 +1,12 @@
+needrestart (1.0) unstable; urgency=medium
+
+  * Fix grammar errors.
+    (Debian Bug#748652 by Justin B Rye <justin.byam.rye@gmail.com>)
+  * Ignore device ID in /proc/<pid>/maps on kFreeBSD.
+    (Reported by Axel Beckert <abe@debian.org>).
+
+ -- Thomas Liske <thomas@fiasko-nw.net>  
+
 needrestart (0.9) unstable; urgency=medium
 
   * Drop external dependency on strings command from binutils.
