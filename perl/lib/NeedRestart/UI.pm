@@ -27,6 +27,7 @@ package NeedRestart::UI;
 use strict;
 use warnings;
 use Term::ProgressBar::Simple;
+use Test::MockObject;
 
 sub new {
     my $class = shift;
@@ -42,20 +43,27 @@ sub progress_prep($$$$) {
     my $self = shift;
     my ($max, $out, $pass) = @_;
 
-    # restore terminal if required (debconf)
-    unless(-t *STDIN) {
-	open($self->{fhin}, '<&', \*STDIN) || die "Can't dup stdin: $!\n";
-	open(STDIN, '< /dev/tty') || open(STDIN, '<&1');
-    }
-    unless(-t *STDOUT) {
-	open($self->{fhout}, '>&', \*STDOUT) || die "Can't dup stdout: $!\n";
-	open(STDOUT, '> /dev/tty') || open(STDOUT, '>&2');
-    }
+    unless($self->{debug}) {
+	# restore terminal if required (debconf)
+	unless(-t *STDIN) {
+	    open($self->{fhin}, '<&', \*STDIN) || die "Can't dup stdin: $!\n";
+	    open(STDIN, '< /dev/tty') || open(STDIN, '<&1');
+	}
+	unless(-t *STDOUT) {
+	    open($self->{fhout}, '>&', \*STDOUT) || die "Can't dup stdout: $!\n";
+	    open(STDOUT, '> /dev/tty') || open(STDOUT, '>&2');
+	}
 
-    $self->{progress} = Term::ProgressBar::Simple->new({
-        count => $max,
-	remove => 1,
-    });
+	$self->{progress} = Term::ProgressBar::Simple->new({
+	    count => $max,
+	    remove => 1,
+	});
+    }
+    else {
+        $self->{progress} = Test::MockObject->new();
+        $self->{progress}->set_true('update');
+        $self->{progress}->set_true('message');
+    }
 
     $self->{progress}->message($out);
 }
