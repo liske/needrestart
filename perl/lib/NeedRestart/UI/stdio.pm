@@ -33,31 +33,6 @@ use NeedRestart qw(:ui);
 
 needrestart_ui_register(__PACKAGE__, NEEDRESTART_PRIO_LOW);
 
-sub progress_prep($$$$) {
-    my $self = shift;
-    my ($max, $out, $pass) = @_;
-
-    $|++;
-
-    print "$out";
-    print "\n" if($self->{debug});
-}
-
-sub progress_step($$) {
-    my $self = shift;
-    my $bin = shift;
-
-    print '.' if($bin && !$self->{debug});
-}
-
-sub progress_fin($) {
-    my $self = shift;
-
-    print "\n" if(!$self->{debug});
-
-    $|--;
-}
-
 
 sub announce {
     my $self = shift;

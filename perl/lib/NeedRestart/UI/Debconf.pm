@@ -63,28 +63,6 @@ sub new {
     }, $class;
 }
 
-sub progress_prep($$$$) {
-    my $self = shift;
-    my ($max, $out, $pass) = @_;
-
-    dcres( progress('START', 0, $max, "needrestart/ui-progress_title$pass") );
-}
-
-sub progress_step($$) {
-    my $self = shift;
-    my $bin = shift;
-
-    progress('STEP', 1);
-    dcres( subst('needrestart/ui-progress_info', 'BIN', ($bin ? $bin : '')) );
-    dcres( progress('INFO', 'needrestart/ui-progress_info') );
-}
-
-sub progress_fin($) {
-    my $self = shift;
-
-    dcres( progress('STOP') );
-}
-
 
 sub announce {
     my $self = shift;

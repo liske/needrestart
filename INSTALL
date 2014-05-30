@@ -8,6 +8,7 @@ Module::Find
 Module::ScanDeps
 Proc::ProcessTable
 Sort::Naturally
+Term::ProgressBar::Simple
 
 
 Misc

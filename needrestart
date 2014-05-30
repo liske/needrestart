@@ -194,7 +194,7 @@ my %restart;
 
 # inspect only pids
 my $ptable = nr_ptable();
-$ui->progress_prep(scalar keys %$ptable, 'Scanning processes', 1);
+$ui->progress_prep(scalar keys %$ptable, 'Scanning processes...', 1);
 my %stage2;
 for my $pid (sort {$a <=> $b} keys %$ptable) {
     my $restart = 0;
@@ -284,7 +284,7 @@ for my $pid (sort {$a <=> $b} keys %$ptable) {
 $ui->progress_fin(1);
 
 if(scalar keys %stage2) {
-    $ui->progress_prep(scalar keys %stage2, 'Scanning candidates', 2);
+    $ui->progress_prep(scalar keys %stage2, 'Scanning candidates...', 2);
     foreach my $pid (sort {$a <=> $b} keys %stage2) {
 	my $exe = nr_readlink($pid);
 	$exe =~ s/ \(deleted\)$//;  # Linux

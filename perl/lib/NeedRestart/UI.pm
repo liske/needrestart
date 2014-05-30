@@ -26,6 +26,7 @@ package NeedRestart::UI;
 
 use strict;
 use warnings;
+use Term::ProgressBar::Simple;
 
 sub new {
     my $class = shift;
@@ -33,16 +34,51 @@ sub new {
 
     return bless {
 	debug => $debug,
+	progress => undef,
     }, $class;
 }
 
 sub progress_prep($$$$) {
+    my $self = shift;
+    my ($max, $out, $pass) = @_;
+
+    # restore terminal if required (debconf)
+    unless(-t *STDIN) {
+	open($self->{fhin}, '<&', \*STDIN) || die "Can't dup stdin: $!\n";
+	open(STDIN, '< /dev/tty') || open(STDIN, '<&1');
+    }
+    unless(-t *STDOUT) {
+	open($self->{fhout}, '>&', \*STDOUT) || die "Can't dup stdout: $!\n";
+	open(STDOUT, '> /dev/tty') || open(STDOUT, '>&2');
+    }
+
+    $self->{progress} = Term::ProgressBar::Simple->new({
+        count => $max,
+	remove => 1,
+    });
+
+    $self->{progress}->message($out);
 }
 
 sub progress_step($$) {
+    my $self = shift;
+    my $bin = shift;
+
+    $self->{progress}++;
+
+    1;
 }
 
 sub progress_fin($) {
+    my $self = shift;
+
+    undef($self->{progress});
+
+    # restore STDIN/STDOUT if required (debconf)
+    open(STDIN, '<&', \*{$self->{fhin}}) || die "Can't dup stdin: $!\n"
+	if($self->{fhin});
+    open(STDOUT, '>&', \*{$self->{fhout}}) || die "Can't dup stdout: $!\n"
+	if($self->{fhout});
 }
 
 
