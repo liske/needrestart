@@ -1,15 +1,3 @@
-Template: needrestart/ui-progress_title1
-Type: text
-Description: Scanning processes...
-
-Template: needrestart/ui-progress_title2
-Type: text
-Description: Scanning candidates...
-
-Template: needrestart/ui-progress_info
-Type: text
-Description: Inspecting ${BIN}...
-
 Template: needrestart/ui-query_pkgs_title
 Type: title
 Description: Daemons using outdated libraries
