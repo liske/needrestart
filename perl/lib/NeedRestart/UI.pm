@@ -60,9 +60,10 @@ sub progress_prep($$$$) {
 	});
     }
     else {
-        $self->{progress} = Test::MockObject->new();
-        $self->{progress}->set_true('update');
-        $self->{progress}->set_true('message');
+	# disable progress indicator while being verbose
+	$self->{progress} = Test::MockObject->new();
+	$self->{progress}->set_true('update');
+	$self->{progress}->set_true('message');
     }
 
     $self->{progress}->message($out);
