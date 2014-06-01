@@ -194,14 +194,14 @@ my %restart;
 
 # inspect only pids
 my $ptable = nr_ptable();
-$ui->progress_prep(scalar keys %$ptable, 'Scanning processes...', 1);
+$ui->progress_prep(scalar keys %$ptable, 'Scanning processes...');
 my %stage2;
 for my $pid (sort {$a <=> $b} keys %$ptable) {
     my $restart = 0;
     my $exe = nr_readlink($pid);
 
     # get executable (Linux 2.2+)
-    $ui->progress_step($exe);
+    $ui->progress_step;
 
     # ignore kernel threads
     next unless(defined($exe));
@@ -281,10 +281,10 @@ for my $pid (sort {$a <=> $b} keys %$ptable) {
 	$stage2{$pid} = $exe;
     }
 }
-$ui->progress_fin(1);
+$ui->progress_fin;
 
 if(scalar keys %stage2) {
-    $ui->progress_prep(scalar keys %stage2, 'Scanning candidates...', 2);
+    $ui->progress_prep(scalar keys %stage2, 'Scanning candidates...');
     foreach my $pid (sort {$a <=> $b} keys %stage2) {
 	my $exe = nr_readlink($pid);
 	$exe =~ s/ \(deleted\)$//;  # Linux
@@ -294,7 +294,7 @@ if(scalar keys %stage2) {
 	# try to find interpreter source file
 	($exe) = (needrestart_interp_source($nrconf{verbose}, $pid, $exe), $exe);
 
-	$ui->progress_step($exe);
+	$ui->progress_step;
 
 	# ignore blacklisted binaries
 	next if(grep { $exe =~ /$_/; } @{$nrconf{blacklist}});
@@ -378,10 +378,10 @@ if(scalar keys %stage2) {
 	    last if($found);
 	}
     }
-    $ui->progress_fin(1);
+    $ui->progress_fin;
 }
 
-my ($kversion, $kmessage) = ($nrconf{kernelhints} || $opt_b ? nr_kernel_check($nrconf{verbose}) : ());
+my ($kversion, $kmessage) = ($nrconf{kernelhints} || $opt_b ? nr_kernel_check($nrconf{verbose}, $ui) : ());
 
 print "NEEDRESTART-VER: $NeedRestart::VERSION\n" if($opt_b);
 

@@ -75,8 +75,12 @@ sub nr_kernel_version_x86($$) {
     return $buf;
 }
 
-sub nr_kernel_check($) {
+sub nr_kernel_check($$) {
     my $debug = shift;
+    my $ui = shift;
+
+    my @kfiles = reverse nsort </boot/vmlinu*>;
+    $ui->progress_prep(scalar @kfiles, 'Scanning kernel images...');
 
     my $fh;
     open($fh, '/proc/version') || return (undef, "Could not read /proc/version: $!");
@@ -86,10 +90,11 @@ sub nr_kernel_check($) {
     my $kversion = $kverstr;
     $kversion =~ s/^[\D]+(\S+)\s.+$/$1/;
 
-    print STDERR "$LOGPREF Scanning kernel images...\n$LOGPREF Running kernel version: $kversion => $kverstr\n" if($debug);
+    print STDERR "$LOGPREF Running kernel version: $kversion => $kverstr\n" if($debug);
 
     my %kernels;
-    foreach my $fn (reverse nsort </boot/vmlinu*>) {
+    foreach my $fn (@kfiles) {
+	$ui->progress_step;
 	my $stat = nr_stat($fn);
 
 	if($stat->{size} < 1000000) {
@@ -122,6 +127,7 @@ sub nr_kernel_check($) {
 	    }
 	}
     }
+    $ui->progress_fin;
 
     return (undef, "Did not find any kernel images (/boot/vmlinu*)!")
 	unless(scalar keys %kernels);

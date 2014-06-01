@@ -39,9 +39,9 @@ sub new {
     }, $class;
 }
 
-sub progress_prep($$$$) {
+sub progress_prep($$$) {
     my $self = shift;
-    my ($max, $out, $pass) = @_;
+    my ($max, $out) = @_;
 
     unless($self->{debug}) {
 	# restore terminal if required (debconf)
@@ -69,9 +69,8 @@ sub progress_prep($$$$) {
     $self->{progress}->message($out);
 }
 
-sub progress_step($$) {
+sub progress_step($) {
     my $self = shift;
-    my $bin = shift;
 
     $self->{progress}++;
 
