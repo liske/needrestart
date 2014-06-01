@@ -27,54 +27,16 @@ package NeedRestart::Kernel;
 use strict;
 use warnings;
 use NeedRestart::Utils;
-use NeedRestart::Strings;
 use POSIX qw(uname);
-use Sort::Naturally;
-use Fcntl qw(SEEK_SET);
 
 require Exporter;
 our @ISA = qw(Exporter);
 
 our @EXPORT = qw(
     nr_kernel_check
-    nr_linux_version_x86
 );
 
 my $LOGPREF = '[Kernel]';
-
-sub nr_linux_version_x86($$) {
-    my $debug = shift;
-    my $fn = shift;
-
-    my $fh;
-    unless(open($fh, '<', $fn)) {
-	print STDERR "$LOGPREF Could not open kernel image ($fn): $!\n" if($debug);
-	return undef;
-    }
-    binmode($fh);
-
-    my $buf;
-
-    # get kernel_version address from header
-    seek($fh, 0x20e, SEEK_SET);
-    read($fh, $buf, 2);
-    my $offset = unpack 'v', $buf;
-
-    # get kernel_version string
-    seek($fh, 0x200 + $offset, SEEK_SET);
-    read($fh, $buf, 128);
-    close($fh);
-
-    $buf =~ s/\000.*$//;
-    return undef if($buf eq '');
-
-    unless($buf =~ /^\d+\.\d+/) {
-	print STDERR "$LOGPREF Got garbage from kernel image header ($fn): '$buf'\n" if($debug);
-	return undef;
-    }
-
-    return $buf;
-}
 
 sub nr_kernel_check($$) {
     my $debug = shift;
@@ -83,52 +45,16 @@ sub nr_kernel_check($$) {
     my ($sysname, $nodename, $release, $version, $machine) = uname;
     print STDERR "$LOGPREF Running kernel release $release, kernel version $version\n" if($debug);
 
-    my @kfiles = reverse nsort </boot/vmlinu*>;
-    $ui->progress_prep(scalar @kfiles, 'Scanning kernel images...');
-
-    my %kernels;
-    foreach my $fn (@kfiles) {
-	$ui->progress_step;
-	my $stat = nr_stat($fn);
-
-	if($stat->{size} < 1000000) {
-	    print STDERR "$LOGPREF $fn seems to be too small\n" if($debug);
-	    next;
-	}
-
-	my $verstr = nr_linux_version_x86($debug, $fn);
-	unless(defined($verstr)) {
-	    $verstr = nr_strings($debug, qr/^(Linux version )?\d\.\d+\S*\s/, $fn);
-
-	    unless(defined($verstr)) {
-		print STDERR "$LOGPREF Could not get version string from $fn.\n" if($debug);
-		next;
-	    }
-	}
-
-	my $iversion = $verstr;
-	$iversion =~ s/^Linux version //;
-	chomp($iversion);
-	$iversion =~ s/\s.+$//;
-	$kernels{$iversion} = (index($verstr, $release) != -1 && index($verstr, $version) != -1);
-
-	print STDERR "$LOGPREF $fn => $verstr [$iversion]".($kernels{$iversion} ? '*' : '')."\n" if($debug);
+    if($sysname eq 'Linux') {
+	require NeedRestart::Kernel::Linux;
+	return NeedRestart::Kernel::Linux::nr_linux_check($debug, $ui);
     }
-    $ui->progress_fin;
+    elsif($sysname eq 'GNU/kFreeBSD') {
+	require NeedRestart::Kernel::kFreeBSD;
+	return NeedRestart::Kernel::kFreeBSD::nr_kfreebsd_check($debug, $ui);
+    }
 
-    return (undef, "Did not find any kernel images (/boot/vmlinu*)!")
-	unless(scalar keys %kernels);
-
-    my ($eversion) = reverse nsort keys %kernels;
-    print STDERR "$LOGPREF Expected kernel version: $eversion\n" if($debug);
-
-    return ($release, qq(Not running the expected kernel version $eversion.))
-	if($release ne $eversion);
-
-    return ($release, qq(Running kernel has an ABI compatible upgrade pending.))
-	unless($kernels{$release});
-
-    return ($release, undef);
+    return (undef, "Running on unknown $sysname kernel.");
 }
 
 1;
