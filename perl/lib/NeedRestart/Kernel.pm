@@ -43,7 +43,7 @@ sub nr_kernel_check($$) {
     my $ui = shift;
 
     my ($sysname, $nodename, $release, $version, $machine) = uname;
-    print STDERR "$LOGPREF Running kernel release $release, kernel version $version\n" if($debug);
+    print STDERR "$LOGPREF $sysname: kernel release $release, kernel version $version\n" if($debug);
 
     if($sysname eq 'Linux') {
 	require NeedRestart::Kernel::Linux;
