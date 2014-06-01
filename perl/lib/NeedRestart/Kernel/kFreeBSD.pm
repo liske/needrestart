@@ -69,6 +69,7 @@ sub nr_kfreebsd_check($$) {
 	$iversion =~ s/^.*FreeBSD //;
 	chomp($iversion);
 	$iversion =~ s/\s.+$//;
+	$verstr =~ s/(#\d+):/$1/;
 	$kernels{$iversion} = (index($verstr, $release) != -1 && index($verstr, $version) != -1);
 
 	print STDERR "$LOGPREF $fn => $verstr [$iversion]".($kernels{$iversion} ? '*' : '')."\n" if($debug);
