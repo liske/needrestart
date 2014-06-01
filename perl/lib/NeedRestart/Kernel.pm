@@ -28,6 +28,7 @@ use strict;
 use warnings;
 use NeedRestart::Utils;
 use NeedRestart::Strings;
+use POSIX qw(uname);
 use Sort::Naturally;
 use Fcntl qw(SEEK_SET);
 
@@ -79,18 +80,11 @@ sub nr_kernel_check($$) {
     my $debug = shift;
     my $ui = shift;
 
+    my ($sysname, $nodename, $release, $version, $machine) = uname;
+    print STDERR "$LOGPREF Running kernel release $release, kernel version $version\n" if($debug);
+
     my @kfiles = reverse nsort </boot/vmlinu*>;
     $ui->progress_prep(scalar @kfiles, 'Scanning kernel images...');
-
-    my $fh;
-    open($fh, '/proc/version') || return (undef, "Could not read /proc/version: $!");
-    my $kverstr = <$fh>;
-    close($fh);
-    chomp($kverstr);
-    my $kversion = $kverstr;
-    $kversion =~ s/^[\D]+(\S+)\s.+$/$1/;
-
-    print STDERR "$LOGPREF Running kernel version: $kversion => $kverstr\n" if($debug);
 
     my %kernels;
     foreach my $fn (@kfiles) {
@@ -112,20 +106,13 @@ sub nr_kernel_check($$) {
 	    }
 	}
 
-	$verstr =~ s/^Linux version //;
-	chomp($verstr);
-	print STDERR "$LOGPREF $fn => $verstr\n" if($debug);
-
 	my $iversion = $verstr;
+	$iversion =~ s/^Linux version //;
+	chomp($iversion);
 	$iversion =~ s/\s.+$//;
+	$kernels{$iversion} = (index($verstr, $release) != -1 && index($verstr, $version) != -1);
 
-	$kernels{$iversion} = 1;
-	foreach my $token (split(/ /, $verstr)) {
-	    if(index($kverstr, $token) == -1) {
-		$kernels{$iversion} = 0;
-		last;
-	    }
-	}
+	print STDERR "$LOGPREF $fn => $verstr [$iversion]".($kernels{$iversion} ? '*' : '')."\n" if($debug);
     }
     $ui->progress_fin;
 
@@ -135,13 +122,13 @@ sub nr_kernel_check($$) {
     my ($eversion) = reverse nsort keys %kernels;
     print STDERR "$LOGPREF Expected kernel version: $eversion\n" if($debug);
 
-    return ($kversion, qq(Not running the expected kernel version $eversion.))
-	if($kversion ne $eversion);
+    return ($release, qq(Not running the expected kernel version $eversion.))
+	if($release ne $eversion);
 
-    return ($kversion, qq(Running kernel has an ABI compatible upgrade pending.))
-	unless($kernels{$kversion});
+    return ($release, qq(Running kernel has an ABI compatible upgrade pending.))
+	unless($kernels{$release});
 
-    return ($kversion, undef);
+    return ($release, undef);
 }
 
 1;
