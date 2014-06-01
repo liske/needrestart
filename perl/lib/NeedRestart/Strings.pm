@@ -84,7 +84,7 @@ sub nr_strings($$$) {
 	return undef;
     }
 
-    return nr_strings($debug, $re, $fh);
+    return nr_strings_fh($debug, $re, $fh);
 }
 
 1;
