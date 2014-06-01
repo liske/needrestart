@@ -59,7 +59,7 @@ sub nr_kfreebsd_check($$) {
 	    next;
 	}
 
-	my $verstr = nr_strings($debug, qr/FreeBSD \d.+:.+/, nr_fork_pipe($debug, qq(gunzip -c), $fn));
+	my $verstr = nr_strings_fh($debug, qr/FreeBSD \d.+:.+/, nr_fork_pipe($debug, qw(gunzip -c), $fn));
 	unless(defined($verstr)) {
 	    print STDERR "$LOGPREF Could not get version string from $fn.\n" if($debug);
 	    next;
