@@ -32,6 +32,7 @@ our @ISA = qw(Exporter);
 
 our @EXPORT = qw(
     nr_strings
+    nr_strings_fh
 );
 
 my $LOGPREF = '[Strings]';
@@ -44,16 +45,11 @@ my $PUNCTUATION = join '\\', split //, q/`~!@#$%^&*()-+={}|[]\:";'<>?,.\//; #`
 my $PRINTABLE = '\w \t' . $PUNCTUATION;
 my $CHUNKSIZE = 4096;
 
-sub nr_strings($$$) {
+sub nr_strings_fh($$$) {
     my $debug = shift;
     my $re = shift;
-    my $fn = shift;
+    my $fh = shift;
 
-    my $fh;
-    unless(open($fh, '<', $fn)) {
-	print STDERR "$LOGPREF Could not open file ($fn): $!\n" if($debug);
-	return undef;
-    }
     binmode($fh);
 
     my $offset = 0;
@@ -75,6 +71,20 @@ sub nr_strings($$$) {
     close($fh);
 
     return undef;
+}
+
+sub nr_strings($$$) {
+    my $debug = shift;
+    my $re = shift;
+    my $fn = shift;
+
+    my $fh;
+    unless(open($fh, '<', $fn)) {
+	print STDERR "$LOGPREF Could not open file ($fn): $!\n" if($debug);
+	return undef;
+    }
+
+    return nr_strings($debug, $re, $fh);
 }
 
 1;
