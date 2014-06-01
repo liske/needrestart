@@ -37,12 +37,12 @@ our @ISA = qw(Exporter);
 
 our @EXPORT = qw(
     nr_kernel_check
-    nr_kernel_version_x86
+    nr_linux_version_x86
 );
 
 my $LOGPREF = '[Kernel]';
 
-sub nr_kernel_version_x86($$) {
+sub nr_linux_version_x86($$) {
     my $debug = shift;
     my $fn = shift;
 
@@ -96,7 +96,7 @@ sub nr_kernel_check($$) {
 	    next;
 	}
 
-	my $verstr = nr_kernel_version_x86($debug, $fn);
+	my $verstr = nr_linux_version_x86($debug, $fn);
 	unless(defined($verstr)) {
 	    $verstr = nr_strings($debug, qr/^(Linux version )?\d\.\d+\S*\s/, $fn);
 
