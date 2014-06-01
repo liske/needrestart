@@ -222,7 +222,7 @@ for my $pid (sort {$a <=> $b} keys %$ptable) {
 	    my ($maddr, $mperm, $moffset, $mdev, $minode, $path) = split(/\s+/);
 	    
 	    # skip special handles and non-executable mappings
-	    next unless($minode != 0 && $path ne '' && $mperm =~ /x/);
+	    next unless(defined($path) && $minode != 0 && $path ne '' && $mperm =~ /x/);
 	    
 	    # check for non-existing libs
 	    unless(-e $path) {
