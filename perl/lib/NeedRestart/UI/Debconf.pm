@@ -36,14 +36,14 @@ use constant {
 };
 
 version('2.0');
-capb;
+capb('backup');
 
 needrestart_ui_register(__PACKAGE__, NEEDRESTART_PRIO_HIGH);
 
 sub dcres(@) {
     my ($rc, @bulk) = @_;
 
-    if($rc != 0) {
+    if($rc != 0 && $rc != 30) {
 	stop;
 
 	die "Debconf: $bulk[0]\n";
@@ -103,9 +103,9 @@ sub query_pkgs($$$$$) {
     dcres( fset('needrestart/ui-query_pkgs', 'seen', 0) );
     dcres( settitle('needrestart/ui-query_pkgs_title') );
     dcres( input('critical', 'needrestart/ui-query_pkgs') );
-    dcres( go );
+    my ($r) = dcres( go );
 
-    my ($s) = dcres(get('needrestart/ui-query_pkgs'));
+    my ($s) = dcres( get('needrestart/ui-query_pkgs') );
 
     stop;
 
@@ -115,9 +115,13 @@ sub query_pkgs($$$$$) {
     # get selected rc.d script
     my @s = split(/, /, $s);
 
-    if($#s == -1) {
-	print STDERR "No services need to be restarted...\n";
+    if($r eq 'backup') {
+	print STDERR "User canceled.\n";
+	return;
     }
+
+    print STDERR "User declined any service restarts.\n"
+	if($#s == -1);
 
     # restart each selected service script
     &$cb($_) for @s;
