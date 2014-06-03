@@ -36,7 +36,7 @@ require Exporter;
 our @ISA = qw(Exporter);
 
 our @EXPORT = qw(
-    nr_linux_check
+    nr_kernel_check
     nr_linux_version_x86
 );
 
@@ -76,11 +76,13 @@ sub nr_linux_version_x86($$) {
     return $buf;
 }
 
-sub nr_linux_check($$) {
+sub nr_kernel_check($$) {
     my $debug = shift;
     my $ui = shift;
 
     my ($sysname, $nodename, $release, $version, $machine) = uname;
+
+    die "$LOGPREF Not running on Linux!\n" unless($sysname eq 'Linux');
 
     my @kfiles = reverse nsort </boot/vmlinu*>;
     $ui->progress_prep(scalar @kfiles, 'Scanning kernel images...');

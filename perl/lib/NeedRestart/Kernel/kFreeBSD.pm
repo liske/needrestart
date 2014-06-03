@@ -35,16 +35,18 @@ require Exporter;
 our @ISA = qw(Exporter);
 
 our @EXPORT = qw(
-    nr_kfreebsd_check
+    nr_kernel_check
 );
 
 my $LOGPREF = '[Kernel/kFreeBSD]';
 
-sub nr_kfreebsd_check($$) {
+sub nr_kernel_check($$) {
     my $debug = shift;
     my $ui = shift;
 
     my ($sysname, $nodename, $release, $version, $machine) = uname;
+
+    die "$LOGPREF Not running on GNU/kFreeBSD!\n" unless($sysname eq 'GNU/kFreeBSD');
 
     my @kfiles = reverse nsort </boot/kfreebsd-*>;
     $ui->progress_prep(scalar @kfiles, 'Scanning kernel images...');

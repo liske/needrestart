@@ -27,6 +27,7 @@ package NeedRestart::Kernel;
 use strict;
 use warnings;
 use NeedRestart::Utils;
+use Module::Find;
 use POSIX qw(uname);
 
 require Exporter;
@@ -45,13 +46,15 @@ sub nr_kernel_check($$) {
     my ($sysname, $nodename, $release, $version, $machine) = uname;
     print STDERR "$LOGPREF $sysname: kernel release $release, kernel version $version\n" if($debug);
 
-    if($sysname eq 'Linux') {
-	require NeedRestart::Kernel::Linux;
-	return NeedRestart::Kernel::Linux::nr_linux_check($debug, $ui);
-    }
-    elsif($sysname eq 'GNU/kFreeBSD') {
-	require NeedRestart::Kernel::kFreeBSD;
-	return NeedRestart::Kernel::kFreeBSD::nr_kfreebsd_check($debug, $ui);
+    # autoload Kernel modules
+    foreach my $module (findsubmod NeedRestart::Kernel) {
+	my @ret;
+	unless(eval "use $module; \@ret = ${module}::nr_kernel_check(\$debug, \$ui);") {
+	    warn "Failed to load $module: $@" if($@ && $debug);
+	}
+	else {
+	    return @ret;
+	}
     }
 
     return (undef, "Running on unknown $sysname kernel.");
