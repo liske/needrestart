@@ -12,6 +12,9 @@ There are some hook scripts in the ``ex/`` directory (to be used with
 *apt* and *dpkg*. The scripts will call *needrestart*
 after any package installation/upgrades.
 
+*needrestart* should work on GNU/Linux. It has limited functionality on
+GNU/kFreeBSD since /proc/<pid>/maps does not show removed file links.
+
 
 restarting services
 -------------------
