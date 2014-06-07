@@ -8,6 +8,9 @@ needrestart (1.0) unstable; urgency=medium
     Term::ProgressBar::Simple to minimize disruption of the terminal.
     (Debian Bug#748758 by Thijs Kinkhorst <thijs@debian.org>)
   * [UI] Support 'backup' capability of Debconf.
+  * [Interp] Fix include path retrieval on python3.
+    (Debian Bug#750589 by Cristian Ionescu-Idbohrn
+    <cristian.ionescu-idbohrn@axis.com>).
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
