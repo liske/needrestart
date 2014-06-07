@@ -157,11 +157,17 @@ sub files {
     close($pyread);
     
     # look for module source files
-    chomp($path);
-    $path =~ s/^\['//;
-    $path =~ s/'\$//;
-    my @path = split("', '", $path);
-
+    my @path;
+    if(defined($path)) {
+	chomp($path);
+	$path =~ s/^\['//;
+	$path =~ s/'\$//;
+	@path = split("', '", $path);
+    }
+    else {
+	print STDERR "$LOGPREF #$pid: failed to retrieve include path\n" if($self->{debug});
+    }
+    
     my %files;
     _scan($self->{debug}, $pid, $src, \%files, \@path);
 

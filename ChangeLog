@@ -10,7 +10,10 @@ needrestart (1.0) unstable; urgency=medium
   * [UI] Support 'backup' capability of Debconf.
   * [Interp] Fix include path retrieval on python3.
     (Debian Bug#750589 by Cristian Ionescu-Idbohrn
-    <cristian.ionescu-idbohrn@axis.com>).
+    <cristian.ionescu-idbohrn@axis.com>)
+  * [Interp] Handle errors on python include path retrieval gracefully.
+    (Debian Bug#750589 by Cristian Ionescu-Idbohrn
+    <cristian.ionescu-idbohrn@axis.com>)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
