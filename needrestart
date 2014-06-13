@@ -246,7 +246,10 @@ for my $pid (sort {$a <=> $b} keys %$ptable) {
 		);
 	    
 	    # compare maps content vs. on-disk
-	    unless($minode eq $sinode && grep {$mdev eq $_} @sdevs) {
+	    unless($minode eq $sinode && (grep {$mdev eq $_} @sdevs ||
+					  # BTRFS breaks device ID mapping completely...
+					  # ignoring unnamed device IDs for now
+					  $mdev =~ /^00:/)) {
 		print STDERR "$LOGPREF #$pid uses obsolete $path\n" if($nrconf{verbose});
 		$restart++;
 		last;
