@@ -383,21 +383,28 @@ if(scalar keys %stage2) {
     $ui->progress_fin;
 }
 
-my ($kversion, $kmessage) = ($nrconf{kernelhints} || $opt_b ? nr_kernel_check($nrconf{verbose}, $ui) : ());
+my ($kresult, %kvars) = ($nrconf{kernelhints} || $opt_b ? nr_kernel_check($nrconf{verbose}, $ui) : ());
 
 print "NEEDRESTART-VER: $NeedRestart::VERSION\n" if($opt_b);
 
-if(defined($kversion)) {
+if(defined($kresult)) {
     if($opt_b) {
-	print "NEEDRESTART-KVERSION: $kversion\n";
-	print "NEEDRESTART-KPENDING: $kmessage\n" if(defined($kmessage));
+	print "NEEDRESTART-KVERSION: $kvars{KVERSION}\n";
+	print "NEEDRESTART-EVERSION: $kvars{EVERSION}\n" if(defined($kvars{EVERSION}));
+	print "NEEDRESTART-KPENDING: $kresult\n";
     }
     else {
-	if($kmessage) {
-	    $ui->announce($kversion, $kmessage);
+	if($kresult == NRK_NOUPGRADE) {
+	    $ui->notice('Running kernel seems to be up-to-date.');
+	}
+	elsif($kresult == NRK_ABIUPGRADE) {
+	    $ui->announce_abi(%kvars);
+	}
+	elsif($kresult == NRK_VERUPGRADE) {
+	    $ui->announce_ver(%kvars);
 	}
 	else {
-	    $ui->notice('Running kernel seems to be up-to-date.');
+	    $ui->notice('Failed to retrieve available kernel versions.');
 	}
     }
 }

@@ -7,12 +7,20 @@ Type: multiselect
 Choices: ${PKGS}
 Description: Which services should be restarted?
 
-Template: needrestart/ui-kernel_announce
+Template: needrestart/ui-kernel_announce_abi
 Type: note
 Description: Newer kernel available
- The currently running kernel version is ${KVERSION}.
+ The currently running kernel version is ${KVERSION} and there is an
+ ABI compatible upgrade pending.
  .
- ${KMESSAGE}
+ Restarting the system to load the new kernel will not be handled
+ automatically, so you should consider rebooting.
+
+Template: needrestart/ui-kernel_announce_ver
+Type: note
+Description: Newer kernel available
+ The currently running kernel version is ${KVERSION} which is not
+ the expected kernel version ${EVERSION}.
  .
  Restarting the system to load the new kernel will not be handled
  automatically, so you should consider rebooting.

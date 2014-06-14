@@ -30,11 +30,22 @@ use NeedRestart::Utils;
 use Module::Find;
 use POSIX qw(uname);
 
+use constant {
+    NRK_UNKNOWN    => 0,
+    NRK_NOUPGRADE  => 1,
+    NRK_ABIUPGRADE => 2,
+    NRK_VERUPGRADE => 3,
+};
+
 require Exporter;
 our @ISA = qw(Exporter);
 
 our @EXPORT = qw(
     nr_kernel_check
+    NRK_UNKNOWN
+    NRK_NOUPGRADE
+    NRK_ABIUPGRADE
+    NRK_VERUPGRADE
 );
 
 my $LOGPREF = '[Kernel]';
@@ -42,14 +53,17 @@ my $LOGPREF = '[Kernel]';
 sub nr_kernel_check($$) {
     my $debug = shift;
     my $ui = shift;
+    my %vars;
 
     my ($sysname, $nodename, $release, $version, $machine) = uname;
+    $vars{KVERSION} = $release;
+
     print STDERR "$LOGPREF $sysname: kernel release $release, kernel version $version\n" if($debug);
 
     # autoload Kernel modules
     foreach my $module (findsubmod NeedRestart::Kernel) {
 	my @ret;
-	unless(eval "use $module; \@ret = ${module}::nr_kernel_check(\$debug, \$ui);") {
+	unless(eval "use $module; \@ret = ${module}::nr_kernel_check_real(\$debug, \$ui);") {
 	    warn "Failed to load $module: $@" if($@ && $debug);
 	}
 	else {
@@ -57,7 +71,7 @@ sub nr_kernel_check($$) {
 	}
     }
 
-    return (undef, "Running on unknown $sysname kernel.");
+    return (NRK_UNKNOWN, %vars);
 }
 
 1;

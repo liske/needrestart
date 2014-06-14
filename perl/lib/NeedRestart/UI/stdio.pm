@@ -34,13 +34,29 @@ use NeedRestart qw(:ui);
 needrestart_ui_register(__PACKAGE__, NEEDRESTART_PRIO_LOW);
 
 
-sub announce {
+sub _announce {
     my $self = shift;
-    my $kversion = shift;
-    my $kmessage = shift;
+    my $message = shift;
+    my %vars = @_;
 
-    print "Pending kernel upgrade!\n\nRunning kernel version:\n  ${kversion}\n\nDiagnostics:\n  ${kmessage}\n\nRestarting the system to load the new kernel will not be handled automatically, so you should consider rebooting. [Return]\n";
+    print "Pending kernel upgrade!\n\nRunning kernel version:\n  $vars{KVERSION}\n\nDiagnostics:\n  $message\n\nRestarting the system to load the new kernel will not be handled automatically, so you should consider rebooting. [Return]\n";
     <STDIN>;
+}
+
+
+sub announce_abi {
+    my $self = shift;
+    my %vars = @_;
+
+    $self->_announce('The currently running kernel has an ABI compatible upgrade pending.', %vars);
+}
+
+
+sub announce_ver {
+    my $self = shift;
+    my %vars = @_;
+
+    $self->_announce("The currently running kernel version is not the expected kernel version $vars{EVERSION}.", %vars);
 }
 
 

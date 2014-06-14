@@ -90,7 +90,11 @@ sub progress_fin($) {
 }
 
 
-sub announce {
+sub announce_abi {
+}
+
+
+sub announce_ver {
 }
 
 

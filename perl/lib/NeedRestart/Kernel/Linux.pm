@@ -27,6 +27,7 @@ package NeedRestart::Kernel::Linux;
 use strict;
 use warnings;
 use NeedRestart::Utils;
+use NeedRestart::Kernel;
 use NeedRestart::Strings;
 use POSIX qw(uname);
 use Sort::Naturally;
@@ -36,7 +37,6 @@ require Exporter;
 our @ISA = qw(Exporter);
 
 our @EXPORT = qw(
-    nr_kernel_check
     nr_linux_version_x86
 );
 
@@ -76,11 +76,13 @@ sub nr_linux_version_x86($$) {
     return $buf;
 }
 
-sub nr_kernel_check($$) {
+sub nr_kernel_check_real($$) {
     my $debug = shift;
     my $ui = shift;
+    my %vars;
 
     my ($sysname, $nodename, $release, $version, $machine) = uname;
+    $vars{KVERSION} = $release;
 
     die "$LOGPREF Not running on Linux!\n" unless($sysname eq 'Linux');
 
@@ -117,19 +119,17 @@ sub nr_kernel_check($$) {
     }
     $ui->progress_fin;
 
-    return (undef, "Did not find any kernel images (/boot/vmlinu*)!")
-	unless(scalar keys %kernels);
+    unless(scalar keys %kernels) {
+	print STDERR "$LOGPREF Did not find any kernel images.\n" if($debug);
+	return (NRK_UNKNOWN, %vars);
+    }
 
-    my ($eversion) = reverse nsort keys %kernels;
-    print STDERR "$LOGPREF Expected kernel version: $eversion\n" if($debug);
+    ($vars{EVERSION}) = reverse nsort keys %kernels;
+    print STDERR "$LOGPREF Expected kernel version: $vars{EVERSION}\n" if($debug);
 
-    return ($release, qq(Not running the expected kernel version $eversion.))
-	if($release ne $eversion);
-
-    return ($release, qq(Running kernel has an ABI compatible upgrade pending.))
-	unless($kernels{$release});
-
-    return ($release, undef);
+    return (NRK_VERUPGRADE, %vars) if($vars{KVERSION} ne $vars{EVERSION});
+    return (NRK_ABIUPGRADE, %vars) unless($kernels{$release});
+    return (NRK_NOUPGRADE, %vars);
 }
 
 1;

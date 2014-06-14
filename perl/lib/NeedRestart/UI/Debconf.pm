@@ -63,18 +63,34 @@ sub new {
     }, $class;
 }
 
+sub _announce {
+    my $self = shift;
+    my $templ = shift;
+    my %vars = @_;
 
-sub announce {
+    foreach my $k (keys %vars) {
+	dcres( subst($templ, $k, $vars{$k}) );
+    }
+
+    dcres( fset($templ, 'seen', 0) );
+    dcres( settitle('needrestart/ui-kernel_title') );
+    dcres( input('critical', $templ) );
+    dcres( go );
+}
+
+sub announce_abi {
+    my $self = shift;
+
+    $self->_announce('needrestart/ui-kernel_announce_abi', @_);
+}
+
+
+sub announce_ver {
     my $self = shift;
     my $kversion = shift;
     my $kmessage = shift;
 
-    dcres( subst('needrestart/ui-kernel_announce', 'KVERSION', $kversion) );
-    dcres( subst('needrestart/ui-kernel_announce', 'KMESSAGE', $kmessage) );
-    dcres( fset('needrestart/ui-kernel_announce', 'seen', 0) );
-    dcres( settitle('needrestart/ui-kernel_title') );
-    dcres( input('critical', 'needrestart/ui-kernel_announce') );
-    dcres( go );
+    $self->_announce('needrestart/ui-kernel_announce_ver', @_);
 }
 
 
