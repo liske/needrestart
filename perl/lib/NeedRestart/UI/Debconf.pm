@@ -131,13 +131,8 @@ sub query_pkgs($$$$$) {
     # get selected rc.d script
     my @s = split(/, /, $s);
 
-    if($r eq 'backup') {
-	print STDERR "User canceled.\n";
-	return;
-    }
-
-    print STDERR "User declined any service restarts.\n"
-	if($#s == -1);
+    # user has canceled
+    return if($r eq 'backup');
 
     # restart each selected service script
     &$cb($_) for @s;
