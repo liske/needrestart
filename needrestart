@@ -191,17 +191,20 @@ sub restart_cmd($) {
 }
 
 my %restart;
+my @ign_pids=($$, getppid());
 
 # inspect only pids
 my $ptable = nr_ptable();
 $ui->progress_prep(scalar keys %$ptable, 'Scanning processes...');
 my %stage2;
 for my $pid (sort {$a <=> $b} keys %$ptable) {
+    $ui->progress_step;
+
+    # skip myself
+    next if(grep {$pid == $_} @ign_pids);
+
     my $restart = 0;
     my $exe = nr_readlink($pid);
-
-    # get executable (Linux 2.2+)
-    $ui->progress_step;
 
     # ignore kernel threads
     next unless(defined($exe));
@@ -288,6 +291,11 @@ $ui->progress_fin;
 if(scalar keys %stage2) {
     $ui->progress_prep(scalar keys %stage2, 'Scanning candidates...');
     foreach my $pid (sort {$a <=> $b} keys %stage2) {
+	$ui->progress_step;
+
+	# skip myself
+	next if(grep {$pid == $_} @ign_pids);
+
 	my $exe = nr_readlink($pid);
 	$exe =~ s/ \(deleted\)$//;  # Linux
 	$exe =~ s/^\(deleted\)//;   # Linux VServer
@@ -295,8 +303,6 @@ if(scalar keys %stage2) {
 
 	# try to find interpreter source file
 	($exe) = (needrestart_interp_source($nrconf{verbose}, $pid, $exe), $exe);
-
-	$ui->progress_step;
 
 	# ignore blacklisted binaries
 	next if(grep { $exe =~ /$_/; } @{$nrconf{blacklist}});
