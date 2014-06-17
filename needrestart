@@ -389,9 +389,9 @@ print "NEEDRESTART-VER: $NeedRestart::VERSION\n" if($opt_b);
 
 if(defined($kresult)) {
     if($opt_b) {
-	print "NEEDRESTART-KVERSION: $kvars{KVERSION}\n";
-	print "NEEDRESTART-EVERSION: $kvars{EVERSION}\n" if(defined($kvars{EVERSION}));
-	print "NEEDRESTART-KPENDING: $kresult\n";
+	print "NEEDRESTART-KCUR: $kvars{KVERSION}\n";
+	print "NEEDRESTART-KEXP: $kvars{EVERSION}\n" if(defined($kvars{EVERSION}));
+	print "NEEDRESTART-KSTA: $kresult\n";
     }
     else {
 	if($kresult == NRK_NOUPGRADE) {
