@@ -140,7 +140,7 @@ chomp($runlevel);
 $runlevel = 2 unless($runlevel =~ s/^.+run-level (\S)\s.+$/$1/);
 
 # get UI
-my $ui = ($opt_b ? NeedRestart::UI->new() : needrestart_ui($nrconf{verbose}, $nrconf{ui}));
+my $ui = ($opt_b ? NeedRestart::UI->new(1) : needrestart_ui($nrconf{verbose}, $nrconf{ui}));
 die "Error: no UI class available!\n" unless(defined($ui));
 
 # enable/disable checks
