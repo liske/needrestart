@@ -2,6 +2,8 @@ needrestart (1.1) unstable; urgency=medium
 
   * Ignore DHCP clients.
     (Debian Bug#752111 by Axel Beckert <abe@debian.org>)
+  * Add options allowing to select which check should be performed.
+    (Proposed by Axel Beckert <abe@debian.org>)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
