@@ -6,7 +6,7 @@ needrestart checks which daemons need to be restarted after library upgrades.
 .SH USAGE
 Usage:
 .IP
-needrestart [\-vn] [\-c <cfg>] [\-r <mode>]
+needrestart [\-vn] [\-c <cfg>] [\-r <mode>] [\-bkl]
 .TP
 \fB\-v\fR
 be more verbose
@@ -31,6 +31,14 @@ a
 .TP
 \fB\-b\fR
 enable batch mode
+.PP
+By using the following options only the specified checks are performed:
+.TP
+\fB\-k\fR
+check for obsolete kernel
+.TP
+\fB\-l\fR
+check for obsolete libraries
 .SH "AUTHOR"
 Thomas Liske <thomas@fiasko\-nw.net>
 .SH "COPYRIGHT"

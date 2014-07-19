@@ -44,7 +44,7 @@ sub HELP_MESSAGE {
     print <<USG;
 Usage:
 
-  needrestart [-vn] [-c <cfg>] [-r <mode>]
+  needrestart [-vn] [-c <cfg>] [-r <mode>] [-bkl]
 
     -v		be more verbose
     -n		set default answer to 'no'
@@ -54,13 +54,13 @@ Usage:
 	i	(i)nteractive restart
 	a	(a)utomatically restart
     -b		enable batch mode
-    --help      show this help
-    --version   show version information
 
-  By using the follow switches needrestart does only the
-  specified checks:
+  By using the following options only the specified checks are performed:
     -k          check for obsolete kernel
     -l          check for obsolete libraries
+
+    --help      show this help
+    --version   show version information
 
 USG
 }
