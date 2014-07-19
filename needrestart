@@ -57,6 +57,11 @@ Usage:
     --help      show this help
     --version   show version information
 
+  By using the follow switches needrestart does only the
+  specified checks:
+    -k          check for obsolete kernel
+    -l          check for obsolete libraries
+
 USG
 }
 
@@ -101,7 +106,9 @@ our $opt_v;
 our $opt_r;
 our $opt_n;
 our $opt_b;
-unless(getopts('c:vr:nb')) {
+our $opt_k;
+our $opt_l;
+unless(getopts('c:vr:nbkl')) {
     HELP_MESSAGE;
     exit 1;
 }
@@ -135,6 +142,11 @@ $runlevel = 2 unless($runlevel =~ s/^.+run-level (\S)\s.+$/$1/);
 # get UI
 my $ui = ($opt_b ? NeedRestart::UI->new() : needrestart_ui($nrconf{verbose}, $nrconf{ui}));
 die "Error: no UI class available!\n" unless(defined($ui));
+
+# enable/disable checks
+unless(defined($opt_k) || defined($opt_l)) {
+    $opt_k = $opt_l = 1;
+}
 
 sub parse_lsbinit($) {
     my $rc = '/etc/init.d/'.shift;
@@ -191,278 +203,284 @@ sub restart_cmd($) {
 }
 
 my %restart;
-my @ign_pids=($$, getppid());
+if(defined($opt_l)) {
+    my @ign_pids=($$, getppid());
 
-# inspect only pids
-my $ptable = nr_ptable();
-$ui->progress_prep(scalar keys %$ptable, 'Scanning processes...');
-my %stage2;
-for my $pid (sort {$a <=> $b} keys %$ptable) {
-    $ui->progress_step;
-
-    # skip myself
-    next if(grep {$pid == $_} @ign_pids);
-
-    my $restart = 0;
-    my $exe = nr_readlink($pid);
-
-    # ignore kernel threads
-    next unless(defined($exe));
-
-    # orphaned binary
-    $restart++ if (defined($exe) && $exe =~ s/ \(deleted\)$//);  # Linux
-    $restart++ if (defined($exe) && $exe =~ s/^\(deleted\)//);   # Linux VServer
-    print STDERR "$LOGPREF #$pid uses obsolete binary $exe\n" if($restart && $nrconf{verbose});
-
-    # ignore blacklisted binaries
-    next if(grep { $exe =~ /$_/; } @{$nrconf{blacklist}});
-
-    # read file mappings (Linux 2.0+)
-    unless($restart) {
-	open(HMAP, '<', "/proc/$pid/maps") || next;
-	while(<HMAP>) {
-	    chomp;
-	    my ($maddr, $mperm, $moffset, $mdev, $minode, $path) = split(/\s+/);
-	    
-	    # skip special handles and non-executable mappings
-	    next unless(defined($path) && $minode != 0 && $path ne '' && $mperm =~ /x/);
-	    
-	    # check for non-existing libs
-	    unless(-e $path) {
-		unless($path =~ m@^/tmp/@) {
-		    print STDERR "$LOGPREF #$pid uses non-existing $path\n" if($nrconf{verbose});
-		    $restart++;
-		    last;
-		}
-	    }
-	    
-	    # get on-disk info
-	    my ($sdev, $sinode) = stat($path);
-	    last unless(defined($sinode));
-	    my @sdevs = (
-		# glibc gnu_dev_* definition from sysmacros.h
-		sprintf("%02x:%02x", (($sdev >> 8) & 0xfff) | (($sdev >> 32) & ~0xfff), (($sdev & 0xff) | (($sdev >> 12) & ~0xff))),
-		# Traditional definition of major(3) and minor(3)
-		sprintf("%02x:%02x", $sdev >> 8, $sdev & 0xff),
-		# kFreeBSD: /proc/<pid>/maps does not contain device IDs
-		qq(00:00)
-		);
-	    
-	    # compare maps content vs. on-disk
-	    unless($minode eq $sinode && ((grep {$mdev eq $_} @sdevs) ||
-					  # BTRFS breaks device ID mapping completely...
-					  # ignoring unnamed device IDs for now
-					  $mdev =~ /^00:/)) {
-		print STDERR "$LOGPREF #$pid uses obsolete $path\n" if($nrconf{verbose});
-		$restart++;
-		last;
-	    }
-	}
-	close(HMAP);
-    }
-
-    unless($restart || !$nrconf{interpscan}) {
-	$restart++ if(needrestart_interp_check($nrconf{verbose}, $pid, $exe));
-    }
-
-    # restart needed?
-    next unless($restart);
-
-    # find parent process
-    my $ppid = $ptable->{$pid}->{ppid};
-    if($ppid != $pid && $ppid > 1) {
-	print STDERR "$LOGPREF #$pid is a child of #$ppid\n" if($nrconf{verbose});
-
-	unless(exists($stage2{$ppid})) {
-	    my $pexe = nr_readlink($ppid);
-	    # ignore kernel threads
-	    next unless(defined($pexe));
-
-	    $stage2{$ppid} = $pexe;
-	}
-    }
-    else {
-	print STDERR "$LOGPREF #$pid is not a child\n" if($nrconf{verbose});
-	$stage2{$pid} = $exe;
-    }
-}
-$ui->progress_fin;
-
-if(scalar keys %stage2) {
-    $ui->progress_prep(scalar keys %stage2, 'Scanning candidates...');
-    foreach my $pid (sort {$a <=> $b} keys %stage2) {
+    # inspect only pids
+    my $ptable = nr_ptable();
+    $ui->progress_prep(scalar keys %$ptable, 'Scanning processes...');
+    my %stage2;
+    for my $pid (sort {$a <=> $b} keys %$ptable) {
 	$ui->progress_step;
 
 	# skip myself
 	next if(grep {$pid == $_} @ign_pids);
 
+	my $restart = 0;
 	my $exe = nr_readlink($pid);
-	$exe =~ s/ \(deleted\)$//;  # Linux
-	$exe =~ s/^\(deleted\)//;   # Linux VServer
-	print STDERR "$LOGPREF #$pid exe => $exe\n" if($nrconf{verbose});
 
-	# try to find interpreter source file
-	($exe) = (needrestart_interp_source($nrconf{verbose}, $pid, $exe), $exe);
+	# ignore kernel threads
+	next unless(defined($exe));
+
+	# orphaned binary
+	$restart++ if (defined($exe) && $exe =~ s/ \(deleted\)$//);  # Linux
+	$restart++ if (defined($exe) && $exe =~ s/^\(deleted\)//);   # Linux VServer
+	print STDERR "$LOGPREF #$pid uses obsolete binary $exe\n" if($restart && $nrconf{verbose});
 
 	# ignore blacklisted binaries
 	next if(grep { $exe =~ /$_/; } @{$nrconf{blacklist}});
 
-	if($is_systemd) {
-	    my $systemctl = nr_fork_pipe($nrconf{verbose}, qq(systemctl), qq(-n), qq(0), qq(--full), qq(status), $pid);
-	    my $ret = <$systemctl>;
-	    close($systemctl);
+	# read file mappings (Linux 2.0+)
+	unless($restart) {
+	    open(HMAP, '<', "/proc/$pid/maps") || next;
+	    while(<HMAP>) {
+		chomp;
+		my ($maddr, $mperm, $moffset, $mdev, $minode, $path) = split(/\s+/);
 
-	    if(defined($ret) && $ret =~ /^([^.]+\.service) /) {
-		print STDERR "$LOGPREF #$pid is $1\n" if($nrconf{verbose});
-		$restart{$1}++;
-		next;
+		# skip special handles and non-executable mappings
+		next unless(defined($path) && $minode != 0 && $path ne '' && $mperm =~ /x/);
+
+		# check for non-existing libs
+		unless(-e $path) {
+		    unless($path =~ m@^/tmp/@) {
+			print STDERR "$LOGPREF #$pid uses non-existing $path\n" if($nrconf{verbose});
+			$restart++;
+			last;
+		    }
+		}
+
+		# get on-disk info
+		my ($sdev, $sinode) = stat($path);
+		last unless(defined($sinode));
+		my @sdevs = (
+		    # glibc gnu_dev_* definition from sysmacros.h
+		    sprintf("%02x:%02x", (($sdev >> 8) & 0xfff) | (($sdev >> 32) & ~0xfff), (($sdev & 0xff) | (($sdev >> 12) & ~0xff))),
+		    # Traditional definition of major(3) and minor(3)
+		    sprintf("%02x:%02x", $sdev >> 8, $sdev & 0xff),
+		    # kFreeBSD: /proc/<pid>/maps does not contain device IDs
+		    qq(00:00)
+		    );
+
+		# compare maps content vs. on-disk
+		unless($minode eq $sinode && ((grep {$mdev eq $_} @sdevs) ||
+					      # BTRFS breaks device ID mapping completely...
+					      # ignoring unnamed device IDs for now
+					      $mdev =~ /^00:/)) {
+		    print STDERR "$LOGPREF #$pid uses obsolete $path\n" if($nrconf{verbose});
+		    $restart++;
+		    last;
+		}
 	    }
+	    close(HMAP);
 	}
 
-	my $pkg;
-	foreach my $hook (sort <$nrconf{hook_d}/*>) {
-	    print STDERR "$LOGPREF #$pid running $hook\n" if($nrconf{verbose});
+	unless($restart || !$nrconf{interpscan}) {
+	    $restart++ if(needrestart_interp_check($nrconf{verbose}, $pid, $exe));
+	}
 
-	    my $found = 0;
-	    my $prun = nr_fork_pipe($nrconf{verbose}, $hook, ($nrconf{verbose} ? qw(-v) : ()), $exe);
-	    my @nopids;
-	    while(<$prun>) {
-		chomp;
-		my @v = split(/\|/);
+	# restart needed?
+	next unless($restart);
 
-		if($v[0] eq 'PACKAGE' && $v[1]) {
-		    $pkg = $v[1];
-		    print STDERR "$LOGPREF #$pid package: $v[1]\n" if($nrconf{verbose});
-		    next;
-		}
+	# find parent process
+	my $ppid = $ptable->{$pid}->{ppid};
+	if($ppid != $pid && $ppid > 1) {
+	    print STDERR "$LOGPREF #$pid is a child of #$ppid\n" if($nrconf{verbose});
 
-		if($v[0] eq 'RC') {
-		    my %lsb = parse_lsbinit($v[1]);
+	    unless(exists($stage2{$ppid})) {
+		my $pexe = nr_readlink($ppid);
+		# ignore kernel threads
+		next unless(defined($pexe));
 
-		    unless(%lsb && exists($lsb{'default-start'})) {
-			# If the script has no LSB tags we consider to call it later - they
-			# are broken anyway.
-			print STDERR "$LOGPREF no LSB headers found at $v[1]\n" if($nrconf{verbose});
-			push(@nopids, $v[1]);
-		    }
-		    # In the run-levels S and 1 no daemons are being started (normaly).
-		    # We don't call any rc.d script not started in the current run-level.
-		    elsif($lsb{'default-start'} =~ /$runlevel/) {
-			# If a pidfile has been found, try to look for the daemon and ignore
-			# any forked/detached childs (just a heuristic due Debian Bug#721810).
-			if(exists($lsb{pidfiles})) {
-			    foreach my $pidfile (@{ $lsb{pidfiles} }) {
-				open(HPID, '<', "$pidfile") || next;
-				my $p = <HPID>;
-				close(HPID);
-
-				if(int($p) == $pid) {
-				    print STDERR "$LOGPREF #$pid has been started by $v[1] - triggering\n" if($nrconf{verbose});
-				    $restart{$v[1]}++;
-				    $found++;
-				    last;
-				}
-			    }
-			}
-			else {
- 			    print STDERR "$LOGPREF no pidfile reference found at $v[1]\n" if($nrconf{verbose});
-			    push(@nopids, $v[1]);
-			}
-		    }
-		    else {
-			print STDERR "$LOGPREF #$pid rc.d script $v[1] should not start in the current run-level($runlevel)\n" if($nrconf{verbose});
-		    }
-		}
+		$stage2{$ppid} = $pexe;
 	    }
-
-	    # No perfect hit - call any rc scripts instead.
-	    if(!$found && $#nopids > -1) {
-		foreach my $rc (@nopids) {
-		    $restart{$rc}++;
-		}
-		$found++;
-	    }
-
-	    last if($found);
+	}
+	else {
+	    print STDERR "$LOGPREF #$pid is not a child\n" if($nrconf{verbose});
+	    $stage2{$pid} = $exe;
 	}
     }
     $ui->progress_fin;
-}
 
-my ($kresult, %kvars) = ($nrconf{kernelhints} || $opt_b ? nr_kernel_check($nrconf{verbose}, $ui) : ());
+    if(scalar keys %stage2) {
+	$ui->progress_prep(scalar keys %stage2, 'Scanning candidates...');
+	foreach my $pid (sort {$a <=> $b} keys %stage2) {
+	    $ui->progress_step;
+
+	    # skip myself
+	    next if(grep {$pid == $_} @ign_pids);
+
+	    my $exe = nr_readlink($pid);
+	    $exe =~ s/ \(deleted\)$//;  # Linux
+	    $exe =~ s/^\(deleted\)//;   # Linux VServer
+	    print STDERR "$LOGPREF #$pid exe => $exe\n" if($nrconf{verbose});
+
+	    # try to find interpreter source file
+	    ($exe) = (needrestart_interp_source($nrconf{verbose}, $pid, $exe), $exe);
+
+	    # ignore blacklisted binaries
+	    next if(grep { $exe =~ /$_/; } @{$nrconf{blacklist}});
+
+	    if($is_systemd) {
+		my $systemctl = nr_fork_pipe($nrconf{verbose}, qq(systemctl), qq(-n), qq(0), qq(--full), qq(status), $pid);
+		my $ret = <$systemctl>;
+		close($systemctl);
+
+		if(defined($ret) && $ret =~ /^([^.]+\.service) /) {
+		    print STDERR "$LOGPREF #$pid is $1\n" if($nrconf{verbose});
+		    $restart{$1}++;
+		    next;
+		}
+	    }
+
+	    my $pkg;
+	    foreach my $hook (sort <$nrconf{hook_d}/*>) {
+		print STDERR "$LOGPREF #$pid running $hook\n" if($nrconf{verbose});
+
+		my $found = 0;
+		my $prun = nr_fork_pipe($nrconf{verbose}, $hook, ($nrconf{verbose} ? qw(-v) : ()), $exe);
+		my @nopids;
+		while(<$prun>) {
+		    chomp;
+		    my @v = split(/\|/);
+
+		    if($v[0] eq 'PACKAGE' && $v[1]) {
+			$pkg = $v[1];
+			print STDERR "$LOGPREF #$pid package: $v[1]\n" if($nrconf{verbose});
+			next;
+		    }
+
+		    if($v[0] eq 'RC') {
+			my %lsb = parse_lsbinit($v[1]);
+
+			unless(%lsb && exists($lsb{'default-start'})) {
+			    # If the script has no LSB tags we consider to call it later - they
+			    # are broken anyway.
+			    print STDERR "$LOGPREF no LSB headers found at $v[1]\n" if($nrconf{verbose});
+			    push(@nopids, $v[1]);
+			}
+			# In the run-levels S and 1 no daemons are being started (normaly).
+			# We don't call any rc.d script not started in the current run-level.
+			elsif($lsb{'default-start'} =~ /$runlevel/) {
+			    # If a pidfile has been found, try to look for the daemon and ignore
+			    # any forked/detached childs (just a heuristic due Debian Bug#721810).
+			    if(exists($lsb{pidfiles})) {
+				foreach my $pidfile (@{ $lsb{pidfiles} }) {
+				    open(HPID, '<', "$pidfile") || next;
+				    my $p = <HPID>;
+				    close(HPID);
+
+				    if(int($p) == $pid) {
+					print STDERR "$LOGPREF #$pid has been started by $v[1] - triggering\n" if($nrconf{verbose});
+					$restart{$v[1]}++;
+					$found++;
+					last;
+				    }
+				}
+			    }
+			    else {
+				print STDERR "$LOGPREF no pidfile reference found at $v[1]\n" if($nrconf{verbose});
+				push(@nopids, $v[1]);
+			    }
+			}
+			else {
+			    print STDERR "$LOGPREF #$pid rc.d script $v[1] should not start in the current run-level($runlevel)\n" if($nrconf{verbose});
+			}
+		    }
+		}
+
+		# No perfect hit - call any rc scripts instead.
+		if(!$found && $#nopids > -1) {
+		    foreach my $rc (@nopids) {
+			$restart{$rc}++;
+		    }
+		    $found++;
+		}
+
+		last if($found);
+	    }
+	}
+	$ui->progress_fin;
+    }
+}
 
 print "NEEDRESTART-VER: $NeedRestart::VERSION\n" if($opt_b);
 
-if(defined($kresult)) {
-    if($opt_b) {
-	print "NEEDRESTART-KCUR: $kvars{KVERSION}\n";
-	print "NEEDRESTART-KEXP: $kvars{EVERSION}\n" if(defined($kvars{EVERSION}));
-	print "NEEDRESTART-KSTA: $kresult\n";
-    }
-    else {
-	if($kresult == NRK_NOUPGRADE) {
-	    $ui->notice('Running kernel seems to be up-to-date.');
-	}
-	elsif($kresult == NRK_ABIUPGRADE) {
-	    $ui->announce_abi(%kvars);
-	}
-	elsif($kresult == NRK_VERUPGRADE) {
-	    $ui->announce_ver(%kvars);
+if(defined($opt_k)) {
+    my ($kresult, %kvars) = ($nrconf{kernelhints} || $opt_b ? nr_kernel_check($nrconf{verbose}, $ui) : ());
+
+    if(defined($kresult)) {
+	if($opt_b) {
+	    print "NEEDRESTART-KCUR: $kvars{KVERSION}\n";
+	    print "NEEDRESTART-KEXP: $kvars{EVERSION}\n" if(defined($kvars{EVERSION}));
+	    print "NEEDRESTART-KSTA: $kresult\n";
 	}
 	else {
-	    $ui->notice('Failed to retrieve available kernel versions.');
+	    if($kresult == NRK_NOUPGRADE) {
+		$ui->notice('Running kernel seems to be up-to-date.');
+	    }
+	    elsif($kresult == NRK_ABIUPGRADE) {
+		$ui->announce_abi(%kvars);
+	    }
+	    elsif($kresult == NRK_VERUPGRADE) {
+		$ui->announce_ver(%kvars);
+	    }
+	    else {
+		$ui->notice('Failed to retrieve available kernel versions.');
+	    }
 	}
     }
 }
 
-unless(scalar %restart) {
-    $ui->notice('No services need to be restarted.') unless($opt_b);
-}
-else {
-    if($opt_b || $opt_r ne 'i') {
-	$ui->notice('Services to be restarted:');
-	
-	foreach my $rc (keys %restart) {
-	    my @cmd = restart_cmd($rc);
-	    
-	    if($opt_b) {
-		print "NEEDRESTART-SVC: $rc\n";
-		next;
-	    }
-	    
-	    next unless($#cmd > -1);
-	    
-	    if($opt_r eq 'a') {
-		system(@cmd);
-	    }
-	    else {
-		print join(' ', @cmd)."\n";
-	    }
-	}
-	
-	unless($opt_b || $#systemd_restart == -1) {
-	    my @cmd = (qq(systemctl), qq(restart), @systemd_restart);
-	    if($opt_r eq 'a') {
-		print "Restarting services using systemd...\n";
-		system(@cmd);
-	    }
-	    else {
-		print join(' ', @cmd)."\n";
-	}
-	}
+if(defined($opt_l)) {
+    unless(scalar %restart) {
+	$ui->notice('No services need to be restarted.') unless($opt_b);
     }
     else {
-	my $o = 0;
+	if($opt_b || $opt_r ne 'i') {
+	    $ui->notice('Services to be restarted:');
+	    
+	    foreach my $rc (keys %restart) {
+		my @cmd = restart_cmd($rc);
 
-	$ui->query_pkgs('Services to be restarted:', $nrconf{defno}, \%restart,
-			sub {
-			    my @cmd = restart_cmd(shift);
-			    system(@cmd) if($#cmd > -1);
-			});
+		if($opt_b) {
+		    print "NEEDRESTART-SVC: $rc\n";
+		    next;
+		}
+
+		next unless($#cmd > -1);
+
+		if($opt_r eq 'a') {
+		    system(@cmd);
+		}
+		else {
+		    print join(' ', @cmd)."\n";
+		}
+	    }
 	
-	if($#systemd_restart > -1) {
-	    print "Restarting services using systemd...\n";
-	    system(qq(systemctl), qq(restart), @systemd_restart);
+	    unless($opt_b || $#systemd_restart == -1) {
+		my @cmd = (qq(systemctl), qq(restart), @systemd_restart);
+		if($opt_r eq 'a') {
+		    print "Restarting services using systemd...\n";
+		    system(@cmd);
+		}
+		else {
+		    print join(' ', @cmd)."\n";
+		}
+	    }
+	}
+	else {
+	    my $o = 0;
+
+	    $ui->query_pkgs('Services to be restarted:', $nrconf{defno}, \%restart,
+			    sub {
+				my @cmd = restart_cmd(shift);
+				system(@cmd) if($#cmd > -1);
+			    });
+
+	    if($#systemd_restart > -1) {
+		print "Restarting services using systemd...\n";
+		system(qq(systemctl), qq(restart), @systemd_restart);
+	    }
 	}
     }
 }
