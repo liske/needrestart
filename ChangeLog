@@ -5,7 +5,7 @@ needrestart (1.1) unstable; urgency=medium
   * Add options allowing to select which check should be performed.
     (Proposed by Axel Beckert <abe@debian.org>)
 
- -- Thomas Liske <thomas@fiasko-nw.net>  
+ -- Thomas Liske <thomas@fiasko-nw.net>  Sat, 16 Aug 2014 09:57:29 +0200
 
 needrestart (1.0) unstable; urgency=medium
 
