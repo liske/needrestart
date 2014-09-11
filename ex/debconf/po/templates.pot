@@ -1,0 +1,76 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-09-11 21:59+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Type: title
+#. Description
+#: ../needrestart.templates:1001
+msgid "Daemons using outdated libraries"
+msgstr ""
+
+#. Type: multiselect
+#. Choices
+#: ../needrestart.templates:2001
+msgid "${PKGS}"
+msgstr ""
+
+#. Type: multiselect
+#. Description
+#: ../needrestart.templates:2002
+msgid "Which services should be restarted?"
+msgstr ""
+
+#. Type: note
+#. Description
+#. Type: note
+#. Description
+#: ../needrestart.templates:3001 ../needrestart.templates:4001
+msgid "Newer kernel available"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../needrestart.templates:3001
+msgid ""
+"The currently running kernel version is ${KVERSION} and there is an ABI "
+"compatible upgrade pending."
+msgstr ""
+
+#. Type: note
+#. Description
+#. Type: note
+#. Description
+#: ../needrestart.templates:3001 ../needrestart.templates:4001
+msgid ""
+"Restarting the system to load the new kernel will not be handled "
+"automatically, so you should consider rebooting."
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../needrestart.templates:4001
+msgid ""
+"The currently running kernel version is ${KVERSION} which is not the "
+"expected kernel version ${EVERSION}."
+msgstr ""
+
+#. Type: title
+#. Description
+#: ../needrestart.templates:5001
+msgid "Pending kernel upgrade"
+msgstr ""

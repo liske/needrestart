@@ -1,30 +1,30 @@
 Template: needrestart/ui-query_pkgs_title
 Type: title
-Description: Daemons using outdated libraries
+_Description: Daemons using outdated libraries
 
 Template: needrestart/ui-query_pkgs
 Type: multiselect
-Choices: ${PKGS}
-Description: Which services should be restarted?
+_Choices: ${PKGS}
+_Description: Which services should be restarted?
 
 Template: needrestart/ui-kernel_announce_abi
 Type: note
-Description: Newer kernel available
- The currently running kernel version is ${KVERSION} and there is an
- ABI compatible upgrade pending.
+_Description: Newer kernel available
+ The currently running kernel version is ${KVERSION} and there is an ABI
+ compatible upgrade pending.
  .
  Restarting the system to load the new kernel will not be handled
  automatically, so you should consider rebooting.
 
 Template: needrestart/ui-kernel_announce_ver
 Type: note
-Description: Newer kernel available
- The currently running kernel version is ${KVERSION} which is not
- the expected kernel version ${EVERSION}.
+_Description: Newer kernel available
+ The currently running kernel version is ${KVERSION} which is not the
+ expected kernel version ${EVERSION}.
  .
  Restarting the system to load the new kernel will not be handled
  automatically, so you should consider rebooting.
 
 Template: needrestart/ui-kernel_title
 Type: title
-Description: Pending kernel upgrade
+_Description: Pending kernel upgrade
