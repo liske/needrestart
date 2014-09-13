@@ -2,6 +2,8 @@ needrestart (1.2) unstable; urgency=medium
 
   * Prepare po-debconf usage.
     (Debian Bug#761068 by David Prévot <taffit@debian.org>)
+  * Fix blacklist to match upgraded binaries (dpkg).
+    (Debian Bug#761346 by Paul Wise <pabs@debian.org>)
 
 needrestart (1.1) unstable; urgency=medium
 
