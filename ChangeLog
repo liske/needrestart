@@ -2,6 +2,8 @@ needrestart (1.2) unstable; urgency=medium
 
   * Prepare po-debconf usage.
     (Debian Bug#761068 by David Prévot <taffit@debian.org>)
+  * Drop dependency on Term::ProgressBar::Simple.
+    (Debian Bug#761192 by Thijs Kinkhorst <thijs@debian.org>)
   * Fix blacklist to match upgraded binaries (dpkg).
     (Debian Bug#761346 by Paul Wise <pabs@debian.org>)
 

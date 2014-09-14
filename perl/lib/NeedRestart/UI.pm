@@ -26,8 +26,7 @@ package NeedRestart::UI;
 
 use strict;
 use warnings;
-use Term::ProgressBar::Simple;
-use Test::MockObject;
+use Term::ReadKey;
 
 sub new {
     my $class = shift;
@@ -54,25 +53,25 @@ sub progress_prep($$$) {
 	    open(STDOUT, '> /dev/tty') || open(STDOUT, '>&2');
 	}
 
-	$self->{progress} = Term::ProgressBar::Simple->new({
-	    count => $max,
-	    remove => 1,
-	});
+	$self->{progress} = {
+	    count => 0,
+	    max => $max,
+	};
     }
     else {
 	# disable progress indicator while being verbose
-	$self->{progress} = Test::MockObject->new();
-	$self->{progress}->set_true('update');
-	$self->{progress}->set_true('message');
+	$self->{progress} = undef;
     }
 
-    $self->{progress}->message($out);
+    $self->_progress_msg($out);
 }
 
 sub progress_step($) {
     my $self = shift;
 
-    $self->{progress}++;
+    return unless defined($self->{progress});
+
+    $self->_progress_inc();
 
     1;
 }
@@ -80,7 +79,9 @@ sub progress_step($) {
 sub progress_fin($) {
     my $self = shift;
 
-    undef($self->{progress});
+    return unless defined($self->{progress});
+
+    $self->_progress_fin();
 
     # restore STDIN/STDOUT if required (debconf)
     open(STDIN, '<&', \*{$self->{fhin}}) || die "Can't dup stdin: $!\n"
@@ -89,6 +90,47 @@ sub progress_fin($) {
 	if($self->{fhout});
 }
 
+sub _progress_msg {
+    my $self = shift;
+
+    return unless defined($self->{progress});
+
+    $self->{progress}->{msg} = shift;
+    $self->_progress_out();
+}
+
+sub _progress_inc {
+    my $self = shift;
+
+    $self->{progress}->{count}++;
+    $self->_progress_out();
+}
+
+sub _progress_out {
+    my $self = shift;
+    
+    $|++;
+    
+    my ($columns) = GetTerminalSize(\*STDOUT);
+    
+    $columns -= 3;
+    my $wbar = int($columns * 0.3);
+    my $wmsg = int($columns * 0.7);
+
+    printf("[%-${wbar}s] %-${wmsg}s\r", '=' x ($wbar*$self->{progress}->{count}/$self->{progress}->{max}), substr($self->{progress}->{msg}, 0, $wmsg));
+
+    $|--;
+}
+
+sub _progress_fin {
+   my $self = shift;
+
+   $self->{progress}->{count} = 0;
+
+   my ($columns) = GetTerminalSize(\*STDOUT);
+
+   print $self->{progress}->{msg}, ' ' x ($columns - length($self->{progress}->{msg})), "\n";
+}
 
 sub announce_abi {
 }
