@@ -240,6 +240,9 @@ if(defined($opt_l)) {
 		# skip special handles and non-executable mappings
 		next unless(defined($path) && $minode != 0 && $path ne '' && $mperm =~ /x/);
 
+		# skip special device paths
+		next if($path =~ m@^/(SYSV00000000$|drm$|dev/)@);
+
 		# check for non-existing libs
 		unless(-e $path) {
 		    unless($path =~ m@^/tmp/@) {

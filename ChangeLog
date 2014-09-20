@@ -6,6 +6,8 @@ needrestart (1.2) unstable; urgency=medium
     (Debian Bug#761192 by Thijs Kinkhorst <thijs@debian.org>)
   * Fix blacklist to match upgraded binaries (dpkg).
     (Debian Bug#761346 by Paul Wise <pabs@debian.org>)
+  * Ignore special paths (SYSV IPC, DRM, /dev), fixing some
+    false positives.
 
 needrestart (1.1) unstable; urgency=medium
 
