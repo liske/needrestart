@@ -94,6 +94,7 @@ our %nrconf = (
     restart => 'i',
     defno => 0,
     blacklist => [],
+    blacklist_rc => [],
     interpscan => 1,
     kernelhints => 1,
 );
@@ -404,6 +405,14 @@ if(defined($opt_l)) {
 	}
 	$ui->progress_fin;
     }
+}
+
+# Apply rc/service blacklist
+foreach my $rc (keys %restart) {
+    next unless(scalar grep { $rc =~ /$_/; } @{$nrconf{blacklist_rc}});
+
+    print STDERR "$LOGPREF $rc is blacklisted -> ignored\n" if($nrconf{verbose});
+    delete($restart{$rc});
 }
 
 print "NEEDRESTART-VER: $NeedRestart::VERSION\n" if($opt_b);

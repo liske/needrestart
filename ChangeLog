@@ -8,6 +8,8 @@ needrestart (1.2) unstable; urgency=medium
     (Debian Bug#761346 by Paul Wise <pabs@debian.org>)
   * Ignore special paths (SYSV IPC, DRM, /dev), fixing some
     false positives.
+  * Add service blacklist configuration option to fix display
+    manager blacklisting with systemd.
 
 needrestart (1.1) unstable; urgency=medium
 
