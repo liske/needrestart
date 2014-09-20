@@ -442,32 +442,28 @@ if(defined($opt_l)) {
 	if($opt_b || $opt_r ne 'i') {
 	    $ui->notice('Services to be restarted:');
 	    
-	    foreach my $rc (keys %restart) {
-		my @cmd = restart_cmd($rc);
-
+	    foreach my $rc (sort { lc($a) cmp lc($b) } keys %restart) {
 		if($opt_b) {
 		    print "NEEDRESTART-SVC: $rc\n";
 		    next;
 		}
 
-		next unless($#cmd > -1);
-
 		if($opt_r eq 'a') {
+		    my @cmd = restart_cmd($rc);
+		    next unless($#cmd > -1);
+
 		    system(@cmd);
 		}
 		else {
-		    print join(' ', @cmd)."\n";
+		    $ui->notice(" $rc");
 		}
 	    }
 	
 	    unless($opt_b || $#systemd_restart == -1) {
 		my @cmd = (qq(systemctl), qq(restart), @systemd_restart);
 		if($opt_r eq 'a') {
-		    print "Restarting services using systemd...\n";
+		    $ui->notice('Restarting services using systemd...');
 		    system(@cmd);
-		}
-		else {
-		    print join(' ', @cmd)."\n";
 		}
 	    }
 	}
@@ -481,7 +477,7 @@ if(defined($opt_l)) {
 			    });
 
 	    if($#systemd_restart > -1) {
-		print "Restarting services using systemd...\n";
+		$ui->notice('Restarting services using systemd...');
 		system(qq(systemctl), qq(restart), @systemd_restart);
 	    }
 	}
