@@ -1,6 +1,6 @@
 needrestart (1.2) unstable; urgency=medium
 
-  * Prepare po-debconf usage.
+  * Prepare po-debconf usage and add German translation.
     (Debian Bug#761068 by David Prévot <taffit@debian.org>)
   * Drop dependency on Term::ProgressBar::Simple.
     (Debian Bug#761192 by Thijs Kinkhorst <thijs@debian.org>)

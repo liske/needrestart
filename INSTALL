@@ -14,4 +14,4 @@ Term::ProgressBar::Simple
 Misc
 ----
 
-debconf (on Debian derivates)
+po-debconf (on Debian derivates)

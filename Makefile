@@ -16,7 +16,7 @@ install: all
 	
 	which debconf > /dev/null && \
 	    mkdir -p "$(DESTDIR)/usr/share/needrestart" && \
-	    cp ex/debconf/needrestart.templates "$(DESTDIR)/usr/share/needrestart/" || true
+	    po2debconf ex/debconf/needrestart.templates > "$(DESTDIR)/usr/share/needrestart/needrestart.templates" || true
 	
 	mkdir -p "$(DESTDIR)/usr/sbin"
 	cp needrestart "$(DESTDIR)/usr/sbin/"
