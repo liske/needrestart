@@ -4,7 +4,7 @@ _Description: Daemons using outdated libraries
 
 Template: needrestart/ui-query_pkgs
 Type: multiselect
-_Choices: ${PKGS}
+Choices: ${PKGS}
 _Description: Which services should be restarted?
 
 Template: needrestart/ui-kernel_announce_abi

@@ -24,12 +24,6 @@ msgid "Daemons using outdated libraries"
 msgstr ""
 
 #. Type: multiselect
-#. Choices
-#: ../needrestart.templates:2001
-msgid "${PKGS}"
-msgstr ""
-
-#. Type: multiselect
 #. Description
 #: ../needrestart.templates:2002
 msgid "Which services should be restarted?"
