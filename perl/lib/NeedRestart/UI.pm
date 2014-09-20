@@ -116,7 +116,7 @@ sub _progress_out {
     $columns -= 3;
     my $wmsg = int($columns * 0.7);
     $wmsg = length($self->{progress}->{msg}) if(length($self->{progress}->{msg}) < $wmsg);
-    my $wbar = $columns - $wmsg;
+    my $wbar = $columns - $wmsg - 1;
 
     printf("%-${wmsg}s [%-${wbar}s]\r", substr($self->{progress}->{msg}, 0, $wmsg), '=' x ($wbar*$self->{progress}->{count}/$self->{progress}->{max}));
 
