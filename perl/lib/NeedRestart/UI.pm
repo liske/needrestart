@@ -109,8 +109,6 @@ sub _progress_inc {
 sub _progress_out {
     my $self = shift;
     
-    $|++;
-    
     my ($columns) = GetTerminalSize(\*STDOUT);
     
     $columns -= 3;
@@ -119,8 +117,6 @@ sub _progress_out {
     my $wbar = $columns - $wmsg - 1;
 
     printf("%-${wmsg}s [%-${wbar}s]\r", substr($self->{progress}->{msg}, 0, $wmsg), '=' x ($wbar*$self->{progress}->{count}/$self->{progress}->{max}));
-
-    $|--;
 }
 
 sub _progress_fin {
