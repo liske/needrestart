@@ -6,6 +6,8 @@ needrestart (1.2) unstable; urgency=medium
     (Debian Bug#761192 by Thijs Kinkhorst <thijs@debian.org>)
   * Fix blacklist to match upgraded binaries (dpkg).
     (Debian Bug#761346 by Paul Wise <pabs@debian.org>)
+  * Fix detection of unit names on systemd 215+.
+    (Debian Bug#762312 by Sven Hartge <sven@svenhartge.de>)
   * Ignore special paths (SYSV IPC, DRM, /dev), fixing some
     false positives.
   * Add service blacklist configuration option to fix display
