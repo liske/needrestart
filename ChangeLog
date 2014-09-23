@@ -12,6 +12,9 @@ needrestart (1.2) unstable; urgency=medium
     false positives.
   * Add service blacklist configuration option to fix display
     manager blacklisting with systemd.
+  * Handle systemd manager restarts by using the 'systemctl
+    daemon-reexec' command.
+    (Debian Bug#762528 by Paul Wise <pabs@debian.org>)
 
 needrestart (1.1) unstable; urgency=medium
 
