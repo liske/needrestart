@@ -201,6 +201,9 @@ sub restart_cmd($) {
     elsif($rc eq q(systemd manager)) {
 	(qw(systemctl daemon-reexec));
     }
+    elsif($rc eq q(sysv init)) {
+	(qw(telinit u));
+    }
     else {
 	(q(service), $rc, q(restart));
     }
@@ -329,8 +332,8 @@ if(defined($opt_l)) {
 
 	    if($is_systemd) {
 		# systemd manager
-		if($pid == 1 && $exe eq q(/lib/systemd/systemd)) {
-		    print STDERR "$LOGPREF #$pid is the systemd manager\n" if($nrconf{verbose});
+		if($pid == 1 && $exe =~ m@^/lib/systemd/systemd@) {
+		    print STDERR "$LOGPREF #$pid is systemd manager\n" if($nrconf{verbose});
 		    $restart{q(systemd manager)}++;
 		    next;
 		}
@@ -371,6 +374,14 @@ if(defined($opt_l)) {
 		if(defined($ret) && $ret =~ /([^.\s]+\.service) /) {
 		    print STDERR "$LOGPREF #$pid is $2\n" if($nrconf{verbose});
 		    $restart{$2}++;
+		    next;
+		}
+	    }
+	    else {
+		# sysv init
+		if($pid == 1 && $exe =~ m@^/sbin/init@) {
+		    print STDERR "$LOGPREF #$pid is sysv init\n" if($nrconf{verbose});
+		    $restart{q(sysv init)}++;
 		    next;
 		}
 	    }
