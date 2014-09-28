@@ -16,6 +16,8 @@ needrestart (1.2) unstable; urgency=medium
     their specific commands.
     (Debian Bug#762528 by Paul Wise <pabs@debian.org>)
 
+ -- Thomas Liske <thomas@fiasko-nw.net>  Sun, 28 Sep 2014 23:48:42 +0200
+
 needrestart (1.1) unstable; urgency=medium
 
   * Ignore DHCP clients.
