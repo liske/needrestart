@@ -510,14 +510,14 @@ if(defined($opt_l)) {
 		    next;
 		}
 
-		if($opt_r eq 'a') {
-		    my @cmd = restart_cmd($rc);
-		    next unless($#cmd > -1);
+		my @cmd = restart_cmd($rc);
+		next unless($#cmd > -1);
 
+		if($opt_r eq 'a') {
 		    system(@cmd);
 		}
 		else {
-		    $ui->notice(" $rc");
+		    $ui->notice(join(' ', @cmd));
 		}
 	    }
 	
@@ -526,6 +526,9 @@ if(defined($opt_l)) {
 		if($opt_r eq 'a') {
 		    $ui->notice('Restarting services using systemd...');
 		    system(@cmd);
+		}
+		else {
+		    $ui->notice(join(' ', @cmd));
 		}
 	    }
 	}

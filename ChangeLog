@@ -1,5 +1,7 @@
 needrestart (1.3) unstable; urgency=medium
 
+  * [regression] List commands in list mode.
+    (Debian Bug#764042 by Paul Wise <pabs@debian.org>)
   * Add a conf.d/ directory.
     (Debian Bug#764043 by Paul Wise <pabs@debian.org>)
 
