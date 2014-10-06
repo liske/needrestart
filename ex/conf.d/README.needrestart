@@ -1,0 +1,5 @@
+Files ending with .conf and located in the /etc/needrestart/conf.d
+directory are parsed by needrestart's default configuration file.
+
+Files are parsed in order (using Perl's sort sub) and override or
+modify any previously set config option.
