@@ -87,8 +87,6 @@ sub announce_abi {
 
 sub announce_ver {
     my $self = shift;
-    my $kversion = shift;
-    my $kmessage = shift;
 
     $self->_announce('needrestart/ui-kernel_announce_ver', @_);
 }
