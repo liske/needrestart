@@ -4,6 +4,9 @@ needrestart (1.3) unstable; urgency=medium
     (Debian Bug#764042 by Paul Wise <pabs@debian.org>)
   * Add a conf.d/ directory.
     (Debian Bug#764043 by Paul Wise <pabs@debian.org>)
+  * [UI] Fix empty current/expected kernel version string used by
+    debconf template.
+    (Debian Bug#764917 by Laurent Bonnaud <L.Bonnaud@laposte.net>)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
