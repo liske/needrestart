@@ -48,7 +48,7 @@ sub nr_linux_version_x86($$) {
 
     my $fh;
     unless(open($fh, '<', $fn)) {
-	print STDERR "$LOGPREF Could not open kernel image ($fn): $!\n" if($debug);
+	print STDERR "$LOGPREF Could not open linux image ($fn): $!\n" if($debug);
 	return undef;
     }
     binmode($fh);
@@ -69,7 +69,7 @@ sub nr_linux_version_x86($$) {
     return undef if($buf eq '');
 
     unless($buf =~ /^\d+\.\d+/) {
-	print STDERR "$LOGPREF Got garbage from kernel image header ($fn): '$buf'\n" if($debug);
+	print STDERR "$LOGPREF Got garbage from linux image header ($fn): '$buf'\n" if($debug);
 	return undef;
     }
 
@@ -87,7 +87,7 @@ sub nr_kernel_check_real($$) {
     die "$LOGPREF Not running on Linux!\n" unless($sysname eq 'Linux');
 
     my @kfiles = reverse nsort </boot/vmlinu*>;
-    $ui->progress_prep(scalar @kfiles, 'Scanning kernel images...');
+    $ui->progress_prep(scalar @kfiles, 'Scanning linux images...');
 
     my %kernels;
     foreach my $fn (@kfiles) {
@@ -120,12 +120,12 @@ sub nr_kernel_check_real($$) {
     $ui->progress_fin;
 
     unless(scalar keys %kernels) {
-	print STDERR "$LOGPREF Did not find any kernel images.\n" if($debug);
+	print STDERR "$LOGPREF Did not find any linux images.\n" if($debug);
 	return (NRK_UNKNOWN, %vars);
     }
 
     ($vars{EVERSION}) = reverse nsort keys %kernels;
-    print STDERR "$LOGPREF Expected kernel version: $vars{EVERSION}\n" if($debug);
+    print STDERR "$LOGPREF Expected linux version: $vars{EVERSION}\n" if($debug);
 
     return (NRK_VERUPGRADE, %vars) if($vars{KVERSION} ne $vars{EVERSION});
     return (NRK_ABIUPGRADE, %vars) unless($kernels{$release});

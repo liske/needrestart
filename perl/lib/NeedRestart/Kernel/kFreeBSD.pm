@@ -45,7 +45,7 @@ sub nr_kernel_check_real($$) {
     die "$LOGPREF Not running on GNU/kFreeBSD!\n" unless($sysname eq 'GNU/kFreeBSD');
 
     my @kfiles = reverse nsort </boot/kfreebsd-*>;
-    $ui->progress_prep(scalar @kfiles, 'Scanning kernel images...');
+    $ui->progress_prep(scalar @kfiles, 'Scanning kfreebsd images...');
 
     my %kernels;
     foreach my $fn (@kfiles) {
@@ -75,12 +75,12 @@ sub nr_kernel_check_real($$) {
     $ui->progress_fin;
 
     unless(scalar keys %kernels) {
-	print STDERR "$LOGPREF Did not find any kernel images (/boot/kfreebsd-*)!\n" if($debug);
+	print STDERR "$LOGPREF Did not find any kfreebsd images (/boot/kfreebsd-*)!\n" if($debug);
 	return (NRK_UNKNOWN, %vars);
     }
 
     ($vars{EVERSION}) = reverse nsort keys %kernels;
-    print STDERR "$LOGPREF Expected kernel version: $vars{EVERSION}\n" if($debug);
+    print STDERR "$LOGPREF Expected kfreebsd version: $vars{EVERSION}\n" if($debug);
 
     return (NRK_VERUPGRADE, %vars) if($vars{KVERSION} ne $vars{EVERSION});
     return (NRK_ABIUPGRADE, %vars) unless($kernels{$release});
