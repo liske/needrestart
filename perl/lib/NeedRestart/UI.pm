@@ -141,7 +141,7 @@ sub notice($$) {
 }
 
 
-sub query_pkgs($$$$) {
+sub query_pkgs($$$$$) {
 }
 
 1;

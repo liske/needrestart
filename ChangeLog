@@ -7,6 +7,9 @@ needrestart (1.3) unstable; urgency=medium
   * [UI] Fix empty current/expected kernel version string used by
     debconf template.
     (Debian Bug#764917 by Laurent Bonnaud <L.Bonnaud@laposte.net>)
+  * Don't blacklist services by default but use a new override_rc option
+    to don't restart some critical services by default.
+    (Debian Bug#763937 Christoph Anton Mitterer <calestyo@scientia.net>)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
