@@ -91,6 +91,7 @@ LIC
 our %nrconf = (
     verbose => 0,
     hook_d => '/etc/needrestart/hook.d',
+    notify_d => '/etc/needrestart/notify.d',
     restart => 'i',
     defno => 0,
     blacklist => [],
