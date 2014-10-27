@@ -28,6 +28,7 @@ use strict;
 use warnings;
 use Module::Find;
 use NeedRestart::Utils;
+use Sort::Naturally;
 
 use constant {
     NEEDRESTART_PRIO_LOW	=> 1,
@@ -102,7 +103,7 @@ sub needrestart_ui {
     my $prefui = shift;
 
     needrestart_ui_init($debug, $prefui) unless(%UIs);
-    my ($ui) = sort { $UIs{$b} <=> $UIs{$a} } keys %UIs;
+    my ($ui) = sort { ncmp($UIs{$b}, $UIs{$a}) } keys %UIs;
 
     return undef unless($ui);
 

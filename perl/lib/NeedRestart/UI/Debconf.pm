@@ -30,6 +30,7 @@ use warnings;
 use parent qw(NeedRestart::UI);
 use NeedRestart qw(:ui);
 use Debconf::Client::ConfModule qw(:all);
+use Sort::Naturally;
 
 use constant {
     DCTMPL => '/usr/share/needrestart/needrestart.templates',
@@ -109,7 +110,7 @@ sub query_pkgs($$$$$$) {
     my $cb = shift;
 
     # prepare checklist array
-    my @l = sort keys %$pkgs;
+    my @l = nsort keys %$pkgs;
 
     # apply rc selection overrides
     my @selected = ();
