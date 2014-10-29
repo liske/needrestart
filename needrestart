@@ -94,6 +94,7 @@ our %nrconf = (
     verbose => 0,
     hook_d => '/etc/needrestart/hook.d',
     notify_d => '/etc/needrestart/notify.d',
+    sendnotify => 1,
     restart => 'i',
     defno => 0,
     blacklist => [],
@@ -566,13 +567,6 @@ if(defined($opt_l)) {
 		    $ui->notice(join(' ', @cmd));
 		}
 	    }
-
-	    $ui->notice('User sessions:');
-	    foreach my $uid (sort { ncmp(uid2name($a), uid2name($b)); } keys %sessions) {
-		foreach my $sess (sort keys %{ $sessions{$uid} }) {
-		    $ui->notice(uid2name($uid)." on $sess is running obsolete ".join(', ',map { $_.'['.join(',', @{ $sessions{$uid}->{$sess}->{$_} }).']';  } nsort keys %{ $sessions{$uid}->{$sess} }));
-		}
-	    }
 	}
 	else {
 	    my $o = 0;
@@ -586,6 +580,32 @@ if(defined($opt_l)) {
 	    if($#systemd_restart > -1) {
 		$ui->notice('Restarting services using systemd...');
 		system(qq(systemctl), qq(restart), @systemd_restart);
+	    }
+	}
+    }
+
+    # list and notify user sessions
+    if(scalar keys %sessions) {
+	$ui->notice('User sessions:');
+	foreach my $uid (sort { ncmp(uid2name($a), uid2name($b)); } keys %sessions) {
+	    foreach my $sess (sort keys %{ $sessions{$uid} }) {
+		my $fnames = join(', ',map { $_.'['.join(',', @{ $sessions{$uid}->{$sess}->{$_} }).']';  } nsort keys %{ $sessions{$uid}->{$sess} });
+		$ui->notice(uid2name($uid)." on $sess is running obsolete $fnames");
+		if($nrconf{sendnotify}) {
+		    local %ENV;
+
+		    $ENV{NR_UID} = $uid;
+		    $ENV{NR_USERNAME} = uid2name($uid);
+		    $ENV{NR_SESSION} = $sess;
+
+		    foreach my $bin (nsort <$nrconf{notify_d}/*>) {
+			next unless(-x $bin);
+			print STDERR "$LOGPREF run $bin\n" if($nrconf{verbose});
+			my $pipe = nr_fork_pipew($nrconf{verbose}, $bin);
+			print $pipe "$fnames\n";
+			last if(close($pipe));
+		    }
+		}
 	    }
 	}
     }

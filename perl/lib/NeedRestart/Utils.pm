@@ -40,6 +40,7 @@ our @EXPORT = qw(
     nr_readlink
     nr_stat
     nr_fork_pipe
+    nr_fork_pipew
     nr_fork_pipe2
 );
 
@@ -129,6 +130,25 @@ sub nr_fork_pipe($@) {
 
     if($pid == 0) {
 	close(STDIN);
+	close(STDERR) unless($debug);
+
+	undef $ENV{LANG};
+
+	exec(@_);
+	exit;
+    }
+
+    \*HPIPE
+}
+
+sub nr_fork_pipew($@) {
+    my $debug = shift;
+
+    my $pid = open(HPIPE, '|-');
+    defined($pid) || die "Can't fork: $!\n";
+
+    if($pid == 0) {
+	close(STDOUT);
 	close(STDERR) unless($debug);
 
 	undef $ENV{LANG};
