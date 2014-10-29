@@ -377,8 +377,11 @@ if(defined($opt_l)) {
 		close($systemctl);
 
 		if(defined($ret) && $ret =~ /([^.\s]+\.service) /) {
-		    print STDERR "$LOGPREF #$pid is $2\n" if($nrconf{verbose});
-		    $restart{$2}++;
+		    my $s = $2;
+		    print STDERR "$LOGPREF #$pid is $s\n" if($nrconf{verbose});
+		    $restart{$s}++;
+		    $s =~ s/\.service$//;
+		    delete($restart{$s});
 		    next;
 		}
 	    }
@@ -450,7 +453,12 @@ if(defined($opt_l)) {
 		# No perfect hit - call any rc scripts instead.
 		if(!$found && $#nopids > -1) {
 		    foreach my $rc (@nopids) {
-			$restart{$rc}++;
+			if($is_systemd && exists($restart{"$rc.service"})) {
+			    print STDERR "$LOGPREF #$pid rc.d script $rc seems to be superseeded by $rc.service\n" if($nrconf{verbose});
+			}
+			else {
+			    $restart{$rc}++;
+			}
 		    }
 		    $found++;
 		}
