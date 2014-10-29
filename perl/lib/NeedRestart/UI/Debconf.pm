@@ -123,7 +123,7 @@ sub query_pkgs($$$$$$) {
 	    last;
 	}
 
-	push(@selected, $pkg) unless($defno) unless($found);
+	push(@selected, $pkg) unless($defno || $found);
     }
     dcres(set('needrestart/ui-query_pkgs', join(', ', @selected)));
 
