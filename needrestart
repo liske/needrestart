@@ -24,12 +24,14 @@
 #   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 #
 
+use Cwd qw(realpath);
 use Getopt::Std;
 use NeedRestart;
 use NeedRestart::UI;
 use NeedRestart::Interp;
 use NeedRestart::Kernel;
 use NeedRestart::Utils;
+use Sort::Naturally;
 
 use warnings;
 use strict;
@@ -214,7 +216,17 @@ sub restart_cmd($) {
     }
 }
 
+my %uidcache;
+sub uid2name($) {
+    my $uid = shift;
+
+    return $uidcache{$uid} if(exists($uidcache{$uid}));
+
+    return $uidcache{$uid} = getpwuid($uid) || $uid;
+}
+
 my %restart;
+my %sessions;
 if(defined($opt_l)) {
     my @ign_pids=($$, getppid());
 
@@ -296,6 +308,14 @@ if(defined($opt_l)) {
 	# restart needed?
 	next unless($restart);
 
+	# handle user sessions
+	if($ptable->{$pid}->{ttydev} ne '') {
+	    my $ttydev = realpath( $ptable->{$pid}->{ttydev} );
+	    print STDERR "$LOGPREF #$pid part of user session: uid=$ptable->{$pid}->{uid} sess=$ttydev\n" if($nrconf{verbose});
+	    push(@{ $sessions{ $ptable->{$pid}->{uid} }->{ $ttydev }->{ $ptable->{$pid}->{fname} } }, $pid);
+	    next;
+	}
+
 	# find parent process
 	my $ppid = $ptable->{$pid}->{ppid};
 	if($ppid != $pid && $ppid > 1) {
@@ -354,6 +374,11 @@ if(defined($opt_l)) {
 			else {
 			    if($value =~ m@/([^/]+\.service)$@) {
 				($1);
+			    }
+			    elsif($value = m@/user-(\d+).slice/session-(\d+).scope@) {
+				push(@{ $sessions{$1}->{"session #$2"}->{ $ptable->{$pid}->{fname} } }, $pid);
+				print STDERR "$LOGPREF #$pid part of user session: uid=$1 sess=$2\n" if($nrconf{verbose});
+				next;
 			    }
 			    else {
 				print STDERR "$LOGPREF #$pid unexpected cgroup '$value'\n" if($nrconf{verbose});
@@ -539,6 +564,13 @@ if(defined($opt_l)) {
 		}
 		else {
 		    $ui->notice(join(' ', @cmd));
+		}
+	    }
+
+	    $ui->notice('User sessions:');
+	    foreach my $uid (sort { ncmp(uid2name($a), uid2name($b)); } keys %sessions) {
+		foreach my $sess (sort keys %{ $sessions{$uid} }) {
+		    $ui->notice(uid2name($uid)." on $sess is running obsolete ".join(', ',map { $_.'['.join(',', @{ $sessions{$uid}->{$sess}->{$_} }).']';  } nsort keys %{ $sessions{$uid}->{$sess} }));
 		}
 	    }
 	}

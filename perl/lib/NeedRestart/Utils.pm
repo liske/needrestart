@@ -43,7 +43,7 @@ our @EXPORT = qw(
     nr_fork_pipe2
 );
 
-my %ptable = map {$_->pid => $_} @{ new Proc::ProcessTable(enable_ttys => 0)->table };
+my %ptable = map {$_->pid => $_} @{ new Proc::ProcessTable(enable_ttys => 1)->table };
 
 sub nr_ptable() {
     return \%ptable;
