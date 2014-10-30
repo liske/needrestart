@@ -23,12 +23,11 @@ case "$NR_SESSION" in
 	{
 	    echo
 	    echo "Your session is running obsolete binaries or libraries as listed below."
-	    echo
 	    echo "Please consider to relogin or restart them!"
 	    echo
 	    cat
 	    echo
-	} | write "$NR_USERNAME" "$NR_SESSION"
+	} | write "$NR_USERNAME" "$NR_SESSION" 2> /dev/null
 	;;
     *)
 	echo "[$0] skip session w/o tty" 1>&2
