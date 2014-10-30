@@ -22,19 +22,16 @@ case "$NR_SESSION" in
 	echo "[$0] notify user $NR_USERNAME on $NR_SESSION" 1>&2
 	{
 	    echo
-	    echo "The following list of processes are using obsolete binaries or libraries:"
+	    echo "Your session is running obsolete binaries or libraries as listed below."
+	    echo
+	    echo "Please consider to relogin or restart them!"
 	    echo
 	    cat
 	    echo
-	    echo "Please consider to relogin or restart them."
-	    echo
 	} | write "$NR_USERNAME" "$NR_SESSION"
-	exit 0;
 	;;
     *)
 	echo "[$0] skip session w/o tty" 1>&2
-
-EOF
 	exit 1;
 	;;
 esac

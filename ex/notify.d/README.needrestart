@@ -1,0 +1,2 @@
+Files located in /etc/needrestart/notify.d are used to notify running
+user sessions about usage of outdated libraries.

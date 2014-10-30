@@ -1,0 +1,45 @@
+#!/bin/sh
+
+# needrestart - Restart daemons after library updates.
+#
+# Authors:
+#   Thomas Liske <thomas@fiasko-nw.net>
+#
+# Copyright Holder:
+#   2013 - 2014 (C) Thomas Liske [http://fiasko-nw.net/~thomas/]
+#
+# License:
+#   This program is free software; you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation; either version 2 of the License, or
+#   (at your option) any later version.
+#
+
+# Use notify-send (from libnotify-bin) to notify a user session via dbus.
+
+export NSEND='/usr/bin/notify-send'
+test -x "$NSEND" || exit 1
+
+case "$NR_SESSION" in
+    session*)
+        # cleanup environment
+	unset DBUS_SESSION_BUS_ADDRESS
+	export DISPLAY=`grep -z DISPLAY "/proc/$NR_SESSPPID/environ" 2> /dev/null | sed -e s/DISPLAY=//`
+
+	if [ -z "$DISPLAY" ]; then
+ 	    echo "[$0] could not find DISPLAY for $NR_USERNAME on $NR_SESSION" 1>&2
+	    exit 1
+	fi
+
+ 	echo "[$0] notify user $NR_USERNAME on $DISPLAY" 1>&2
+
+	MSGTITLE='Relogin or restarts required!'
+	MSGBODY="<p>Your session is running obsolete binaries or libraries as listed below.</p><p><i><b>Please consider to relogin or restart the affected programs!</b></i></p>\n\n$(cat)"
+
+	su -p -s /bin/sh -c "$NSEND -u critical -i dialog-warning \"$MSGTITLE\" \"$MSGBODY\"" "$NR_USERNAME"
+	;;
+    *)
+ 	echo "[$0] skip session '$NR_SESSION'" 1>&2
+	exit 1;
+	;;
+esac

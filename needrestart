@@ -217,6 +217,7 @@ sub restart_cmd($) {
     }
 }
 
+# map UID to username (cached)
 my %uidcache;
 sub uid2name($) {
     my $uid = shift;
@@ -233,6 +234,28 @@ if(defined($opt_l)) {
 
     # inspect only pids
     my $ptable = nr_ptable();
+
+    # find session parent
+    sub findppid($@) {
+	my $uid = shift;
+	my ($pid, @pids) = @_;
+	
+	if($ptable->{$pid}->{ppid} == 1) {
+	    return $pid
+		if($ptable->{$pid}->{uid} == $uid);
+	    
+	    return undef;
+	}
+	
+	foreach my $pid (@pids) {
+	    my $ppid = findppid($uid, $pid);
+	    
+	    return $ppid if($ppid);
+	}
+	
+	return $pid;
+    }
+
     $ui->progress_prep(scalar keys %$ptable, 'Scanning processes...');
     my %stage2;
     for my $pid (sort {$a <=> $b} keys %$ptable) {
@@ -377,8 +400,8 @@ if(defined($opt_l)) {
 				($1);
 			    }
 			    elsif($value = m@/user-(\d+).slice/session-(\d+).scope@) {
-				push(@{ $sessions{$1}->{"session #$2"}->{ $ptable->{$pid}->{fname} } }, $pid);
 				print STDERR "$LOGPREF #$pid part of user session: uid=$1 sess=$2\n" if($nrconf{verbose});
+				push(@{ $sessions{$1}->{"session #$2"}->{ $ptable->{$pid}->{fname} } }, $pid);
 				next;
 			    }
 			    else {
@@ -597,6 +620,7 @@ if(defined($opt_l)) {
 		    $ENV{NR_UID} = $uid;
 		    $ENV{NR_USERNAME} = uid2name($uid);
 		    $ENV{NR_SESSION} = $sess;
+		    $ENV{NR_SESSPPID} = findppid($uid, sort map { @$_; } values %{ $sessions{$uid}->{$sess} });
 
 		    foreach my $bin (nsort <$nrconf{notify_d}/*>) {
 			next unless(-x $bin);
