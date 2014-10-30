@@ -248,7 +248,7 @@ if(defined($opt_l)) {
 	}
 	
 	foreach my $pid (@pids) {
-	    my $ppid = findppid($uid, $pid);
+	    my $ppid = &findppid($uid, $pid);
 	    
 	    return $ppid if($ppid);
 	}
