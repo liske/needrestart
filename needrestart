@@ -624,6 +624,8 @@ if(defined($opt_l)) {
 
 		    foreach my $bin (nsort <$nrconf{notify_d}/*>) {
 			next unless(-x $bin);
+			next if($bin =~ /(~|\.dpkg-[^.]+)$/);
+
 			print STDERR "$LOGPREF run $bin\n" if($nrconf{verbose});
 			my $pipe = nr_fork_pipew($nrconf{verbose}, $bin);
 			print $pipe "$fnames\n";
