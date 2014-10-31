@@ -444,7 +444,7 @@ if(defined($opt_l)) {
 	    }
 
 	    my $pkg;
-	    foreach my $hook (sort <$nrconf{hook_d}/*>) {
+	    foreach my $hook (nsort <$nrconf{hook_d}/*>) {
 		print STDERR "$LOGPREF #$pid running $hook\n" if($nrconf{verbose});
 
 		my $found = 0;
