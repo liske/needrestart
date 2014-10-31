@@ -17,7 +17,7 @@
 
 # Use notify-send (from libnotify-bin) to notify a user session via dbus.
 
-export NSEND='/usr/bin/notify-send'
+NSEND='/usr/bin/notify-send'
 test -x "$NSEND" || exit 1
 
 case "$NR_SESSION" in
