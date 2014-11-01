@@ -1,2 +1,28 @@
 Files located in /etc/needrestart/notify.d are used to notify running
 user sessions about usage of outdated libraries.
+
+needrestart runs any executable file (except *~, *.dpkg-*, *.ex) naturally
+sorted by the filename for each notification. If the result code is 0 than
+needrestart will stop to run the remaining notification binaries.
+
+
+The following environment variables are set:
+
+- NR_SESSION
+  Session identifier (tty device node or systemd's session name).
+- NR_SESSPPID
+  The first pid in the session detected by needrestart.
+- NR_UID
+  User ID of the session owner.
+- NR_USERNAME
+  Username of the session owner.
+
+
+The following file descriptors are used:
+
+- /dev/stdin
+  The list of obsolete processes.
+- /dev/stdout
+  Closed.
+- /dev/stderr
+  Available in verbose mode (-v).
