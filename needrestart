@@ -95,6 +95,7 @@ our %nrconf = (
     defno => 0,
     blacklist => [],
     blacklist_rc => [],
+    override_rc => [],
     interpscan => 1,
     kernelhints => 1,
 );
@@ -540,7 +541,7 @@ if(defined($opt_l)) {
 	else {
 	    my $o = 0;
 
-	    $ui->query_pkgs('Services to be restarted:', $nrconf{defno}, \%restart,
+	    $ui->query_pkgs('Services to be restarted:', $nrconf{defno}, \%restart, $nrconf{override_rc},
 			    sub {
 				my @cmd = restart_cmd(shift);
 				system(@cmd) if($#cmd > -1);

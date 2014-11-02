@@ -93,18 +93,22 @@ sub _query($$) {
     return $i;
 }
 
-sub query_pkgs($$$$$) {
+sub query_pkgs($$$$$$) {
     my $self = shift;
     my $out = shift;
     my $def = shift;
     my $pkgs = shift;
+    my $overrides = shift;
     my $cb = shift;
 
     delete($self->{stdio_same});
 
     print "$out\n";
     foreach my $rc (sort keys %$pkgs) {
-	&$cb($rc) if($self->_query("Restart $rc?", ($def ? 'N' : 'Y')) eq 'yes');
+	my ($or) = grep { $rc =~ /$_/; } keys %$overrides;
+	my $d = (defined($or) ? ($overrides->{$or} ? 'Y' : 'N') : ($def ? 'N' : 'Y'));
+
+	&$cb($rc) if($self->_query("Restart $rc?", $d) eq 'yes');
     }
 }
 

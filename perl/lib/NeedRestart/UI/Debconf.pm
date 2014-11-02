@@ -100,17 +100,32 @@ sub notice {
 }
 
 
-sub query_pkgs($$$$$) {
+sub query_pkgs($$$$$$) {
     my $self = shift;
     my $out = shift;
     my $defno = shift;
     my $pkgs = shift;
+    my $overrides = shift;
     my $cb = shift;
 
     # prepare checklist array
     my @l = sort keys %$pkgs;
 
-    dcres(set('needrestart/ui-query_pkgs', join(', ', ($defno ? () : @l) )));
+    # apply rc selection overrides
+    my @selected = ();
+    foreach my $pkg (@l) {
+	my $found;
+	foreach my $re (keys %$overrides) {
+	    next unless($pkg =~ /$re/);
+
+	    push(@selected, $pkg) if($overrides->{$re});
+	    $found++;
+	    last;
+	}
+
+	push(@selected, $pkg) unless($defno) unless($found);
+    }
+    dcres(set('needrestart/ui-query_pkgs', join(', ', @selected)));
 
     dcres( subst('needrestart/ui-query_pkgs', 'OUT', $out) );
     dcres( subst('needrestart/ui-query_pkgs', 'PKGS', join(', ', @l)) );
