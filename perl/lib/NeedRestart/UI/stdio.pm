@@ -81,7 +81,12 @@ sub _query($$) {
 	    return $self->{stdio_same};
 	}
 
-	$i = lc(<STDIN>);
+	$i = <STDIN>;
+	unless(defined($i)) {
+	    $i = 'n';
+	    last;
+	}
+	$i = lc($i);
 	chomp($i);
 	$i =~ s/^\s+//;
 	$i =~ s/\s+$//;
