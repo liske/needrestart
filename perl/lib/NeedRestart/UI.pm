@@ -42,7 +42,7 @@ sub progress_prep($$$) {
     my $self = shift;
     my ($max, $out) = @_;
 
-    unless($self->{debug}) {
+    unless($self->{debug} || !exists($ENV{COLUMNS}) || !exists($ENV{LINES})) {
 	# restore terminal if required (debconf)
 	unless(-t *STDIN) {
 	    open($self->{fhin}, '<&', \*STDIN) || die "Can't dup stdin: $!\n";
