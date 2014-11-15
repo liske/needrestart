@@ -141,7 +141,15 @@ die "ERROR: Unknown restart option '$opt_r'!\n" unless($opt_r =~ /^(l|i|a)$/);
 
 $nrconf{defno}++ if($opt_n);
 
-warn "WARNING: This program should be run as root!\n" if($< != 0);
+my $usermode;
+# running mode
+if($< != 0) {
+    print STDERR "$LOGPREF running in user-mode\n" if($nrconf{verbose});
+    $usermode++;
+}
+else {
+    print STDERR "$LOGPREF running in root-mode\n" if($nrconf{verbose});
+}
 
 # get current runlevel, fallback to '2'
 my $runlevel = `who -r` || '';
@@ -154,7 +162,8 @@ die "Error: no UI class available!\n" unless(defined($ui));
 
 # enable/disable checks
 unless(defined($opt_k) || defined($opt_l)) {
-    $opt_k = $opt_l = 1;
+    $opt_k = ($usermode ? undef : 1);
+    $opt_l = 1;
 }
 
 sub parse_lsbinit($) {
