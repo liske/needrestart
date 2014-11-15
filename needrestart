@@ -141,11 +141,10 @@ die "ERROR: Unknown restart option '$opt_r'!\n" unless($opt_r =~ /^(l|i|a)$/);
 
 $nrconf{defno}++ if($opt_n);
 
-my $usermode;
-# running mode
-if($< != 0) {
+# running mode (user or root)
+my $uid = $<;
+if($uid) {
     print STDERR "$LOGPREF running in user-mode\n" if($nrconf{verbose});
-    $usermode++;
 }
 else {
     print STDERR "$LOGPREF running in root-mode\n" if($nrconf{verbose});
@@ -162,7 +161,7 @@ die "Error: no UI class available!\n" unless(defined($ui));
 
 # enable/disable checks
 unless(defined($opt_k) || defined($opt_l)) {
-    $opt_k = ($usermode ? undef : 1);
+    $opt_k = ($uid ? undef : 1);
     $opt_l = 1;
 }
 
@@ -270,6 +269,9 @@ if(defined($opt_l)) {
     for my $pid (sort {$a <=> $b} keys %$ptable) {
 	$ui->progress_step;
 
+	# user-mode: skip foreign processes
+	next if($uid && $ptable->{$pid}->{uid} != $uid);
+
 	# skip myself
 	next if(grep {$pid == $_} @ign_pids);
 
@@ -342,6 +344,7 @@ if(defined($opt_l)) {
 	next unless($restart);
 
 	# handle user sessions
+	print STDERR $ptable->{$pid}->{ttydev}."\n";
 	if($ptable->{$pid}->{ttydev} ne '') {
 	    my $ttydev = realpath( $ptable->{$pid}->{ttydev} );
 	    print STDERR "$LOGPREF #$pid part of user session: uid=$ptable->{$pid}->{uid} sess=$ttydev\n" if($nrconf{verbose});
@@ -354,12 +357,18 @@ if(defined($opt_l)) {
 	if($ppid != $pid && $ppid > 1) {
 	    print STDERR "$LOGPREF #$pid is a child of #$ppid\n" if($nrconf{verbose});
 
-	    unless(exists($stage2{$ppid})) {
-		my $pexe = nr_readlink($ppid);
-		# ignore kernel threads
-		next unless(defined($pexe));
+	    if($uid && $ptable->{$ppid}->{uid} != $uid) {
+		print STDERR "$LOGPREF #$ppid is a foreign process\n" if($nrconf{verbose});
+		$stage2{$pid} = $exe;
+	    }
+	    else {
+		unless(exists($stage2{$ppid})) {
+		    my $pexe = nr_readlink($ppid);
+		    # ignore kernel threads
+		    next unless(defined($pexe));
 
-		$stage2{$ppid} = $pexe;
+		    $stage2{$ppid} = $pexe;
+		}
 	    }
 	}
 	else {
