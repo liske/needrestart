@@ -344,7 +344,6 @@ if(defined($opt_l)) {
 	next unless($restart);
 
 	# handle user sessions
-	print STDERR $ptable->{$pid}->{ttydev}."\n";
 	if($ptable->{$pid}->{ttydev} ne '') {
 	    my $ttydev = realpath( $ptable->{$pid}->{ttydev} );
 	    print STDERR "$LOGPREF #$pid part of user session: uid=$ptable->{$pid}->{uid} sess=$ttydev\n" if($nrconf{verbose});
