@@ -29,12 +29,17 @@ use warnings;
 
 use parent qw(NeedRestart::UI);
 use NeedRestart qw(:ui);
-use Debconf::Client::ConfModule qw(:all);
 use Sort::Naturally;
 
 use constant {
     DCTMPL => '/usr/share/needrestart/needrestart.templates',
 };
+
+BEGIN {
+    die __PACKAGE__." is not supported as normal user!\n" if($<);
+}
+
+import Debconf::Client::ConfModule qw(:all);
 
 version('2.0');
 capb('backup');
