@@ -235,6 +235,8 @@ sub uid2name($) {
     return $uidcache{$uid} = getpwuid($uid) || $uid;
 }
 
+print "NEEDRESTART-VER: $NeedRestart::VERSION\n" if($opt_b);
+
 my %restart;
 my %sessions;
 if(defined($opt_l)) {
@@ -377,7 +379,7 @@ if(defined($opt_l)) {
     }
     $ui->progress_fin;
 
-    if(scalar keys %stage2) {
+    if(scalar keys %stage2 && !$uid) {
 	$ui->progress_prep(scalar keys %stage2, 'Scanning candidates...');
 	foreach my $pid (sort {$a <=> $b} keys %stage2) {
 	    $ui->progress_step;
@@ -534,6 +536,22 @@ if(defined($opt_l)) {
 	}
 	$ui->progress_fin;
     }
+
+    # List user's processes in user-mode
+    if($uid && scalar %stage2) {
+	my %fnames;
+	foreach my $pid (keys %stage2) {
+	    push(@{$fnames{ $ptable->{$pid}->{fname} }}, $pid);
+	}
+
+	if($opt_b) {
+	    print map { "NEEDRESTART-PID: $_=".join(',', @{ $fnames{$_} })."\n"; } nsort keys %fnames;
+	}
+	else {
+	    $ui->notice('Your outdated processes:');
+	    $ui->notice(join(', ',map { $_.'['.join(', ', @{ $fnames{$_} }).']';  } nsort keys %fnames));
+	}
+    }
 }
 
 # Apply rc/service blacklist
@@ -543,8 +561,6 @@ foreach my $rc (keys %restart) {
     print STDERR "$LOGPREF $rc is blacklisted -> ignored\n" if($nrconf{verbose});
     delete($restart{$rc});
 }
-
-print "NEEDRESTART-VER: $NeedRestart::VERSION\n" if($opt_b);
 
 if(defined($opt_k)) {
     my ($kresult, %kvars) = ($nrconf{kernelhints} || $opt_b ? nr_kernel_check($nrconf{verbose}, $ui) : ());
@@ -572,7 +588,7 @@ if(defined($opt_k)) {
     }
 }
 
-if(defined($opt_l)) {
+if(defined($opt_l) && !$uid) {
     unless(scalar %restart) {
 	$ui->notice('No services need to be restarted.') unless($opt_b);
     }
