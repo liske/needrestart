@@ -602,6 +602,20 @@ if(defined($opt_l) && !$uid) {
 		    next;
 		}
 
+		# don't restart greylisted services...
+		my $restart = !$nrconf{defno};
+		foreach my $re (keys %{$nrconf{override_rc}}) {
+		    next unless($rc =~ /$re/);
+
+		    $restart = $nrconf{override_rc}->{$re};
+		    last;
+		}
+		# ...but complain about them
+		unless($restart) {
+		    $ui->notice("Skipping $rc...");
+		    next;
+		}
+
 		my @cmd = restart_cmd($rc);
 		next unless($#cmd > -1);
 
