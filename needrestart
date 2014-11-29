@@ -351,6 +351,10 @@ if(defined($opt_l)) {
 			    if($value =~ m@/([^/]+\.service)$@) {
 				($1);
 			    }
+			    elsif($value = m@/user-(\d+).slice/session-(\d+).scope@) {
+				print STDERR "$LOGPREF #$pid is ignored; part of user session: uid=$1 sess=$2\n" if($nrconf{verbose});
+				next;
+			    }
 			    else {
 				print STDERR "$LOGPREF #$pid unexpected cgroup '$value'\n" if($nrconf{verbose});
 				();
