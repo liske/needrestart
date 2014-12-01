@@ -251,6 +251,9 @@ if(defined($opt_l)) {
 		# skip special device paths
 		next if($path =~ m@^/(SYSV00000000$|drm$|dev/)@);
 
+		# skip aio(7) mapping
+		next if($path =~ m@^/\[aio\]@);
+
 		# check for non-existing libs
 		unless(-e $path) {
 		    unless($path =~ m@^/tmp/@) {
