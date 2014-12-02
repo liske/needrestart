@@ -10,7 +10,7 @@ used to detect the running interpreter.
 Whenever source files where located their ctime values are retrieved. If
 any of the source files has been changed after process creation time
 a restart of the pid is triggered. This is no perfect valuation since
-there are no inode informations like for loaded binary objects nor has
+there are no inode information like for loaded binary objects nor has
 needrestart any chance to get a verified list of sourced files..
 
 
