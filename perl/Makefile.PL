@@ -9,5 +9,6 @@ WriteMakefile(
 	Module::ScanDeps => 0,
 	Proc::ProcessTable => 0,
 	Sort::Naturally => 0,
+	Term::ReadKey => 0.
     },
 );
