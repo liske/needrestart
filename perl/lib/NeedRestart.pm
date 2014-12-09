@@ -147,10 +147,10 @@ sub needrestart_interp_check($$$) {
 	    my $ps = nr_ptable_pid($pid);
 	    my %files = $interp->files($pid);
 
-	    if(grep {$_ > $ps->start} values %files) {
+	    if(grep {!defined($_) || $_ > $ps->start} values %files) {
 		if($debug) {
 		    print STDERR "$LOGPREF #$pid uses obsolete script file(s):";
-		    print STDERR join("\n$LOGPREF #$pid  ", '', map {($files{$_} > $ps->start ? $_ : ())} keys %files);
+		    print STDERR join("\n$LOGPREF #$pid  ", '', map {(!defined($files{$_}) || $files{$_} > $ps->start ? $_ : ())} keys %files);
 		    print STDERR "\n";
 		}
 
