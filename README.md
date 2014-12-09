@@ -51,6 +51,7 @@ they may contain security issues, too. This is only a heuristic and might
 fail to detect all relevant source files. The following interpreter
 scanners are shipped:
 
+* *NeedRestart::Interp::Java*
 * *NeedRestart::Interp::Perl*
 * *NeedRestart::Interp::Python*
 * *NeedRestart::Interp::Ruby*
