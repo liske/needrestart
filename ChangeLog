@@ -16,6 +16,7 @@ needrestart (2.0) unstable; urgency=medium
     (Debian Bug#768124 by Phillip Berndt <phillip.berndt@googlemail.com>)
   * [UI] Fix warning on uninitialized values while reading from /dev/stdin.
     (Debian Bug#768124 by Phillip Berndt <phillip.berndt@googlemail.com>)
+  * [Interp] Add basic Java detection support.
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
