@@ -109,7 +109,7 @@ sub _progress_inc {
 sub _progress_out {
     my $self = shift;
     
-    my ($columns) = GetTerminalSize(\*STDOUT);
+    my ($columns) = (-t \*STDOUT) ? GetTerminalSize(\*STDOUT) : 80;
     
     $columns -= 3;
     my $wmsg = int($columns * 0.7);
@@ -124,7 +124,7 @@ sub _progress_fin {
 
    $self->{progress}->{count} = 0;
 
-   my ($columns) = GetTerminalSize(\*STDOUT);
+   my ($columns) = (-t \*STDOUT) ? GetTerminalSize(\*STDOUT) : 80;
 
    print $self->{progress}->{msg}, ' ' x ($columns - length($self->{progress}->{msg})), "\n";
 }
