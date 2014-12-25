@@ -353,6 +353,10 @@ if(defined($opt_l)) {
 	    my $ttydev = realpath( $ptable->{$pid}->{ttydev} );
 	    print STDERR "$LOGPREF #$pid part of user session: uid=$ptable->{$pid}->{uid} sess=$ttydev\n" if($nrconf{verbose});
 	    push(@{ $sessions{ $ptable->{$pid}->{uid} }->{ $ttydev }->{ $ptable->{$pid}->{fname} } }, $pid);
+
+	    # add session processes to stage2 only in user mode
+	    $stage2{$pid} = $exe if($uid);
+
 	    next;
 	}
 
