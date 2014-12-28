@@ -362,7 +362,7 @@ if(defined($opt_l)) {
 
 	# find parent process
 	my $ppid = $ptable->{$pid}->{ppid};
-	if($ppid != $pid && $ppid > 1) {
+	if($ppid != $pid && $ppid > 1 && !$uid) {
 	    print STDERR "$LOGPREF #$pid is a child of #$ppid\n" if($nrconf{verbose});
 
 	    if($uid && $ptable->{$ppid}->{uid} != $uid) {
@@ -380,7 +380,7 @@ if(defined($opt_l)) {
 	    }
 	}
 	else {
-	    print STDERR "$LOGPREF #$pid is not a child\n" if($nrconf{verbose});
+	    print STDERR "$LOGPREF #$pid is not a child\n" if($nrconf{verbose} && !$uid);
 	    $stage2{$pid} = $exe;
 	}
     }
