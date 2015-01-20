@@ -46,7 +46,7 @@ sub HELP_MESSAGE {
     print <<USG;
 Usage:
 
-  needrestart [-vn] [-c <cfg>] [-r <mode>] [-bkl]
+  needrestart [-vn] [-c <cfg>] [-r <mode>] [-f <fe>] [-bkl]
 
     -v		be more verbose
     -n		set default answer to 'no'
@@ -56,6 +56,7 @@ Usage:
 	i	(i)nteractive restart
 	a	(a)utomatically restart
     -b		enable batch mode
+    -f <fe>	overwrite debconf frontend
 
   By using the following options only the specified checks are performed:
     -k          check for obsolete kernel
@@ -112,9 +113,10 @@ our $opt_v;
 our $opt_r;
 our $opt_n;
 our $opt_b;
+our $opt_f;
 our $opt_k;
 our $opt_l;
-unless(getopts('c:vr:nbkl')) {
+unless(getopts('c:vr:nbf:kl')) {
     HELP_MESSAGE;
     exit 1;
 }
@@ -123,6 +125,9 @@ unless(getopts('c:vr:nbkl')) {
 @ARGV = @argv;
 
 die "ERROR: Could not read config file '$opt_c'!\n" unless(-r $opt_c || $opt_b);
+
+# overwrite debconf frontend
+$ENV{DEBIAN_FRONTEND} = $opt_f if($opt_f);
 
 # be verbose
 $nrconf{verbose}++ if($opt_v);

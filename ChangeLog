@@ -19,6 +19,8 @@ needrestart (2.0) unstable; urgency=medium
   * [Interp] Add basic Java detection support.
   * Add PolicyKit action file to allow needrestart-session to run
     needrestart as root.
+  * [UI] Add `-f <fe>` CLI parameter to allow to overwrite the
+    DEBIAN_FRONTEND environment variable used by debconf(7).
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
