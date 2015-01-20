@@ -1,4 +1,4 @@
-.TH NEEDRESTART "1" "August 2013" "needrestart " "User Commands"
+.TH NEEDRESTART "1" "January 2015" "needrestart " "User Commands"
 .SH NAME
 needrestart \- needrestart
 .SH DESCRIPTION
@@ -6,7 +6,7 @@ needrestart checks which daemons need to be restarted after library upgrades.
 .SH USAGE
 Usage:
 .IP
-needrestart [\-vn] [\-c <cfg>] [\-r <mode>] [\-bkl]
+needrestart [\-vn] [\-c <cfg>] [\-r <mode>] [\-f <fe>] [\-bkl]
 .TP
 \fB\-v\fR
 be more verbose
@@ -29,10 +29,13 @@ i
 a
 (a)utomatically restart
 .TP
+\fB\-f\fR <fe>
+overwrite debconf(7) frontend, sets the DEBIAN_FRONT environment variable to <fe>
+.TP
 \fB\-b\fR
 enable batch mode
 .PP
-By using the following options only the specified checks are performed:
+By using one of the following options only the specified checks are performed:
 .TP
 \fB\-k\fR
 check for obsolete kernel
@@ -42,7 +45,7 @@ check for obsolete libraries
 .SH "AUTHOR"
 Thomas Liske <thomas@fiasko\-nw.net>
 .SH "COPYRIGHT"
-2013 - 2014 (C) Thomas Liske [http://fiasko\-nw.net/~thomas/]
+2013 - 2015 (C) Thomas Liske [http://fiasko\-nw.net/~thomas/]
 .PP
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
