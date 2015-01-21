@@ -39,7 +39,7 @@ BEGIN {
     die __PACKAGE__." is not supported as normal user!\n" if($<);
 }
 
-import Debconf::Client::ConfModule qw(:all);
+use Debconf::Client::ConfModule qw(:all);
 
 version('2.0');
 capb('backup');
