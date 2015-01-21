@@ -47,6 +47,8 @@ capb('backup');
 needrestart_ui_register(__PACKAGE__, NEEDRESTART_PRIO_HIGH);
 
 sub dcres(@) {
+    return unless(scalar @_);
+
     my ($rc, @bulk) = @_;
 
     if($rc != 0 && $rc != 30) {
@@ -147,11 +149,12 @@ sub query_pkgs($$$$$$) {
     # Debconf kills STDOUT... try to restore it
     open(STDOUT, '> /dev/tty') || open(STDOUT, '>&2');
 
+    # user has canceled
+    return unless(defined($s));
+    return if($r eq 'backup');
+
     # get selected rc.d script
     my @s = split(/, /, $s);
-
-    # user has canceled
-    return if($r eq 'backup');
 
     # restart each selected service script
     &$cb($_) for @s;
