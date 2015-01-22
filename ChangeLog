@@ -22,7 +22,7 @@ needrestart (2.0) unstable; urgency=medium
   * [UI] Add `-f <fe>` CLI parameter to allow to overwrite the
     DEBIAN_FRONTEND environment variable used by debconf(7).
 
- -- Thomas Liske <thomas@fiasko-nw.net>  
+ -- Thomas Liske <thomas@fiasko-nw.net>  Fri, 23 Jan 2015 00:46:13 +0100
 
 needrestart (1.2) unstable; urgency=medium
 
