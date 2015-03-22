@@ -39,6 +39,7 @@ $Getopt::Std::STANDARD_HELP_VERSION++;
 
 my $LOGPREF = '[main]';
 my $is_systemd = -d qq(/run/systemd/system);
+my $is_tty = (-t *STDERR || -t *STDOUT || -t *STDIN);
 
 sub HELP_MESSAGE {
     print <<USG;
@@ -131,6 +132,7 @@ $nrconf{ui} = qq(NeedRestart::UI::stdio) if($nrconf{verbose});
 die "Hook directory '$nrconf{hook_d}' is invalid!\n" unless(-d $nrconf{hook_d} || $opt_b);
 $opt_r = $nrconf{restart} unless(defined($opt_r));
 die "ERROR: Unknown restart option '$opt_r'!\n" unless($opt_r =~ /^(l|i|a)$/);
+$opt_r = 'l' if(!$is_tty && $opt_r eq 'i');
 
 $nrconf{defno}++ if($opt_n);
 
@@ -142,7 +144,7 @@ chomp($runlevel);
 $runlevel = 2 unless($runlevel =~ s/^.+run-level (\S)\s.+$/$1/);
 
 # get UI
-my $ui = ($opt_b ? NeedRestart::UI->new(1) : needrestart_ui($nrconf{verbose}, $nrconf{ui}));
+my $ui = ($opt_b ? NeedRestart::UI->new(1) : needrestart_ui($nrconf{verbose}, ($is_tty ? $nrconf{ui} : 'NeedRestart::UI::stdio')));
 die "Error: no UI class available!\n" unless(defined($ui));
 
 # enable/disable checks
