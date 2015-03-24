@@ -1,5 +1,7 @@
 #!/usr/bin/perl
 
+# nagios: -epn
+
 # needrestart - Restart daemons after library updates.
 #
 # Authors:
@@ -57,6 +59,7 @@ Usage:
 	i	(i)nteractive restart
 	a	(a)utomatically restart
     -b		enable batch mode
+    -p          enable nagios plugin mode
     -f <fe>	overwrite debconf frontend
 
   By using the following options only the specified checks are performed:
@@ -117,7 +120,8 @@ our $opt_b;
 our $opt_f;
 our $opt_k;
 our $opt_l;
-unless(getopts('c:vr:nbf:kl')) {
+our $opt_p;
+unless(getopts('c:vr:nbf:klp')) {
     HELP_MESSAGE;
     exit 1;
 }
@@ -147,6 +151,7 @@ die "ERROR: Unknown restart option '$opt_r'!\n" unless($opt_r =~ /^(l|i|a)$/);
 $opt_r = 'l' if(!$is_tty && $opt_r eq 'i');
 
 $nrconf{defno}++ if($opt_n);
+$opt_b++ if($opt_p);
 
 # running mode (user or root)
 my $uid = $<;
@@ -242,7 +247,24 @@ sub uid2name($) {
     return $uidcache{$uid} = getpwuid($uid) || $uid;
 }
 
-print "NEEDRESTART-VER: $NeedRestart::VERSION\n" if($opt_b);
+
+my %nagios = (
+    # kernel
+    kstr => "unknown",
+    kret => 3,
+    kperf => -1,
+
+    # services
+    sstr => "0",
+    sret => 3,
+    sperf => -1,
+
+    # sessions
+    ustr => "0",
+    uret => 3,
+    uperf => -1,
+ );
+print "NEEDRESTART-VER: $NeedRestart::VERSION\n" if($opt_b && !$opt_p);
 
 my %restart;
 my %sessions;
@@ -581,9 +603,25 @@ if(defined($opt_k)) {
 
     if(defined($kresult)) {
 	if($opt_b) {
-	    print "NEEDRESTART-KCUR: $kvars{KVERSION}\n";
-	    print "NEEDRESTART-KEXP: $kvars{EVERSION}\n" if(defined($kvars{EVERSION}));
-	    print "NEEDRESTART-KSTA: $kresult\n";
+	    unless($opt_p) {
+		print "NEEDRESTART-KCUR: $kvars{KVERSION}\n";
+		print "NEEDRESTART-KEXP: $kvars{EVERSION}\n" if(defined($kvars{EVERSION}));
+		print "NEEDRESTART-KSTA: $kresult\n";
+	    }
+	    else {
+		$nagios{kstr} = $kvars{KVERSION};
+		if($kresult == NRK_VERUPGRADE) {
+		    $nagios{kstr} .= "!=$kvars{EVERSION} (!)";
+		    $nagios{kret} = 1;
+		}
+		elsif($kresult == NRK_ABIUPGRADE) {
+		    $nagios{kstr} .= " (!)";
+		    $nagios{kret} = 1;
+		}
+		elsif($kresult == NRK_NOUPGRADE) {
+		    $nagios{kret} = 0;
+		}
+	    }
 	}
 	else {
 	    if($kresult == NRK_NOUPGRADE) {
@@ -605,14 +643,22 @@ if(defined($opt_k)) {
 if(defined($opt_l) && !$uid) {
     unless(scalar %restart) {
 	$ui->notice('No services need to be restarted.') unless($opt_b);
+	if($opt_p) {
+	    $nagios{sstr} = 'none';
+	    $nagios{sret} = 0;
+	}
     }
     else {
 	if($opt_b || $opt_r ne 'i') {
 	    $ui->notice('Services to be restarted:');
+	    if($opt_p) {
+		$nagios{sstr} = (scalar keys %restart).' (!)';
+		$nagios{sret} = 1;
+	    }
 	    
 	    foreach my $rc (sort { lc($a) cmp lc($b) } keys %restart) {
 		if($opt_b) {
-		    print "NEEDRESTART-SVC: $rc\n";
+		    print "NEEDRESTART-SVC: $rc\n" unless($opt_p);
 		    next;
 		}
 
@@ -671,6 +717,10 @@ if(defined($opt_l) && !$uid) {
     # list and notify user sessions
     if(scalar keys %sessions) {
 	$ui->notice('User sessions:');
+	if($opt_p) {
+	    $nagios{ustr} = (scalar keys %sessions).' (!)';
+	    $nagios{uret} = 1;
+	}
 	foreach my $uid (sort { ncmp(uid2name($a), uid2name($b)); } keys %sessions) {
 	    foreach my $sess (sort keys %{ $sessions{$uid} }) {
 		my $fnames = join(', ',map { $_.'['.join(',', @{ $sessions{$uid}->{$sess}->{$_} }).']';  } nsort keys %{ $sessions{$uid}->{$sess} });
@@ -696,4 +746,33 @@ if(defined($opt_l) && !$uid) {
 	    }
 	}
     }
+    elsif($opt_p) {
+	$nagios{ustr} = 'none';
+	$nagios{uret} = 0;
+    }
+}
+
+# nagios plugin output
+if($opt_p) {
+    my %states = (
+	0 => q(OK),
+	1 => q(WARN),
+	2 => q(CRIT),
+	3 => q(UNKN),
+	);
+    my ($ret) = reverse sort 
+	($opt_k ? $nagios{kret} : ()),
+	($opt_l ? ($nagios{sret}, $nagios{uret}) : ());
+
+    print "$states{$ret} - ", join(', ',
+	       ($opt_k ? "Kernel: $nagios{kstr}" : ()),
+	       ($opt_l ? "Services: $nagios{sstr}" : ()),
+	       ($opt_l ? "Sessions: $nagios{ustr}" : ()),
+	), '|', join(' ',
+	       ($opt_k ? "Kernel=$nagios{kperf};;0;0;1" : ()),
+	       ($opt_l ? "Services=$nagios{sperf};0;;0" : ()),
+	       ($opt_l ? "Sessions=$nagios{uperf};0;;0" : ()),
+	), "\n";
+
+    exit $ret;
 }
