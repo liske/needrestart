@@ -1,3 +1,12 @@
+needrestart (2.1) unstable; urgency=medium
+
+  * [regression] Fix 2c037bc did broke the progressbar.
+    (Related to Debian Bug#768124)
+  * Add nagios plugin mode (-p).
+    (github issue #5 by Ludovic Gasc [@GMLudo])
+
+ -- Thomas Liske <thomas@fiasko-nw.net>  
+
 needrestart (2.0) unstable; urgency=medium
 
   * [regression] List commands in list mode.
