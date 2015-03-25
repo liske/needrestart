@@ -747,7 +747,7 @@ if(defined($opt_l) && !$uid) {
 	}
     }
     elsif($opt_p) {
-	$nagios{ustr} = 'none';
+	$nagios{ustr} = '0';
 	$nagios{uret} = 0;
     }
 }
