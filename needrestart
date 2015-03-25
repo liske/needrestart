@@ -250,19 +250,19 @@ sub uid2name($) {
 
 my %nagios = (
     # kernel
-    kstr => "unknown",
+    kstr => q(unknown),
     kret => 3,
-    kperf => -1,
+    kperf => q(U),
 
     # services
-    sstr => "0",
+    sstr => q(unknown),
     sret => 3,
-    sperf => -1,
+    sperf => q(U),
 
     # sessions
-    ustr => "0",
+    ustr => q(unknown),
     uret => 3,
-    uperf => -1,
+    uperf => q(U),
  );
 print "NEEDRESTART-VER: $NeedRestart::VERSION\n" if($opt_b && !$opt_p);
 
@@ -613,13 +613,16 @@ if(defined($opt_k)) {
 		if($kresult == NRK_VERUPGRADE) {
 		    $nagios{kstr} .= "!=$kvars{EVERSION} (!)";
 		    $nagios{kret} = 1;
+		    $nagios{kperf} = 2;
 		}
 		elsif($kresult == NRK_ABIUPGRADE) {
 		    $nagios{kstr} .= " (!)";
 		    $nagios{kret} = 1;
+		    $nagios{kperf} = 1;
 		}
 		elsif($kresult == NRK_NOUPGRADE) {
 		    $nagios{kret} = 0;
+		    $nagios{kperf} = 0;
 		}
 	    }
 	}
@@ -644,8 +647,9 @@ if(defined($opt_l) && !$uid) {
     unless(scalar %restart) {
 	$ui->notice('No services need to be restarted.') unless($opt_b);
 	if($opt_p) {
-	    $nagios{sstr} = 'none';
+	    $nagios{sstr} = q(none);
 	    $nagios{sret} = 0;
+	    $nagios{sperf} = 0;
 	}
     }
     else {
@@ -654,6 +658,7 @@ if(defined($opt_l) && !$uid) {
 	    if($opt_p) {
 		$nagios{sstr} = (scalar keys %restart).' (!)';
 		$nagios{sret} = 1;
+		$nagios{sperf} = (scalar keys %restart);
 	    }
 	    
 	    foreach my $rc (sort { lc($a) cmp lc($b) } keys %restart) {
@@ -720,6 +725,7 @@ if(defined($opt_l) && !$uid) {
 	if($opt_p) {
 	    $nagios{ustr} = (scalar keys %sessions).' (!)';
 	    $nagios{uret} = 1;
+	    $nagios{uperf} = (scalar keys %sessions);
 	}
 	unless($opt_p) {
 	    foreach my $uid (sort { ncmp(uid2name($a), uid2name($b)); } keys %sessions) {
@@ -749,8 +755,9 @@ if(defined($opt_l) && !$uid) {
 	}
     }
     elsif($opt_p) {
-	$nagios{ustr} = '0';
+	$nagios{ustr} = 'none';
 	$nagios{uret} = 0;
+	$nagios{uperf} = 0;
     }
 }
 
@@ -771,7 +778,7 @@ if($opt_p) {
 	       ($opt_l ? "Services: $nagios{sstr}" : ()),
 	       ($opt_l ? "Sessions: $nagios{ustr}" : ()),
 	), '|', join(' ',
-	       ($opt_k ? "Kernel=$nagios{kperf};;0;0;1" : ()),
+	       ($opt_k ? "Kernel=$nagios{kperf};;0;0;2" : ()),
 	       ($opt_l ? "Services=$nagios{sperf};0;;0" : ()),
 	       ($opt_l ? "Sessions=$nagios{uperf};0;;0" : ()),
 	), "\n";
