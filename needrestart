@@ -657,7 +657,7 @@ if(defined($opt_l) && !$uid) {
 	    $ui->notice('Services to be restarted:');
 	    if($opt_p) {
 		$nagios{sstr} = (scalar keys %restart).' (!)';
-		$nagios{sret} = 1;
+		$nagios{sret} = 2;
 		$nagios{sperf} = (scalar keys %restart);
 	    }
 	    
@@ -770,16 +770,16 @@ if($opt_p) {
 	3 => q(UNKN),
 	);
     my ($ret) = reverse sort 
-	($opt_k ? $nagios{kret} : ()),
-	($opt_l ? ($nagios{sret}, $nagios{uret}) : ());
+	(($opt_k ? $nagios{kret} : ()),
+	($opt_l ? ($nagios{sret}, $nagios{uret}) : ()));
 
     print "$states{$ret} - ", join(', ',
 	       ($opt_k ? "Kernel: $nagios{kstr}" : ()),
 	       ($opt_l ? "Services: $nagios{sstr}" : ()),
 	       ($opt_l ? "Sessions: $nagios{ustr}" : ()),
 	), '|', join(' ',
-	       ($opt_k ? "Kernel=$nagios{kperf};;0;0;2" : ()),
-	       ($opt_l ? "Services=$nagios{sperf};0;;0" : ()),
+	       ($opt_k ? "Kernel=$nagios{kperf};0;;0;2" : ()),
+	       ($opt_l ? "Services=$nagios{sperf};;0;0" : ()),
 	       ($opt_l ? "Sessions=$nagios{uperf};0;;0" : ()),
 	), "\n";
 
