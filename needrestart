@@ -156,6 +156,11 @@ $opt_b++ if($opt_p);
 # running mode (user or root)
 my $uid = $<;
 if($uid) {
+    if($opt_p) {
+	print STDERR "UNKN - This plugin needs to be run as root!\n";
+	exit 3;
+    }
+
     print STDERR "$LOGPREF running in user-mode\n" if($nrconf{verbose});
 }
 else {
