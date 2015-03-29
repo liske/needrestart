@@ -80,6 +80,10 @@ sub source {
     my $self = shift;
     my $pid = shift;
     my $ptable = nr_ptable_pid($pid);
+    unless($ptable->{cwd}) {
+	print STDERR "$LOGPREF #$pid: could not get current working directory, skipping\n" if($self->{debug});
+	return ();
+    }
     my $cwd = getcwd();
     chdir($ptable->{cwd});
 
