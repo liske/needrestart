@@ -1,5 +1,10 @@
 needrestart (2.1) unstable; urgency=medium
 
+  * [interp] Skip scanning files with Interp/* if cwd is unknown.
+    (Debian Bug#779832 by wforumw <wforumw@gmail.com>)
+  * [kernel] Take version number comparing stuff from Dpkg::Version to
+    compare kernel versions correctly.
+    (Debian Bug#781657 by Martin Steigerwald <Martin@Lichtvoll.de>)
   * [regression] Fix 2c037bc did broke the progressbar.
     (Related to Debian Bug#768124)
   * Add nagios plugin mode (-p).
