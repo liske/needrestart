@@ -42,6 +42,7 @@ our @ISA = qw(Exporter);
 
 our @EXPORT = qw(
     nr_kernel_check
+    nr_kernel_vcmp
     NRK_UNKNOWN
     NRK_NOUPGRADE
     NRK_ABIUPGRADE
@@ -72,6 +73,68 @@ sub nr_kernel_check($$) {
     }
 
     return (NRK_UNKNOWN, %vars);
+}
+
+## The following version number comparing stuff was taken from Dpkg::Version.
+## The code has been adopted to be usable in needrestart w/o any additional
+## dependencies.
+
+sub _nr_kversion_order {
+    my ($x) = @_;
+
+    if ($x eq '~') {
+        return -1;
+    } elsif ($x =~ /^\d$/) {
+        return $x * 1 + 1;
+    } elsif ($x =~ /^[A-Za-z]$/) {
+        return ord($x);
+    } else {
+        return ord($x) + 256;
+    }
+}
+
+sub _nr_kversion_strcmp($$) {
+    my @a = map { _nr_kversion_order($_); } split(//, shift);
+    my @b = map { _nr_kversion_order($_); } split(//, shift);
+
+    while (1) {
+        my ($a, $b) = (shift @a, shift @b);
+        return 0 unless(defined($a) || defined($b));
+
+        $a ||= 0; # Default order for "no character"
+        $b ||= 0;
+
+        return 1 if($a > $b);
+        return -1 if($a < $b);
+    }
+}
+
+sub nr_kernel_vcmp($$) {
+    # sort well known devel tags just as grub does
+    my @v = map {
+	my $v = $_;
+	$v =~ s/[._-](pre|rc|test|git|old|trunk)/~$1/g;
+	$v;
+    } @_;
+
+    my @a = split(/(?<=\d)(?=\D)|(?<=\D)(?=\d)/, shift(@v));
+    my @b = split(/(?<=\d)(?=\D)|(?<=\D)(?=\d)/, shift(@v));
+
+    while(1) {
+	my ($a, $b) = (shift @a, shift @b);
+	return 0 unless(defined($a) || defined($b));
+
+	$a ||= 0;
+	$b ||= 0;
+	if($a =~ /^\d+$/ && $b =~ /^\d+$/) {
+	    my $cmp = $a <=> $b;
+	    return $cmp if($cmp);
+	}
+	else {
+	    my $cmp = _nr_kversion_strcmp($a, $b);
+	    return $cmp if($cmp);
+	}
+    }
 }
 
 1;

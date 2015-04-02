@@ -79,7 +79,7 @@ sub nr_kernel_check_real($$) {
 	return (NRK_UNKNOWN, %vars);
     }
 
-    ($vars{EVERSION}) = reverse nsort keys %kernels;
+    ($vars{EVERSION}) = reverse sort { nr_kernel_vcmp($a, $b); } keys %kernels;
     print STDERR "$LOGPREF Expected kernel version: $vars{EVERSION}\n" if($debug);
 
     return (NRK_VERUPGRADE, %vars) if($vars{KVERSION} ne $vars{EVERSION});
