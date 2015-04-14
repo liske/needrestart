@@ -60,7 +60,7 @@ The old basic user interface has been replace by a modular approach.
 User interfaces are now implemented in the NeedRestart::UI::* packages.
 
 New UI packages can be added by putting them into perl's search path.
-Using Module::Find to load any NeedRestart::UID::* package. Packages
+Using Module::Find to load any NeedRestart::UI::* package. Packages
 failing to load are ignored.
 
 The following UI implementations are shipped:
