@@ -94,6 +94,11 @@ sub nr_kernel_check_real($$) {
 	$ui->progress_step;
 	my $stat = nr_stat($fn);
 
+	unless(defined($stat)) {
+	    print STDERR "$LOGPREF could not stat(2) on $fn\n" if($debug);
+	    next;
+	}
+
 	if($stat->{size} < 1000000) {
 	    print STDERR "$LOGPREF $fn seems to be too small\n" if($debug);
 	    next;
