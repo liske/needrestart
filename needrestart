@@ -486,7 +486,7 @@ if(defined($opt_l)) {
 		close($systemctl);
 
 		if(defined($ret) && $ret =~ /([^.\s]+\.service) /) {
-		    my $s = $2;
+		    my $s = $1;
 		    print STDERR "$LOGPREF #$pid is $s\n" if($nrconf{verbose});
 		    $restart{$s}++;
 		    $s =~ s/\.service$//;
