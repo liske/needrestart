@@ -28,6 +28,7 @@ use strict;
 use warnings;
 use Module::Find;
 use NeedRestart::Utils;
+use NeedRestart::NS;
 use Sort::Naturally;
 
 use constant {
@@ -47,12 +48,14 @@ our @EXPORT = qw(
     needrestart_ui
     needrestart_interp_check
     needrestart_interp_source
+    needrestart_ns_check
 );
 
 our @EXPORT_OK = qw(
     needrestart_ui_register
     needrestart_ui_init
     needrestart_interp_register
+    needrestart_ns_register
 );
 
 our %EXPORT_TAGS = (
@@ -66,6 +69,9 @@ our %EXPORT_TAGS = (
     )],
     interp => [qw(
 	needrestart_interp_register
+    )],
+    ns => [qw(
+	needrestart_ns_register
     )],
 );
 
@@ -182,6 +188,47 @@ sub needrestart_interp_source($$$) {
     }
 
     return ();
+}
+
+
+my @NS;
+my $ndebug;
+
+sub needrestart_ns_register($) {
+    my $pkg = shift;
+
+    push(@NS, new $pkg($ndebug));
+}
+
+sub needrestart_ns_init($) {
+    $ndebug = shift;
+
+    # autoload NS modules
+    foreach my $module (findsubmod NeedRestart::NS) {
+	unless(eval "use $module; 1;") {
+	    warn "Error loading $module: $@\n" if($@ && $ndebug);
+	}
+    }
+
+    push(@NS, new NeedRestart::NS($ndebug));
+}
+
+sub needrestart_ns_check($$$) {
+    my $debug = shift;
+    my $pid = shift;
+    my $bin = shift;
+
+    needrestart_ns_init($debug) unless(@NS);
+
+    foreach my $ns (@NS) {
+	if($ns->check($pid, $bin)) {
+	    print STDERR "$LOGPREF #$pid is a ".(ref $ns)."\n" if($debug);
+
+	    return 1;
+	}
+    }
+
+    return 0;
 }
 
 1;
