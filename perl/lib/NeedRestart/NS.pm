@@ -61,7 +61,13 @@ sub check($$) {
     return 0 unless($stat);
 
     # return true if process is part of a different pid namespace than our init
-    return $self->{nspid} != $stat->{ino};
+    if($self->{nspid} != $stat->{ino}) {
+	print STDERR "$LOGPREF #$pid has descent ns pid:[$stat->{ino}]\n" if($self->{debug});
+	return 1;
+    }
+    else {
+	return 0;
+    }
 }
 
 1;
