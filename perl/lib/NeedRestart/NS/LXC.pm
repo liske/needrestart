@@ -40,9 +40,12 @@ sub check {
     my $self = shift;
     my $pid = shift;
     my $bin = shift;
+    my $ns = SUPER->get_nspid($pid);
 
     # stop here if no dedicated PID namespace is used
-    return 0 unless($self->SUPER::check($pid, $bin));
+    return 0 unless($ns || $ns == $self->{nspid});
+
+    print STDERR "$LOGPREF #$pid uses ns pid:[$ns]\n" if($debug);
 
     return 0;
 }

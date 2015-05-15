@@ -30,19 +30,27 @@ use NeedRestart::Utils;
 
 my $LOGPREF = '[NS]';
 
+sub get_nspid($) {
+    my $pid = shift;
+
+    my $stat = nr_stat(q(/proc/1/ns/pid));
+
+    return $stat->{ino} if($stat);
+
+    return undef;
+}
+
+my $nspid = get_nspid(1);
+if($nspid) {
+    print STDERR "$LOGPREF #1 uses ns pid:[$nspid]\n" if($debug);
+}
+else {
+    print STDERR "$LOGPREF unable to get init's ns pid\n" if($debug);
+}
+
 sub new {
     my $class = shift;
     my $debug = shift;
-
-    my $stat = nr_stat(q(/proc/1/ns/pid));
-    my $nspid;
-    if($stat) {
-	$nspid = $stat->{ino};
-	print STDERR "$LOGPREF #1 uses ns pid:[$nspid]\n" if($debug);
-    }
-    else {
-	print STDERR "$LOGPREF unable to get init's ns pid\n" if($debug);
-    }
 
     return bless {
 	debug => $debug,
@@ -53,21 +61,7 @@ sub new {
 sub check($$) {
     my $self = shift;
 
-    return 0 unless($self->{nspid});
-
-    my $pid = shift;
-    my $stat = nr_stat(qq(/proc/$pid/ns/pid));
-
-    return 0 unless($stat);
-
-    # return true if process is part of a different pid namespace than our init
-    if($self->{nspid} != $stat->{ino}) {
-	print STDERR "$LOGPREF #$pid has descent ns pid:[$stat->{ino}]\n" if($self->{debug});
-	return 1;
-    }
-    else {
-	return 0;
-    }
+    return 0;
 }
 
 1;
