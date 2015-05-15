@@ -43,16 +43,25 @@ sub check {
     my $ns = $self->get_nspid($pid);
 
     # stop here if no dedicated PID namespace is used
-    return 0 unless($ns || $ns == $self->{nspid});
+    return 0 if(!$ns || $ns == $self->{nspid});
 
     print STDERR "$LOGPREF #$pid uses ns pid:[$ns]\n" if($self->{debug});
 
+    # get parent outside the ns pid
     my $ppid = $self->find_nsparent($pid);
 
-    return 0 unless($ppid);
+    # stop here if no parent has been found or is #1
+    return 0 unless(!$ppid || $ppid != 1);
 
-    print STDERR "$LOGPREF #$pid ns pid parent is #$ppid\n" if($self->{debug});
+    print STDERR "$LOGPREF #$pid's ns pid parent is #$ppid\n" if($self->{debug});
     
+    # get original ARGV
+    (my $pbin, local @ARGV) = nr_parse_cmd($ppid);
+
+    # parse command line options
+    #my %opts;
+    #getopts('sTtuUWXhvV:cwdt:D:pnaF:l:0:I:m:M:fC:Sx:i:eE:', \%opts);
+
     return 0;
 }
 
