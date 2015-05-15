@@ -45,7 +45,7 @@ sub check {
     # stop here if no dedicated PID namespace is used
     return 0 unless($ns || $ns == $self->{nspid});
 
-    print STDERR "$LOGPREF #$pid uses ns pid:[$ns]\n" if($debug);
+    print STDERR "$LOGPREF #$pid uses ns pid:[$ns]\n" if($self->{debug});
 
     return 0;
 }
