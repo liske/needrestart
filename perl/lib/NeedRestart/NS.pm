@@ -41,12 +41,6 @@ sub get_nspid($) {
 }
 
 my $nspid = get_nspid(1);
-if($nspid) {
-    print STDERR "$LOGPREF #1 uses ns pid:[$nspid]\n" if($debug);
-}
-else {
-    print STDERR "$LOGPREF unable to get init's ns pid\n" if($debug);
-}
 
 sub new {
     my $class = shift;
