@@ -30,17 +30,7 @@ use NeedRestart::Utils;
 
 my $LOGPREF = '[NS]';
 
-sub get_nspid($) {
-    my $pid = shift;
-
-    my $stat = nr_stat(q(/proc/1/ns/pid));
-
-    return $stat->{ino} if($stat);
-
-    return undef;
-}
-
-my $nspid = get_nspid(1);
+my $nspid = get_nspid(undef, 1);
 
 sub new {
     my $class = shift;
@@ -50,6 +40,17 @@ sub new {
 	debug => $debug,
 	nspid => $nspid,
     }, $class;
+}
+
+sub get_nspid($$) {
+    my $self = shift;
+    my $pid = shift;
+
+    my $stat = nr_stat(q(/proc/1/ns/pid));
+
+    return $stat->{ino} if($stat);
+
+    return undef;
 }
 
 sub check($$) {
