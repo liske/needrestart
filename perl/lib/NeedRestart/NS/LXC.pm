@@ -47,6 +47,12 @@ sub check {
 
     print STDERR "$LOGPREF #$pid uses ns pid:[$ns]\n" if($self->{debug});
 
+    my $ppid = $self->find_nsparent($pid);
+
+    return 0 unless($ppid);
+
+    print STDERR "$LOGPREF #$pid ns pid parent is #$ppid\n" if($self->{debug});
+    
     return 0;
 }
 
