@@ -68,7 +68,7 @@ sub find_nsparent {
 
     my $ns = $self->get_nspid($ptable->{$pid}->{ppid});
 
-    return $pid if($ns && $ns == $nspid);
+    return $ptable->{$pid}->{ppid} if($ns && $ns == $nspid);
 
     return $self->find_nsparent($ptable->{$pid}->{ppid});
 }

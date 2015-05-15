@@ -325,9 +325,6 @@ if(defined($opt_l)) {
 	# ignore blacklisted binaries
 	next if(grep { $exe =~ /$_/; } @{$nrconf{blacklist}});
 
-	# handle pid namespaces (LXC, Docker, etc.)
-	next if(needrestart_ns_check($nrconf{verbose}, $pid, $exe));
-
 	# read file mappings (Linux 2.0+)
 	unless($restart) {
 	    open(HMAP, '<', "/proc/$pid/maps") || next;
@@ -381,6 +378,9 @@ if(defined($opt_l)) {
 	unless($restart || !$nrconf{interpscan}) {
 	    $restart++ if(needrestart_interp_check($nrconf{verbose}, $pid, $exe));
 	}
+
+	# handle pid namespaces (LXC, Docker, etc.)
+	next if(needrestart_ns_check($nrconf{verbose}, $pid, $exe));
 
 	# restart needed?
 	next unless($restart);
