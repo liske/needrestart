@@ -40,7 +40,7 @@ sub check {
     my $self = shift;
     my $pid = shift;
     my $bin = shift;
-    my $ns = self->get_nspid($pid);
+    my $ns = $self->get_nspid($pid);
 
     # stop here if no dedicated PID namespace is used
     return 0 unless($ns || $ns == $self->{nspid});
