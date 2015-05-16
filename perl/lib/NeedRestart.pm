@@ -221,11 +221,7 @@ sub needrestart_ns_check($$$) {
     needrestart_ns_init($debug) unless(@NS);
 
     foreach my $ns (@NS) {
-	if($ns->check($pid, $bin)) {
-	    print STDERR "$LOGPREF #$pid is part of a ".(ref $ns)." domain\n" if($debug);
-
-	    return 1;
-	}
+	return 1 if($ns->check($pid, $bin));
     }
 
     return 0;
