@@ -57,7 +57,7 @@ sub check {
     }
 
     # look for LXC cgroups
-    return 0 unless($cg =~ /^\d+:[^:]+:\/lxc\/(.+)$/);
+    return 0 unless($cg =~ /^\d+:[^:]+:\/lxc\/(.+)$/m);
 
     my $lxc = $1;
     print STDERR "$LOGPREF #$pid is part of LXC container '$lxc'\n" if($self->{debug});
