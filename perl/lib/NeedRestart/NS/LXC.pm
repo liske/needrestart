@@ -45,8 +45,23 @@ sub check {
     # stop here if no dedicated PID namespace is used
     return 0 if(!$ns || $ns == $self->{nspid});
 
-    print STDERR "$LOGPREF #$pid uses ns pid:[$ns]\n" if($self->{debug});
+    unless(open(FCG, qq(/proc/$pid/cgroup))) {
+	print STDERR "$LOGPREF #$pid: unable to open cgroup ($!)\n" if($self->{debug});
+	return 0;
+    }
+    my $cg;
+    {
+	local $/;
+	$cg = <FCG>;
+	close(FCG);
+    }
 
+    # look for LXC cgroups
+    return 0 unless($cg =~ /^\d+:[^:]+:\/lxc\/(.+)$/);
+
+    my $lxc = $1;
+    print STDERR "$LOGPREF #$pid is part of LXC container '$lxc'\n" if($self->{debug});
+    
     # get parent outside the ns pid
     my $ppid = $self->find_nsparent($pid);
 
@@ -60,7 +75,7 @@ sub check {
 
     # parse command line options
     #my %opts;
-    #getopts('sTtuUWXhvV:cwdt:D:pnaF:l:0:I:m:M:fC:Sx:i:eE:', \%opts);
+    #qgetopts('sTtuUWXhvV:cwdt:D:pnaF:l:0:I:m:M:fC:Sx:i:eE:', \%opts);
 
     return 0;
 }
