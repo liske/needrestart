@@ -36,6 +36,15 @@ my $LOGPREF = '[LXC]';
 
 needrestart_ns_register(__PACKAGE__);
 
+sub new {
+    my $class = shift;
+
+    my $self = $class->SUPER::new(@_);
+
+    $self->{lxc} = {};
+    return bless $self, $class;
+}
+
 sub check {
     my $self = shift;
     my $pid = shift;
@@ -59,8 +68,10 @@ sub check {
     # look for LXC cgroups
     return 0 unless($cg =~ /^\d+:[^:]+:\/lxc\/(.+)$/m);
 
-    my $lxc = $1;
-    print STDERR "$LOGPREF #$pid is part of LXC container '$lxc'\n" if($self->{debug});
+    my $name = $1;
+    print STDERR "$LOGPREF #$pid is part of LXC container '$name'\n" if($self->{debug});
+
+    return 1 if(exists($self->{lxc}->{$name}));
     
     # get parent outside the ns pid
     my $ppid = $self->find_nsparent($pid);
@@ -77,7 +88,9 @@ sub check {
     #my %opts;
     #qgetopts('sTtuUWXhvV:cwdt:D:pnaF:l:0:I:m:M:fC:Sx:i:eE:', \%opts);
 
-    return 0;
+    $self->{lxc}->{$name} = \@ARGV;
+
+    return 1;
 }
 
 1;
