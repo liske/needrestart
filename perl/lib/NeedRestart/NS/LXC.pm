@@ -79,7 +79,7 @@ sub check {
     # stop here if no parent has been found or is #1
     return 0 unless(!$ppid || $ppid != 1);
 
-    print STDERR "$LOGPREF #$pid's ns pid parent is #$ppid\n" if($self->{debug});
+    print STDERR "$LOGPREF #${pid}'s ns pid parent is #$ppid\n" if($self->{debug});
     
     # get original ARGV
     (my $pbin, local @ARGV) = nr_parse_cmd($ppid);
