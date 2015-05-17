@@ -22,13 +22,13 @@
 #   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 #
 
-package NeedRestart::NS;
+package NeedRestart::CONT;
 
 use strict;
 use warnings;
 use NeedRestart::Utils;
 
-my $LOGPREF = '[NS]';
+my $LOGPREF = '[CONT]';
 
 my $nspid = get_nspid(undef, 1);
 my $ptable = nr_ptable();

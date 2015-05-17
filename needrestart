@@ -379,8 +379,8 @@ if(defined($opt_l)) {
 	    $restart++ if(needrestart_interp_check($nrconf{verbose}, $pid, $exe));
 	}
 
-	# handle pid namespaces (LXC, Docker, etc.)
-	next if(needrestart_ns_check($nrconf{verbose}, $pid, $exe));
+	# handle containers (LXC, docker, etc.)
+	next if(needrestart_cont_check($nrconf{verbose}, $pid, $exe));
 
 	# restart needed?
 	next unless($restart);

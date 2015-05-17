@@ -22,19 +22,19 @@
 #   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 #
 
-package NeedRestart::NS::LXC;
+package NeedRestart::CONT::LXC;
 
 use strict;
 use warnings;
 
-use parent qw(NeedRestart::NS);
+use parent qw(NeedRestart::CONT);
 use Getopt::Std;
-use NeedRestart qw(:ns);
+use NeedRestart qw(:cont);
 use NeedRestart::Utils;
 
 my $LOGPREF = '[LXC]';
 
-needrestart_ns_register(__PACKAGE__);
+needrestart_cont_register(__PACKAGE__);
 
 sub new {
     my $class = shift;
@@ -72,7 +72,7 @@ sub check {
     print STDERR "$LOGPREF #$pid is part of LXC container '$name'\n" if($self->{debug});
 
     return 1 if(exists($self->{lxc}->{$name}));
-    
+
     # get parent outside the ns pid
     my $ppid = $self->find_nsparent($pid);
 
@@ -80,7 +80,7 @@ sub check {
     return 0 unless(!$ppid || $ppid != 1);
 
     print STDERR "$LOGPREF #${pid}'s ns pid parent is #$ppid\n" if($self->{debug});
-    
+
     # get original ARGV
     (my $pbin, local @ARGV) = nr_parse_cmd($ppid);
 

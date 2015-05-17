@@ -28,7 +28,7 @@ use strict;
 use warnings;
 use Module::Find;
 use NeedRestart::Utils;
-use NeedRestart::NS;
+use NeedRestart::CONT;
 use Sort::Naturally;
 
 use constant {
@@ -48,14 +48,14 @@ our @EXPORT = qw(
     needrestart_ui
     needrestart_interp_check
     needrestart_interp_source
-    needrestart_ns_check
+    needrestart_cont_check
 );
 
 our @EXPORT_OK = qw(
     needrestart_ui_register
     needrestart_ui_init
     needrestart_interp_register
-    needrestart_ns_register
+    needrestart_cont_register
 );
 
 our %EXPORT_TAGS = (
@@ -70,8 +70,8 @@ our %EXPORT_TAGS = (
     interp => [qw(
 	needrestart_interp_register
     )],
-    ns => [qw(
-	needrestart_ns_register
+    cont => [qw(
+	needrestart_cont_register
     )],
 );
 
@@ -191,37 +191,37 @@ sub needrestart_interp_source($$$) {
 }
 
 
-my @NS;
+my @CONT;
 my $ndebug;
 
-sub needrestart_ns_register($) {
+sub needrestart_cont_register($) {
     my $pkg = shift;
 
-    push(@NS, new $pkg($ndebug));
+    push(@CONT, new $pkg($ndebug));
 }
 
-sub needrestart_ns_init($) {
+sub needrestart_cont_init($) {
     $ndebug = shift;
 
-    # autoload NS modules
-    foreach my $module (findsubmod NeedRestart::NS) {
+    # autoload CONT modules
+    foreach my $module (findsubmod NeedRestart::CONT) {
 	unless(eval "use $module; 1;") {
 	    warn "Error loading $module: $@\n" if($@ && $ndebug);
 	}
     }
 
-    push(@NS, new NeedRestart::NS($ndebug));
+    push(@CONT, new NeedRestart::CONT($ndebug));
 }
 
-sub needrestart_ns_check($$$) {
+sub needrestart_cont_check($$$) {
     my $debug = shift;
     my $pid = shift;
     my $bin = shift;
 
-    needrestart_ns_init($debug) unless(@NS);
+    needrestart_cont_init($debug) unless(@CONT);
 
-    foreach my $ns (@NS) {
-	return 1 if($ns->check($pid, $bin));
+    foreach my $cont (@CONT) {
+	return 1 if($cont->check($pid, $bin));
     }
 
     return 0;
