@@ -380,7 +380,7 @@ if(defined($opt_l)) {
 	}
 
 	# handle containers (LXC, docker, etc.)
-	next if(needrestart_cont_check($nrconf{verbose}, $pid, $exe));
+	next if($restart && needrestart_cont_check($nrconf{verbose}, $pid, $exe));
 
 	# restart needed?
 	next unless($restart);
