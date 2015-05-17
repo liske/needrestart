@@ -95,9 +95,11 @@ sub check {
 	);
 
     if($opt_n eq $name && !$opt_f) {
+	print STDERR "$LOGPREF #${pid} should be restarted\n" if($self->{debug});
 	$self->{lxc_res}->{$name} = \@argv;
     }
     else {
+	print STDERR "$LOGPREF #${pid} could not be restarted\n" if($self->{debug});
 	$self->{lxc_unk}->{$name} = \@argv;
     }
 
