@@ -91,7 +91,7 @@ sub check {
     GetOptionsFromArray(
 	\@argv,
 	'foreground|F' => \$opt_f,
-	'name|n' => \$opt_n,
+	'name|n=s' => \$opt_n,
 	);
 
     if($opt_n eq $name && !$opt_f) {
