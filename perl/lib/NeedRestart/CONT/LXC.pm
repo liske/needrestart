@@ -28,7 +28,7 @@ use strict;
 use warnings;
 
 use parent qw(NeedRestart::CONT);
-use Getopt::Std;
+use Getopt::Long qw(GetOptionsFromArray :config posix_default bundling no_ignore_case);
 use NeedRestart qw(:cont);
 use NeedRestart::Utils;
 
@@ -41,7 +41,8 @@ sub new {
 
     my $self = $class->SUPER::new(@_);
 
-    $self->{lxc} = {};
+    $self->{lxc_res} = {};
+    $self->{lxc_unk} = {};
     return bless $self, $class;
 }
 
@@ -82,13 +83,23 @@ sub check {
     print STDERR "$LOGPREF #${pid}'s ns pid parent is #$ppid\n" if($self->{debug});
 
     # get original ARGV
-    (my $pbin, local @ARGV) = nr_parse_cmd($ppid);
+    my ($pbin, @argv) = nr_parse_cmd($ppid);
 
     # parse command line options
-    #my %opts;
-    #qgetopts('sTtuUWXhvV:cwdt:D:pnaF:l:0:I:m:M:fC:Sx:i:eE:', \%opts);
+    my $opt_f = 0;
+    my $opt_n = '';
+    GetOptionsFromArray(
+	\@argv,
+	'foreground|F' => \$opt_f,
+	'name|n' => \$opt_n,
+	);
 
-    $self->{lxc}->{$name} = \@ARGV;
+    if($opt_n eq $name && !$opt_f) {
+	$self->{lxc_res}->{$name} = \@argv;
+    }
+    else {
+	$self->{lxc_unk}->{$name} = \@argv;
+    }
 
     return 1;
 }
