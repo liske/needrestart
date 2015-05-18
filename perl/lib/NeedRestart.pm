@@ -243,7 +243,7 @@ sub needrestart_cont_get($) {
 	my @k = keys %{ $conts{$c} };
 
 	map {
-	    ("$n: $_" => $conts{$c}->{$_});
+	    ("$n $_" => $conts{$c}->{$_});
 	} keys %{ $conts{$c} };
     } keys %conts;
 }
