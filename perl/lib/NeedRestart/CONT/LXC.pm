@@ -28,7 +28,6 @@ use strict;
 use warnings;
 
 use parent qw(NeedRestart::CONT);
-use Getopt::Long qw(GetOptionsFromArray :config posix_default bundling no_ignore_case);
 use NeedRestart qw(:cont);
 use NeedRestart::Utils;
 
@@ -41,8 +40,7 @@ sub new {
 
     my $self = $class->SUPER::new(@_);
 
-    $self->{lxc_res} = {};
-    $self->{lxc_unk} = {};
+    $self->{lxc} = {};
     return bless $self, $class;
 }
 
@@ -70,38 +68,9 @@ sub check {
     return 0 unless($cg =~ /^\d+:[^:]+:\/lxc\/(.+)$/m);
 
     my $name = $1;
-    print STDERR "$LOGPREF #$pid is part of LXC container '$name'\n" if($self->{debug});
+    print STDERR "$LOGPREF #$pid is part of LXC container '$name' and should be restarted\n" if($self->{debug});
 
-    return 1 if(exists($self->{lxc}->{$name}));
-
-    # get parent outside the ns pid
-    my $ppid = $self->find_nsparent($pid);
-
-    # stop here if no parent has been found or is #1
-    return 0 unless(!$ppid || $ppid != 1);
-
-    print STDERR "$LOGPREF #${pid}'s ns pid parent is #$ppid\n" if($self->{debug});
-
-    # get original ARGV
-    my ($pbin, @argv) = nr_parse_cmd($ppid);
-
-    # parse command line options
-    my $opt_f = 0;
-    my $opt_n = '';
-    GetOptionsFromArray(
-	\@argv,
-	'foreground|F' => \$opt_f,
-	'name|n=s' => \$opt_n,
-	);
-
-    if($opt_n eq $name && !$opt_f) {
-	print STDERR "$LOGPREF #${pid} should be restarted\n" if($self->{debug});
-	$self->{lxc_res}->{$name} = \@argv;
-    }
-    else {
-	print STDERR "$LOGPREF #${pid} could not be restarted\n" if($self->{debug});
-	$self->{lxc_unk}->{$name} = \@argv;
-    }
+    $self->{lxc}->{$name}++;
 
     return 1;
 }
