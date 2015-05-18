@@ -238,12 +238,14 @@ sub needrestart_cont_get($) {
 
     return map {
 	my $c = $_;
+	my $n = ref $c;
+	$n =~ s/^NeedRestart::CONT:://;
 	my @k = keys %{ $conts{$c} };
 
 	map {
-	    ("${c}-$_" => $conts{$c}->{$_});
-	} sort keys %{ $conts{$c} };
-    } sort keys %conts;
+	    ("$n: $_" => $conts{$c}->{$_});
+	} keys %{ $conts{$c} };
+    } keys %conts;
 }
 
 1;
