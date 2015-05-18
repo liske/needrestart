@@ -29,7 +29,7 @@ Template: needrestart/ui-kernel_title
 Type: title
 _Description: Pending kernel upgrade
 
-Template: needrestart/ui-query_cont_title
+Template: needrestart/ui-query_conts_title
 Type: title
 _Description: Containers using outdated libraries
 
