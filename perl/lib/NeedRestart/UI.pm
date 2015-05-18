@@ -144,4 +144,7 @@ sub notice($$) {
 sub query_pkgs($$$$$) {
 }
 
+sub query_conts($$$$$) {
+}
+
 1;

@@ -652,6 +652,7 @@ if(defined($opt_k)) {
 }
 
 if(defined($opt_l) && !$uid) {
+    ## SERVICES
     unless(scalar %restart) {
 	$ui->notice('No services need to be restarted.') unless($opt_b);
 	if($opt_p) {
@@ -722,6 +723,125 @@ if(defined($opt_l) && !$uid) {
 
 	    if($#systemd_restart > -1) {
 		$ui->notice('Restarting services using systemd...');
+		system(qq(systemctl), qq(restart), @systemd_restart);
+	    }
+	}
+    }
+
+    # list and notify user sessions
+    if(scalar keys %sessions) {
+	$ui->notice('User sessions:');
+	if($opt_p) {
+	    $nagios{ustr} = (scalar keys %sessions).' (!)';
+	    $nagios{uret} = 1;
+	    $nagios{uperf} = (scalar keys %sessions);
+	}
+	unless($opt_p) {
+	    foreach my $uid (sort { ncmp(uid2name($a), uid2name($b)); } keys %sessions) {
+		foreach my $sess (sort keys %{ $sessions{$uid} }) {
+		    my $fnames = join(', ',map { $_.'['.join(',', @{ $sessions{$uid}->{$sess}->{$_} }).']';  } nsort keys %{ $sessions{$uid}->{$sess} });
+		    $ui->notice(uid2name($uid)." on $sess is running obsolete $fnames");
+		    if($nrconf{sendnotify}) {
+			local %ENV;
+
+			$ENV{NR_UID} = $uid;
+			$ENV{NR_USERNAME} = uid2name($uid);
+			$ENV{NR_SESSION} = $sess;
+			$ENV{NR_SESSPPID} = findppid($uid, sort map { @$_; } values %{ $sessions{$uid}->{$sess} });
+
+			foreach my $bin (nsort <$nrconf{notify_d}/*>) {
+			    next unless(-x $bin);
+			    next if($bin =~ /(~|\.dpkg-[^.]+)$/);
+
+			    print STDERR "$LOGPREF run $bin\n" if($nrconf{verbose});
+			    my $pipe = nr_fork_pipew($nrconf{verbose}, $bin);
+			    print $pipe "$fnames\n";
+			    last if(close($pipe));
+			}
+		    }
+		}
+	    }
+	}
+    }
+    elsif($opt_p) {
+	$nagios{ustr} = 'none';
+	$nagios{uret} = 0;
+	$nagios{uperf} = 0;
+    }
+
+    ## CONTAINERS
+    @systemd_restart = ();
+    my %conts = needrestart_cont_get($nrconf{verbose});
+    unless(scalar %conts) {
+	$ui->notice('No containers need to be restarted.') unless($opt_b);
+	if($opt_p) {
+	    $nagios{sstr} = q(none);
+	    $nagios{sret} = 0;
+	    $nagios{sperf} = 0;
+	}
+    }
+    else {
+	if($opt_b || $opt_r ne 'i') {
+	    $ui->notice('Containers to be restarted:');
+	    if($opt_p) {
+		$nagios{sstr} = (scalar keys %restart).' (!)';
+		$nagios{sret} = 2;
+		$nagios{sperf} = (scalar keys %restart);
+	    }
+
+	    foreach my $rc (sort { lc($a) cmp lc($b) } keys %restart) {
+		if($opt_b) {
+		    print "NEEDRESTART-CONT: $rc\n" unless($opt_p);
+		    next;
+		}
+
+		# don't restart greylisted services...
+		my $restart = !$nrconf{defno};
+		foreach my $re (keys %{$nrconf{override_rc}}) {
+		    next unless($rc =~ /$re/);
+
+		    $restart = $nrconf{override_rc}->{$re};
+		    last;
+		}
+		# ...but complain about them
+		unless($restart) {
+		    $ui->notice("Skipping $rc...");
+		    next;
+		}
+
+		my @cmd = restart_cmd($rc);
+		next unless($#cmd > -1);
+
+		if($opt_r eq 'a') {
+		    system(@cmd);
+		}
+		else {
+		    $ui->notice(join(' ', @cmd));
+		}
+	    }
+
+	    unless($opt_b || $#systemd_restart == -1) {
+		my @cmd = (qq(systemctl), qq(restart), @systemd_restart);
+		if($opt_r eq 'a') {
+		    $ui->notice('Restarting containers using systemd...');
+		    system(@cmd);
+		}
+		else {
+		    $ui->notice(join(' ', @cmd));
+		}
+	    }
+	}
+	else {
+	    my $o = 0;
+
+	    $ui->query_conts('Containers to be restarted:', $nrconf{defno}, \%conts, $nrconf{override_rc},
+			    sub {
+				my @cmd = restart_cmd(shift);
+				system(@cmd) if($#cmd > -1);
+			    });
+
+	    if($#systemd_restart > -1) {
+		$ui->notice('Restarting containers...');
 		system(qq(systemctl), qq(restart), @systemd_restart);
 	    }
 	}

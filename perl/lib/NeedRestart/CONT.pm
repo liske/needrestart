@@ -49,6 +49,12 @@ sub check {
     return 0;
 }
 
+sub get {
+    my $self = shift;
+
+    return ();
+}
+
 sub get_nspid {
     my $self = shift;
     my $pid = shift;

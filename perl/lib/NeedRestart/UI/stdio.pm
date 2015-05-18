@@ -117,4 +117,10 @@ sub query_pkgs($$$$$$) {
     }
 }
 
+sub query_conts($$$$$$) {
+    my $self = shift;
+
+    $self->query_pkgs(@_);
+}
+
 1;

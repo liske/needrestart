@@ -49,6 +49,7 @@ our @EXPORT = qw(
     needrestart_interp_check
     needrestart_interp_source
     needrestart_cont_check
+    needrestart_cont_get
 );
 
 our @EXPORT_OK = qw(
@@ -225,6 +226,24 @@ sub needrestart_cont_check($$$) {
     }
 
     return 0;
+}
+
+sub needrestart_cont_get($) {
+    my $debug = shift;
+
+    my %conts;
+    foreach my $cont (@CONT) {
+	$conts{ref $cont} = { $cont->get() };
+    }
+
+    return map {
+	my $c = $_;
+	my @k = keys %{ $conts{$c} };
+
+	map {
+	    ("${c}-$_" => $conts{$c}->{$_});
+	} sort keys %{ $conts{$c} };
+    } sort keys %conts;
 }
 
 1;
