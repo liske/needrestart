@@ -160,4 +160,56 @@ sub query_pkgs($$$$$$) {
     &$cb($_) for @s;
 }
 
+sub query_conts($$$$$$) {
+    my $self = shift;
+    my $out = shift;
+    my $defno = shift;
+    my $pkgs = shift;
+    my $overrides = shift;
+    my $cb = shift;
+
+    # prepare checklist array
+    my @l = nsort keys %$pkgs;
+
+    # apply rc selection overrides
+    my @selected = ();
+    foreach my $pkg (@l) {
+	my $found;
+	foreach my $re (keys %$overrides) {
+	    next unless($pkg =~ /$re/);
+
+	    push(@selected, $pkg) if($overrides->{$re});
+	    $found++;
+	    last;
+	}
+
+	push(@selected, $pkg) unless($defno || $found);
+    }
+    dcres(set('needrestart/ui-query_conts', join(', ', @selected)));
+
+    dcres( subst('needrestart/ui-query_conts', 'OUT', $out) );
+    dcres( subst('needrestart/ui-query_conts', 'CONTS', join(', ', @l)) );
+    dcres( fset('needrestart/ui-query_conts', 'seen', 0) );
+    dcres( settitle('needrestart/ui-query_conts_title') );
+    dcres( input('critical', 'needrestart/ui-query_conts') );
+    my ($r) = dcres( go );
+
+    my ($s) = dcres( get('needrestart/ui-query_conts') );
+
+    stop;
+
+    # Debconf kills STDOUT... try to restore it
+    open(STDOUT, '> /dev/tty') || open(STDOUT, '>&2');
+
+    # user has canceled
+    return unless(defined($s));
+    return if($r eq 'backup');
+
+    # get selected rc.d script
+    my @s = split(/, /, $s);
+
+    # restart each selected service script
+    &$cb($_) for @s;
+}
+
 1;
