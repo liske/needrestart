@@ -728,46 +728,6 @@ if(defined($opt_l) && !$uid) {
 	}
     }
 
-    # list and notify user sessions
-    if(scalar keys %sessions) {
-	$ui->notice('User sessions:');
-	if($opt_p) {
-	    $nagios{ustr} = (scalar keys %sessions).' (!)';
-	    $nagios{uret} = 1;
-	    $nagios{uperf} = (scalar keys %sessions);
-	}
-	unless($opt_p) {
-	    foreach my $uid (sort { ncmp(uid2name($a), uid2name($b)); } keys %sessions) {
-		foreach my $sess (sort keys %{ $sessions{$uid} }) {
-		    my $fnames = join(', ',map { $_.'['.join(',', @{ $sessions{$uid}->{$sess}->{$_} }).']';  } nsort keys %{ $sessions{$uid}->{$sess} });
-		    $ui->notice(uid2name($uid)." on $sess is running obsolete $fnames");
-		    if($nrconf{sendnotify}) {
-			local %ENV;
-
-			$ENV{NR_UID} = $uid;
-			$ENV{NR_USERNAME} = uid2name($uid);
-			$ENV{NR_SESSION} = $sess;
-			$ENV{NR_SESSPPID} = findppid($uid, sort map { @$_; } values %{ $sessions{$uid}->{$sess} });
-
-			foreach my $bin (nsort <$nrconf{notify_d}/*>) {
-			    next unless(-x $bin);
-			    next if($bin =~ /(~|\.dpkg-[^.]+)$/);
-
-			    print STDERR "$LOGPREF run $bin\n" if($nrconf{verbose});
-			    my $pipe = nr_fork_pipew($nrconf{verbose}, $bin);
-			    print $pipe "$fnames\n";
-			    last if(close($pipe));
-			}
-		    }
-		}
-	    }
-	}
-    }
-    elsif($opt_p) {
-	$nagios{ustr} = 'none';
-	$nagios{uret} = 0;
-	$nagios{uperf} = 0;
-    }
 
     ## CONTAINERS
     @systemd_restart = ();
@@ -847,6 +807,7 @@ if(defined($opt_l) && !$uid) {
 	}
     }
 
+    ## SESSIONS
     # list and notify user sessions
     if(scalar keys %sessions) {
 	$ui->notice('User sessions:');
