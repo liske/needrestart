@@ -789,7 +789,7 @@ if(defined($opt_l) && !$uid) {
 		$nagios{sperf} = (scalar keys %restart);
 	    }
 
-	    foreach my $rc (sort { lc($a) cmp lc($b) } keys %restart) {
+	    foreach my $rc (sort { lc($a) cmp lc($b) } keys %conts) {
 		if($opt_b) {
 		    print "NEEDRESTART-CONT: $rc\n" unless($opt_p);
 		    next;
