@@ -238,7 +238,7 @@ sub needrestart_cont_get($) {
 
     return map {
 	my $c = $_;
-	my $n = ref $c;
+	my $n = ref $conts{c};
 	$n =~ s/^NeedRestart::CONT:://;
 	my @k = keys %{ $conts{$c} };
 
