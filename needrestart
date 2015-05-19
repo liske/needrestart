@@ -781,9 +781,10 @@ if(defined($opt_l) && !$uid) {
 	    my $o = 0;
 
 	    $ui->query_conts('Containers to be restarted:', $nrconf{defno}, \%conts, $nrconf{override_rc},
-			    sub {
-				system(@{ $conts{shift} });
-			    });
+			     sub {
+				 my $cont = shift;
+				 system(@{ $conts{$cont} });
+			     });
 	}
     }
 
