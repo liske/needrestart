@@ -68,6 +68,7 @@ sub check {
     return 0 unless($cg =~ /^\d+:[^:]+:\/system.slice\/docker-(.+)\.scope$/m);
 
     my $name = $1;
+    $name =~ s/^([\da-f]{12})[\da-f]{52}$/$1/;
     print STDERR "$LOGPREF #$pid is part of docker container '$name' and should be restarted\n" if($self->{debug});
 
     $self->{docker}->{$name}++;
