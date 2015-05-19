@@ -1,0 +1,8 @@
+# needrestart nagios plugin sudoers.d config file
+# -----------------------------------------------
+#
+# Please consider a look at /etc/sudoers.d/README howto enable this file.
+#
+
+# Allow nagios to execute the needrestart command
+nagios		ALL=NOPASSWD: /usr/sbin/needrestart -p
