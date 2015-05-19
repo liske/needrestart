@@ -735,18 +735,18 @@ if(defined($opt_l) && !$uid) {
     unless(scalar %conts) {
 	$ui->notice('No containers need to be restarted.') unless($opt_b);
 	if($opt_p) {
-	    $nagios{sstr} = q(none);
-	    $nagios{sret} = 0;
-	    $nagios{sperf} = 0;
+	    $nagios{cstr} = q(none);
+	    $nagios{cret} = 0;
+	    $nagios{cperf} = 0;
 	}
     }
     else {
 	if($opt_b || $opt_r ne 'i') {
 	    $ui->notice('Containers to be restarted:');
 	    if($opt_p) {
-		$nagios{sstr} = (scalar keys %restart).' (!)';
-		$nagios{sret} = 2;
-		$nagios{sperf} = (scalar keys %restart);
+		$nagios{cstr} = (scalar keys %restart).' (!)';
+		$nagios{cret} = 2;
+		$nagios{cperf} = (scalar keys %restart);
 	    }
 
 	    foreach my $rc (sort { lc($a) cmp lc($b) } keys %conts) {
@@ -860,15 +860,17 @@ if($opt_p) {
 	);
     my ($ret) = reverse sort 
 	(($opt_k ? $nagios{kret} : ()),
-	($opt_l ? ($nagios{sret}, $nagios{uret}) : ()));
+	($opt_l ? ($nagios{sret}, $nagios{cret}, $nagios{uret}) : ()));
 
     print "$states{$ret} - ", join(', ',
 	       ($opt_k ? "Kernel: $nagios{kstr}" : ()),
 	       ($opt_l ? "Services: $nagios{sstr}" : ()),
+	       ($opt_l ? "Containers: $nagios{cstr}" : ()),
 	       ($opt_l ? "Sessions: $nagios{ustr}" : ()),
 	), '|', join(' ',
 	       ($opt_k ? "Kernel=$nagios{kperf};0;;0;2" : ()),
 	       ($opt_l ? "Services=$nagios{sperf};;0;0" : ()),
+	       ($opt_l ? "Containers=$nagios{sperf};;0;0" : ()),
 	       ($opt_l ? "Sessions=$nagios{uperf};0;;0" : ()),
 	), "\n";
 
