@@ -18,6 +18,8 @@ needrestart (2.1) unstable; urgency=medium
     (Debian Bug#783181 by Brian Minton <brian@minton.name>)
   * Ignore /usr/bin/apt-get.
     (Debian Bug#784237 by Thijs Kinkhorst <thijs@debian.org>)
+  * Add override for systemd's emergency.service and rescue.service.
+    (Debian Bug#784437)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
