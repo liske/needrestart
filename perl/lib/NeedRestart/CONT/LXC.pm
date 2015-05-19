@@ -79,7 +79,7 @@ sub get {
     my $self = shift;
 
     return map {
-	($_ => [qw(lxc-stop -r), $_]);
+	($_ => [qw(lxc-stop --reboot --name), $_]);
     } keys %{ $self->{lxc} };
 }
 
