@@ -870,7 +870,7 @@ if($opt_p) {
 	), '|', join(' ',
 	       ($opt_k ? "Kernel=$nagios{kperf};0;;0;2" : ()),
 	       ($opt_l ? "Services=$nagios{sperf};;0;0" : ()),
-	       ($opt_l ? "Containers=$nagios{sperf};;0;0" : ()),
+	       ($opt_l ? "Containers=$nagios{cperf};;0;0" : ()),
 	       ($opt_l ? "Sessions=$nagios{uperf};0;;0" : ()),
 	), "\n";
 
