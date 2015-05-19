@@ -744,9 +744,9 @@ if(defined($opt_l) && !$uid) {
 	if($opt_b || $opt_r ne 'i') {
 	    $ui->notice('Containers to be restarted:');
 	    if($opt_p) {
-		$nagios{cstr} = (scalar keys %restart).' (!)';
+		$nagios{cstr} = (scalar keys %conts).' (!)';
 		$nagios{cret} = 2;
-		$nagios{cperf} = (scalar keys %restart);
+		$nagios{cperf} = (scalar keys %conts);
 	    }
 
 	    foreach my $rc (sort { lc($a) cmp lc($b) } keys %conts) {
