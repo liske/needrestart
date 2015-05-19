@@ -71,14 +71,17 @@ sub notice($$) {
 sub _query($$) {
     my $self = shift;
     my($query, $def) = @_;
-    my @def = ($def eq 'Y' ? qw(yes no all skip) : qw(no yes all skip));
+    my @def = ($def eq 'Y' ? qw(yes no auto stop) : qw(no yes auto stop));
 
     my $i;
     do {
-	print "$query [", ($def eq 'Y' ? 'Ynas' : 'yNas'), '] ';
+	print "$query [", ($def eq 'Y' ? 'Ynas?' : 'yNas?'), '] ';
 	if($self->{stdio_same}) {
-	    print "$self->{stdio_same}\n";
-	    return $self->{stdio_same};
+	    my $s = $self->{stdio_same};
+	    $s = ($def eq 'Y' ? 'yes' : 'no') if($s eq 'auto');
+
+	    print "$s\n";
+	    return $s;
 	}
 
 	$i = <STDIN>;
@@ -90,10 +93,20 @@ sub _query($$) {
 	chomp($i);
 	$i =~ s/^\s+//;
 	$i =~ s/\s+$//;
+
+	if($i eq '?') {
+	    print <<HLP;
+  Yes   - restart this service
+  No    - do not restart this service
+  Auto  - auto restart all remaining services
+  Stop  - stop restarting services
+
+HLP
+	}
     } while(!( ($i) = map { (substr($_, 0, length($i)) eq $i ? ($_) : ())} @def ));
 
-    return ($self->{stdio_same} = 'yes') if($i eq 'all');
-    return ($self->{stdio_same} = 'no') if($i eq 'skip');
+    return ($self->{stdio_same} = 'auto') if($i eq 'auto');
+    return ($self->{stdio_same} = 'no') if($i eq 'stop');
 
     return $i;
 }

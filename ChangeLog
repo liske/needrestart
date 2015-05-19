@@ -24,6 +24,8 @@ needrestart (2.1) unstable; urgency=medium
     (Debian Bug#784437)
   * Add kernel hints not requiring an acknowledgement by the user.
     (Debian Bug#769811 by Axel Beckert <abe@debian.org>)
+  * [UI] Improve restart query in interactive mode (stdio).
+    (Debian Bug#772859 by Axel Beckert <abe@debian.org>)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
