@@ -20,6 +20,8 @@ needrestart (2.1) unstable; urgency=medium
     (Debian Bug#784237 by Thijs Kinkhorst <thijs@debian.org>)
   * Add override for systemd's emergency.service and rescue.service.
     (Debian Bug#784437)
+  * Add kernel hints not requiring an acknowledgement by the user.
+    (Debian Bug#769811 by Axel Beckert <abe@debian.org>)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 

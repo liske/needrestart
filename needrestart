@@ -639,10 +639,24 @@ if(defined($opt_k)) {
 		$ui->notice('Running kernel seems to be up-to-date.');
 	    }
 	    elsif($kresult == NRK_ABIUPGRADE) {
-		$ui->announce_abi(%kvars);
+		if($nrconf{kernelhints} < 0) {
+		    $ui->notice(
+			"The currently running kernel version is $kvars{KVERSION} and there is an ABI compatible upgrade pending."
+			);
+		}
+		else {
+		    $ui->announce_abi(%kvars);
+		}
 	    }
 	    elsif($kresult == NRK_VERUPGRADE) {
-		$ui->announce_ver(%kvars);
+		if($nrconf{kernelhints} < 0) {
+		    $ui->notice(
+			"The currently running kernel version is $kvars{KVERSION} which is not the expected kernel version $kvars{EVERSION}."
+			);
+		}
+		else {
+		    $ui->announce_ver(%kvars);
+		}
 	    }
 	    else {
 		$ui->notice('Failed to retrieve available kernel versions.');
