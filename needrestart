@@ -769,14 +769,11 @@ if(defined($opt_l) && !$uid) {
 		    next;
 		}
 
-		my @cmd = needrestart_cont_cmd($nrconf{verbose}, $cont);
-		next unless($#cmd > -1);
-
 		if($opt_r eq 'a') {
-		    system(@cmd);
+		    system(@{ $conts{$cont} });
 		}
 		else {
-		    $ui->notice(join(' ', @cmd));
+		    $ui->notice(join(' ', @{ $conts{$cont} }));
 		}
 	    }
 	}
@@ -785,14 +782,8 @@ if(defined($opt_l) && !$uid) {
 
 	    $ui->query_conts('Containers to be restarted:', $nrconf{defno}, \%conts, $nrconf{override_rc},
 			    sub {
-				my @cmd = restart_cmd(shift);
-				system(@cmd) if($#cmd > -1);
+				system(@{ $conts{shift} });
 			    });
-
-	    if($#systemd_restart > -1) {
-		$ui->notice('Restarting containers...');
-		system(qq(systemctl), qq(restart), @systemd_restart);
-	    }
 	}
     }
 

@@ -79,7 +79,9 @@ sub check {
 sub get {
     my $self = shift;
 
-    return keys %{ $self->{docker} };
+    return map {
+	($_ => [qw(docker restart), $_]);
+    } keys %{ $self->{docker} };
 }
 
 1;

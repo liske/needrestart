@@ -78,7 +78,9 @@ sub check {
 sub get {
     my $self = shift;
 
-    return keys %{ $self->{lxc} };
+    return map {
+	($_ => [qw(lxc-stop -r), $_]);
+    } keys %{ $self->{lxc} };
 }
 
 1;

@@ -235,16 +235,12 @@ sub needrestart_cont_get($) {
 	my $n = ref $cont;
 	$n =~ s/^NeedRestart::CONT:://;
 
+	my %c = $cont->get;
+	
 	map {
-	    ("$n $_" => $cont);
-	} sort $cont->get;
+	    ("$n $_" => $c{$_});
+	} sort keys %c;
     } sort { (ref $a) cmp (ref $b); } values %CONT;
-}
-
-sub needrestart_cont_cmd($$) {
-    my $debug = shift;
-    my $cont = shift;
-
 }
 
 1;
