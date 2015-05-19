@@ -749,41 +749,30 @@ if(defined($opt_l) && !$uid) {
 		$nagios{cperf} = (scalar keys %conts);
 	    }
 
-	    foreach my $rc (sort { lc($a) cmp lc($b) } keys %conts) {
+	    foreach my $cont (sort { lc($a) cmp lc($b) } keys %conts) {
 		if($opt_b) {
-		    print "NEEDRESTART-CONT: $rc\n" unless($opt_p);
+		    print "NEEDRESTART-CONT: $cont\n" unless($opt_p);
 		    next;
 		}
 
 		# don't restart greylisted services...
 		my $restart = !$nrconf{defno};
 		foreach my $re (keys %{$nrconf{override_rc}}) {
-		    next unless($rc =~ /$re/);
+		    next unless($cont =~ /$re/);
 
 		    $restart = $nrconf{override_rc}->{$re};
 		    last;
 		}
 		# ...but complain about them
 		unless($restart) {
-		    $ui->notice("Skipping $rc...");
+		    $ui->notice("Skipping $cont...");
 		    next;
 		}
 
-		my @cmd = restart_cmd($rc);
+		my @cmd = needrestart_cont_cmd($nrconf{verbose}, $cont);
 		next unless($#cmd > -1);
 
 		if($opt_r eq 'a') {
-		    system(@cmd);
-		}
-		else {
-		    $ui->notice(join(' ', @cmd));
-		}
-	    }
-
-	    unless($opt_b || $#systemd_restart == -1) {
-		my @cmd = (qq(systemctl), qq(restart), @systemd_restart);
-		if($opt_r eq 'a') {
-		    $ui->notice('Restarting containers using systemd...');
 		    system(@cmd);
 		}
 		else {

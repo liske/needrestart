@@ -78,7 +78,7 @@ sub check {
 sub get {
     my $self = shift;
 
-    return map { $_ => "$_ [LXC]"; } keys %{ $self->{lxc} };
+    return keys %{ $self->{lxc} };
 }
 
 1;

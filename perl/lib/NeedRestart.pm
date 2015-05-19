@@ -50,6 +50,7 @@ our @EXPORT = qw(
     needrestart_interp_source
     needrestart_cont_check
     needrestart_cont_get
+    needrestart_cont_cmd
 );
 
 our @EXPORT_OK = qw(
@@ -192,13 +193,13 @@ sub needrestart_interp_source($$$) {
 }
 
 
-my @CONT;
+my %CONT;
 my $ndebug;
 
 sub needrestart_cont_register($) {
     my $pkg = shift;
 
-    push(@CONT, new $pkg($ndebug));
+    $CONT{$pkg} = new $pkg($ndebug);
 }
 
 sub needrestart_cont_init($) {
@@ -210,8 +211,6 @@ sub needrestart_cont_init($) {
 	    warn "Error loading $module: $@\n" if($@ && $ndebug);
 	}
     }
-
-    push(@CONT, new NeedRestart::CONT($ndebug));
 }
 
 sub needrestart_cont_check($$$) {
@@ -219,9 +218,9 @@ sub needrestart_cont_check($$$) {
     my $pid = shift;
     my $bin = shift;
 
-    needrestart_cont_init($debug) unless(@CONT);
+    needrestart_cont_init($debug) unless(scalar keys %CONT);
 
-    foreach my $cont (@CONT) {
+    foreach my $cont (values %CONT) {
 	return 1 if($cont->check($pid, $bin));
     }
 
@@ -231,21 +230,21 @@ sub needrestart_cont_check($$$) {
 sub needrestart_cont_get($) {
     my $debug = shift;
 
-    my %conts;
-    foreach my $cont (@CONT) {
-	$conts{ref $cont} = { $cont->get() };
-    }
-
     return map {
-	my $c = $_;
-	my $n = $c;
+	my $cont = $_;
+	my $n = ref $cont;
 	$n =~ s/^NeedRestart::CONT:://;
-	my @k = keys %{ $conts{$c} };
 
 	map {
-	    ("$n $_" => $conts{$c}->{$_});
-	} keys %{ $conts{$c} };
-    } keys %conts;
+	    ("$n $_" => $cont);
+	} sort $cont->get;
+    } sort { (ref $a) cmp (ref $b); } values %CONT;
+}
+
+sub needrestart_cont_cmd($$) {
+    my $debug = shift;
+    my $cont = shift;
+
 }
 
 1;

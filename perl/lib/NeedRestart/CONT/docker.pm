@@ -79,7 +79,7 @@ sub check {
 sub get {
     my $self = shift;
 
-    return map { $_ => "$_ [docker]"; } keys %{ $self->{docker} };
+    return keys %{ $self->{docker} };
 }
 
 1;
