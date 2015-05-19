@@ -16,6 +16,8 @@ needrestart (2.1) unstable; urgency=medium
     - docker
     - LXC
     (Debian Bug#783181 by Brian Minton <brian@minton.name>)
+  * Ignore /usr/bin/apt-get.
+    (Debian Bug#784237 by Thijs Kinkhorst <thijs@debian.org>)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
