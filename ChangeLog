@@ -9,6 +9,8 @@ needrestart (2.1) unstable; urgency=medium
     (Related to Debian Bug#768124)
   * Add nagios plugin mode (-p).
     (github issue #5 by Ludovic Gasc [@GMLudo])
+  * [Interp] Skip scanning files with Interp/* if cwd is unknown.
+    (Debian Bug#779832 by wforumw <wforumw@gmail.com>)
   * Use /proc/$PID/root to scan for files fixing false positives on
     containers (i.e. LXC) using bind mounts.
     (Debian Bug#783181 by Brian Minton <brian@minton.name>)
