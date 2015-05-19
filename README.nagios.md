@@ -14,4 +14,4 @@ needrestart as nagios plugin using sudo:
 
 - `ex/nagios/check_needrestart` - calls sudo to invoke needrestart
 - `ex/nagios/needrestart` - sudo(8) config allowing nagios to run needrestart as root
-- `ex/nagios/check_needrestart.conf` - nagios(8) integration
+- `ex/nagios/plugin.conf` - nagios(8) integration
