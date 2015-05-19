@@ -13,6 +13,7 @@ needrestart (2.1) unstable; urgency=medium
     containers (i.e. LXC) using bind mounts.
     (Debian Bug#783181 by Brian Minton <brian@minton.name>)
   * Detect and suggest to restart containers:
+    - docker
     - LXC
     (Debian Bug#783181 by Brian Minton <brian@minton.name>)
 
