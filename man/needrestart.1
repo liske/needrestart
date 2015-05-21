@@ -6,7 +6,7 @@ needrestart checks which daemons need to be restarted after library upgrades.
 .SH USAGE
 Usage:
 .IP
-needrestart [\-vn] [\-c <cfg>] [\-r <mode>] [\-f <fe>] [\-bkl]
+needrestart [\-vn] [\-c <cfg>] [\-r <mode>] [\-f <fe>] ([\-b]|[\-p]) [\-kl]
 .TP
 \fB\-v\fR
 be more verbose
@@ -34,6 +34,9 @@ overwrite debconf(7) frontend, sets the DEBIAN_FRONT environment variable to <fe
 .TP
 \fB\-b\fR
 enable batch mode
+.TP
+\fB\-p\fR
+nagios plugin mode: makes output and exit codes nagios compatible
 .PP
 By using one of the following options only the specified checks are performed:
 .TP
