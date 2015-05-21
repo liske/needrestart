@@ -1,29 +1,32 @@
 needrestart (2.1) unstable; urgency=medium
 
-  * [interp] Skip scanning files with Interp/* if cwd is unknown.
-    (Debian Bug#779832 by wforumw <wforumw@gmail.com>)
-  * [kernel] Take version number comparing stuff from Dpkg::Version to
-    compare kernel versions correctly.
-    (Debian Bug#781657 by Martin Steigerwald <Martin@Lichtvoll.de>)
-  * [regression] Fix 2c037bc did broke the progressbar.
+  * [Bug] Ignore /usr/bin/apt-get.
+    (Debian Bug#784237 by Thijs Kinkhorst <thijs@debian.org>)
+  * [Bug] Add override for systemd's emergency.service and rescue.service.
+    (Debian Bug#784437)
+  * [Bug] Ignore Oil Runtime Compiler's JIT files.
+    (Debian Bug#786374 by Francois Mescam <francois@mescam.org>)
+  * [Bug] Fix 2c037bc did broke the progressbar.
     (Related to Debian Bug#768124)
-  * Add nagios plugin mode (-p).
-    (github issue #5 by Ludovic Gasc [@GMLudo])
-  * [Interp] Skip scanning files with Interp/* if cwd is unknown.
-    (Debian Bug#779832 by wforumw <wforumw@gmail.com>)
-  * Use /proc/$PID/root to scan for files fixing false positives on
-    containers (i.e. LXC) using bind mounts.
-    (Debian Bug#783181 by Brian Minton <brian@minton.name>)
-  * Detect and suggest to restart containers:
+  * [Cont] Detect and suggest to restart containers:
     - docker
     - LXC
     (Debian Bug#783181 by Brian Minton <brian@minton.name>)
-  * Ignore /usr/bin/apt-get.
-    (Debian Bug#784237 by Thijs Kinkhorst <thijs@debian.org>)
-  * Add override for systemd's emergency.service and rescue.service.
-    (Debian Bug#784437)
-  * Add kernel hints not requiring an acknowledgement by the user.
+  * [Core] Add nagios plugin mode (-p).
+    (github issue #5 by Ludovic Gasc [@GMLudo])
+  * [Core] Use /proc/$PID/root to scan for files fixing false positives on
+    containers (i.e. LXC) using bind mounts.
+    (Debian Bug#783181 by Brian Minton <brian@minton.name>)
+  * [Interp] Skip scanning files with Interp/* if cwd is unknown.
+    (Debian Bug#779832 by wforumw <wforumw@gmail.com>)
+  * [Interp] Skip scanning files with Interp/* if cwd is unknown.
+    (Debian Bug#779832 by wforumw <wforumw@gmail.com>)
+  * [Kernel] Add kernel hints option not requiring an acknowledgement by
+    the user.
     (Debian Bug#769811 by Axel Beckert <abe@debian.org>)
+  * [Kernel] Take version number comparing stuff from Dpkg::Version to
+    compare kernel versions correctly.
+    (Debian Bug#781657 by Martin Steigerwald <Martin@Lichtvoll.de>)
   * [UI] Improve restart query in interactive mode (stdio).
     (Debian Bug#772859 by Axel Beckert <abe@debian.org>)
 
