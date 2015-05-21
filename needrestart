@@ -814,7 +814,7 @@ if(defined($opt_l) && !$uid) {
 	    $nagios{uret} = 1;
 	    $nagios{uperf} = (scalar keys %sessions);
 	}
-	unless($opt_p) {
+	unless($opt_p || $opt_b) {
 	    foreach my $uid (sort { ncmp(uid2name($a), uid2name($b)); } keys %sessions) {
 		foreach my $sess (sort keys %{ $sessions{$uid} }) {
 		    my $fnames = join(', ',map { $_.'['.join(',', @{ $sessions{$uid}->{$sess}->{$_} }).']';  } nsort keys %{ $sessions{$uid}->{$sess} });
