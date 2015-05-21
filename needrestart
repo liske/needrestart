@@ -256,9 +256,12 @@ if(defined($opt_l)) {
 		# skip aio(7) mapping
 		next if($path =~ m@^/\[aio\]@);
 
+		# skip Oil Runtime Compiler's JIT files
+		next if($path =~ m@^/orcexec\.[\w\d]+$@);
+
 		# check for non-existing libs
 		unless(-e $path) {
-		    unless($path =~ m@^/tmp/@) {
+		    unless($path =~ m@^/tmp/@ || $path =~ m@^(/var)?/run/@) {
 			print STDERR "$LOGPREF #$pid uses non-existing $path\n" if($nrconf{verbose});
 			$restart++;
 			last;
