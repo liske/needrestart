@@ -19,4 +19,4 @@ While needrestart is run in batch mode it will never show any UI dialogs
 nor restart anything. The output format is complient to the
 *apt-dater protocol*[1].
 
-[1] https://github.com/DE-IBH/apt-dater-host/blob/master/doc/ADP-0.7
+[1] https://github.com/DE-IBH/apt-dater-host/blob/master/doc/
