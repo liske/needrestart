@@ -55,3 +55,18 @@ scanners are shipped:
 * *NeedRestart::Interp::Perl*
 * *NeedRestart::Interp::Python*
 * *NeedRestart::Interp::Ruby*
+
+
+containers
+----------
+
+*needrestart* 2.1 detects some container technologies. If a process is
+part of a container it might not be possible to restart it using
+Sys-V/systemd.
+
+There are special packages (NeedRestart::CONT::*) implementing the
+container detection and restarting. The following container detectors
+are shipped:
+
+* *NeedRestart::CONT::docker*
+* *NeedRestart::CONT::LXC*
