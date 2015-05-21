@@ -1,3 +1,16 @@
+Changes in 2.1
+==============
+
+containers (LXC et. al.)
+------------------------
+
+Needrestart tries to detect if a process runs inside a container like LXC or
+docker. There are special scanner packages (NeedRestart::CONT::*) which
+implements the implementation specific detection and restarting.
+
+More information: README.Cont.md
+
+
 Changes in 0.8
 ==============
 
@@ -10,7 +23,7 @@ the interpreter specific detection. Since most interpreter languages allow
 dynamic source code loading (eval) and we are using a home made source
 parcing there is a reasonable possibility to miss outdated source files.
 
-More information: README.Interp
+More information: README.Interp.md
 
 
 kernel upgrades
@@ -19,7 +32,7 @@ kernel upgrades
 Needrestart tries to detect if an pending kernel upgrade is available. It
 will only suggest a reboot.
 
-More information: README.Kernel
+More information: README.Kernel.md
 
 
 UI
