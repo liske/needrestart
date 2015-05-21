@@ -39,6 +39,7 @@ sub new {
     my $class = shift;
 
     my $self = $class->SUPER::new(@_);
+    die "Could not get NS PID of #1!\n" unless(defined($self->{nspid}));
 
     $self->{lxc} = {};
     return bless $self, $class;
