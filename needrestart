@@ -345,7 +345,7 @@ if(defined($opt_l)) {
 		next if($path =~ m@^/orcexec\.[\w\d]+$@);
 
 		# check for non-existing libs
-		unless(-e "/proc/$pid/root/$path") {
+		unless(-e "/proc/$pid/root/$path" || -e $path) {
 		    unless($path =~ m@^/tmp/@ || $path =~ m@^(/var)?/run/@) {
 			print STDERR "$LOGPREF #$pid uses non-existing $path\n" if($nrconf{verbose});
 			$restart++;
@@ -355,6 +355,7 @@ if(defined($opt_l)) {
 
 		# get on-disk info
 		my ($sdev, $sinode) = stat("/proc/$pid/root/$path");
+		($sdev, $sinode) = stat($path) unless(defined($sinode));
 		last unless(defined($sinode));
 		my @sdevs = (
 		    # glibc gnu_dev_* definition from sysmacros.h
