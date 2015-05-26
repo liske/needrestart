@@ -1,3 +1,11 @@
+needrestart (2.2) unstable; urgency=medium
+
+  * [regression] Processes using chroot were always detected as obsolete
+    since missing binaries in /proc/PID/root/.
+    (Debian Bug#786584 by François Mescam <francois@mescam.org>)
+
+ -- Thomas Liske <thomas@fiasko-nw.net>  Tue, 26 May 2015 23:56:11 +0200
+
 needrestart (2.1) unstable; urgency=medium
 
   * [Bug] Ignore /usr/bin/apt-get.
