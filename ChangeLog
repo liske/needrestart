@@ -1,3 +1,10 @@
+needrestart (2.3) unstable; urgency=medium
+
+  * [Bug] Add lightdm to override.
+    (Debian Bug#791649 by Martin Steigerwald <martin@lichtvoll.de>)
+
+ -- Thomas Liske <thomas@fiasko-nw.net>  
+
 needrestart (2.2) unstable; urgency=medium
 
   * [regression] Processes using chroot were always detected as obsolete
