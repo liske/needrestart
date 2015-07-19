@@ -4,6 +4,8 @@ needrestart (2.3) unstable; urgency=medium
     (Debian Bug#791649 by Martin Steigerwald <martin@lichtvoll.de>)
   * [Bug] Do not try container detection in user mode.
     (Debian Bug#791665 by Ansgar Burchardt <ansgar@debian.org>)
+  * [Bug] Remove unsupported HTML markups from notifications.
+    (Debian Bug#791664 by Ansgar Burchardt <ansgar@debian.org>)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
