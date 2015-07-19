@@ -33,7 +33,8 @@ use NeedRestart::Utils;
 
 my $LOGPREF = '[docker]';
 
-needrestart_cont_register(__PACKAGE__);
+needrestart_cont_register(__PACKAGE__)
+    unless($<);
 
 sub new {
     my $class = shift;

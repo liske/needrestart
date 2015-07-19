@@ -2,6 +2,8 @@ needrestart (2.3) unstable; urgency=medium
 
   * [Bug] Add lightdm to override.
     (Debian Bug#791649 by Martin Steigerwald <martin@lichtvoll.de>)
+  * [Bug] Do not try container detection in user mode.
+    (Debian Bug#791665 by Ansgar Burchardt <ansgar@debian.org>)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
