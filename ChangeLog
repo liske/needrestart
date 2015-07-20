@@ -6,6 +6,8 @@ needrestart (2.3) unstable; urgency=medium
     (Debian Bug#791665 by Ansgar Burchardt <ansgar@debian.org>)
   * [Bug] Remove unsupported HTML markups from notifications.
     (Debian Bug#791664 by Ansgar Burchardt <ansgar@debian.org>)
+  * [Bug] Add user@\d+.service to override_rc.
+    (Debian Bug#788380 by Shirish Agarwal <shirishag75@gmail.com>)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
