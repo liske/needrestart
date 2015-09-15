@@ -6,6 +6,9 @@ needrestart (2.3) unstable; urgency=medium
     (Debian Bug#791665 by Ansgar Burchardt <ansgar@debian.org>)
   * [Bug] Remove unsupported HTML markups from notifications.
     (Debian Bug#791664 by Ansgar Burchardt <ansgar@debian.org>)
+  * [Bug] Compare inodes of mapped files more reliable for chrooted
+    processes.
+    (github issue #11 by Markus Frosch <markus@lazyfrosch.de>)
   * [Kernel] Skip kernel detection within LXC containers.
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
