@@ -27,6 +27,7 @@
 #
 
 use Cwd qw(realpath);
+use File::Slurp;
 use Getopt::Std;
 use NeedRestart;
 use NeedRestart::UI;
@@ -608,6 +609,16 @@ foreach my $rc (keys %restart) {
 
     print STDERR "$LOGPREF $rc is blacklisted -> ignored\n" if($nrconf{verbose});
     delete($restart{$rc});
+}
+
+# skip kernel stuff within lxc containers
+my $cfn = q(/proc/1/cgroup);
+if(-r $cfn) {
+    my $f = read_file($cfn);
+    if($f =~ m@^\d+:[^:]+:/lxc/(\S+)@m) {
+	print STDERR "$LOGPREF LXC container '$1' detected, skipping kernel check\n" if($nrconf{verbose});
+	$opt_k = undef;
+    }
 }
 
 if(defined($opt_k)) {

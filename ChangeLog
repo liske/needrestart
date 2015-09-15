@@ -6,6 +6,7 @@ needrestart (2.3) unstable; urgency=medium
     (Debian Bug#791665 by Ansgar Burchardt <ansgar@debian.org>)
   * [Bug] Remove unsupported HTML markups from notifications.
     (Debian Bug#791664 by Ansgar Burchardt <ansgar@debian.org>)
+  * [Kernel] Skip kernel detection within LXC containers.
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
