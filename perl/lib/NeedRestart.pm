@@ -90,7 +90,7 @@ sub needrestart_ui_register($$) {
 }
 
 sub needrestart_ui_init($$) {
-    my $debug = shift;
+    my $verbosity = shift;
     my $prefui = shift;
 
     # load prefered UI module
@@ -101,23 +101,23 @@ sub needrestart_ui_init($$) {
     # autoload UI modules
     foreach my $module (findsubmod NeedRestart::UI) {
 	unless(eval "use $module; 1;") {
-	    warn "Error loading $module: $@\n" if($@ && $debug);
+	    warn "Error loading $module: $@\n" if($@ && ($verbosity > 1));
 	}
     }
 }
 
 sub needrestart_ui {
-    my $debug = shift;
+    my $verbosity = shift;
     my $prefui = shift;
 
-    needrestart_ui_init($debug, $prefui) unless(%UIs);
+    needrestart_ui_init($verbosity, $prefui) unless(%UIs);
     my ($ui) = sort { ncmp($UIs{$b}, $UIs{$a}) } keys %UIs;
 
     return undef unless($ui);
 
-    print STDERR "$LOGPREF Using UI '$ui'...\n" if($debug);
+    print STDERR "$LOGPREF Using UI '$ui'...\n" if($verbosity > 1);
 
-    return $ui->new($debug);
+    return $ui->new($verbosity);
 }
 
 

@@ -53,6 +53,7 @@ Usage:
   needrestart [-vn] [-c <cfg>] [-r <mode>] [-f <fe>] [-bkl]
 
     -v		be more verbose
+    -q		be quiet
     -n		set default answer to 'no'
     -c <cfg>	config filename
     -r <mode>	set restart mode
@@ -97,7 +98,7 @@ LIC
 }
 
 our %nrconf = (
-    verbose => 0,
+    verbosity => 1,
     hook_d => '/etc/needrestart/hook.d',
     notify_d => '/etc/needrestart/notify.d',
     sendnotify => 1,
@@ -122,7 +123,8 @@ our $opt_f;
 our $opt_k;
 our $opt_l;
 our $opt_p;
-unless(getopts('c:vr:nbf:klp')) {
+our $opt_q;
+unless(getopts('c:vr:nbf:klpq')) {
     HELP_MESSAGE;
     exit 1;
 }
@@ -135,16 +137,22 @@ die "ERROR: Could not read config file '$opt_c'!\n" unless(-r $opt_c || $opt_b);
 # overwrite debconf frontend
 $ENV{DEBIAN_FRONTEND} = $opt_f if($opt_f);
 
+# be quiet
+if($opt_q) {
+    $nrconf{verbosity} = 0;
+}
 # be verbose
-$nrconf{verbose}++ if($opt_v);
+elsif($opt_v) {
+    $nrconf{verbosity} = 2;
+}
 
 # slurp config file
-print STDERR "$LOGPREF eval $opt_c\n" if($nrconf{verbose});
+print STDERR "$LOGPREF eval $opt_c\n" if($nrconf{verbosity} > 1);
 eval do { local(@ARGV, $/) = $opt_c; <>};
 die "Error parsing $opt_c: $@" if($@);
 
 # fallback to stdio on verbose mode
-$nrconf{ui} = qq(NeedRestart::UI::stdio) if($nrconf{verbose});
+$nrconf{ui} = qq(NeedRestart::UI::stdio) if($nrconf{verbosity} > 1);
 
 die "Hook directory '$nrconf{hook_d}' is invalid!\n" unless(-d $nrconf{hook_d} || $opt_b);
 $opt_r = $nrconf{restart} unless(defined($opt_r));
@@ -162,10 +170,10 @@ if($uid) {
 	exit 3;
     }
 
-    print STDERR "$LOGPREF running in user-mode\n" if($nrconf{verbose});
+    print STDERR "$LOGPREF running in user-mode\n" if($nrconf{verbosity} > 1);
 }
 else {
-    print STDERR "$LOGPREF running in root-mode\n" if($nrconf{verbose});
+    print STDERR "$LOGPREF running in root-mode\n" if($nrconf{verbosity} > 1);
 }
 
 # get current runlevel, fallback to '2'
@@ -174,7 +182,7 @@ chomp($runlevel);
 $runlevel = 2 unless($runlevel =~ s/^.+run-level (\S)\s.+$/$1/);
 
 # get UI
-my $ui = ($opt_b ? NeedRestart::UI->new(1) : needrestart_ui($nrconf{verbose}, ($is_tty ? $nrconf{ui} : 'NeedRestart::UI::stdio')));
+my $ui = ($opt_b ? NeedRestart::UI->new($nrconf{verbosity}) : needrestart_ui($nrconf{verbosity}, ($is_tty ? $nrconf{ui} : 'NeedRestart::UI::stdio')));
 die "Error: no UI class available!\n" unless(defined($ui));
 
 # enable/disable checks
@@ -222,7 +230,7 @@ sub parse_lsbinit($) {
     return %lsb;
 }
 
-print STDERR "$LOGPREF detected systemd\n" if($nrconf{verbose} && $is_systemd);
+print STDERR "$LOGPREF detected systemd\n" if($nrconf{verbosity} > 1 && $is_systemd);
 
 my @systemd_restart;
 sub restart_cmd($) {
@@ -321,7 +329,7 @@ if(defined($opt_l)) {
 	# orphaned binary
 	$restart++ if (defined($exe) && $exe =~ s/ \(deleted\)$//);  # Linux
 	$restart++ if (defined($exe) && $exe =~ s/^\(deleted\)//);   # Linux VServer
-	print STDERR "$LOGPREF #$pid uses obsolete binary $exe\n" if($restart && $nrconf{verbose});
+	print STDERR "$LOGPREF #$pid uses obsolete binary $exe\n" if($restart && $nrconf{verbosity} > 1);
 
 	# ignore blacklisted binaries
 	next if(grep { $exe =~ /$_/; } @{$nrconf{blacklist}});
@@ -348,7 +356,7 @@ if(defined($opt_l)) {
 		# check for non-existing libs
 		unless(-e "/proc/$pid/root/$path" || -e $path) {
 		    unless($path =~ m@^/tmp/@ || $path =~ m@^(/var)?/run/@) {
-			print STDERR "$LOGPREF #$pid uses non-existing $path\n" if($nrconf{verbose});
+			print STDERR "$LOGPREF #$pid uses non-existing $path\n" if($nrconf{verbosity} > 1);
 			$restart++;
 			last;
 		    }
@@ -383,7 +391,7 @@ if(defined($opt_l)) {
 		    }
 		}
 		unless($found) {
-		    print STDERR "$LOGPREF #$pid uses obsolete $path\n" if($nrconf{verbose});
+		    print STDERR "$LOGPREF #$pid uses obsolete $path\n" if($nrconf{verbosity} > 1);
 		    $restart++;
 		    last;
 		}
@@ -392,11 +400,11 @@ if(defined($opt_l)) {
 	}
 
 	unless($restart || !$nrconf{interpscan}) {
-	    $restart++ if(needrestart_interp_check($nrconf{verbose}, $pid, $exe));
+	    $restart++ if(needrestart_interp_check($nrconf{verbosity} > 1, $pid, $exe));
 	}
 
 	# handle containers (LXC, docker, etc.)
-	next if($restart && needrestart_cont_check($nrconf{verbose}, $pid, $exe));
+	next if($restart && needrestart_cont_check($nrconf{verbosity} > 1, $pid, $exe));
 
 	# restart needed?
 	next unless($restart);
@@ -404,7 +412,7 @@ if(defined($opt_l)) {
 	# handle user sessions
 	if($ptable->{$pid}->{ttydev} ne '') {
 	    my $ttydev = realpath( $ptable->{$pid}->{ttydev} );
-	    print STDERR "$LOGPREF #$pid part of user session: uid=$ptable->{$pid}->{uid} sess=$ttydev\n" if($nrconf{verbose});
+	    print STDERR "$LOGPREF #$pid part of user session: uid=$ptable->{$pid}->{uid} sess=$ttydev\n" if($nrconf{verbosity} > 1);
 	    push(@{ $sessions{ $ptable->{$pid}->{uid} }->{ $ttydev }->{ $ptable->{$pid}->{fname} } }, $pid);
 
 	    # add session processes to stage2 only in user mode
@@ -416,10 +424,10 @@ if(defined($opt_l)) {
 	# find parent process
 	my $ppid = $ptable->{$pid}->{ppid};
 	if($ppid != $pid && $ppid > 1 && !$uid) {
-	    print STDERR "$LOGPREF #$pid is a child of #$ppid\n" if($nrconf{verbose});
+	    print STDERR "$LOGPREF #$pid is a child of #$ppid\n" if($nrconf{verbosity} > 1);
 
 	    if($uid && $ptable->{$ppid}->{uid} != $uid) {
-		print STDERR "$LOGPREF #$ppid is a foreign process\n" if($nrconf{verbose});
+		print STDERR "$LOGPREF #$ppid is a foreign process\n" if($nrconf{verbosity} > 1);
 		$stage2{$pid} = $exe;
 	    }
 	    else {
@@ -433,7 +441,7 @@ if(defined($opt_l)) {
 	    }
 	}
 	else {
-	    print STDERR "$LOGPREF #$pid is not a child\n" if($nrconf{verbose} && !$uid);
+	    print STDERR "$LOGPREF #$pid is not a child\n" if($nrconf{verbosity} > 1 && !$uid);
 	    $stage2{$pid} = $exe;
 	}
     }
@@ -450,10 +458,10 @@ if(defined($opt_l)) {
 	    my $exe = nr_readlink($pid);
 	    $exe =~ s/ \(deleted\)$//;  # Linux
 	    $exe =~ s/^\(deleted\)//;   # Linux VServer
-	    print STDERR "$LOGPREF #$pid exe => $exe\n" if($nrconf{verbose});
+	    print STDERR "$LOGPREF #$pid exe => $exe\n" if($nrconf{verbosity} > 1);
 
 	    # try to find interpreter source file
-	    ($exe) = (needrestart_interp_source($nrconf{verbose}, $pid, $exe), $exe);
+	    ($exe) = (needrestart_interp_source($nrconf{verbosity} > 1, $pid, $exe), $exe);
 
 	    # ignore blacklisted binaries
 	    next if(grep { $exe =~ /$_/; } @{$nrconf{blacklist}});
@@ -461,7 +469,7 @@ if(defined($opt_l)) {
 	    if($is_systemd) {
 		# systemd manager
 		if($pid == 1 && $exe =~ m@^/lib/systemd/systemd@) {
-		    print STDERR "$LOGPREF #$pid is systemd manager\n" if($nrconf{verbose});
+		    print STDERR "$LOGPREF #$pid is systemd manager\n" if($nrconf{verbosity} > 1);
 		    $restart{q(systemd manager)}++;
 		    next;
 		}
@@ -479,12 +487,12 @@ if(defined($opt_l)) {
 				($1);
 			    }
 			    elsif($value = m@/user-(\d+).slice/session-(\d+).scope@) {
-				print STDERR "$LOGPREF #$pid part of user session: uid=$1 sess=$2\n" if($nrconf{verbose});
+				print STDERR "$LOGPREF #$pid part of user session: uid=$1 sess=$2\n" if($nrconf{verbosity} > 1);
 				push(@{ $sessions{$1}->{"session #$2"}->{ $ptable->{$pid}->{fname} } }, $pid);
 				next;
 			    }
 			    else {
-				print STDERR "$LOGPREF #$pid unexpected cgroup '$value'\n" if($nrconf{verbose});
+				print STDERR "$LOGPREF #$pid unexpected cgroup '$value'\n" if($nrconf{verbosity} > 1);
 				();
 			    }
 			}
@@ -492,21 +500,21 @@ if(defined($opt_l)) {
 		    close(HCGROUP);
 
 		    if($rc) {
-			print STDERR "$LOGPREF #$pid is $rc\n" if($nrconf{verbose});
+			print STDERR "$LOGPREF #$pid is $rc\n" if($nrconf{verbosity} > 1);
 			$restart{$rc}++;
 			next;
 		    }
 		}
 
 		# did not get the unit name, yet - try systemctl status
-		print STDERR "$LOGPREF /proc/#$pid/cgroup: $! - trying systemctl status\n" if($nrconf{verbose} && $!);
-		my $systemctl = nr_fork_pipe($nrconf{verbose}, qq(systemctl), qq(-n), qq(0), qq(--full), qq(status), $pid);
+		print STDERR "$LOGPREF /proc/#$pid/cgroup: $! - trying systemctl status\n" if($nrconf{verbosity} > 1 && $!);
+		my $systemctl = nr_fork_pipe($nrconf{verbosity} > 1, qq(systemctl), qq(-n), qq(0), qq(--full), qq(status), $pid);
 		my $ret = <$systemctl>;
 		close($systemctl);
 
 		if(defined($ret) && $ret =~ /([^.\s]+\.service) /) {
 		    my $s = $1;
-		    print STDERR "$LOGPREF #$pid is $s\n" if($nrconf{verbose});
+		    print STDERR "$LOGPREF #$pid is $s\n" if($nrconf{verbosity} > 1);
 		    $restart{$s}++;
 		    $s =~ s/\.service$//;
 		    delete($restart{$s});
@@ -516,7 +524,7 @@ if(defined($opt_l)) {
 	    else {
 		# sysv init
 		if($pid == 1 && $exe =~ m@^/sbin/init@) {
-		    print STDERR "$LOGPREF #$pid is sysv init\n" if($nrconf{verbose});
+		    print STDERR "$LOGPREF #$pid is sysv init\n" if($nrconf{verbosity} > 1);
 		    $restart{q(sysv init)}++;
 		    next;
 		}
@@ -524,10 +532,10 @@ if(defined($opt_l)) {
 
 	    my $pkg;
 	    foreach my $hook (nsort <$nrconf{hook_d}/*>) {
-		print STDERR "$LOGPREF #$pid running $hook\n" if($nrconf{verbose});
+		print STDERR "$LOGPREF #$pid running $hook\n" if($nrconf{verbosity} > 1);
 
 		my $found = 0;
-		my $prun = nr_fork_pipe($nrconf{verbose}, $hook, ($nrconf{verbose} ? qw(-v) : ()), $exe);
+		my $prun = nr_fork_pipe($nrconf{verbosity} > 1, $hook, ($nrconf{verbosity} > 1 ? qw(-v) : ()), $exe);
 		my @nopids;
 		while(<$prun>) {
 		    chomp;
@@ -535,7 +543,7 @@ if(defined($opt_l)) {
 
 		    if($v[0] eq 'PACKAGE' && $v[1]) {
 			$pkg = $v[1];
-			print STDERR "$LOGPREF #$pid package: $v[1]\n" if($nrconf{verbose});
+			print STDERR "$LOGPREF #$pid package: $v[1]\n" if($nrconf{verbosity} > 1);
 			next;
 		    }
 
@@ -545,7 +553,7 @@ if(defined($opt_l)) {
 			unless(%lsb && exists($lsb{'default-start'})) {
 			    # If the script has no LSB tags we consider to call it later - they
 			    # are broken anyway.
-			    print STDERR "$LOGPREF no LSB headers found at $v[1]\n" if($nrconf{verbose});
+			    print STDERR "$LOGPREF no LSB headers found at $v[1]\n" if($nrconf{verbosity} > 1);
 			    push(@nopids, $v[1]);
 			}
 			# In the run-levels S and 1 no daemons are being started (normaly).
@@ -560,7 +568,7 @@ if(defined($opt_l)) {
 				    close(HPID);
 
 				    if(int($p) == $pid) {
-					print STDERR "$LOGPREF #$pid has been started by $v[1] - triggering\n" if($nrconf{verbose});
+					print STDERR "$LOGPREF #$pid has been started by $v[1] - triggering\n" if($nrconf{verbosity} > 1);
 					$restart{$v[1]}++;
 					$found++;
 					last;
@@ -568,12 +576,12 @@ if(defined($opt_l)) {
 				}
 			    }
 			    else {
-				print STDERR "$LOGPREF no pidfile reference found at $v[1]\n" if($nrconf{verbose});
+				print STDERR "$LOGPREF no pidfile reference found at $v[1]\n" if($nrconf{verbosity} > 1);
 				push(@nopids, $v[1]);
 			    }
 			}
 			else {
-			    print STDERR "$LOGPREF #$pid rc.d script $v[1] should not start in the current run-level($runlevel)\n" if($nrconf{verbose});
+			    print STDERR "$LOGPREF #$pid rc.d script $v[1] should not start in the current run-level($runlevel)\n" if($nrconf{verbosity} > 1);
 			}
 		    }
 		}
@@ -582,7 +590,7 @@ if(defined($opt_l)) {
 		if(!$found && $#nopids > -1) {
 		    foreach my $rc (@nopids) {
 			if($is_systemd && exists($restart{"$rc.service"})) {
-			    print STDERR "$LOGPREF #$pid rc.d script $rc seems to be superseeded by $rc.service\n" if($nrconf{verbose});
+			    print STDERR "$LOGPREF #$pid rc.d script $rc seems to be superseeded by $rc.service\n" if($nrconf{verbosity} > 1);
 			}
 			else {
 			    $restart{$rc}++;
@@ -618,7 +626,7 @@ if(defined($opt_l)) {
 foreach my $rc (keys %restart) {
     next unless(scalar grep { $rc =~ /$_/; } @{$nrconf{blacklist_rc}});
 
-    print STDERR "$LOGPREF $rc is blacklisted -> ignored\n" if($nrconf{verbose});
+    print STDERR "$LOGPREF $rc is blacklisted -> ignored\n" if($nrconf{verbosity} > 1);
     delete($restart{$rc});
 }
 
@@ -627,13 +635,13 @@ my $cfn = q(/proc/1/cgroup);
 if(-r $cfn) {
     my $f = read_file($cfn);
     if($f =~ m@^\d+:[^:]+:/lxc/(\S+)@m) {
-	print STDERR "$LOGPREF LXC container '$1' detected, skipping kernel check\n" if($nrconf{verbose});
+	print STDERR "$LOGPREF LXC container '$1' detected, skipping kernel check\n" if($nrconf{verbosity} > 1);
 	$opt_k = undef;
     }
 }
 
 if(defined($opt_k)) {
-    my ($kresult, %kvars) = ($nrconf{kernelhints} || $opt_b ? nr_kernel_check($nrconf{verbose}, $ui) : ());
+    my ($kresult, %kvars) = ($nrconf{kernelhints} || $opt_b ? nr_kernel_check($nrconf{verbosity} > 1, $ui) : ());
 
     if(defined($kresult)) {
 	if($opt_b) {
@@ -771,7 +779,7 @@ if(defined($opt_l) && !$uid) {
 
     ## CONTAINERS
     @systemd_restart = ();
-    my %conts = needrestart_cont_get($nrconf{verbose});
+    my %conts = needrestart_cont_get($nrconf{verbosity} > 1);
     unless(scalar %conts) {
 	$ui->notice('No containers need to be restarted.') unless($opt_b);
 	if($opt_p) {
@@ -854,8 +862,8 @@ if(defined($opt_l) && !$uid) {
 			    next unless(-x $bin);
 			    next if($bin =~ /(~|\.dpkg-[^.]+)$/);
 
-			    print STDERR "$LOGPREF run $bin\n" if($nrconf{verbose});
-			    my $pipe = nr_fork_pipew($nrconf{verbose}, $bin);
+			    print STDERR "$LOGPREF run $bin\n" if($nrconf{verbosity} > 1);
+			    my $pipe = nr_fork_pipew($nrconf{verbosity} > 1, $bin);
 			    print $pipe "$fnames\n";
 			    last if(close($pipe));
 			}

@@ -62,12 +62,12 @@ sub dcres(@) {
 
 sub new {
     my $class = shift;
-    my $debug = shift;
+    my $verbosity = shift;
 
     dcres( x_loadtemplatefile(DCTMPL) ) if(-r DCTMPL);
 
     return bless {
-	debug => $debug
+	verbosity => $verbosity
     }, $class;
 }
 
@@ -104,7 +104,7 @@ sub notice {
     my $self = shift;
     my $out = shift;
 
-    print STDERR "$out\n";
+    print STDERR "$out\n" if($self->{verbosity});
 }
 
 

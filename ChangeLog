@@ -10,6 +10,8 @@ needrestart (2.3) unstable; urgency=medium
     processes.
     (github issue #11 by Markus Frosch <markus@lazyfrosch.de>)
   * [Kernel] Skip kernel detection within LXC containers.
+  * [UI] Add a quiet option to drop any progress messages.
+    (Debian Bug#791708 by Rodrigo Campos <rodrigo@sdfg.com.ar>)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 

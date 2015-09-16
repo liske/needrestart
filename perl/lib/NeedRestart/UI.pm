@@ -30,10 +30,10 @@ use Term::ReadKey;
 
 sub new {
     my $class = shift;
-    my $debug = shift;
+    my $verbosity = shift;
 
     return bless {
-	debug => $debug,
+	verbosity => $verbosity,
 	progress => undef,
     }, $class;
 }
@@ -42,7 +42,7 @@ sub progress_prep($$$) {
     my $self = shift;
     my ($max, $out) = @_;
 
-    unless($self->{debug} || !(-t *STDERR)) {
+    unless(($self->{verbosity} != 1) || !(-t *STDERR)) {
 	# restore terminal if required (debconf)
 	unless(-t *STDIN) {
 	    open($self->{fhin}, '<&', \*STDIN) || die "Can't dup stdin: $!\n";
