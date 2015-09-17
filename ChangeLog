@@ -12,6 +12,8 @@ needrestart (2.3) unstable; urgency=medium
   * [Kernel] Skip kernel detection within LXC containers.
   * [UI] Add a quiet option to drop any progress messages.
     (Debian Bug#791708 by Rodrigo Campos <rodrigo@sdfg.com.ar>)
+  * [Bug] Do not handle user services as system services.
+    (Debian Bug#792032 by Ansgar Burchardt <ansgar@debian.org>)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
