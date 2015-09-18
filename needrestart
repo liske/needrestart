@@ -339,7 +339,7 @@ if(defined($opt_l)) {
 	    open(HMAP, '<', "/proc/$pid/maps") || next;
 	    while(<HMAP>) {
 		chomp;
-		my ($maddr, $mperm, $moffset, $mdev, $minode, $path) = split(/\s+/);
+		my ($maddr, $mperm, $moffset, $mdev, $minode, $path) = split(/\s+/, 6);
 
 		# skip special handles and non-executable mappings
 		next unless(defined($path) && $minode != 0 && $path ne '' && $mperm =~ /x/);

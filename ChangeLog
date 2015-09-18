@@ -14,6 +14,8 @@ needrestart (2.3) unstable; urgency=medium
     (Debian Bug#791708 by Rodrigo Campos <rodrigo@sdfg.com.ar>)
   * [Bug] Do not handle user services as system services.
     (Debian Bug#792032 by Ansgar Burchardt <ansgar@debian.org>)
+  * [Bug] Fix cutting path names read from /proc/PID/maps at spaces
+    resulting in false-positives.
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
