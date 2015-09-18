@@ -9,7 +9,7 @@ needrestart (2.3) unstable; urgency=medium
   * [Bug] Compare inodes of mapped files more reliable for chrooted
     processes.
     (github issue #11 by Markus Frosch <markus@lazyfrosch.de>)
-  * [Kernel] Skip kernel detection within LXC containers.
+  * [Kernel] Skip kernel detection within containers.
   * [UI] Add a quiet option to drop any progress messages.
     (Debian Bug#791708 by Rodrigo Campos <rodrigo@sdfg.com.ar>)
   * [Bug] Do not handle user services as system services.

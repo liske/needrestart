@@ -635,14 +635,10 @@ foreach my $rc (keys %restart) {
     delete($restart{$rc});
 }
 
-# skip kernel stuff within lxc containers
-my $cfn = q(/proc/1/cgroup);
-if(-r $cfn) {
-    my $f = read_file($cfn);
-    if($f =~ m@^\d+:[^:]+:/lxc/(\S+)@m) {
-	print STDERR "$LOGPREF LXC container '$1' detected, skipping kernel check\n" if($nrconf{verbosity} > 1);
-	$opt_k = undef;
-    }
+# Skip kernel stuff within containers
+if(needrestart_cont_check($nrconf{verbosity} > 1, 1, nr_readlink(1), 1)) {
+    print STDERR "$LOGPREF container detected, skipping kernel check\n" if($nrconf{verbosity} > 1);
+    $opt_k = undef;
 }
 
 if(defined($opt_k)) {

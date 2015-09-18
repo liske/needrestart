@@ -213,15 +213,16 @@ sub needrestart_cont_init($) {
     }
 }
 
-sub needrestart_cont_check($$$) {
+sub needrestart_cont_check($$$;$) {
     my $debug = shift;
     my $pid = shift;
     my $bin = shift;
+    my $norestart = shift || 0;
 
     needrestart_cont_init($debug) unless(scalar keys %CONT);
 
     foreach my $cont (values %CONT) {
-	return 1 if($cont->check($pid, $bin));
+	return 1 if($cont->check($pid, $bin, $norestart));
     }
 
     return 0;
