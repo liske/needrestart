@@ -17,7 +17,7 @@ needrestart (2.3) unstable; urgency=medium
   * [Bug] Fix cutting path names read from /proc/PID/maps at spaces
     resulting in false-positives.
 
- -- Thomas Liske <thomas@fiasko-nw.net>  
+ -- Thomas Liske <thomas@fiasko-nw.net>  Sat, 19 Sep 2015 20:38:19 +0200
 
 needrestart (2.2) unstable; urgency=medium
 
