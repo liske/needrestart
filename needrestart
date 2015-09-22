@@ -27,7 +27,6 @@
 #
 
 use Cwd qw(realpath);
-use File::Slurp;
 use Getopt::Std;
 use NeedRestart;
 use NeedRestart::UI;

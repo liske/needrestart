@@ -1,3 +1,11 @@
+needrestart (2.4) unstable; urgency=medium
+
+  * [Bug] Drop unused dependency on File::Slurp.
+    (Debian Bug#799733 by Christoph Anton Mitterer <calestyo@scientia.net>)
+    (Debian Bug#799734 by Sven Hartge <sven@svenhartge.de>)
+
+ -- Thomas Liske <thomas@fiasko-nw.net>  
+
 needrestart (2.3) unstable; urgency=medium
 
   * [Bug] Add lightdm to override.
