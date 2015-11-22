@@ -1,3 +1,13 @@
+needrestart (2.4) unstable; urgency=medium
+
+  * [Bug] Drop unused dependency on File::Slurp.
+    (Debian Bug#799733 by Christoph Anton Mitterer <calestyo@scientia.net>)
+    (Debian Bug#799734 by Sven Hartge <sven@svenhartge.de>)
+  * [Bug] Add user@\d+.service to override_rc.
+    (Debian Bug#788380 by Shirish Agarwal <shirishag75@gmail.com>)
+
+ -- Thomas Liske <thomas@fiasko-nw.net>  
+
 needrestart (2.3) unstable; urgency=medium
 
   * [Bug] Add lightdm to override.
@@ -6,10 +16,18 @@ needrestart (2.3) unstable; urgency=medium
     (Debian Bug#791665 by Ansgar Burchardt <ansgar@debian.org>)
   * [Bug] Remove unsupported HTML markups from notifications.
     (Debian Bug#791664 by Ansgar Burchardt <ansgar@debian.org>)
-  * [Bug] Add user@\d+.service to override_rc.
-    (Debian Bug#788380 by Shirish Agarwal <shirishag75@gmail.com>)
+  * [Bug] Compare inodes of mapped files more reliable for chrooted
+    processes.
+    (github issue #11 by Markus Frosch <markus@lazyfrosch.de>)
+  * [Kernel] Skip kernel detection within containers.
+  * [UI] Add a quiet option to drop any progress messages.
+    (Debian Bug#791708 by Rodrigo Campos <rodrigo@sdfg.com.ar>)
+  * [Bug] Do not handle user services as system services.
+    (Debian Bug#792032 by Ansgar Burchardt <ansgar@debian.org>)
+  * [Bug] Fix cutting path names read from /proc/PID/maps at spaces
+    resulting in false-positives.
 
- -- Thomas Liske <thomas@fiasko-nw.net>  
+ -- Thomas Liske <thomas@fiasko-nw.net>  Sat, 19 Sep 2015 20:38:19 +0200
 
 needrestart (2.2) unstable; urgency=medium
 

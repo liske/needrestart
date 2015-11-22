@@ -90,7 +90,7 @@ sub needrestart_ui_register($$) {
 }
 
 sub needrestart_ui_init($$) {
-    my $debug = shift;
+    my $verbosity = shift;
     my $prefui = shift;
 
     # load prefered UI module
@@ -101,23 +101,23 @@ sub needrestart_ui_init($$) {
     # autoload UI modules
     foreach my $module (findsubmod NeedRestart::UI) {
 	unless(eval "use $module; 1;") {
-	    warn "Error loading $module: $@\n" if($@ && $debug);
+	    warn "Error loading $module: $@\n" if($@ && ($verbosity > 1));
 	}
     }
 }
 
 sub needrestart_ui {
-    my $debug = shift;
+    my $verbosity = shift;
     my $prefui = shift;
 
-    needrestart_ui_init($debug, $prefui) unless(%UIs);
+    needrestart_ui_init($verbosity, $prefui) unless(%UIs);
     my ($ui) = sort { ncmp($UIs{$b}, $UIs{$a}) } keys %UIs;
 
     return undef unless($ui);
 
-    print STDERR "$LOGPREF Using UI '$ui'...\n" if($debug);
+    print STDERR "$LOGPREF Using UI '$ui'...\n" if($verbosity > 1);
 
-    return $ui->new($debug);
+    return $ui->new($verbosity);
 }
 
 
@@ -213,15 +213,16 @@ sub needrestart_cont_init($) {
     }
 }
 
-sub needrestart_cont_check($$$) {
+sub needrestart_cont_check($$$;$) {
     my $debug = shift;
     my $pid = shift;
     my $bin = shift;
+    my $norestart = shift || 0;
 
     needrestart_cont_init($debug) unless(scalar keys %CONT);
 
     foreach my $cont (values %CONT) {
-	return 1 if($cont->check($pid, $bin));
+	return 1 if($cont->check($pid, $bin, $norestart));
     }
 
     return 0;

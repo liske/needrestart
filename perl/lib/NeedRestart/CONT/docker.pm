@@ -50,6 +50,7 @@ sub check {
     my $self = shift;
     my $pid = shift;
     my $bin = shift;
+    my $norestart = shift;
     my $ns = $self->get_nspid($pid);
 
     # stop here if no dedicated PID namespace is used
@@ -71,9 +72,14 @@ sub check {
 
     my $name = $1;
     $name =~ s/^([\da-f]{12})[\da-f]{52}$/$1/;
-    print STDERR "$LOGPREF #$pid is part of docker container '$name' and should be restarted\n" if($self->{debug});
+    unless($norestart) {
+	print STDERR "$LOGPREF #$pid is part of docker container '$name' and should be restarted\n" if($self->{debug});
 
-    $self->{docker}->{$name}++;
+	$self->{docker}->{$name}++;
+    }
+    else {
+	print STDERR "$LOGPREF #$pid is part of docker container '$name'\n" if($self->{debug});
+    }
 
     return 1;
 }

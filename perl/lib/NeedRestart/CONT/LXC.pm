@@ -50,6 +50,7 @@ sub check {
     my $self = shift;
     my $pid = shift;
     my $bin = shift;
+    my $norestart = shift;
     my $ns = $self->get_nspid($pid);
 
     # stop here if no dedicated PID namespace is used
@@ -70,9 +71,14 @@ sub check {
     return 0 unless($cg =~ /^\d+:[^:]+:\/lxc\/(.+)$/m);
 
     my $name = $1;
-    print STDERR "$LOGPREF #$pid is part of LXC container '$name' and should be restarted\n" if($self->{debug});
+    unless($norestart) {
+	print STDERR "$LOGPREF #$pid is part of LXC container '$name' and should be restarted\n" if($self->{debug});
 
-    $self->{lxc}->{$name}++;
+	$self->{lxc}->{$name}++;
+    }
+    else {
+	print STDERR "$LOGPREF #$pid is part of LXC container '$name'\n" if($self->{debug});
+    }
 
     return 1;
 }
