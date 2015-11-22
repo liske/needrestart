@@ -5,6 +5,8 @@ needrestart (2.4) unstable; urgency=medium
     (Debian Bug#799734 by Sven Hartge <sven@svenhartge.de>)
   * [Bug] Add user@\d+.service to override_rc.
     (Debian Bug#788380 by Shirish Agarwal <shirishag75@gmail.com>)
+  * [Bug] Add override for systemd-logind due to another systemd regression.
+    (Debian Bug#800718 by Sven Hartge <sven@svenhartge.de>)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
