@@ -23,7 +23,7 @@ case "$NR_SESSION" in
 	{
 	    echo
 	    echo "Your session is running obsolete binaries or libraries as listed below."
-	    echo "Please consider to relogin or restart them!"
+	    echo "Please consider a relogin or restart of the affected processes!"
 	    echo
 	    cat
 	    echo

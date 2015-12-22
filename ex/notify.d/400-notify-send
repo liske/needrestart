@@ -35,7 +35,7 @@ case "$NR_SESSION" in
  	echo "[$0] notify user $NR_USERNAME on $DISPLAY" 1>&2
 
 	MSGTITLE='Relogin or restarts required!'
-	MSGBODY="Your session is running obsolete binaries or libraries as listed below.\n<i><b>Please consider to relogin or restart the affected programs!</b></i>\n\n$(cat)"
+	MSGBODY="Your session is running obsolete binaries or libraries as listed below.\n<i><b>Please consider a relogin or restart of the affected processes!</b></i>\n\n$(cat)"
 
 	su -p -s /bin/sh -c "$NSEND -u critical -i dialog-warning \"$MSGTITLE\" \"$MSGBODY\"" "$NR_USERNAME"
 	;;

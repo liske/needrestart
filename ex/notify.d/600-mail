@@ -25,7 +25,7 @@ echo "[$0] notify user $NR_USERNAME on $NR_SESSION via mail" 1>&2
 {
     echo "Your session on host $(hostname -f) ($NR_SESSION) is running obsolete binaries or libraries as listed below."
     echo
-    echo "Please consider to relogin or restart the affected processes!"
+    echo "Please consider a relogin or restart of the affected processes!"
     echo
     cat
 } | fold -s -w 72 | "$MAILX" -s "Relogin or restarts on host $(hostname) required!" "$NR_USERNAME"

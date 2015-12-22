@@ -7,6 +7,8 @@ needrestart (2.4) unstable; urgency=medium
     (Debian Bug#788380 by Shirish Agarwal <shirishag75@gmail.com>)
   * [Bug] Add override for systemd-logind due to another systemd regression.
     (Debian Bug#800718 by Sven Hartge <sven@svenhartge.de>)
+  * [Bug] Fix grammar in hook scripts.
+    (Debian Bug#805980 by Justin B Rye <justin.byam.rye@gmail.com>)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
