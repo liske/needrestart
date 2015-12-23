@@ -9,6 +9,8 @@ needrestart (2.4) unstable; urgency=medium
     (Debian Bug#800718 by Sven Hartge <sven@svenhartge.de>)
   * [Bug] Fix grammar in hook scripts.
     (Debian Bug#805980 by Justin B Rye <justin.byam.rye@gmail.com>)
+  * [Bug] Fix kernel detection on non x86* arch.
+    (Debian Bug#800720 by Sven Hartge <sven@svenhartge.de>)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 

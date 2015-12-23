@@ -38,6 +38,7 @@ our @ISA = qw(Exporter);
 
 our @EXPORT = qw(
     nr_linux_version_x86
+    nr_linux_version_generic
 );
 
 my $LOGPREF = '[Kernel/Linux]';
@@ -76,13 +77,26 @@ sub nr_linux_version_x86($$) {
     return $buf;
 }
 
+sub nr_linux_version_generic($$) {
+    my $debug = shift;
+    my $fn = shift;
+
+    $fn =~ s/[^-]*-//;
+
+    print STDERR "$fn => $fn\n" if($debug);
+
+    return $fn;
+}
+
 sub nr_kernel_check_real($$) {
     my $debug = shift;
     my $ui = shift;
     my %vars;
 
     my ($sysname, $nodename, $release, $version, $machine) = uname;
+    my $is_x86 = ($machine =~ /^(i\d86|x86_64)$/);
     $vars{KVERSION} = $release;
+    $vars{ABIDETECT} = $is_x86;
 
     die "$LOGPREF Not running on Linux!\n" unless($sysname eq 'Linux');
 
@@ -104,7 +118,13 @@ sub nr_kernel_check_real($$) {
 	    next;
 	}
 
-	my $verstr = nr_linux_version_x86($debug, $fn);
+	my $verstr;
+	if($is_x86) {
+	    $verstr = nr_linux_version_x86($debug, $fn);
+	}
+	else {
+	    $verstr = nr_linux_version_generic($debug, $fn);
+	}
 	unless(defined($verstr)) {
 	    $verstr = nr_strings($debug, qr/^(Linux version )?\d\.\d+\S*\s/, $fn);
 
@@ -133,7 +153,7 @@ sub nr_kernel_check_real($$) {
     print STDERR "$LOGPREF Expected linux version: $vars{EVERSION}\n" if($debug);
 
     return (NRK_VERUPGRADE, %vars) if($vars{KVERSION} ne $vars{EVERSION});
-    return (NRK_ABIUPGRADE, %vars) unless($kernels{$release});
+    return (NRK_ABIUPGRADE, %vars) unless(!$is_x86 || $kernels{$release});
     return (NRK_NOUPGRADE, %vars);
 }
 

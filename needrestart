@@ -670,7 +670,7 @@ if(defined($opt_k)) {
 	}
 	else {
 	    if($kresult == NRK_NOUPGRADE) {
-		$ui->notice('Running kernel seems to be up-to-date.');
+		$ui->notice(($kvars{ABIDETECT} ? 'Running kernel seems to be up-to-date.' : "Running kernel seems to be up-to-date (ABI upgrades are not detected)."));
 	    }
 	    elsif($kresult == NRK_ABIUPGRADE) {
 		if($nrconf{kernelhints} < 0) {
