@@ -13,7 +13,7 @@ needrestart (2.4) unstable; urgency=medium
     (Debian Bug#800720 by Sven Hartge <sven@svenhartge.de>)
   * [Kernel] Extract kernel version on non-x86(_64) archs (allows ABI checks).
 
- -- Thomas Liske <thomas@fiasko-nw.net>  
+ -- Thomas Liske <thomas@fiasko-nw.net>  Fri, 01 Jan 2016 21:54:47 +0100
 
 needrestart (2.3) unstable; urgency=medium
 
