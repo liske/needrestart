@@ -33,6 +33,10 @@ use POSIX qw(uname);
 use Sort::Naturally;
 use Fcntl qw(SEEK_SET);
 
+use constant {
+    NRK_LNX_GETVER_HELPER => q(/usr/lib/needrestart/vmlinuz-get-version),
+};
+
 require Exporter;
 our @ISA = qw(Exporter);
 
@@ -74,18 +78,39 @@ sub nr_linux_version_x86($$) {
 	return undef;
     }
 
-    return $buf;
+    return ($buf, 1);
 }
 
 sub nr_linux_version_generic($$) {
     my $debug = shift;
     my $fn = shift;
 
+    # use helper script to get version string
+    if(-x NRK_LNX_GETVER_HELPER) {
+	my $fh = nr_fork_pipe($debug, NRK_LNX_GETVER_HELPER, $fn, $debug);
+	if($fh) {
+	    my $verstr = <$fh>;
+	    close($fh);
+
+	    if($verstr) {
+		chomp($verstr);
+		return ($verstr, 1) ;
+	    }
+	}
+    }
+    else {
+	print STDERR "$LOGPREF ".(NRK_LNX_GETVER_HELPER)." is n/a\n" if($debug);
+    }
+
+    # fallback trying filename
     $fn =~ s/[^-]*-//;
+    if($fn =~ /^\d+\.\d+/) {
+	print STDERR "$LOGPREF version from filename: $fn\n" if($debug);
 
-    print STDERR "$fn => $fn\n" if($debug);
+	return ($fn, 0);
+    }
 
-    return $fn;
+    return undef;
 }
 
 sub nr_kernel_check_real($$) {
@@ -96,7 +121,6 @@ sub nr_kernel_check_real($$) {
     my ($sysname, $nodename, $release, $version, $machine) = uname;
     my $is_x86 = ($machine =~ /^(i\d86|x86_64)$/);
     $vars{KVERSION} = $release;
-    $vars{ABIDETECT} = $is_x86;
 
     die "$LOGPREF Not running on Linux!\n" unless($sysname eq 'Linux');
 
@@ -119,20 +143,18 @@ sub nr_kernel_check_real($$) {
 	}
 
 	my $verstr;
+	my $abidtc;
 	if($is_x86) {
-	    $verstr = nr_linux_version_x86($debug, $fn);
+	    ($verstr, $abidtc) = nr_linux_version_x86($debug, $fn);
 	}
-	else {
-	    $verstr = nr_linux_version_generic($debug, $fn);
+	if(!$is_x86 || undefined($verstr)) {
+	    ($verstr, $abidtc) = nr_linux_version_generic($debug, $fn);
 	}
 	unless(defined($verstr)) {
-	    $verstr = nr_strings($debug, qr/^(Linux version )?\d\.\d+\S*\s/, $fn);
-
-	    unless(defined($verstr)) {
-		print STDERR "$LOGPREF Could not get version string from $fn.\n" if($debug);
-		next;
-	    }
+	    print STDERR "$LOGPREF Could not get version string from $fn.\n" if($debug);
+	    next;
 	}
+        $vars{ABIDETECT} += $abidtc;
 
 	my $iversion = $verstr;
 	$iversion =~ s/^Linux version //;

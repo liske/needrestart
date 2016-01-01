@@ -11,6 +11,7 @@ needrestart (2.4) unstable; urgency=medium
     (Debian Bug#805980 by Justin B Rye <justin.byam.rye@gmail.com>)
   * [Bug] Fix kernel detection on non x86* arch.
     (Debian Bug#800720 by Sven Hartge <sven@svenhartge.de>)
+  * [Kernel] Extract kernel version on non-x86(_64) archs (allows ABI checks).
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 

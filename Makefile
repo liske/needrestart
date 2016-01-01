@@ -27,6 +27,9 @@ install: all
 	
 	mkdir -p "$(DESTDIR)/usr/sbin"
 	cp needrestart "$(DESTDIR)/usr/sbin/"
+	
+	mkdir -p "$(DESTDIR)/usr/lib/needrestart"
+	cp lib/vmlinuz-get-version "$(DESTDIR)/usr/lib/needrestart/"
 
 clean:
 	[ ! -f perl/Makefile ] || ( cd perl && $(MAKE) realclean ) 

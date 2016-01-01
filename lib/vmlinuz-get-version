@@ -1,0 +1,65 @@
+#!/bin/sh
+
+# ----------------------------------------------------------------------
+# This file was taken from the Linux kernel source tree (scripts/extract-vmlinux)
+# and has been adopted for the use within needrestart.
+#
+# extract-vmlinux - Extract uncompressed vmlinux from a kernel image
+#
+# Inspired from extract-ikconfig
+# (c) 2009,2010 Dick Streefland <dick@streefland.net>
+#
+# (c) 2011      Corentin Chary <corentin.chary@gmail.com>
+#
+# Adopted for needrestart
+# (c) 2016      Thomas Liske <liske@ibh.de>
+#
+# Licensed under the GNU General Public License, version 2 (GPLv2).
+# ----------------------------------------------------------------------
+
+get_version()
+{
+    # search and output version string pattern
+    strings "$1" | grep -m 1 '^Linux version ' && exit 0
+}
+
+try_decompress()
+{
+    # The obscure use of the "tr" filter is to work around older versions of
+    # "grep" that report the byte offset of the line instead of the pattern.
+
+    # Try to find the header ($1) and decompress from here
+    for	pos in `tr "$1\n$2" "\n$2=" < "$img" | grep -abo "^$2"`
+    do
+	pos=${pos%%:*}
+	tail -c+$pos "$img" | $3 > $tmp 2> /dev/null
+	get_version $tmp
+    done
+}
+
+# Check invocation:
+me=${0##*/}
+img=$1
+if	[ $# -lt 1 -o $# -gt 2  -o ! -s "$img" ]
+then
+    echo "Usage: $me <kernel-image> [debug]" >&2
+    exit 2
+fi
+
+if [ "$2" = "1" ]; then
+    set -x
+fi
+
+# Prepare temp files:
+tmp=$(mktemp)
+trap "rm -f $tmp" 0
+
+# Initial attempt for uncompressed images or objects:
+get_version $img
+
+# That didn't work, so retry after decompression.
+which gunzip  > /dev/null && try_decompress '\037\213\010' xy    gunzip
+which unxz    > /dev/null && try_decompress '\3757zXZ\000' abcde unxz
+which bunzip2 > /dev/null && try_decompress 'BZh'          xy    bunzip2
+which unlzma  > /dev/null && try_decompress '\135\0\0\0'   xxx   unlzma
+which lzop    > /dev/null && try_decompress '\211\114\132' xy    'lzop -d'
