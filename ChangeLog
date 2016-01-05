@@ -3,7 +3,7 @@ needrestart (2.5) unstable; urgency=medium
   * [Bug] Fix broken kernel detection due to syntax error.
     (Debian Bug#810031 by Martin Steigerwald <martin@lichtvoll.de>)
 
- -- Thomas Liske <thomas@fiasko-nw.net>  
+ -- Thomas Liske <thomas@fiasko-nw.net>  Tue, 05 Jan 2016 23:17:53 +0100
 
 needrestart (2.4) unstable; urgency=medium
 
