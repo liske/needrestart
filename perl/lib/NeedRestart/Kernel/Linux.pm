@@ -147,7 +147,7 @@ sub nr_kernel_check_real($$) {
 	if($is_x86) {
 	    ($verstr, $abidtc) = nr_linux_version_x86($debug, $fn);
 	}
-	if(!$is_x86 || undefined($verstr)) {
+	unless(defined($verstr)) {
 	    ($verstr, $abidtc) = nr_linux_version_generic($debug, $fn);
 	}
 	unless(defined($verstr)) {

@@ -1,3 +1,10 @@
+needrestart (2.5) unstable; urgency=medium
+
+  * [Bug] Fix broken kernel detection due to syntax error.
+    (Debian Bug#810031 by Martin Steigerwald <martin@lichtvoll.de>)
+
+ -- Thomas Liske <thomas@fiasko-nw.net>  
+
 needrestart (2.4) unstable; urgency=medium
 
   * [Bug] Drop unused dependency on File::Slurp.
