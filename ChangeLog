@@ -2,6 +2,9 @@ needrestart (2.6) unstable; urgency=medium
 
   * [Bug] Do not notify system users via email.
     (Debian Bug#812399 by Marc Haber <mh+debian-packages@zugschlus.de>)
+  * [Bug] Do no restart services in interactive restart mode while
+     debconf's noninteractive frontend is used.
+    (Debian Bug#803249 by Felix Geyer <fgeyer@debian.org>)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
