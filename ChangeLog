@@ -1,10 +1,13 @@
-needrestart (2.6) unstable; urgency=medium
+needrestart (2.6) unstable; urgency=high
 
   * [Bug] Do not notify system users via email.
     (Debian Bug#812399 by Marc Haber <mh+debian-packages@zugschlus.de>)
   * [Bug] Do no restart services in interactive restart mode while
      debconf's noninteractive frontend is used.
     (Debian Bug#803249 by Felix Geyer <fgeyer@debian.org>)
+  * [Bug] Fix broken detection of old mappings due to regression
+    introduced in v2.3 (commit acf6a07).
+    (Debian Bug#810970 by Andreas Schmidt <pi-c@arcor.de>)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
