@@ -20,6 +20,13 @@
 MAILX='/usr/bin/mail'
 test -x "$MAILX" || exit 1
 
+# Skip system users
+NR_USERID=`id -u "$NR_USERNAME"`
+if [ "0$NR_USERID" -gt 0 -a "0$NR_USERID" -lt 1000 ]; then
+    echo "[$0] do not notify system-user $NR_USERNAME via mail" 1>&2
+    exit 1
+fi
+
 echo "[$0] notify user $NR_USERNAME on $NR_SESSION via mail" 1>&2
 
 {
