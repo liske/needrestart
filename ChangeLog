@@ -9,7 +9,7 @@ needrestart (2.6) unstable; urgency=high
     introduced in v2.3 (commit acf6a07).
     (Debian Bug#810970 by Andreas Schmidt <pi-c@arcor.de>)
 
- -- Thomas Liske <thomas@fiasko-nw.net>  
+ -- Thomas Liske <thomas@fiasko-nw.net>  Wed, 17 Feb 2016 22:14:32 +0100
 
 needrestart (2.5) unstable; urgency=medium
 
