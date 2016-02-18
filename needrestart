@@ -195,6 +195,13 @@ sub parse_lsbinit($) {
     my $rc = '/etc/init.d/'.shift;
     my %lsb;
 
+    if ( -l $rc) {
+        if (readlink($rc) eq '/lib/init/upstart-job') {
+	    print STDERR "WARNING: $rc is a converted upstart job.\n";
+	    return ();
+	}
+    }
+
     open(HLSB, '<', $rc) || die "Can't open $rc: $!\n";
     my $found;
     while(my $line = <HLSB>) {
