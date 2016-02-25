@@ -1,3 +1,12 @@
+needrestart (2.7) unstable; urgency=high
+
+  * [Bug] Ignore init rc being symlinks to upstart-job.
+    (github issue #16 by Jonas Genannt @hggh)
+  * [Bug] Allow systemd service names with dots in them.
+    (github issue #19 by Michael Fladischer <michael@fladi.at>)
+
+ -- Thomas Liske <thomas@fiasko-nw.net>  
+
 needrestart (2.6) unstable; urgency=high
 
   * [Bug] Do not notify system users via email.
