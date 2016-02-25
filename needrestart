@@ -524,7 +524,7 @@ if(defined($opt_l)) {
 		my $ret = <$systemctl>;
 		close($systemctl);
 
-		if(defined($ret) && $ret =~ /([^.\s]+\.service) /) {
+		if(defined($ret) && $ret =~ /([^\s]+\.service) /) {
 		    my $s = $1;
 		    print STDERR "$LOGPREF #$pid is $s\n" if($nrconf{verbosity} > 1);
 		    $restart{$s}++;
