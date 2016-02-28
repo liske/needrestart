@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-11 21:59+0200\n"
+"POT-Creation-Date: 2016-02-28 19:12+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -67,4 +67,16 @@ msgstr ""
 #. Description
 #: ../needrestart.templates:5001
 msgid "Pending kernel upgrade"
+msgstr ""
+
+#. Type: title
+#. Description
+#: ../needrestart.templates:6001
+msgid "Containers using outdated libraries"
+msgstr ""
+
+#. Type: multiselect
+#. Description
+#: ../needrestart.templates:7002
+msgid "Which containers should be restarted?"
 msgstr ""
