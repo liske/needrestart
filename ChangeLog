@@ -10,6 +10,9 @@ needrestart (2.7) unstable; urgency=medium
     (Debian Bug#815086 by Vladimir Kudrya <pzs-fs@yandex.ru>)
   * [notify] Add support for translation of notify scripts.
     (Debian Bug#815086 by Vladimir Kudrya <pzs-fs@yandex.ru>)
+  * [Core] Add support for translation of core script.
+    (Debian Bug#815086 by Vladimir Kudrya <pzs-fs@yandex.ru>)
+  * [notify] Notification scripts can be disabled globaly.
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
