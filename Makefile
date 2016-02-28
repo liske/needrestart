@@ -36,11 +36,16 @@ install: all
 clean:
 	[ ! -f perl/Makefile ] || ( cd perl && $(MAKE) realclean ) 
 
-pot: po/messages.pot
+pot: po/needrestart/messages.pot po/needrestart-notify/messages.pot
 
-po/messages.pot: needrestart
-	xgettext -o po/messages.pot --msgid-bugs-address=thomas@fiasko-nw.net \
-	     --package-name=needrestart --package-version=2.7 \
+po/needrestart/messages.pot: needrestart
+	xgettext -o $@ --msgid-bugs-address=thomas@fiasko-nw.net \
+	    --package-name=needrestart --package-version=2.7 \
 	    --keyword --keyword='$$__' --keyword=__ --keyword=__x \
 	    --keyword=__n:1,2 --keyword=__nx:1,2 --keyword=__xn \
-	    --keyword=N__ --language=perl needrestart
+	    --keyword=N__ --language=perl $^
+
+po/needrestart-notify/messages.pot: ex/notify.d/*-*
+	xgettext -o $@ --msgid-bugs-address=thomas@fiasko-nw.net \
+	    --package-name=needrestart-notify --package-version=2.7 \
+	    --language=shell $^
