@@ -4,6 +4,8 @@ needrestart (2.7) unstable; urgency=high
     (github issue #16 by Jonas Genannt @hggh)
   * [Bug] Allow systemd service names with dots in them.
     (github issue #19 by Michael Fladischer <michael@fladi.at>)
+  * [Bug] Add slim to override.
+    (Debian Bug#816061 by Lars Kruse <devel@sumpfralle.de>)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
