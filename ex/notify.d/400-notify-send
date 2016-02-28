@@ -20,6 +20,13 @@
 NSEND='/usr/bin/notify-send'
 test -x "$NSEND" || exit 1
 
+. /usr/lib/needrestart/notify.d.sh
+
+if [[ "$NR_NOTIFYD_DISABLE_NOTIFY_SEND" -eq '1' ]]; then
+    echo "[$0] disabled in global config" 1>&2
+    exit 1
+fi
+
 case "$NR_SESSION" in
     session*)
         # cleanup environment
@@ -34,8 +41,11 @@ case "$NR_SESSION" in
 
  	echo "[$0] notify user $NR_USERNAME on $DISPLAY" 1>&2
 
-	MSGTITLE='Relogin or restarts required!'
-	MSGBODY="Your session is running obsolete binaries or libraries as listed below.\n<i><b>Please consider a relogin or restart of the affected processes!</b></i>\n\n$(cat)"
+	MSGTITLE=$(gettext 'Relogin or restarts required!')
+	MSGBODY=$(gettext 'Your session is running obsolete binaries or libraries as listed below.
+<i><b>Please consider a relogin or restart of the affected processes!</b></i>
+
+')$(cat)
 
 	su -p -s /bin/sh -c "$NSEND -u critical -i dialog-warning \"$MSGTITLE\" \"$MSGBODY\"" "$NR_USERNAME"
 	;;

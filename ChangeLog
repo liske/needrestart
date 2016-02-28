@@ -8,6 +8,8 @@ needrestart (2.7) unstable; urgency=high
     (Debian Bug#816061 by Lars Kruse <devel@sumpfralle.de>)
   * [debconf] Add russian translation.
     (Debian Bug#815086 by Vladimir Kudrya <pzs-fs@yandex.ru>)
+  * [notify] Add support for translation of notify scripts.
+    (Debian Bug#815086 by Vladimir Kudrya <pzs-fs@yandex.ru>)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 

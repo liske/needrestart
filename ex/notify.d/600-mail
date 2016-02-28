@@ -20,6 +20,13 @@
 MAILX='/usr/bin/mail'
 test -x "$MAILX" || exit 1
 
+. /usr/lib/needrestart/notify.d.sh
+
+if [[ "$NR_NOTIFYD_DISABLE_MAIL" -eq '1' ]]; then
+    echo "[$0] disabled in global config" 1>&2
+    exit 1
+fi
+
 # Skip system users
 NR_USERID=`id -u "$NR_USERNAME"`
 if [ "0$NR_USERID" -gt 0 -a "0$NR_USERID" -lt 1000 ]; then
@@ -30,9 +37,12 @@ fi
 echo "[$0] notify user $NR_USERNAME on $NR_SESSION via mail" 1>&2
 
 {
-    echo "Your session on host $(hostname -f) ($NR_SESSION) is running obsolete binaries or libraries as listed below."
+    _NR_FQDN=$(hostname -f)
+    eval_gettext 'Your session on host $_NR_FQDN ($NR_SESSION) is running obsolete binaries or libraries as listed below.'
     echo
-    echo "Please consider a relogin or restart of the affected processes!"
+    echo
+    gettext "Please consider a relogin or restart of the affected processes!"
+    echo
     echo
     cat
 } | fold -s -w 72 | "$MAILX" -s "Relogin or restarts on host $(hostname) required!" "$NR_USERNAME"

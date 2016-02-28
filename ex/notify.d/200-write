@@ -17,20 +17,28 @@
 
 # Use write to notify users on TTYs.
 
+. /usr/lib/needrestart/notify.d.sh
+
+if [[ "$NR_NOTIFYD_DISABLE_WRITE" -eq '1' ]]; then
+    echo "[$0] disabled in global config" 1>&2
+    exit 1
+fi
+
 case "$NR_SESSION" in
     /dev/tty*|/dev/pts*)
 	echo "[$0] notify user $NR_USERNAME on $NR_SESSION" 1>&2
 	{
 	    echo
-	    echo "Your session is running obsolete binaries or libraries as listed below."
-	    echo "Please consider a relogin or restart of the affected processes!"
+	    gettext 'Your session is running obsolete binaries or libraries as listed below.
+Please consider a relogin or restart of the affected processes!'
 	    echo
-	    cat
+	    echo
+	    cat -n
 	    echo
 	} | write "$NR_USERNAME" "$NR_SESSION" 2> /dev/null
 	;;
     *)
 	echo "[$0] skip session w/o tty" 1>&2
-	exit 1;
+	exit 1
 	;;
 esac
