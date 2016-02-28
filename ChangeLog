@@ -6,6 +6,8 @@ needrestart (2.7) unstable; urgency=high
     (github issue #19 by Michael Fladischer <michael@fladi.at>)
   * [Bug] Add slim to override.
     (Debian Bug#816061 by Lars Kruse <devel@sumpfralle.de>)
+  * [debconf] Add russian translation.
+    (Debian Bug#815086 by Vladimir Kudrya <pzs-fs@yandex.ru>)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
