@@ -6,6 +6,7 @@ Perl
 
 - Module::Find
 - Module::ScanDeps
+- Locale::TextDomain
 - Proc::ProcessTable
 - Sort::Naturally
 - Term::ReadKey

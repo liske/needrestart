@@ -34,6 +34,7 @@ use NeedRestart::Interp;
 use NeedRestart::Kernel;
 use NeedRestart::Utils;
 use Sort::Naturally;
+use Locale::TextDomain 'needrestart';
 
 use warnings;
 use strict;
@@ -315,7 +316,7 @@ if(defined($opt_l)) {
 	return $pid;
     }
 
-    $ui->progress_prep(scalar keys %$ptable, 'Scanning processes...');
+    $ui->progress_prep(scalar keys %$ptable, __ 'Scanning processes...');
     my %stage2;
     for my $pid (sort {$a <=> $b} keys %$ptable) {
 	$ui->progress_step;
@@ -454,7 +455,7 @@ if(defined($opt_l)) {
     $ui->progress_fin;
 
     if(scalar keys %stage2 && !$uid) {
-	$ui->progress_prep(scalar keys %stage2, 'Scanning candidates...');
+	$ui->progress_prep(scalar keys %stage2, __ 'Scanning candidates...');
 	foreach my $pid (sort {$a <=> $b} keys %stage2) {
 	    $ui->progress_step;
 
@@ -627,7 +628,7 @@ if(defined($opt_l)) {
 	    print map { "NEEDRESTART-PID: $_=".join(',', @{ $fnames{$_} })."\n"; } nsort keys %fnames;
 	}
 	else {
-	    $ui->notice('Your outdated processes:');
+	    $ui->notice(__ 'Your outdated processes:');
 	    $ui->notice(join(', ',map { $_.'['.join(', ', @{ $fnames{$_} }).']';  } nsort keys %fnames));
 	}
     }
@@ -677,13 +678,14 @@ if(defined($opt_k)) {
 	}
 	else {
 	    if($kresult == NRK_NOUPGRADE) {
-		$ui->notice(($kvars{ABIDETECT} ? 'Running kernel seems to be up-to-date.' : "Running kernel seems to be up-to-date (ABI upgrades are not detected)."));
+		$ui->notice(($kvars{ABIDETECT} ? __('Running kernel seems to be up-to-date.') : __('Running kernel seems to be up-to-date (ABI upgrades are not detected).')));
 	    }
 	    elsif($kresult == NRK_ABIUPGRADE) {
 		if($nrconf{kernelhints} < 0) {
-		    $ui->notice(
-			"The currently running kernel version is $kvars{KVERSION} and there is an ABI compatible upgrade pending."
-			);
+		    $ui->notice(__x(
+				    'The currently running kernel version is {kversion} and there is an ABI compatible upgrade pending.',
+				    kversion => $kvars{KVERSION},
+				));
 		}
 		else {
 		    $ui->announce_abi(%kvars);
@@ -691,16 +693,18 @@ if(defined($opt_k)) {
 	    }
 	    elsif($kresult == NRK_VERUPGRADE) {
 		if($nrconf{kernelhints} < 0) {
-		    $ui->notice(
-			"The currently running kernel version is $kvars{KVERSION} which is not the expected kernel version $kvars{EVERSION}."
-			);
+		    $ui->notice(__x(
+				    'The currently running kernel version is {kversion} which is not the expected kernel version {eversion}.',
+				    kversion => $kvars{KVERSION},
+				    eversion => $kvars{EVERSION},
+				));
 		}
 		else {
 		    $ui->announce_ver(%kvars);
 		}
 	    }
 	    else {
-		$ui->notice('Failed to retrieve available kernel versions.');
+		$ui->notice(__ 'Failed to retrieve available kernel versions.');
 	    }
 	}
     }
@@ -709,7 +713,7 @@ if(defined($opt_k)) {
 if(defined($opt_l) && !$uid) {
     ## SERVICES
     unless(scalar %restart) {
-	$ui->notice('No services need to be restarted.') unless($opt_b);
+	$ui->notice(__ 'No services need to be restarted.') unless($opt_b);
 	if($opt_p) {
 	    $nagios{sstr} = q(none);
 	    $nagios{sret} = 0;
@@ -718,7 +722,7 @@ if(defined($opt_l) && !$uid) {
     }
     else {
 	if($opt_b || $opt_r ne 'i') {
-	    $ui->notice('Services to be restarted:');
+	    $ui->notice(__ 'Services to be restarted:');
 	    if($opt_p) {
 		$nagios{sstr} = (scalar keys %restart).' (!)';
 		$nagios{sret} = 2;
@@ -741,7 +745,10 @@ if(defined($opt_l) && !$uid) {
 		}
 		# ...but complain about them
 		unless($restart) {
-		    $ui->notice("Skipping $rc...");
+		    $ui->notice(__x(
+				    'Skipping {rc}...',
+				    rc => $rc,
+				));
 		    next;
 		}
 
@@ -759,7 +766,7 @@ if(defined($opt_l) && !$uid) {
 	    unless($opt_b || $#systemd_restart == -1) {
 		my @cmd = (qq(systemctl), qq(restart), @systemd_restart);
 		if($opt_r eq 'a') {
-		    $ui->notice('Restarting services using systemd...');
+		    $ui->notice(__ 'Restarting services using systemd...');
 		    system(@cmd);
 		}
 		else {
@@ -770,14 +777,14 @@ if(defined($opt_l) && !$uid) {
 	else {
 	    my $o = 0;
 
-	    $ui->query_pkgs('Services to be restarted:', $nrconf{defno}, \%restart, $nrconf{override_rc},
+	    $ui->query_pkgs(__('Services to be restarted:'), $nrconf{defno}, \%restart, $nrconf{override_rc},
 			    sub {
 				my @cmd = restart_cmd(shift);
 				system(@cmd) if($#cmd > -1);
 			    });
 
 	    if($#systemd_restart > -1) {
-		$ui->notice('Restarting services using systemd...');
+		$ui->notice(__ 'Restarting services using systemd...');
 		system(qq(systemctl), qq(restart), @systemd_restart);
 	    }
 	}
@@ -788,7 +795,7 @@ if(defined($opt_l) && !$uid) {
     @systemd_restart = ();
     my %conts = needrestart_cont_get($nrconf{verbosity} > 1);
     unless(scalar %conts) {
-	$ui->notice('No containers need to be restarted.') unless($opt_b);
+	$ui->notice(__ 'No containers need to be restarted.') unless($opt_b);
 	if($opt_p) {
 	    $nagios{cstr} = q(none);
 	    $nagios{cret} = 0;
@@ -797,7 +804,7 @@ if(defined($opt_l) && !$uid) {
     }
     else {
 	if($opt_b || $opt_r ne 'i') {
-	    $ui->notice('Containers to be restarted:');
+	    $ui->notice(__ 'Containers to be restarted:');
 	    if($opt_p) {
 		$nagios{cstr} = (scalar keys %conts).' (!)';
 		$nagios{cret} = 2;
@@ -820,7 +827,10 @@ if(defined($opt_l) && !$uid) {
 		}
 		# ...but complain about them
 		unless($restart) {
-		    $ui->notice("Skipping $cont...");
+		    $ui->notice(__x(
+				    'Skipping {cont}...',
+				    cont => $cont,
+				));
 		    next;
 		}
 
@@ -835,7 +845,7 @@ if(defined($opt_l) && !$uid) {
 	else {
 	    my $o = 0;
 
-	    $ui->query_conts('Containers to be restarted:', $nrconf{defno}, \%conts, $nrconf{override_rc},
+	    $ui->query_conts(__('Containers to be restarted:'), $nrconf{defno}, \%conts, $nrconf{override_rc},
 			     sub {
 				 my $cont = shift;
 				 system(@{ $conts{$cont} });
@@ -846,7 +856,7 @@ if(defined($opt_l) && !$uid) {
     ## SESSIONS
     # list and notify user sessions
     if(scalar keys %sessions) {
-	$ui->notice('User sessions:');
+	$ui->notice(__ 'User sessions:');
 	if($opt_p) {
 	    $nagios{ustr} = (scalar keys %sessions).' (!)';
 	    $nagios{uret} = 1;
@@ -856,7 +866,12 @@ if(defined($opt_l) && !$uid) {
 	    foreach my $uid (sort { ncmp(uid2name($a), uid2name($b)); } keys %sessions) {
 		foreach my $sess (sort keys %{ $sessions{$uid} }) {
 		    my $fnames = join(', ',map { $_.'['.join(',', @{ $sessions{$uid}->{$sess}->{$_} }).']';  } nsort keys %{ $sessions{$uid}->{$sess} });
-		    $ui->notice(uid2name($uid)." on $sess is running obsolete $fnames");
+		    $ui->notice(__x(
+				    '{uid} on {sess} is running obsolete {fnames}',
+				    uid => uid2name($uid),
+				    sess => $sess,
+				    fnames => $fnames,
+				));
 		    if($nrconf{sendnotify}) {
 			local %ENV;
 
