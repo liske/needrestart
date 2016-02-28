@@ -1,4 +1,4 @@
-needrestart (2.7) unstable; urgency=high
+needrestart (2.7) unstable; urgency=medium
 
   * [Bug] Ignore init rc being symlinks to upstart-job.
     (github issue #16 by Jonas Genannt @hggh)
