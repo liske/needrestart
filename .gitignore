@@ -1,8 +1,10 @@
 autom4te.cache/
+debian/
 man/Makefile
 perl/MYMETA.json
 perl/MYMETA.yml
 perl/Makefile
 perl/blib/
 perl/pm_to_blib
+po/.build
 *~

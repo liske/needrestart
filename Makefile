@@ -1,4 +1,6 @@
-all:
+LOCALEDIR=/usr/share/locale
+
+all: mo-files
 	cd perl && perl Makefile.PL PREFIX=$(PREFIX) INSTALLDIRS=vendor 
 	cd perl && $(MAKE)
 
@@ -32,11 +34,16 @@ install: all
 	mkdir -p "$(DESTDIR)/usr/lib/needrestart"
 	cp lib/vmlinuz-get-version "$(DESTDIR)/usr/lib/needrestart/"
 	cp lib/notify.d.sh "$(DESTDIR)/usr/lib/needrestart/"
+	
+	mkdir -p "$(DESTDIR)$(LOCALEDIR)"
+	cp -r po/.build/* "$(DESTDIR)$(LOCALEDIR)/"
 
 clean:
-	[ ! -f perl/Makefile ] || ( cd perl && $(MAKE) realclean ) 
+	[ ! -f perl/Makefile ] || ( cd perl && $(MAKE) realclean )
+	rm -rf po/.build
 
-pot: po/needrestart/messages.pot po/needrestart-notify/messages.pot
+
+pot-files: po/needrestart/messages.pot po/needrestart-notify/messages.pot
 
 po/needrestart/messages.pot: needrestart
 	xgettext -o $@ --msgid-bugs-address=thomas@fiasko-nw.net \
@@ -49,3 +56,8 @@ po/needrestart-notify/messages.pot: ex/notify.d/*-*
 	xgettext -o $@ --msgid-bugs-address=thomas@fiasko-nw.net \
 	    --package-name=needrestart-notify --package-version=2.7 \
 	    --language=shell $^
+
+
+mo-files:
+	make -C po/needrestart
+	make -C po/needrestart-notify
