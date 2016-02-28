@@ -8,7 +8,7 @@ Perl
 - Module::ScanDeps
 - Proc::ProcessTable
 - Sort::Naturally
-- Term::ProgressBar::Simple
+- Term::ReadKey
 - Parent (for legacy Perl versions, i.e. on CentOS 6)
 
 Misc
@@ -16,3 +16,4 @@ Misc
 
 - gettext
 - po-debconf (on Debian derivates)
+- xz-utils
