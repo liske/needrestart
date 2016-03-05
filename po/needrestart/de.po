@@ -1,0 +1,94 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: needrestart 2.7\n"
+"Report-Msgid-Bugs-To: thomas@fiasko-nw.net\n"
+"POT-Creation-Date: 2016-02-28 19:29+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Thomas Liske <thomas@fiasko-nw.net>\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: needrestart:319
+msgid "Scanning processes..."
+msgstr "Prüfe Prozesse..."
+
+#: needrestart:458
+msgid "Scanning candidates..."
+msgstr "Prüfe Kandidaten..."
+
+#: needrestart:631
+msgid "Your outdated processes:"
+msgstr "Veraltete Prozesse"
+
+#: needrestart:681
+msgid "Running kernel seems to be up-to-date."
+msgstr "Der laufende Kernel ist aktuell."
+
+#: needrestart:681
+msgid "Running kernel seems to be up-to-date (ABI upgrades are not detected)."
+msgstr "Der laufende Kernel ist aktuell (ABI Änderungen werden nicht erkannt)."
+
+#: needrestart:686
+#, perl-brace-format
+msgid ""
+"The currently running kernel version is {kversion} and there is an ABI "
+"compatible upgrade pending."
+msgstr "Die aktuelle Kernel-Version ist {kversion} und es ist ein ABI-kompatibles Upgrade ausstehend."
+
+#: needrestart:697
+#, perl-brace-format
+msgid ""
+"The currently running kernel version is {kversion} which is not the expected "
+"kernel version {eversion}."
+msgstr "Die aktuelle Kernel-Version ist {kversion} was nicht die erwartete Version {eversion} ist."
+
+#: needrestart:707
+msgid "Failed to retrieve available kernel versions."
+msgstr "Fehler beim Ermitteln der verfügbaren Kernel-Versionen."
+
+#: needrestart:716
+msgid "No services need to be restarted."
+msgstr "Es müssen keine Dienste neugestartet werden."
+
+#: needrestart:725 needrestart:780
+msgid "Services to be restarted:"
+msgstr "Dienste die neu gestartet werden müssen:"
+
+#: needrestart:749
+#, perl-brace-format
+msgid "Skipping {rc}..."
+msgstr "Überspringe {rc}..."
+
+#: needrestart:769 needrestart:787
+msgid "Restarting services using systemd..."
+msgstr "Neustart von Diensten mittels systemd..."
+
+#: needrestart:798
+msgid "No containers need to be restarted."
+msgstr "Es müssen keine Container neugestartet werden."
+
+#: needrestart:807 needrestart:848
+msgid "Containers to be restarted:"
+msgstr "Container die neugestartet werden müssen:"
+
+#: needrestart:831
+#, perl-brace-format
+msgid "Skipping {cont}..."
+msgstr "Überspringe {cont}..."
+
+#: needrestart:859
+msgid "User sessions:"
+msgstr "Nutzer-Sitzungen:"
+
+#: needrestart:870
+#, perl-brace-format
+msgid "{uid} on {sess} is running obsolete {fnames}"
+msgstr "{uid} in {sess} nutzt veraltete Anwendung ({fnames})"
