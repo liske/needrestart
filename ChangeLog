@@ -4,7 +4,7 @@ needrestart (2.7) unstable; urgency=medium
     (github issue #16 by Jonas Genannt @hggh)
   * [Bug] Allow systemd service names with dots in them.
     (github issue #19 by Michael Fladischer <michael@fladi.at>)
-  * [Bug] Add slim to override.
+  * [Bug] Add display-manager 'slim' to override.
     (Debian Bug#816061 by Lars Kruse <devel@sumpfralle.de>)
   * [debconf] Add russian translation.
     (Debian Bug#815086 by Vladimir Kudrya <pzs-fs@yandex.ru>)
@@ -14,7 +14,8 @@ needrestart (2.7) unstable; urgency=medium
     (Debian Bug#815086 by Vladimir Kudrya <pzs-fs@yandex.ru>)
   * [Bug] Fix missing translations in debconf template file.
     (Debian Bug#815086 by Vladimir Kudrya <pzs-fs@yandex.ru>)
-  * [notify] Notification scripts can be disabled globaly.
+  * [notify] Notification scripts can be disabled globaly (see notify.conf).
+  * [Core] Improve output of restart commands.
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
