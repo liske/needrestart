@@ -31,6 +31,7 @@ use NeedRestart::Kernel;
 use NeedRestart::Strings;
 use POSIX qw(uname);
 use Sort::Naturally;
+use Locale::TextDomain 'needrestart';
 
 my $LOGPREF = '[Kernel/kFreeBSD]';
 
@@ -45,7 +46,7 @@ sub nr_kernel_check_real($$) {
     die "$LOGPREF Not running on GNU/kFreeBSD!\n" unless($sysname eq 'GNU/kFreeBSD');
 
     my @kfiles = reverse nsort </boot/kfreebsd-*>;
-    $ui->progress_prep(scalar @kfiles, 'Scanning kfreebsd images...');
+    $ui->progress_prep(scalar @kfiles, __ 'Scanning kfreebsd images...');
 
     my %kernels;
     foreach my $fn (@kfiles) {

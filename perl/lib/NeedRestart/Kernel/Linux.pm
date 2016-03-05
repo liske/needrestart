@@ -31,6 +31,7 @@ use NeedRestart::Kernel;
 use NeedRestart::Strings;
 use POSIX qw(uname);
 use Sort::Naturally;
+use Locale::TextDomain 'needrestart';
 use Fcntl qw(SEEK_SET);
 
 use constant {
@@ -125,7 +126,7 @@ sub nr_kernel_check_real($$) {
     die "$LOGPREF Not running on Linux!\n" unless($sysname eq 'Linux');
 
     my @kfiles = reverse nsort </boot/vmlinu*>;
-    $ui->progress_prep(scalar @kfiles, 'Scanning linux images...');
+    $ui->progress_prep(scalar @kfiles, __ 'Scanning linux images...');
 
     my %kernels;
     foreach my $fn (@kfiles) {
