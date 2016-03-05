@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: needrestart 2.7\n"
 "Report-Msgid-Bugs-To: thomas@fiasko-nw.net\n"
-"POT-Creation-Date: 2016-02-28 19:29+0100\n"
+"POT-Creation-Date: 2016-03-05 17:11+0100\n"
 "PO-Revision-Date: 2016-03-05 11:11+0100\n"
 "Last-Translator: Thomas Liske <thomas@fiasko-nw.net>\n"
 "Language: de\n"
@@ -29,21 +29,26 @@ msgstr "Der laufende Kernel ist aktuell."
 
 #: needrestart:681
 msgid "Running kernel seems to be up-to-date (ABI upgrades are not detected)."
-msgstr "Der laufende Kernel ist aktuell (ABI Änderungen werden nicht erkannt)."
+msgstr ""
+"Der laufende Kernel ist aktuell (ABI Änderungen können nicht erkannt werden)."
 
 #: needrestart:686
 #, perl-brace-format
 msgid ""
 "The currently running kernel version is {kversion} and there is an ABI "
 "compatible upgrade pending."
-msgstr "Die aktuelle Kernel-Version ist {kversion} und es ist ein ABI-kompatibles Upgrade ausstehend."
+msgstr ""
+"Die aktuelle Kernel-Version ist {kversion} und es ist ein ABI-kompatibles "
+"Upgrade ausstehend."
 
 #: needrestart:697
 #, perl-brace-format
 msgid ""
 "The currently running kernel version is {kversion} which is not the expected "
 "kernel version {eversion}."
-msgstr "Die aktuelle Kernel-Version ist {kversion} was nicht die erwartete Version {eversion} ist."
+msgstr ""
+"Die aktuelle Kernel-Version ist {kversion} was nicht die erwartete Version "
+"{eversion} ist."
 
 #: needrestart:707
 msgid "Failed to retrieve available kernel versions."
@@ -87,3 +92,13 @@ msgstr "Nutzer-Sitzungen:"
 #, perl-brace-format
 msgid "{uid} on {sess} is running obsolete {fnames}"
 msgstr "{uid} in {sess} nutzt veraltete Anwendung ({fnames})"
+
+#: perl/lib/NeedRestart/Kernel/Linux.pm:129
+#, fuzzy
+msgid "Scanning linux images..."
+msgstr "Prüfe Linux-Kernel..."
+
+#: perl/lib/NeedRestart/Kernel/kFreeBSD.pm:49
+#, fuzzy
+msgid "Scanning kfreebsd images..."
+msgstr "Prüfe kFreeBSD-Kernel..."
