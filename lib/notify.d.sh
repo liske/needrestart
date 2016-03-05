@@ -29,3 +29,6 @@ fi
 
 # Load gettext shell library
 . "$GETTEXTLIB"
+
+# Get LANG of session
+export LANG=$(sed -z -n s/^LANG=//p "/proc/$NR_SESSPPID/environ")
