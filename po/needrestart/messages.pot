@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: needrestart 2.7\n"
 "Report-Msgid-Bugs-To: thomas@fiasko-nw.net\n"
-"POT-Creation-Date: 2016-03-05 17:11+0100\n"
+"POT-Creation-Date: 2016-03-05 20:19+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,79 +17,81 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: needrestart:319
+#: needrestart:324
 msgid "Scanning processes..."
 msgstr ""
 
-#: needrestart:458
+#: needrestart:463
 msgid "Scanning candidates..."
 msgstr ""
 
-#: needrestart:631
+#: needrestart:636
 msgid "Your outdated processes:"
 msgstr ""
 
-#: needrestart:681
+#: needrestart:686
 msgid "Running kernel seems to be up-to-date."
 msgstr ""
 
-#: needrestart:681
+#: needrestart:686
 msgid "Running kernel seems to be up-to-date (ABI upgrades are not detected)."
 msgstr ""
 
-#: needrestart:686
+#: needrestart:691
 #, perl-brace-format
 msgid ""
 "The currently running kernel version is {kversion} and there is an ABI "
 "compatible upgrade pending."
 msgstr ""
 
-#: needrestart:697
+#: needrestart:702
 #, perl-brace-format
 msgid ""
 "The currently running kernel version is {kversion} which is not the expected "
 "kernel version {eversion}."
 msgstr ""
 
-#: needrestart:707
+#: needrestart:712
 msgid "Failed to retrieve available kernel versions."
 msgstr ""
 
-#: needrestart:716
+#: needrestart:721
 msgid "No services need to be restarted."
 msgstr ""
 
-#: needrestart:725 needrestart:780
+#: needrestart:732 needrestart:787
 msgid "Services to be restarted:"
 msgstr ""
 
-#: needrestart:749
-#, perl-brace-format
-msgid "Skipping {rc}..."
+#: needrestart:733 needrestart:786
+msgid "Restarting services..."
 msgstr ""
 
-#: needrestart:769 needrestart:787
-msgid "Restarting services using systemd..."
+#: needrestart:773
+msgid "Services being skipped:"
 msgstr ""
 
-#: needrestart:798
+#: needrestart:810
 msgid "No containers need to be restarted."
 msgstr ""
 
-#: needrestart:807 needrestart:848
+#: needrestart:821 needrestart:863
 msgid "Containers to be restarted:"
 msgstr ""
 
-#: needrestart:831
-#, perl-brace-format
-msgid "Skipping {cont}..."
+#: needrestart:822
+msgid "Restarting containers..."
 msgstr ""
 
-#: needrestart:859
+#: needrestart:854
+msgid "Containers being skipped:"
+msgstr ""
+
+#: needrestart:875
 msgid "User sessions:"
 msgstr ""
 
-#: needrestart:870
+#: needrestart:886
 #, perl-brace-format
 msgid "{uid} on {sess} is running obsolete {fnames}"
 msgstr ""

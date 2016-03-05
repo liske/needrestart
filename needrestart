@@ -107,6 +107,7 @@ our %nrconf = (
     blacklist => [],
     blacklist_rc => [],
     override_rc => [],
+    override_cont => [],
     interpscan => 1,
     kernelhints => 1,
 );
@@ -727,7 +728,10 @@ if(defined($opt_l) && !$uid) {
     }
     else {
 	if($opt_b || $opt_r ne 'i') {
-	    $ui->notice(__ 'Services to be restarted:');
+	    my @skipped_services;
+
+	    $ui->notice(__ 'Services to be restarted:') if($opt_r eq 'l');
+	    $ui->notice(__ 'Restarting services...') if($opt_r eq 'a');
 	    if($opt_p) {
 		$nagios{sstr} = (scalar keys %restart).' (!)';
 		$nagios{sret} = 2;
@@ -750,47 +754,51 @@ if(defined($opt_l) && !$uid) {
 		}
 		# ...but complain about them
 		unless($restart) {
-		    $ui->notice(__x(
-				    'Skipping {rc}...',
-				    rc => $rc,
-				));
+		    push(@skipped_services, $rc);
 		    next;
 		}
 
 		my @cmd = restart_cmd($rc);
 		next unless($#cmd > -1);
 
-		if($opt_r eq 'a') {
-		    system(@cmd);
-		}
-		else {
-		    $ui->notice(join(' ', @cmd));
-		}
+		$ui->notice(join(' ', '', @cmd));
+		system(@cmd) if($opt_r eq 'a');
 	    }
 	
 	    unless($opt_b || $#systemd_restart == -1) {
 		my @cmd = (qq(systemctl), qq(restart), @systemd_restart);
-		if($opt_r eq 'a') {
-		    $ui->notice(__ 'Restarting services using systemd...');
-		    system(@cmd);
-		}
-		else {
-		    $ui->notice(join(' ', @cmd));
+		$ui->notice(join(' ', '', @cmd)) if($opt_r eq 'a');
+	    }
+
+	    if($#skipped_services > -1) {
+		$ui->notice(__ 'Services being skipped:');
+		foreach my $rc (sort @skipped_services) {
+		    local $opt_r = 'l';
+		    my @cmd = restart_cmd($rc);
+		    next unless($#cmd > -1);
+
+		    $ui->notice(join(' ', '', @cmd));
 		}
 	    }
 	}
 	else {
 	    my $o = 0;
 
+	    $ui->notice(__ 'Restarting services...');
 	    $ui->query_pkgs(__('Services to be restarted:'), $nrconf{defno}, \%restart, $nrconf{override_rc},
 			    sub {
 				my @cmd = restart_cmd(shift);
-				system(@cmd) if($#cmd > -1);
+				return unless($#cmd > -1);
+
+				$ui->notice(join(' ', '', @cmd));
+				system(@cmd);
 			    });
 
 	    if($#systemd_restart > -1) {
-		$ui->notice(__ 'Restarting services using systemd...');
-		system(qq(systemctl), qq(restart), @systemd_restart);
+		my @cmd = (qw(systemctl restart), @systemd_restart);
+
+		$ui->notice(join(' ', '', @cmd));
+		system(@cmd);
 	    }
 	}
     }
@@ -809,7 +817,10 @@ if(defined($opt_l) && !$uid) {
     }
     else {
 	if($opt_b || $opt_r ne 'i') {
-	    $ui->notice(__ 'Containers to be restarted:');
+	    my @skipped_containers;
+
+	    $ui->notice(__ 'Containers to be restarted:') if($opt_r eq 'l');
+	    $ui->notice(__ 'Restarting containers...') if($opt_r eq 'a');
 	    if($opt_p) {
 		$nagios{cstr} = (scalar keys %conts).' (!)';
 		$nagios{cret} = 2;
@@ -822,28 +833,28 @@ if(defined($opt_l) && !$uid) {
 		    next;
 		}
 
-		# don't restart greylisted services...
+		# don't restart greylisted containers...
 		my $restart = !$nrconf{defno};
-		foreach my $re (keys %{$nrconf{override_rc}}) {
+		foreach my $re (keys %{$nrconf{override_cont}}) {
 		    next unless($cont =~ /$re/);
 
-		    $restart = $nrconf{override_rc}->{$re};
+		    $restart = $nrconf{override_cont}->{$re};
 		    last;
 		}
 		# ...but complain about them
 		unless($restart) {
-		    $ui->notice(__x(
-				    'Skipping {cont}...',
-				    cont => $cont,
-				));
+		    push(@skipped_containers, $cont);
 		    next;
 		}
 
-		if($opt_r eq 'a') {
-		    system(@{ $conts{$cont} });
-		}
-		else {
-		    $ui->notice(join(' ', @{ $conts{$cont} }));
+		$ui->notice(join(' ', '', @{ $conts{$cont} }));
+		system(@{ $conts{$cont} }) if($opt_r eq 'a');
+	    }
+
+	    if($#skipped_containers > -1) {
+		$ui->notice(__ 'Containers being skipped:');
+		foreach my $cont (sort @skipped_containers) {
+		    $ui->notice(join(' ', '', @{ $conts{$cont} }));
 		}
 	    }
 	}
@@ -853,6 +864,7 @@ if(defined($opt_l) && !$uid) {
 	    $ui->query_conts(__('Containers to be restarted:'), $nrconf{defno}, \%conts, $nrconf{override_rc},
 			     sub {
 				 my $cont = shift;
+				 $ui->notice(join(' ', '', @{ $conts{$cont} }));
 				 system(@{ $conts{$cont} });
 			     });
 	}
@@ -871,7 +883,7 @@ if(defined($opt_l) && !$uid) {
 	    foreach my $uid (sort { ncmp(uid2name($a), uid2name($b)); } keys %sessions) {
 		foreach my $sess (sort keys %{ $sessions{$uid} }) {
 		    my $fnames = join(', ',map { $_.'['.join(',', @{ $sessions{$uid}->{$sess}->{$_} }).']';  } nsort keys %{ $sessions{$uid}->{$sess} });
-		    $ui->notice(__x(
+		    $ui->notice(' '.__x(
 				    '{uid} on {sess} is running obsolete {fnames}',
 				    uid => uid2name($uid),
 				    sess => $sess,
