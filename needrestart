@@ -244,8 +244,13 @@ sub restart_cmd($) {
     my $rc = shift;
 
     if($rc =~ /.+\.service$/) {
-	push(@systemd_restart, $rc);
-	();
+	unless($opt_r eq 'l') {
+	    push(@systemd_restart, $rc);
+	    ();
+	}
+	else {
+	    (qw(systemctl restart), $rc);
+	}
     }
     elsif($rc eq q(systemd manager)) {
 	(qw(systemctl daemon-reexec));
