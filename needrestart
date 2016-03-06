@@ -502,8 +502,8 @@ if(defined($opt_l)) {
 				next;
 			    }
 			    if($value = m@/user\@(\d+)\.service@) {
-				print STDERR "$LOGPREF #$pid part of user service: uid=$1\n" if($nrconf{verbosity} > 1);
-				push(@{ $sessions{$1}->{"session services"}->{ $ptable->{$pid}->{fname} } }, $pid);
+				print STDERR "$LOGPREF #$pid part of user manager service: uid=$1\n" if($nrconf{verbosity} > 1);
+				push(@{ $sessions{$1}->{'user manager service'}->{ $ptable->{$pid}->{fname} } }, $pid);
 				next;
 			    }
 			    elsif($value =~ m@/([^/]+\.service)$@) {
