@@ -17,7 +17,7 @@
 
 NOTIFYCONF='/etc/needrestart/notify.conf'
 GETTEXTLIB='/usr/bin/gettext.sh'
-TEXTDOMAIN='needrestart-notify'
+export TEXTDOMAIN='needrestart-notify'
 
 if [ ! -r "$NOTIFYCONF" ]; then
     echo "[$0] Unable to read $NOTIFYCONF - aborting!" 1>&2
