@@ -18,7 +18,7 @@ needrestart (2.7) unstable; urgency=medium
     (Debian Bug#787297 by Christoph Anton Mitterer <calestyo@scientia.net>)
   * [Core] Improve output of restart commands.
 
- -- Thomas Liske <thomas@fiasko-nw.net>  
+ -- Thomas Liske <thomas@fiasko-nw.net>  Sun, 06 Mar 2016 14:46:45 +0100
 
 needrestart (2.6) unstable; urgency=high
 
