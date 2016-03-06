@@ -873,7 +873,7 @@ if(defined($opt_l) && !$uid) {
     ## SESSIONS
     # list and notify user sessions
     if(scalar keys %sessions) {
-	$ui->notice(__ 'User sessions:');
+	$ui->notice(__ 'User sessions running outdated binaries:');
 	if($opt_p) {
 	    $nagios{ustr} = (scalar keys %sessions).' (!)';
 	    $nagios{uret} = 1;
@@ -884,7 +884,7 @@ if(defined($opt_l) && !$uid) {
 		foreach my $sess (sort keys %{ $sessions{$uid} }) {
 		    my $fnames = join(', ',map { $_.'['.join(',', @{ $sessions{$uid}->{$sess}->{$_} }).']';  } nsort keys %{ $sessions{$uid}->{$sess} });
 		    $ui->notice(' '.__x(
-				    '{uid} on {sess} is running obsolete {fnames}',
+				    '{uid} @ {sess}: {fnames}',
 				    uid => uid2name($uid),
 				    sess => $sess,
 				    fnames => $fnames,
