@@ -15,6 +15,7 @@ needrestart (2.7) unstable; urgency=medium
   * [Bug] Fix missing translations in debconf template file.
     (Debian Bug#815086 by Vladimir Kudrya <pzs-fs@yandex.ru>)
   * [notify] Notification scripts can be disabled globaly (see notify.conf).
+    (Debian Bug#787297 by Christoph Anton Mitterer <calestyo@scientia.net>)
   * [Core] Improve output of restart commands.
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
