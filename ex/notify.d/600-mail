@@ -22,7 +22,7 @@ test -x "$MAILX" || exit 1
 
 . /usr/lib/needrestart/notify.d.sh
 
-if [[ "$NR_NOTIFYD_DISABLE_MAIL" -eq '1' ]]; then
+if [ "$NR_NOTIFYD_DISABLE_MAIL" = '1' ]; then
     echo "[$0] disabled in global config" 1>&2
     exit 1
 fi

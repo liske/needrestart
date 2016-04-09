@@ -19,7 +19,7 @@
 
 . /usr/lib/needrestart/notify.d.sh
 
-if [[ "$NR_NOTIFYD_DISABLE_WRITE" -eq '1' ]]; then
+if [ "$NR_NOTIFYD_DISABLE_WRITE" = '1' ]; then
     echo "[$0] disabled in global config" 1>&2
     exit 1
 fi

@@ -1,3 +1,12 @@
+needrestart (2.8) unstable; urgency=low
+
+  * [Bug] Fix bashisms in /etc/needrestart/notify.d/*.
+    (Debian Bug#818001 by Cristian Ionescu-Idbohrn
+    <cristian.ionescu-idbohrn@axis.com>)
+    (github issue #21 by Sebastian Brandt @sbrandtb)
+
+ -- Thomas Liske <thomas@fiasko-nw.net>  
+
 needrestart (2.7) unstable; urgency=medium
 
   * [Bug] Ignore init rc being symlinks to upstart-job.
