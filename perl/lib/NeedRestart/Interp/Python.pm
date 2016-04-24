@@ -95,7 +95,17 @@ sub source {
 
     # eat Python's command line options
     my %opts;
-    getopts('BdEhim:ORQ:sStuvVW:x3?c:', \%opts);
+    {
+	local $SIG{__WARN__} = sub { };
+	getopts('BdEhim:ORQ:sStuvVW:x3?c:', \%opts);
+    }
+
+    # skip python -c '...' calls
+    if(exists($opts{c})) {
+	chdir($cwd);
+	print STDERR "$LOGPREF #$pid: uses no source file (-c), skipping\n" if($self->{debug});
+	return undef;
+    }
 
     # extract source file
     unless($#ARGV > -1) {
@@ -131,7 +141,17 @@ sub files {
 
     # eat Python's command line options
     my %opts;
-    getopts('BdEhim:ORQ:sStuvVW:x3?c:', \%opts);
+    {
+	local $SIG{__WARN__} = sub { };
+	getopts('BdEhim:ORQ:sStuvVW:x3?c:', \%opts);
+    }
+
+    # skip python -c '...' calls
+    if(exists($opts{c})) {
+	chdir($cwd);
+	print STDERR "$LOGPREF #$pid: uses no source file (-c), skipping\n" if($self->{debug});
+	return ();
+    }
 
     # extract source file
     unless($#ARGV > -1) {

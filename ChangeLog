@@ -8,6 +8,9 @@ needrestart (2.8) unstable; urgency=low
     (Debian Bug#817807 by Samuel Thibault <sthibault@debian.org>)
   * [Bug] Fix incomplete skipping of scanning files in Interp/*.pm
     if cwd is unknown.
+  * [Bug] Improve getopts parsing (Interp::*) to remove "Uknown option:"
+    warnings.
+    (Debian Bug#817927 by F. Petitjean <francois.petitjean@bureauveritas.com>)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 

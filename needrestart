@@ -130,6 +130,9 @@ unless(getopts('c:vr:nbf:klpq')) {
     exit 1;
 }
 
+# disable exiting and STDOUT in Getopt::Std for further use of getopts
+$Getopt::Std::STANDARD_HELP_VERSION = undef;
+
 # restore ARGV
 @ARGV = @argv;
 

@@ -64,7 +64,17 @@ sub source {
 
     # eat Perl's command line options
     my %opts;
-    getopts('sTtuUWXhvV:cwdt:D:pnaF:l:0:I:m:M:fC:Sx:i:eE:', \%opts);
+    {
+	local $SIG{__WARN__} = sub { };
+	getopts('sTtuUWXhvV:cwdt:D:pnaF:l:0:I:m:M:fC:Sx:i:eE:', \%opts);
+    }
+
+    # skip perl -e '...' calls
+    if(exists($opts{e}) || exists($opts{E})) {
+	chdir($cwd);
+	print STDERR "$LOGPREF #$pid: uses no source file (-e), skipping\n" if($self->{debug});
+	return undef;
+    }
 
     # extract source file
     unless($#ARGV > -1) {
@@ -100,7 +110,17 @@ sub files {
 
     # eat Perl's command line options
     my %opts;
-    getopts('sTtuUWXhvV:cwdt:D:pnaF:l:0:I:m:M:fC:Sx:i:eE:', \%opts);
+    {
+	local $SIG{__WARN__} = sub { };
+	getopts('sTtuUWXhvV:cwdt:D:pnaF:l:0:I:m:M:fC:Sx:i:eE:', \%opts);
+    }
+
+    # skip perl -e '...' calls
+    if(exists($opts{e}) || exists($opts{E})) {
+	chdir($cwd);
+	print STDERR "$LOGPREF #$pid: uses no source file (-e), skipping\n" if($self->{debug});
+	return ();
+    }
 
     # extract source file
     unless($#ARGV > -1) {

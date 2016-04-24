@@ -92,7 +92,17 @@ sub source {
 
     # eat Ruby's command line options
     my %opts;
-    getopts('SUacdlnpswvy0:C:E:F:I:K:T:W:e:i:r:x:e:d:', \%opts);
+    {
+	local $SIG{__WARN__} = sub { };
+	getopts('SUacdlnpswvy0:C:E:F:I:K:T:W:e:i:r:x:e:d:', \%opts);
+    }
+
+    # skip ruby -e '...' calls
+    if(exists($opts{e})) {
+	chdir($cwd);
+	print STDERR "$LOGPREF #$pid: uses no source file (-e), skipping\n" if($self->{debug});
+	return undef;
+    }
 
     # extract source file
     unless($#ARGV > -1) {
@@ -116,6 +126,10 @@ sub files {
     my $self = shift;
     my $pid = shift;
     my $ptable = nr_ptable_pid($pid);
+    unless($ptable->{cwd}) {
+	print STDERR "$LOGPREF #$pid: could not get current working directory, skipping\n" if($self->{debug});
+	return ();
+    }
     my $cwd = getcwd();
     chdir($ptable->{cwd});
 
@@ -124,7 +138,17 @@ sub files {
 
     # eat Ruby's command line options
     my %opts;
-    getopts('SUacdlnpswvy0:C:E:F:I:K:T:W:e:i:r:x:e:d:', \%opts);
+    {
+	local $SIG{__WARN__} = sub { };
+	getopts('SUacdlnpswvy0:C:E:F:I:K:T:W:e:i:r:x:e:d:', \%opts);
+    }
+
+    # skip ruby -e '...' calls
+    if(exists($opts{e})) {
+	chdir($cwd);
+	print STDERR "$LOGPREF #$pid: uses no source file (-e), skipping\n" if($self->{debug});
+	return ();
+    }
 
     # extract source file
     unless($#ARGV > -1) {
