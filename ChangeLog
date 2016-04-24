@@ -6,6 +6,8 @@ needrestart (2.8) unstable; urgency=low
     (github issue #21 by Sebastian Brandt @sbrandtb)
   * [Bug] Add xendomains to override_rc.
     (Debian Bug#817807 by Samuel Thibault <sthibault@debian.org>)
+  * [Bug] Fix incomplete skipping of scanning files in Interp/*.pm
+    if cwd is unknown.
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
