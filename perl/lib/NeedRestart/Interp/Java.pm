@@ -28,7 +28,6 @@ use strict;
 use warnings;
 
 use parent qw(NeedRestart::Interp);
-use Getopt::Long;
 use NeedRestart qw(:interp);
 use NeedRestart::Utils;
 
