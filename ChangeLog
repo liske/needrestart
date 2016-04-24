@@ -1,5 +1,6 @@
-needrestart (2.8) unstable; urgency=low
+needrestart (2.8) unstable; urgency=medium
 
+  * [notify] Disable mail notification by default (notify.conf).
   * [Bug] Fix bashisms in /etc/needrestart/notify.d/*.
     (Debian Bug#818001 by Cristian Ionescu-Idbohrn
     <cristian.ionescu-idbohrn@axis.com>)
