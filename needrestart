@@ -104,6 +104,7 @@ our %nrconf = (
     sendnotify => 1,
     restart => 'i',
     defno => 0,
+    systemctl_combine => 0,
     blacklist => [],
     blacklist_rc => [],
     override_rc => [],
@@ -248,7 +249,7 @@ sub restart_cmd($) {
     my $rc = shift;
 
     if($rc =~ /.+\.service$/) {
-	unless($opt_r eq 'l') {
+	if($nrconf{systemctl_combine}) {
 	    push(@systemd_restart, $rc);
 	    ();
 	}
@@ -264,7 +265,13 @@ sub restart_cmd($) {
     }
     else {
 	if($is_systemd) {
-	    (qw(systemctl restart), qq($rc.service));
+	    if($nrconf{systemctl_combine}) {
+		push(@systemd_restart, qq($rc.service));
+		();
+	    }
+	    else {
+		(qw(systemctl restart), qq($rc.service));
+	    }
 	}
 	else {
 	    (q(service), $rc, q(restart));
@@ -747,6 +754,10 @@ if(defined($opt_l) && !$uid) {
 	    }
 	    
 	    foreach my $rc (sort { lc($a) cmp lc($b) } keys %restart) {
+		# always combine restarts in one systemctl command
+		local %nrconf;
+		$nrconf{systemctl_combine} = 1;
+
 		if($opt_b) {
 		    print "NEEDRESTART-SVC: $rc\n" unless($opt_p);
 		    next;
@@ -773,29 +784,40 @@ if(defined($opt_l) && !$uid) {
 		system(@cmd) if($opt_r eq 'a');
 	    }
 	
-	    unless($opt_b || $#systemd_restart == -1) {
+	    unless($#systemd_restart == -1) {
 		my @cmd = (qq(systemctl), qq(restart), @systemd_restart);
-		$ui->notice(join(' ', '', @cmd)) if($opt_r eq 'a');
+		$ui->notice(join(' ', '', @cmd));
 	    }
 
+	    @systemd_restart = ();
 	    if($#skipped_services > -1) {
 		$ui->notice(__ 'Services being skipped:');
 		foreach my $rc (sort @skipped_services) {
-		    local $opt_r = 'l';
 		    my @cmd = restart_cmd($rc);
-		    next unless($#cmd > -1);
+		    $ui->notice(join(' ', '', @cmd)) if($#cmd > -1);
+		}
 
+		unless($#systemd_restart == -1) {
+		    my @cmd = (qq(systemctl), qq(restart), @systemd_restart);
 		    $ui->notice(join(' ', '', @cmd));
 		}
 	    }
 	}
 	else {
 	    my $o = 0;
+	    my @skipped_services = keys %restart;
 
 	    $ui->notice(__ 'Restarting services...');
 	    $ui->query_pkgs(__('Services to be restarted:'), $nrconf{defno}, \%restart, $nrconf{override_rc},
 			    sub {
-				my @cmd = restart_cmd(shift);
+				# always combine restarts in one systemctl command
+				local %nrconf;
+				$nrconf{systemctl_combine} = 1;
+
+				my $rc = shift;
+				@skipped_services = grep { $_ ne $rc; } @skipped_services;
+
+				my @cmd = restart_cmd($rc);
 				return unless($#cmd > -1);
 
 				$ui->notice(join(' ', '', @cmd));
@@ -807,6 +829,20 @@ if(defined($opt_l) && !$uid) {
 
 		$ui->notice(join(' ', '', @cmd));
 		system(@cmd);
+	    }
+
+	    @systemd_restart = ();
+	    if($#skipped_services > -1) {
+		$ui->notice(__ 'Services being skipped:');
+		foreach my $rc (sort @skipped_services) {
+		    my @cmd = restart_cmd($rc);
+		    $ui->notice(join(' ', '', @cmd)) if($#cmd > -1);
+		}
+
+		unless($#systemd_restart == -1) {
+		    my @cmd = (qq(systemctl), qq(restart), @systemd_restart);
+		    $ui->notice(join(' ', '', @cmd));
+		}
 	    }
 	}
     }
