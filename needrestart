@@ -54,6 +54,9 @@ Usage:
 
     -v		be more verbose
     -q		be quiet
+    -m <mode>	set detail level
+	e	(e)asy mode
+	a	(a)dvanced mode
     -n		set default answer to 'no'
     -c <cfg>	config filename
     -r <mode>	set restart mode
@@ -104,6 +107,7 @@ our %nrconf = (
     sendnotify => 1,
     restart => 'i',
     defno => 0,
+    ui_mode => 'a',
     systemctl_combine => 0,
     blacklist => [],
     blacklist_rc => [],
@@ -120,13 +124,14 @@ our $opt_c = '/etc/needrestart/needrestart.conf';
 our $opt_v;
 our $opt_r;
 our $opt_n;
+our $opt_m;
 our $opt_b;
 our $opt_f;
 our $opt_k;
 our $opt_l;
 our $opt_p;
 our $opt_q;
-unless(getopts('c:vr:nbf:klpq')) {
+unless(getopts('c:vr:nm:bf:klpq')) {
     HELP_MESSAGE;
     exit 1;
 }
@@ -164,6 +169,9 @@ $opt_r = $nrconf{restart} unless(defined($opt_r));
 die "ERROR: Unknown restart option '$opt_r'!\n" unless($opt_r =~ /^(l|i|a)$/);
 $is_tty++ if($opt_r eq 'i' && exists($ENV{DEBIAN_FRONTEND}) && $ENV{DEBIAN_FRONTEND} eq 'noninteractive');
 $opt_r = 'l' if(!$is_tty && $opt_r eq 'i');
+
+$opt_m = $nrconf{ui_mode} unless(defined($opt_m));
+die "ERROR: Unknown UI mode '$opt_m'!\n" unless($opt_m =~ /^(e|a)$/);
 
 $nrconf{defno}++ if($opt_n);
 $opt_b++ if($opt_p);
@@ -310,6 +318,7 @@ print "NEEDRESTART-VER: $NeedRestart::VERSION\n" if($opt_b && !$opt_p);
 
 my %restart;
 my %sessions;
+my $easy_hint = 0;
 if(defined($opt_l)) {
     my @ign_pids=($$, getppid());
 
@@ -699,9 +708,12 @@ if(defined($opt_k)) {
 	}
 	else {
 	    if($kresult == NRK_NOUPGRADE) {
-		$ui->notice(($kvars{ABIDETECT} ? __('Running kernel seems to be up-to-date.') : __('Running kernel seems to be up-to-date (ABI upgrades are not detected).')));
+		$ui->notice(($kvars{ABIDETECT} ? __('Running kernel seems to be up-to-date.') : __('Running kernel seems to be up-to-date (ABI upgrades are not detected).')))
+		    unless($opt_m eq 'e');
 	    }
 	    elsif($kresult == NRK_ABIUPGRADE) {
+		$easy_hint |= 1 if($opt_m eq 'e');
+
 		if($nrconf{kernelhints} < 0) {
 		    $ui->notice(__x(
 				    'The currently running kernel version is {kversion} and there is an ABI compatible upgrade pending.',
@@ -713,6 +725,8 @@ if(defined($opt_k)) {
 		}
 	    }
 	    elsif($kresult == NRK_VERUPGRADE) {
+		$easy_hint |= 1 if($opt_m eq 'e');
+
 		if($nrconf{kernelhints} < 0) {
 		    $ui->notice(__x(
 				    'The currently running kernel version is {kversion} which is not the expected kernel version {eversion}.',
@@ -734,7 +748,7 @@ if(defined($opt_k)) {
 if(defined($opt_l) && !$uid) {
     ## SERVICES
     unless(scalar %restart) {
-	$ui->notice(__ 'No services need to be restarted.') unless($opt_b);
+	$ui->notice(__ 'No services need to be restarted.') unless($opt_b || $opt_m eq 'e');
 	if($opt_p) {
 	    $nagios{sstr} = q(none);
 	    $nagios{sret} = 0;
@@ -742,7 +756,11 @@ if(defined($opt_l) && !$uid) {
 	}
     }
     else {
-	if($opt_b || $opt_r ne 'i') {
+	if($opt_m eq 'e' && $opt_r ne 'i') {
+	    $ui->notice(__ 'Some services need to be restarted!');
+	    $easy_hint |= 2;
+	}
+	elsif($opt_b || $opt_r ne 'i') {
 	    my @skipped_services;
 
 	    $ui->notice(__ 'Services to be restarted:') if($opt_r eq 'l');
@@ -852,7 +870,7 @@ if(defined($opt_l) && !$uid) {
     @systemd_restart = ();
     my %conts = needrestart_cont_get($nrconf{verbosity} > 1);
     unless(scalar %conts) {
-	$ui->notice(__ 'No containers need to be restarted.') unless($opt_b);
+	$ui->notice(__ 'No containers need to be restarted.') unless($opt_b || $opt_m eq 'e');
 	if($opt_p) {
 	    $nagios{cstr} = q(none);
 	    $nagios{cret} = 0;
@@ -860,7 +878,11 @@ if(defined($opt_l) && !$uid) {
 	}
     }
     else {
-	if($opt_b || $opt_r ne 'i') {
+	if($opt_m eq 'e' && $opt_r ne 'i') {
+	    $ui->notice(__ 'Some containers need to be restarted!');
+	    $easy_hint |= 2;
+	}
+	elsif($opt_b || $opt_r ne 'i') {
 	    my @skipped_containers;
 
 	    $ui->notice(__ 'Containers to be restarted:') if($opt_r eq 'l');
@@ -916,8 +938,22 @@ if(defined($opt_l) && !$uid) {
 
     ## SESSIONS
     # list and notify user sessions
-    if(scalar keys %sessions) {
-	$ui->notice(__ 'User sessions running outdated binaries:');
+    unless(scalar keys %sessions) {
+	$ui->notice(__ 'No user sessions running outdated binaries.') unless($opt_b || $opt_m eq 'e');
+	if($opt_p) {
+	    $nagios{ustr} = 'none';
+	    $nagios{uret} = 0;
+	    $nagios{uperf} = 0;
+	}
+    }
+    else {
+	if($opt_m eq 'e') {
+	    $ui->notice(__ 'Some user sessions running outdated binaries!');
+	    $easy_hint |= 2;
+	}
+	else {
+	    $ui->notice(__ 'User sessions running outdated binaries:');
+	}
 	if($opt_p) {
 	    $nagios{ustr} = (scalar keys %sessions).' (!)';
 	    $nagios{uret} = 1;
@@ -932,7 +968,7 @@ if(defined($opt_l) && !$uid) {
 				    uid => uid2name($uid),
 				    sess => $sess,
 				    fnames => $fnames,
-				));
+				)) unless($opt_m eq 'e');
 		    if($nrconf{sendnotify}) {
 			local %ENV;
 
@@ -955,11 +991,18 @@ if(defined($opt_l) && !$uid) {
 	    }
 	}
     }
-    elsif($opt_p) {
-	$nagios{ustr} = 'none';
-	$nagios{uret} = 0;
-	$nagios{uperf} = 0;
-    }
+}
+
+# easy mode: print hint on outdated stuff
+if($easy_hint) {
+    $ui->notice('');
+    $ui->notice(__ 'This system runs '.
+		($easy_hint & 1 ? 'a outdated kernel image' .
+		 ($easy_hint & 2 ? ' and outdated binaries' : '')
+		 :
+		 'outdated binaries')
+		.', you should consider rebooting!');
+    $ui->notice(__ "For more details, run 'needrestart -m a'.");
 }
 
 # nagios plugin output

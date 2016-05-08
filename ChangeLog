@@ -16,6 +16,8 @@ needrestart (2.8) unstable; urgency=medium
     (Debian Bug#818853 by Paul Wise <pabs@debian.org>)
   * [Core] Print a combined `systemctl restart` command line for skipped services.
     (Debian Bug#818853 by Paul Wise <pabs@debian.org>)
+  * [Core] Add a easy UI mode hiding technical details for non-technical users.
+    (Debian Bug#819824 by Patrick Schleizer <adrelanos@riseup.net>))
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
