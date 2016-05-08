@@ -263,7 +263,12 @@ sub restart_cmd($) {
 	(qw(telinit u));
     }
     else {
-	(q(service), $rc, q(restart));
+	if($is_systemd) {
+	    (qw(systemctl restart), qq($rc.service));
+	}
+	else {
+	    (q(service), $rc, q(restart));
+	}
     }
 }
 

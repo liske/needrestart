@@ -12,6 +12,8 @@ needrestart (2.8) unstable; urgency=medium
   * [Bug] Improve getopts parsing (Interp::*) to remove "Uknown option:"
     warnings.
     (Debian Bug#817927 by F. Petitjean <francois.petitjean@bureauveritas.com>)
+  * [Core] Restart SysV init services on systemd using systemctl.
+    (Debian Bug#818853 by Paul Wise <pabs@debian.org>)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
