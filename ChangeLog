@@ -1,6 +1,5 @@
 needrestart (2.8) unstable; urgency=medium
 
-  * [notify] Disable mail notification by default (notify.conf).
   * [Bug] Fix bashisms in /etc/needrestart/notify.d/*.
     (Debian Bug#818001 by Cristian Ionescu-Idbohrn
     <cristian.ionescu-idbohrn@axis.com>)
@@ -12,6 +11,9 @@ needrestart (2.8) unstable; urgency=medium
   * [Bug] Improve getopts parsing (Interp::*) to remove "Uknown option:"
     warnings.
     (Debian Bug#817927 by F. Petitjean <francois.petitjean@bureauveritas.com>)
+  * [Bug] Fix regex handling in cgroup detection.
+    (github pull request #25 by Courtney Bane @cbane)
+  * [notify] Disable mail notification by default (notify.conf).
   * [Core] Restart SysV init services on systemd using systemctl.
     (Debian Bug#818853 by Paul Wise <pabs@debian.org>)
   * [Core] Print a combined `systemctl restart` command line for skipped services.
