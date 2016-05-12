@@ -549,7 +549,8 @@ if(defined($opt_l)) {
 		}
 
 		# did not get the unit name, yet - try systemctl status
-		print STDERR "$LOGPREF /proc/#$pid/cgroup: $! - trying systemctl status\n" if($nrconf{verbosity} > 1 && $!);
+		print STDERR "$LOGPREF /proc/$pid/cgroup: $!\n" if($nrconf{verbosity} > 1 && $!);
+		print STDERR "$LOGPREF trying systemctl status\n" if($nrconf{verbosity} > 1);
 		my $systemctl = nr_fork_pipe($nrconf{verbosity} > 1, qq(systemctl), qq(-n), qq(0), qq(--full), qq(status), $pid);
 		my $ret = <$systemctl>;
 		close($systemctl);
