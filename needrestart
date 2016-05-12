@@ -520,12 +520,12 @@ if(defined($opt_l)) {
 			    ();
 			}
 			else {
-			    if($value = m@/user-(\d+)\.slice/session-(\d+)\.scope@) {
+			    if($value =~ m@/user-(\d+)\.slice/session-(\d+)\.scope@) {
 				print STDERR "$LOGPREF #$pid part of user session: uid=$1 sess=$2\n" if($nrconf{verbosity} > 1);
 				push(@{ $sessions{$1}->{"session #$2"}->{ $ptable->{$pid}->{fname} } }, $pid);
 				next;
 			    }
-			    if($value = m@/user\@(\d+)\.service@) {
+			    if($value =~ m@/user\@(\d+)\.service@) {
 				print STDERR "$LOGPREF #$pid part of user manager service: uid=$1\n" if($nrconf{verbosity} > 1);
 				push(@{ $sessions{$1}->{'user manager service'}->{ $ptable->{$pid}->{fname} } }, $pid);
 				next;
