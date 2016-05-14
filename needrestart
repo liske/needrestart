@@ -172,6 +172,7 @@ $opt_r = 'l' if(!$is_tty && $opt_r eq 'i');
 
 $opt_m = $nrconf{ui_mode} unless(defined($opt_m));
 die "ERROR: Unknown UI mode '$opt_m'!\n" unless($opt_m =~ /^(e|a)$/);
+$opt_r = 'l' if($opt_m eq 'e');
 
 $nrconf{defno}++ if($opt_n);
 $opt_b++ if($opt_p);
@@ -318,7 +319,7 @@ print "NEEDRESTART-VER: $NeedRestart::VERSION\n" if($opt_b && !$opt_p);
 
 my %restart;
 my %sessions;
-my $easy_hint = 0;
+my @easy_hints;
 if(defined($opt_l)) {
     my @ign_pids=($$, getppid());
 
@@ -713,7 +714,7 @@ if(defined($opt_k)) {
 		    unless($opt_m eq 'e');
 	    }
 	    elsif($kresult == NRK_ABIUPGRADE) {
-		$easy_hint |= 1 if($opt_m eq 'e');
+		push(@easy_hints, 'a outdated kernel image') if($opt_m eq 'e');
 
 		if($nrconf{kernelhints} < 0) {
 		    $ui->notice(__x(
@@ -726,7 +727,7 @@ if(defined($opt_k)) {
 		}
 	    }
 	    elsif($kresult == NRK_VERUPGRADE) {
-		$easy_hint |= 1 if($opt_m eq 'e');
+		push(@easy_hints, 'a outdated kernel image') if($opt_m eq 'e');
 
 		if($nrconf{kernelhints} < 0) {
 		    $ui->notice(__x(
@@ -758,8 +759,7 @@ if(defined($opt_l) && !$uid) {
     }
     else {
 	if($opt_m eq 'e' && $opt_r ne 'i') {
-	    $ui->notice(__ 'Some services need to be restarted!');
-	    $easy_hint |= 2;
+	    push(@easy_hints, 'outdated binaries');
 	}
 	elsif($opt_b || $opt_r ne 'i') {
 	    my @skipped_services;
@@ -880,8 +880,7 @@ if(defined($opt_l) && !$uid) {
     }
     else {
 	if($opt_m eq 'e' && $opt_r ne 'i') {
-	    $ui->notice(__ 'Some containers need to be restarted!');
-	    $easy_hint |= 2;
+	    push(@easy_hints, 'outdated containers');
 	}
 	elsif($opt_b || $opt_r ne 'i') {
 	    my @skipped_containers;
@@ -949,8 +948,7 @@ if(defined($opt_l) && !$uid) {
     }
     else {
 	if($opt_m eq 'e') {
-	    $ui->notice(__ 'Some user sessions running outdated binaries!');
-	    $easy_hint |= 2;
+	    push(@easy_hints, 'outdated sessions');
 	}
 	else {
 	    $ui->notice(__ 'User sessions running outdated binaries:');
@@ -995,15 +993,10 @@ if(defined($opt_l) && !$uid) {
 }
 
 # easy mode: print hint on outdated stuff
-if($easy_hint) {
-    $ui->notice('');
-    $ui->notice(__ 'This system runs '.
-		($easy_hint & 1 ? 'a outdated kernel image' .
-		 ($easy_hint & 2 ? ' and outdated binaries' : '')
-		 :
-		 'outdated binaries')
-		.', you should consider rebooting!');
-    $ui->notice(__ "For more details, run 'needrestart -m a'.");
+if(scalar @easy_hints) {
+    my $t = pop(@easy_hints);
+    my $h = join(', ', @easy_hints);
+    $ui->announce_ehint(EHINT => ($h ? join(' ', $h, __ 'and', '') : '') . $t);
 }
 
 # nagios plugin output

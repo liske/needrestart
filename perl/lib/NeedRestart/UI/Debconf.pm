@@ -92,11 +92,25 @@ sub announce_abi {
     $self->_announce('needrestart/ui-kernel_announce_abi', @_);
 }
 
-
 sub announce_ver {
     my $self = shift;
 
     $self->_announce('needrestart/ui-kernel_announce_ver', @_);
+}
+
+sub announce_ehint {
+    my $self = shift;
+    my %vars = @_;
+    my $templ = q(needrestart/ui-ehint_announce);
+
+    foreach my $k (keys %vars) {
+	dcres( subst($templ, $k, $vars{$k}) );
+    }
+
+    dcres( fset($templ, 'seen', 0) );
+    dcres( settitle('needrestart/ui-ehint_title') );
+    dcres( input('critical', $templ) );
+    dcres( go );
 }
 
 

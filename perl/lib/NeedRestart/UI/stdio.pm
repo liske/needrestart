@@ -60,6 +60,17 @@ sub announce_ver {
 }
 
 
+sub announce_ehint {
+    my $self = shift;
+    my %vars = @_;
+
+    print "\nThis system runs $vars{EHINT} - you should consider rebooting!\n";
+    print "For more details, run 'needrestart -m a'.\n\n";
+
+    <STDIN>;
+}
+
+
 sub notice($$) {
     my $self = shift;
     my $out = shift;

@@ -29,6 +29,15 @@ Template: needrestart/ui-kernel_title
 Type: title
 _Description: Pending kernel upgrade
 
+Template: needrestart/ui-ehint_title
+Type: title
+_Description: Restart pending...
+
+Template: needrestart/ui-ehint_announce
+Type: note
+Description: This system runs ${EHINT} - you should consider rebooting!
+ For more details, run 'needrestart -m a'.
+
 Template: needrestart/ui-query_conts_title
 Type: title
 _Description: Containers using outdated libraries
