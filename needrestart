@@ -939,7 +939,7 @@ if(defined($opt_l) && !$uid) {
     ## SESSIONS
     # list and notify user sessions
     unless(scalar keys %sessions) {
-	$ui->notice(__ 'No user sessions running outdated binaries.') unless($opt_b || $opt_m eq 'e');
+	$ui->notice(__ 'No user sessions are running outdated binaries.') unless($opt_b || $opt_m eq 'e');
 	if($opt_p) {
 	    $nagios{ustr} = 'none';
 	    $nagios{uret} = 0;
