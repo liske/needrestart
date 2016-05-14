@@ -714,7 +714,7 @@ if(defined($opt_k)) {
 		    unless($opt_m eq 'e');
 	    }
 	    elsif($kresult == NRK_ABIUPGRADE) {
-		push(@easy_hints, 'a outdated kernel image') if($opt_m eq 'e');
+		push(@easy_hints, __ 'a outdated kernel image') if($opt_m eq 'e');
 
 		if($nrconf{kernelhints} < 0) {
 		    $ui->notice(__x(
@@ -727,7 +727,7 @@ if(defined($opt_k)) {
 		}
 	    }
 	    elsif($kresult == NRK_VERUPGRADE) {
-		push(@easy_hints, 'a outdated kernel image') if($opt_m eq 'e');
+		push(@easy_hints, __ 'a outdated kernel image') if($opt_m eq 'e');
 
 		if($nrconf{kernelhints} < 0) {
 		    $ui->notice(__x(
@@ -759,7 +759,7 @@ if(defined($opt_l) && !$uid) {
     }
     else {
 	if($opt_m eq 'e' && $opt_r ne 'i') {
-	    push(@easy_hints, 'outdated binaries');
+	    push(@easy_hints, __ 'outdated binaries');
 	}
 	elsif($opt_b || $opt_r ne 'i') {
 	    my @skipped_services;
@@ -880,7 +880,7 @@ if(defined($opt_l) && !$uid) {
     }
     else {
 	if($opt_m eq 'e' && $opt_r ne 'i') {
-	    push(@easy_hints, 'outdated containers');
+	    push(@easy_hints, __ 'outdated containers');
 	}
 	elsif($opt_b || $opt_r ne 'i') {
 	    my @skipped_containers;
@@ -948,7 +948,7 @@ if(defined($opt_l) && !$uid) {
     }
     else {
 	if($opt_m eq 'e') {
-	    push(@easy_hints, 'outdated sessions');
+	    push(@easy_hints, __ 'outdated sessions');
 	}
 	else {
 	    $ui->notice(__ 'User sessions running outdated binaries:');

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: needrestart 2.8\n"
 "Report-Msgid-Bugs-To: thomas@fiasko-nw.net\n"
-"POT-Creation-Date: 2016-05-14 17:16+0200\n"
+"POT-Creation-Date: 2016-05-14 17:41+0200\n"
 "PO-Revision-Date: 2016-03-05 11:11+0100\n"
 "Last-Translator: Thomas Liske <thomas@fiasko-nw.net>\n"
 "Language: de\n"
@@ -32,6 +32,10 @@ msgid "Running kernel seems to be up-to-date (ABI upgrades are not detected)."
 msgstr ""
 "Der laufende Kernel ist aktuell (ABI Änderungen können nicht erkannt werden)."
 
+#: needrestart:717 needrestart:730
+msgid "a outdated kernel image"
+msgstr "veralteter Kernel"
+
 #: needrestart:721
 #, perl-brace-format
 msgid ""
@@ -58,6 +62,10 @@ msgstr "Fehler beim Ermitteln der verfügbaren Kernel-Versionen."
 msgid "No services need to be restarted."
 msgstr "Es müssen keine Dienste neugestartet werden."
 
+#: needrestart:762
+msgid "outdated binaries"
+msgstr "veraltete Programme"
+
 #: needrestart:767 needrestart:830
 msgid "Services to be restarted:"
 msgstr "Dienste die neu gestartet werden müssen:"
@@ -74,6 +82,10 @@ msgstr "Ausgelassene Dienste:"
 msgid "No containers need to be restarted."
 msgstr "Es müssen keine Container neugestartet werden."
 
+#: needrestart:883
+msgid "outdated containers"
+msgstr "veraltete Containern"
+
 #: needrestart:888 needrestart:930
 msgid "Containers to be restarted:"
 msgstr "Container die neugestartet werden müssen:"
@@ -89,6 +101,10 @@ msgstr "Ausgelassene Container:"
 #: needrestart:942
 msgid "No user sessions are running outdated binaries."
 msgstr "Es gibt keine Nutzer-Sitzungen mit veralteten Prozessen."
+
+#: needrestart:951
+msgid "outdated sessions"
+msgstr "veraltete Sitzungen"
 
 #: needrestart:954
 msgid "User sessions running outdated binaries:"
