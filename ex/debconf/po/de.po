@@ -6,14 +6,14 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: needrestart 1.2\n"
+"Project-Id-Version: needrestart 2.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-11 21:59+0200\n"
+"POT-Creation-Date: 2016-05-14 17:33+0200\n"
 "PO-Revision-Date: 2014-09-20 17:31+0200\n"
 "Last-Translator: Thomas Liske <thomas@fiasko-nw.net>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #. Type: title
@@ -24,7 +24,7 @@ msgstr "Dienste die veraltete Bibliotheken nutzen"
 
 #. Type: multiselect
 #. Description
-#: ../needrestart.templates:2002
+#: ../needrestart.templates:2001
 msgid "Which services should be restarted?"
 msgstr "Welche Dienste sollen neugestartet werden?"
 
@@ -42,7 +42,9 @@ msgstr "Neuer Kernel vorhanden"
 msgid ""
 "The currently running kernel version is ${KVERSION} and there is an ABI "
 "compatible upgrade pending."
-msgstr "Fuer die aktuelle Kernel-Version ${KVERSION} ist ein ABI-kompatibles Update vorhanden."
+msgstr ""
+"Für die aktuelle Kernel-Version ${KVERSION} ist ein ABI-kompatibles Update "
+"vorhanden."
 
 #. Type: note
 #. Description
@@ -52,7 +54,9 @@ msgstr "Fuer die aktuelle Kernel-Version ${KVERSION} ist ein ABI-kompatibles Upd
 msgid ""
 "Restarting the system to load the new kernel will not be handled "
 "automatically, so you should consider rebooting."
-msgstr "Das System wird nicht automatisch neugestartet um den neuen Kernel zu laden. Ein Neustart sollte durchgefuehrt werden."
+msgstr ""
+"Das System wird nicht automatisch neugestartet um den neuen Kernel zu laden. "
+"Ein Neustart sollte durchgeführt werden."
 
 #. Type: note
 #. Description
@@ -60,10 +64,42 @@ msgstr "Das System wird nicht automatisch neugestartet um den neuen Kernel zu la
 msgid ""
 "The currently running kernel version is ${KVERSION} which is not the "
 "expected kernel version ${EVERSION}."
-msgstr "Die aktuelle Kernel-Version ist ${KVERSION}, es wird jedoch die Version ${EVERSION} erwartet."
+msgstr ""
+"Die aktuelle Kernel-Version ist ${KVERSION}, es wird jedoch die Version "
+"${EVERSION} erwartet."
 
 #. Type: title
 #. Description
 #: ../needrestart.templates:5001
 msgid "Pending kernel upgrade"
 msgstr "Ausstehendes Kernel-Upgrade"
+
+#. Type: title
+#. Description
+#: ../needrestart.templates:6001
+msgid "Restart pending..."
+msgstr "Ausstehender Neustart..."
+
+#. Type: note
+#. Description
+#: ../needrestart.templates:7001
+msgid "This system runs ${EHINT} - you should consider rebooting!"
+msgstr "Das System verwendet ${EHINT} - ein Neustart sollte durchgeführt werden."
+
+#. Type: note
+#. Description
+#: ../needrestart.templates:7001
+msgid "For more details, run 'needrestart -m a'."
+msgstr "Der Befehl 'needrestart -m a' zeigt mehr Details."
+
+#. Type: title
+#. Description
+#: ../needrestart.templates:8001
+msgid "Containers using outdated libraries"
+msgstr "Container die veraltete Bibliotheken nutzen"
+
+#. Type: multiselect
+#. Description
+#: ../needrestart.templates:9001
+msgid "Which containers should be restarted?"
+msgstr "Welche Container sollen neugestartet werden?"

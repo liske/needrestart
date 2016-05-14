@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-28 19:12+0100\n"
+"POT-Creation-Date: 2016-05-14 17:33+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,7 +25,7 @@ msgstr ""
 
 #. Type: multiselect
 #. Description
-#: ../needrestart.templates:2002
+#: ../needrestart.templates:2001
 msgid "Which services should be restarted?"
 msgstr ""
 
@@ -72,11 +72,29 @@ msgstr ""
 #. Type: title
 #. Description
 #: ../needrestart.templates:6001
+msgid "Restart pending..."
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../needrestart.templates:7001
+msgid "This system runs ${EHINT} - you should consider rebooting!"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../needrestart.templates:7001
+msgid "For more details, run 'needrestart -m a'."
+msgstr ""
+
+#. Type: title
+#. Description
+#: ../needrestart.templates:8001
 msgid "Containers using outdated libraries"
 msgstr ""
 
 #. Type: multiselect
 #. Description
-#: ../needrestart.templates:7002
+#: ../needrestart.templates:9001
 msgid "Which containers should be restarted?"
 msgstr ""
