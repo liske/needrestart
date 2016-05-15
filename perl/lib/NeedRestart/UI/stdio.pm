@@ -107,7 +107,12 @@ sub _query($$) {
 	print wrap('', '', "$query [" . ($def eq 'Y' ? 'Ynas?' : 'yNas?') . '] ');
 	if($self->{stdio_same}) {
 	    my $s = $self->{stdio_same};
-	    $s = ($def eq 'Y' ? 'yes' : 'no') if($s eq 'auto');
+	    if($s eq 'auto') {
+		$s = ($def eq 'Y' ? __('yes') : __('no'));
+	    }
+	    else {
+		$s = __($s);
+	    }
 
 	    print "$s\n";
 	    return $s;
