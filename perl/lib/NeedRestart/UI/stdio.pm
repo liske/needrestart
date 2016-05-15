@@ -29,6 +29,9 @@ use warnings;
 
 use parent qw(NeedRestart::UI);
 use NeedRestart qw(:ui);
+use Text::Wrap qw(wrap $columns);
+use Term::ReadKey;
+use Locale::TextDomain 'needrestart';
 
 
 needrestart_ui_register(__PACKAGE__, NEEDRESTART_PRIO_LOW);
@@ -39,7 +42,13 @@ sub _announce {
     my $message = shift;
     my %vars = @_;
 
-    print "Pending kernel upgrade!\n\nRunning kernel version:\n  $vars{KVERSION}\n\nDiagnostics:\n  $message\n\nRestarting the system to load the new kernel will not be handled automatically, so you should consider rebooting. [Return]\n";
+    ($columns) = GetTerminalSize(\*STDOUT);
+    print wrap('', '', __x("Pending kernel upgrade!\n\nRunning kernel version:\n  {kversion}\n\nDiagnostics:\n  {message}\n\nRestarting the system to load the new kernel will not be handled automatically, so you should consider rebooting. [Return]\n",
+			   {
+			       kversion => $vars{KVERSION},
+			       message => $message,
+			   }
+	       ));
     <STDIN>;
 }
 
@@ -48,7 +57,7 @@ sub announce_abi {
     my $self = shift;
     my %vars = @_;
 
-    $self->_announce('The currently running kernel has an ABI compatible upgrade pending.', %vars);
+    $self->_announce(__ 'The currently running kernel has an ABI compatible upgrade pending.', %vars);
 }
 
 
@@ -56,7 +65,11 @@ sub announce_ver {
     my $self = shift;
     my %vars = @_;
 
-    $self->_announce("The currently running kernel version is not the expected kernel version $vars{EVERSION}.", %vars);
+    $self->_announce(__x("The currently running kernel version is not the expected kernel version {eversion}.",
+			 {
+			     eversion => $vars{EVERSION},
+			 }
+		     ), %vars);
 }
 
 
@@ -64,8 +77,14 @@ sub announce_ehint {
     my $self = shift;
     my %vars = @_;
 
-    print "\nThis system runs $vars{EHINT} - you should consider rebooting!\n";
-    print "For more details, run 'needrestart -m a'.\n\n";
+    ($columns) = GetTerminalSize(\*STDOUT);
+    print wrap('', '', __x(<<EHINT, { ehint => $vars{EHINT}, });
+
+This system runs {ehint}. For more details, run 'needrestart -m a'.
+
+You should consider rebooting!
+
+EHINT
 
     <STDIN>;
 }
@@ -74,8 +93,11 @@ sub announce_ehint {
 sub notice($$) {
     my $self = shift;
     my $out = shift;
+    my $indent = ' ';
+    $indent .= $1 if($out =~ /^(\s+)/);
 
-    print "$out\n";
+    ($columns) = GetTerminalSize(\*STDOUT);
+    print wrap('', $indent, "$out\n");
 }
 
 
@@ -86,7 +108,8 @@ sub _query($$) {
 
     my $i;
     do {
-	print "$query [", ($def eq 'Y' ? 'Ynas?' : 'yNas?'), '] ';
+	($columns) = GetTerminalSize(\*STDOUT);
+	print wrap('', '', "$query [" . ($def eq 'Y' ? 'Ynas?' : 'yNas?') . '] ');
 	if($self->{stdio_same}) {
 	    my $s = $self->{stdio_same};
 	    $s = ($def eq 'Y' ? 'yes' : 'no') if($s eq 'auto');
@@ -106,11 +129,12 @@ sub _query($$) {
 	$i =~ s/\s+$//;
 
 	if($i eq '?') {
-	    print <<HLP;
-  Yes   - restart this service
-  No    - do not restart this service
-  Auto  - auto restart all remaining services
-  Stop  - stop restarting services
+	    ($columns) = GetTerminalSize(\*STDOUT);
+	    print wrap('', '', __ <<HLP);
+  (Y)es  - restart this service
+  (N)o   - do not restart this service
+  (A)uto - auto restart all remaining services
+  (S)top - stop restarting services
 
 HLP
 	}
@@ -132,7 +156,8 @@ sub query_pkgs($$$$$$) {
 
     delete($self->{stdio_same});
 
-    print "$out\n";
+    ($columns) = GetTerminalSize(\*STDOUT);
+    print wrap('', '', __ $out."\n");
     foreach my $rc (sort keys %$pkgs) {
 	my ($or) = grep { $rc =~ /$_/; } keys %$overrides;
 	my $d = (defined($or) ? ($overrides->{$or} ? 'Y' : 'N') : ($def ? 'N' : 'Y'));

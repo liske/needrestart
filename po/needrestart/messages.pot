@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: needrestart 2.7\n"
 "Report-Msgid-Bugs-To: thomas@fiasko-nw.net\n"
-"POT-Creation-Date: 2016-05-14 17:41+0200\n"
+"POT-Creation-Date: 2016-05-15 11:19+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -126,4 +126,53 @@ msgstr ""
 
 #: perl/lib/NeedRestart/Kernel/kFreeBSD.pm:49
 msgid "Scanning kfreebsd images..."
+msgstr ""
+
+#: perl/lib/NeedRestart/UI/stdio.pm:46
+#, perl-brace-format
+msgid ""
+"Pending kernel upgrade!\n"
+"\n"
+"Running kernel version:\n"
+"  {kversion}\n"
+"\n"
+"Diagnostics:\n"
+"  {message}\n"
+"\n"
+"Restarting the system to load the new kernel will not be handled "
+"automatically, so you should consider rebooting. [Return]\n"
+msgstr ""
+
+#: perl/lib/NeedRestart/UI/stdio.pm:60
+msgid "The currently running kernel has an ABI compatible upgrade pending."
+msgstr ""
+
+#: perl/lib/NeedRestart/UI/stdio.pm:68
+#, perl-brace-format
+msgid ""
+"The currently running kernel version is not the expected kernel version "
+"{eversion}."
+msgstr ""
+
+#: perl/lib/NeedRestart/UI/stdio.pm:82
+#, perl-brace-format
+msgid ""
+"\n"
+"This system runs {ehint}. For more details, run 'needrestart -m a'.\n"
+"\n"
+"You should consider rebooting!\n"
+"\n"
+msgstr ""
+
+#: perl/lib/NeedRestart/UI/stdio.pm:134
+msgid ""
+"  Yes   - restart this service\n"
+"  No    - do not restart this service\n"
+"  Auto  - auto restart all remaining services\n"
+"  Stop  - stop restarting services\n"
+"\n"
+msgstr ""
+
+#: perl/lib/NeedRestart/UI/stdio.pm:160
+msgid "\n"
 msgstr ""

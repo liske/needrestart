@@ -45,7 +45,7 @@ clean:
 
 pot-files: po/needrestart/messages.pot po/needrestart-notify/messages.pot
 
-po/needrestart/messages.pot: needrestart $(wildcard perl/lib/NeedRestart/Kernel/*.pm)
+po/needrestart/messages.pot: needrestart $(wildcard perl/lib/NeedRestart/Kernel/*.pm wildcard perl/lib/NeedRestart/UI/*.pm)
 	xgettext -o $@ --msgid-bugs-address=thomas@fiasko-nw.net \
 	    --package-name=needrestart --package-version=2.7 \
 	    --keyword --keyword='$$__' --keyword=__ --keyword=__x \

@@ -29,6 +29,8 @@ use warnings;
 
 use parent qw(NeedRestart::UI);
 use NeedRestart qw(:ui);
+use Text::Wrap qw(wrap $columns);
+use Term::ReadKey;
 use Sort::Naturally;
 
 use constant {
@@ -118,7 +120,13 @@ sub notice {
     my $self = shift;
     my $out = shift;
 
-    print STDERR "$out\n" if($self->{verbosity});
+    return unless($self->{verbosity});
+
+    my $indent = ' ';
+    $indent .= $1 if($out =~ /^(\s+)/);
+
+    ($columns) = GetTerminalSize(\*STDERR);
+    print STDERR wrap('', $indent, "$out\n");
 }
 
 
