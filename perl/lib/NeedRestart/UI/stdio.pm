@@ -140,7 +140,10 @@ HLP
 	}
     } while(!( ($i) = map { (substr($_, 0, length($i)) eq $i ? ($_) : ())} @def ));
 
-    return ($self->{stdio_same} = 'auto') if($i eq 'auto');
+    if($i eq 'auto') {
+	$self->{stdio_same} = 'auto';
+	return ($def eq 'Y' ? q(yes) : q(no));
+    }
     return ($self->{stdio_same} = 'no') if($i eq 'stop');
 
     return $i;

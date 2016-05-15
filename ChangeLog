@@ -21,6 +21,7 @@ needrestart (2.8) unstable; urgency=medium
   * [Core] Add a easy UI mode hiding technical details for non-technical users.
     (Debian Bug#819824 by Patrick Schleizer <adrelanos@riseup.net>))
   * [l10n] Make NeedRestart::UI::stdio localized and update German localization.
+  * [UI] stdio: do not skip service asked while choosing auto mode.
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
