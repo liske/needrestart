@@ -36,7 +36,7 @@ _Description: Restart pending...
 Template: needrestart/ui-ehint_announce
 Type: note
 _Description: This system runs ${EHINT} - you should consider rebooting!
- For more details, run 'needrestart -m a'.
+ For more details, run «needrestart -m a».
 
 Template: needrestart/ui-query_conts_title
 Type: title

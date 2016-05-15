@@ -43,18 +43,23 @@ clean:
 	rm -rf po/.build
 
 
-pot-files: po/needrestart/messages.pot po/needrestart-notify/messages.pot
+pot-files: po/debconf/templates.pot po/needrestart/messages.pot po/needrestart-notify/messages.pot
+
+po/debconf/templates.pot: ex/debconf/needrestart.templates
+	cd ex/debconf && debconf-updatepo
+	touch -r $+ $@
 
 po/needrestart/messages.pot: needrestart $(wildcard perl/lib/NeedRestart/Kernel/*.pm wildcard perl/lib/NeedRestart/UI/*.pm)
 	xgettext -o $@ --msgid-bugs-address=thomas@fiasko-nw.net \
-	    --package-name=needrestart --package-version=2.7 \
+	    --from-code=UTF-8 \
+	    --package-name=needrestart --package-version=2.8 \
 	    --keyword --keyword='$$__' --keyword=__ --keyword=__x \
 	    --keyword=__n:1,2 --keyword=__nx:1,2 --keyword=__xn \
 	    --keyword=N__ --language=perl $^
 
 po/needrestart-notify/messages.pot: ex/notify.d/*-*
 	xgettext -o $@ --msgid-bugs-address=thomas@fiasko-nw.net \
-	    --package-name=needrestart-notify --package-version=2.7 \
+	    --package-name=needrestart-notify --package-version=2.8 \
 	    --language=shell $^
 
 

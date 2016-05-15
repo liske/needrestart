@@ -714,7 +714,7 @@ if(defined($opt_k)) {
 		    unless($opt_m eq 'e');
 	    }
 	    elsif($kresult == NRK_ABIUPGRADE) {
-		push(@easy_hints, __ 'a outdated kernel image') if($opt_m eq 'e');
+		push(@easy_hints, __ 'an outdated kernel image') if($opt_m eq 'e');
 
 		if($nrconf{kernelhints} < 0) {
 		    $ui->notice(__x(
@@ -727,7 +727,7 @@ if(defined($opt_k)) {
 		}
 	    }
 	    elsif($kresult == NRK_VERUPGRADE) {
-		push(@easy_hints, __ 'a outdated kernel image') if($opt_m eq 'e');
+		push(@easy_hints, __ 'an outdated kernel image') if($opt_m eq 'e');
 
 		if($nrconf{kernelhints} < 0) {
 		    $ui->notice(__x(
@@ -962,12 +962,7 @@ if(defined($opt_l) && !$uid) {
 	    foreach my $uid (sort { ncmp(uid2name($a), uid2name($b)); } keys %sessions) {
 		foreach my $sess (sort keys %{ $sessions{$uid} }) {
 		    my $fnames = join(', ',map { $_.'['.join(',', @{ $sessions{$uid}->{$sess}->{$_} }).']';  } nsort keys %{ $sessions{$uid}->{$sess} });
-		    $ui->notice(' '.__x(
-				    '{uid} @ {sess}: {fnames}',
-				    uid => uid2name($uid),
-				    sess => $sess,
-				    fnames => $fnames,
-				)) unless($opt_m eq 'e');
+		    $ui->notice(' '.uid2name($uid)." @ $sess: $fnames") unless($opt_m eq 'e');
 		    if($nrconf{sendnotify}) {
 			local %ENV;
 

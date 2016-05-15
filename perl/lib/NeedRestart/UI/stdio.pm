@@ -33,7 +33,6 @@ use Text::Wrap qw(wrap $columns);
 use Term::ReadKey;
 use Locale::TextDomain 'needrestart';
 
-
 needrestart_ui_register(__PACKAGE__, NEEDRESTART_PRIO_LOW);
 
 
@@ -44,10 +43,8 @@ sub _announce {
 
     ($columns) = GetTerminalSize(\*STDOUT);
     print wrap('', '', __x("Pending kernel upgrade!\n\nRunning kernel version:\n  {kversion}\n\nDiagnostics:\n  {message}\n\nRestarting the system to load the new kernel will not be handled automatically, so you should consider rebooting. [Return]\n",
-			   {
-			       kversion => $vars{KVERSION},
-			       message => $message,
-			   }
+			   kversion => $vars{KVERSION},
+			   message => $message,
 	       ));
     <STDIN>;
 }
@@ -66,9 +63,7 @@ sub announce_ver {
     my %vars = @_;
 
     $self->_announce(__x("The currently running kernel version is not the expected kernel version {eversion}.",
-			 {
-			     eversion => $vars{EVERSION},
-			 }
+			 eversion => $vars{EVERSION},
 		     ), %vars);
 }
 
@@ -78,9 +73,9 @@ sub announce_ehint {
     my %vars = @_;
 
     ($columns) = GetTerminalSize(\*STDOUT);
-    print wrap('', '', __x(<<EHINT, { ehint => $vars{EHINT}, });
+    print wrap('', '', __x(<<EHINT, ehint => $vars{EHINT}));
 
-This system runs {ehint}. For more details, run 'needrestart -m a'.
+This system runs {ehint}. For more details, run «needrestart -m a».
 
 You should consider rebooting!
 
@@ -157,12 +152,12 @@ sub query_pkgs($$$$$$) {
     delete($self->{stdio_same});
 
     ($columns) = GetTerminalSize(\*STDOUT);
-    print wrap('', '', __ $out."\n");
+    print wrap('', '', __($out)."\n");
     foreach my $rc (sort keys %$pkgs) {
 	my ($or) = grep { $rc =~ /$_/; } keys %$overrides;
 	my $d = (defined($or) ? ($overrides->{$or} ? 'Y' : 'N') : ($def ? 'N' : 'Y'));
 
-	&$cb($rc) if($self->_query("Restart $rc?", $d) eq 'yes');
+	&$cb($rc) if($self->_query(__x('Restart «{rc}»?', rc => $rc), $d) eq 'yes');
     }
 }
 

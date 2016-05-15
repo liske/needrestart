@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: needrestart 2.8\n"
 "Report-Msgid-Bugs-To: thomas@fiasko-nw.net\n"
-"POT-Creation-Date: 2016-05-14 17:41+0200\n"
-"PO-Revision-Date: 2016-03-05 11:11+0100\n"
+"POT-Creation-Date: 2016-05-15 12:17+0200\n"
+"PO-Revision-Date: 2016-05-15 12:17+0200\n"
 "Last-Translator: Thomas Liske <thomas@fiasko-nw.net>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -21,7 +21,7 @@ msgstr "Prüfe Kandidaten..."
 
 #: needrestart:663
 msgid "Your outdated processes:"
-msgstr "Veraltete Prozesse"
+msgstr "Veraltete Prozesse:"
 
 #: needrestart:713
 msgid "Running kernel seems to be up-to-date."
@@ -33,8 +33,8 @@ msgstr ""
 "Der laufende Kernel ist aktuell (ABI Änderungen können nicht erkannt werden)."
 
 #: needrestart:717 needrestart:730
-msgid "a outdated kernel image"
-msgstr "veralteter Kernel"
+msgid "an outdated kernel image"
+msgstr "eine veraltete Kernel-Version"
 
 #: needrestart:721
 #, perl-brace-format
@@ -68,19 +68,19 @@ msgstr "veraltete Programme"
 
 #: needrestart:767 needrestart:830
 msgid "Services to be restarted:"
-msgstr "Dienste die neu gestartet werden müssen:"
+msgstr "Dienste, die neu gestartet werden müssen:"
 
 #: needrestart:768 needrestart:829
 msgid "Restarting services..."
-msgstr "Dienste werden neugestartet..."
+msgstr "Dienste werden neu gestartet..."
 
 #: needrestart:813 needrestart:855
 msgid "Services being skipped:"
-msgstr "Ausgelassene Dienste:"
+msgstr "ausgelassene Dienste:"
 
 #: needrestart:874
 msgid "No containers need to be restarted."
-msgstr "Es müssen keine Container neugestartet werden."
+msgstr "Es müssen keine Container neu gestartet werden."
 
 #: needrestart:883
 msgid "outdated containers"
@@ -88,7 +88,7 @@ msgstr "veraltete Containern"
 
 #: needrestart:888 needrestart:930
 msgid "Containers to be restarted:"
-msgstr "Container die neugestartet werden müssen:"
+msgstr "Container, die neu gestartet werden müssen:"
 
 #: needrestart:889
 msgid "Restarting containers..."
@@ -110,12 +110,7 @@ msgstr "veraltete Sitzungen"
 msgid "User sessions running outdated binaries:"
 msgstr "Nutzer-Sitzungen mit veralteten Prozessen:"
 
-#: needrestart:966
-#, perl-brace-format
-msgid "{uid} @ {sess}: {fnames}"
-msgstr "{uid} @ {sess}: {fnames}"
-
-#: needrestart:999
+#: needrestart:994
 msgid "and"
 msgstr "und"
 
@@ -126,3 +121,75 @@ msgstr "Prüfe Linux-Kernel..."
 #: perl/lib/NeedRestart/Kernel/kFreeBSD.pm:49
 msgid "Scanning kfreebsd images..."
 msgstr "Prüfe kFreeBSD-Kernel..."
+
+#: perl/lib/NeedRestart/UI/stdio.pm:45
+#, perl-brace-format
+msgid ""
+"Pending kernel upgrade!\n"
+"\n"
+"Running kernel version:\n"
+"  {kversion}\n"
+"\n"
+"Diagnostics:\n"
+"  {message}\n"
+"\n"
+"Restarting the system to load the new kernel will not be handled "
+"automatically, so you should consider rebooting. [Return]\n"
+msgstr ""
+"Ausstehendes Kernel-Upgrade!\n"
+"\n"
+"Laufende Kernel-Version:\n"
+"  {kversion}\n"
+"\n"
+"Diagnose:\n"
+"  {message}\n"
+"\n"
+"Das System wird nicht automatisch neu gestartet um den neuen Kernel zu "
+"laden. Ein Neustart sollte durchgeführt werden. [Return]\n"
+
+#: perl/lib/NeedRestart/UI/stdio.pm:57
+msgid "The currently running kernel has an ABI compatible upgrade pending."
+msgstr "Für den laufende Kernel ist ein ABI-kompatibles Upgrade ausstehend."
+
+#: perl/lib/NeedRestart/UI/stdio.pm:65
+#, perl-brace-format
+msgid ""
+"The currently running kernel version is not the expected kernel version "
+"{eversion}."
+msgstr ""
+"Die aktuelle Kernel-Version ist nicht die erwartete Version {eversion}."
+
+#: perl/lib/NeedRestart/UI/stdio.pm:77
+#, perl-brace-format
+msgid ""
+"\n"
+"This system runs {ehint}. For more details, run «needrestart -m a».\n"
+"\n"
+"You should consider rebooting!\n"
+"\n"
+msgstr ""
+"\n"
+"Das System verwendet {ehint}. Der Befehl »needrestart -m a« zeigt mehr "
+"Details.\n"
+"\n"
+"Ein Neustart sollte durchgeführt werden!\n"
+"\n"
+
+#: perl/lib/NeedRestart/UI/stdio.pm:129
+msgid ""
+"  (Y)es  - restart this service\n"
+"  (N)o   - do not restart this service\n"
+"  (A)uto - auto restart all remaining services\n"
+"  (S)top - stop restarting services\n"
+"\n"
+msgstr ""
+"  ja (Y) - diesen Dienst neu starten\n"
+"  (N)ein - diesen Dienst nicht neu starten\n"
+"  (A)uto - alle weiteren Dienste automatisch neu starten\n"
+"  (S)top - keine weiteren Dienste neu starten\n"
+"\n"
+
+#: perl/lib/NeedRestart/UI/stdio.pm:160
+#, perl-brace-format
+msgid "Restart «{rc}»?"
+msgstr "»{rc}« neu starten?"

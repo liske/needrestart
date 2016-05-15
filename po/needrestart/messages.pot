@@ -6,15 +6,15 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: needrestart 2.7\n"
+"Project-Id-Version: needrestart 2.8\n"
 "Report-Msgid-Bugs-To: thomas@fiasko-nw.net\n"
-"POT-Creation-Date: 2016-05-15 11:19+0200\n"
+"POT-Creation-Date: 2016-05-15 12:17+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: needrestart:350
@@ -38,7 +38,7 @@ msgid "Running kernel seems to be up-to-date (ABI upgrades are not detected)."
 msgstr ""
 
 #: needrestart:717 needrestart:730
-msgid "a outdated kernel image"
+msgid "an outdated kernel image"
 msgstr ""
 
 #: needrestart:721
@@ -111,12 +111,7 @@ msgstr ""
 msgid "User sessions running outdated binaries:"
 msgstr ""
 
-#: needrestart:966
-#, perl-brace-format
-msgid "{uid} @ {sess}: {fnames}"
-msgstr ""
-
-#: needrestart:999
+#: needrestart:994
 msgid "and"
 msgstr ""
 
@@ -128,7 +123,7 @@ msgstr ""
 msgid "Scanning kfreebsd images..."
 msgstr ""
 
-#: perl/lib/NeedRestart/UI/stdio.pm:46
+#: perl/lib/NeedRestart/UI/stdio.pm:45
 #, perl-brace-format
 msgid ""
 "Pending kernel upgrade!\n"
@@ -143,36 +138,37 @@ msgid ""
 "automatically, so you should consider rebooting. [Return]\n"
 msgstr ""
 
-#: perl/lib/NeedRestart/UI/stdio.pm:60
+#: perl/lib/NeedRestart/UI/stdio.pm:57
 msgid "The currently running kernel has an ABI compatible upgrade pending."
 msgstr ""
 
-#: perl/lib/NeedRestart/UI/stdio.pm:68
+#: perl/lib/NeedRestart/UI/stdio.pm:65
 #, perl-brace-format
 msgid ""
 "The currently running kernel version is not the expected kernel version "
 "{eversion}."
 msgstr ""
 
-#: perl/lib/NeedRestart/UI/stdio.pm:82
+#: perl/lib/NeedRestart/UI/stdio.pm:77
 #, perl-brace-format
 msgid ""
 "\n"
-"This system runs {ehint}. For more details, run 'needrestart -m a'.\n"
+"This system runs {ehint}. For more details, run «needrestart -m a».\n"
 "\n"
 "You should consider rebooting!\n"
 "\n"
 msgstr ""
 
-#: perl/lib/NeedRestart/UI/stdio.pm:134
+#: perl/lib/NeedRestart/UI/stdio.pm:129
 msgid ""
-"  Yes   - restart this service\n"
-"  No    - do not restart this service\n"
-"  Auto  - auto restart all remaining services\n"
-"  Stop  - stop restarting services\n"
+"  (Y)es  - restart this service\n"
+"  (N)o   - do not restart this service\n"
+"  (A)uto - auto restart all remaining services\n"
+"  (S)top - stop restarting services\n"
 "\n"
 msgstr ""
 
 #: perl/lib/NeedRestart/UI/stdio.pm:160
-msgid "\n"
+#, perl-brace-format
+msgid "Restart «{rc}»?"
 msgstr ""

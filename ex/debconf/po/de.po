@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: needrestart 2.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-05-14 17:33+0200\n"
-"PO-Revision-Date: 2014-09-20 17:31+0200\n"
+"POT-Creation-Date: 2016-05-15 12:21+0200\n"
+"PO-Revision-Date: 2016-05-15 12:21+0200\n"
 "Last-Translator: Thomas Liske <thomas@fiasko-nw.net>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -20,13 +20,13 @@ msgstr ""
 #. Description
 #: ../needrestart.templates:1001
 msgid "Daemons using outdated libraries"
-msgstr "Dienste die veraltete Bibliotheken nutzen"
+msgstr "Dienste, die veraltete Bibliotheken nutzen"
 
 #. Type: multiselect
 #. Description
 #: ../needrestart.templates:2001
 msgid "Which services should be restarted?"
-msgstr "Welche Dienste sollen neugestartet werden?"
+msgstr "Welche Dienste sollen neu gestartet werden?"
 
 #. Type: note
 #. Description
@@ -55,8 +55,8 @@ msgid ""
 "Restarting the system to load the new kernel will not be handled "
 "automatically, so you should consider rebooting."
 msgstr ""
-"Das System wird nicht automatisch neugestartet um den neuen Kernel zu laden. "
-"Ein Neustart sollte durchgeführt werden."
+"Das System wird nicht automatisch neu gestartet, um den neuen Kernel zu "
+"laden. Ein Neustart sollte durchgeführt werden."
 
 #. Type: note
 #. Description
@@ -84,22 +84,23 @@ msgstr "Ausstehender Neustart..."
 #. Description
 #: ../needrestart.templates:7001
 msgid "This system runs ${EHINT} - you should consider rebooting!"
-msgstr "Das System verwendet ${EHINT} - ein Neustart sollte durchgeführt werden."
+msgstr ""
+"Das System verwendet ${EHINT} - ein Neustart sollte durchgeführt werden."
 
 #. Type: note
 #. Description
 #: ../needrestart.templates:7001
-msgid "For more details, run 'needrestart -m a'."
-msgstr "Der Befehl 'needrestart -m a' zeigt mehr Details."
+msgid "For more details, run «needrestart -m a»."
+msgstr "Der Befehl »needrestart -m a« zeigt mehr Details."
 
 #. Type: title
 #. Description
 #: ../needrestart.templates:8001
 msgid "Containers using outdated libraries"
-msgstr "Container die veraltete Bibliotheken nutzen"
+msgstr "Container, die veraltete Bibliotheken nutzen"
 
 #. Type: multiselect
 #. Description
 #: ../needrestart.templates:9001
 msgid "Which containers should be restarted?"
-msgstr "Welche Container sollen neugestartet werden?"
+msgstr "Welche Container sollen neu gestartet werden?"
