@@ -70,3 +70,4 @@ are shipped:
 
 * *NeedRestart::CONT::docker*
 * *NeedRestart::CONT::LXC*
+* *NeedRestart::CONT::machined*
