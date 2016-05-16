@@ -1,35 +1,40 @@
 needrestart (2.8) unstable; urgency=medium
 
-  * [Bug] Fix bashisms in /etc/needrestart/notify.d/*.
-    (Debian Bug#818001 by Cristian Ionescu-Idbohrn
-    <cristian.ionescu-idbohrn@axis.com>)
-    (github issue #21 by Sebastian Brandt @sbrandtb)
-  * [Bug] Add xendomains to override_rc.
-    (Debian Bug#817807 by Samuel Thibault <sthibault@debian.org>)
-  * [Bug] Fix incomplete skipping of scanning files in Interp/*.pm
-    if cwd is unknown.
-  * [Bug] Improve getopts parsing (Interp::*) to remove "Uknown option:"
-    warnings.
-    (Debian Bug#817927 by F. Petitjean <francois.petitjean@bureauveritas.com>)
-  * [Bug] Fix regex handling in cgroup detection.
-    (github pull request #25 by Courtney Bane @cbane)
-  * [notify] Disable mail notification by default (notify.conf).
-  * [Core] Restart SysV init services on systemd using systemctl.
-    (Debian Bug#818853 by Paul Wise <pabs@debian.org>)
-  * [Core] Print a combined `systemctl restart` command line for skipped services.
-    (Debian Bug#818853 by Paul Wise <pabs@debian.org>)
-  * [Core] Add a easy UI mode hiding technical details for non-technical users.
-    (Debian Bug#819824 by Patrick Schleizer <adrelanos@riseup.net>))
-  * [Bug] Fix library probing inside filesystem namespaces (i.e. LXC containers).
-    (github issue #23 by Lukas Pirl @lpirl)
-  * [l10n] Make NeedRestart::UI::stdio localized and update German localization.
-  * [UI] stdio: do not skip service asked while choosing auto mode.
-  * [Cont] Detect additional containers:
-    - systemd-machined
-  * [Bug] Do not terminate debconf after restart service selection since it is
-          still needed for container selection.
+  * Changes:
+    - [Core] Restart SysV init services on systemd using systemctl.
+      (Debian Bug#818853 by Paul Wise <pabs@debian.org>)
+    - [Core] Print a combined `systemctl restart` command line for skipped
+      services (config option).
+      (Debian Bug#818853 by Paul Wise <pabs@debian.org>)
+    - [l10n] Make NeedRestart::UI::stdio localized and update German localization.
+    - [notify] Disable mail notification by default (notify.conf).
+  * Features:
+    - [Core] Add a easy UI mode hiding technical details for non-technical users.
+      (Debian Bug#819824 by Patrick Schleizer <adrelanos@riseup.net>))
+    - [Cont] Detect systemd-machined containers.
+  * Fixes:
+    - [Conf] Add xendomains to override_rc.
+      (Debian Bug#817807 by Samuel Thibault <sthibault@debian.org>)
+    - [Core] Do not terminate debconf after restart service selection since it
+      is still needed for container selection.
+    - [Core] Fix regex handling in cgroup detection.
+      (github pull request #25 by Courtney Bane @cbane)
+    - [Core] Fix library probing inside filesystem namespaces (i.e. LXC
+      containers).
+      (github issue #23 by Lukas Pirl @lpirl)
+    - [Interp] Fix incomplete skipping of scanning files in Interp/*.pm
+      if cwd is unknown.
+    - [Interp] Improve getopts parsing (Interp::*) to remove "Uknown option:"
+      warnings.
+      (Debian Bug#817927 by F. Petitjean <francois.petitjean@bureauveritas.com>)
+    - [notify.d] Fix bashisms in /etc/needrestart/notify.d/*.
+      (Debian Bug#818001 by Cristian Ionescu-Idbohrn
+      <cristian.ionescu-idbohrn@axis.com>)
+      (github issue #21 by Sebastian Brandt @sbrandtb)
+      (Debian Bug#824184 by Axel Beckert <abe@debian.org>)
+    - [UI] stdio: do not skip service asked while choosing auto mode.
 
- -- Thomas Liske <thomas@fiasko-nw.net>  
+ -- Thomas Liske <thomas@fiasko-nw.net>  Mon, 16 May 2016 18:45:51 +0200
 
 needrestart (2.7) unstable; urgency=medium
 
