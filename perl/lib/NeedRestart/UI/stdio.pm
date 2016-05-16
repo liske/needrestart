@@ -86,7 +86,7 @@ sub notice($$) {
     my $indent = ' ';
     $indent .= $1 if($out =~ /^(\s+)/);
 
-    $self->wprint(\*STDOUT, '', $ident, "$out\n");
+    $self->wprint(\*STDOUT, '', $indent, "$out\n");
 }
 
 
