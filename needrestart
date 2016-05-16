@@ -797,7 +797,9 @@ if(defined($opt_l) && !$uid) {
 		next unless($#cmd > -1);
 
 		$ui->notice(join(' ', '', @cmd));
-		system(@cmd) if($opt_r eq 'a');
+		$ui->runcmd(sub {
+		    system(@cmd) if($opt_r eq 'a');
+			    });
 	    }
 	
 	    unless($#systemd_restart == -1) {
@@ -844,7 +846,9 @@ if(defined($opt_l) && !$uid) {
 		my @cmd = (qw(systemctl restart), @systemd_restart);
 
 		$ui->notice(join(' ', '', @cmd));
-		system(@cmd);
+		$ui->runcmd(sub {
+		    system(@cmd);
+			    });
 	    }
 
 	    @systemd_restart = ();
@@ -911,7 +915,9 @@ if(defined($opt_l) && !$uid) {
 		}
 
 		$ui->notice(join(' ', '', @{ $conts{$cont} }));
-		system(@{ $conts{$cont} }) if($opt_r eq 'a');
+		$ui->runcmd(sub {
+		    system(@{ $conts{$cont} }) if($opt_r eq 'a');
+			    });
 	    }
 
 	    if($#skipped_containers > -1) {

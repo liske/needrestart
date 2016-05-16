@@ -68,7 +68,7 @@ sub new {
     dcres( x_loadtemplatefile(DCTMPL) ) if(-r DCTMPL);
 
     return bless {
-	verbosity => $verbosity
+	verbosity => $verbosity,
     }, $class;
 }
 
@@ -164,11 +164,6 @@ sub query_pkgs($$$$$$) {
 
     my ($s) = dcres( get('needrestart/ui-query_pkgs') );
 
-    stop;
-
-    # Debconf kills STDOUT... try to restore it
-    open(STDOUT, '> /dev/tty') || open(STDOUT, '>&2');
-
     # user has canceled
     return unless(defined($s));
     return if($r eq 'backup');
@@ -176,8 +171,10 @@ sub query_pkgs($$$$$$) {
     # get selected rc.d script
     my @s = split(/, /, $s);
 
-    # restart each selected service script
-    &$cb($_) for @s;
+    $self->runcmd(sub {
+	# restart each selected service script
+	&$cb($_) for @s;
+		  });
 }
 
 sub query_conts($$$$$$) {
@@ -216,11 +213,6 @@ sub query_conts($$$$$$) {
 
     my ($s) = dcres( get('needrestart/ui-query_conts') );
 
-    stop;
-
-    # Debconf kills STDOUT... try to restore it
-    open(STDOUT, '> /dev/tty') || open(STDOUT, '>&2');
-
     # user has canceled
     return unless(defined($s));
     return if($r eq 'backup');
@@ -228,8 +220,23 @@ sub query_conts($$$$$$) {
     # get selected rc.d script
     my @s = split(/, /, $s);
 
-    # restart each selected service script
-    &$cb($_) for @s;
+    $self->runcmd(sub {
+	# restart each selected service script
+	&$cb($_) for @s;
+		  });
+}
+
+sub runcmd {
+    my $self = shift;
+
+    local *STDOUT;
+
+    # Debconf kills STDOUT... try to restore it
+    open(STDOUT, '> /dev/tty') || open(STDOUT, '>&2');
+
+    $self->SUPER::runcmd(@_);
+
+    close(STDOUT);
 }
 
 1;

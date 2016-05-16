@@ -161,4 +161,11 @@ sub query_pkgs($$$$$) {
 sub query_conts($$$$$) {
 }
 
+sub runcmd {
+    my $self = shift;
+    my $cb = shift;
+
+    &$cb;
+}
+
 1;

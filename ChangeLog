@@ -26,6 +26,8 @@ needrestart (2.8) unstable; urgency=medium
   * [UI] stdio: do not skip service asked while choosing auto mode.
   * [Cont] Detect additional containers:
     - systemd-machined
+  * [Bug] Do not terminate debconf after restart service selection since it is
+          still needed for container selection.
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
