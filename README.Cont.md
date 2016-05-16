@@ -25,3 +25,12 @@ Recognized by:	cgroup path (`/lxc/*`)
 
 For each container which should be restarted needrestart calls
 `lxc-stop --reboot --name $NAME`.
+
+
+NeedRestart::CONT::machined
+---------------------------
+
+Recognized by:	cgroup path (`/machine.slice/machine-*.scope`)
+
+For each container which should be restarted needrestart calls
+`machinectl reboot $NAME`.
