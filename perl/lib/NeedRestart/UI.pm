@@ -26,6 +26,7 @@ package NeedRestart::UI;
 
 use strict;
 use warnings;
+use Text::Wrap qw(wrap $columns);
 use Term::ReadKey;
 
 sub new {
@@ -36,6 +37,19 @@ sub new {
 	verbosity => $verbosity,
 	progress => undef,
     }, $class;
+}
+
+sub wprint {
+    my $self = shift;
+    my $fh = shift;
+    my $sp1 = shift;
+    my $sp2 = shift;
+    my $message = shift;
+
+    my ($cols) = GetTerminalSize($fh);
+    $columns = $cols if($cols);
+
+    print $fh wrap($sp1, $sp2, $message);
 }
 
 sub progress_prep($$$) {
