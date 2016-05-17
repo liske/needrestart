@@ -29,7 +29,6 @@ use warnings;
 
 use parent qw(NeedRestart::UI);
 use NeedRestart qw(:ui);
-use Term::ReadKey;
 use Sort::Naturally;
 
 use constant {
