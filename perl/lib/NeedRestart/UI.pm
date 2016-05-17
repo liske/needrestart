@@ -46,7 +46,8 @@ sub wprint {
     my $sp2 = shift;
     my $message = shift;
 
-    my ($cols) = GetTerminalSize($fh);
+    # workaround Debian Bug#824564 in Term::ReadKey: pass filehandle twice
+    my ($cols) = GetTerminalSize($fh, $fh);
     $columns = $cols if($cols);
 
     print $fh wrap($sp1, $sp2, $message);
