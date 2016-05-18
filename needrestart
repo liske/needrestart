@@ -389,7 +389,7 @@ if(defined($opt_l)) {
 		next if($path =~ m@^/\[aio\]@);
 
 		# skip Oil Runtime Compiler's JIT files
-		next if($path =~ m@^/orcexec\.[\w\d]+$@);
+		next if($path =~ m@/orcexec\.[\w\d]+$@);
 
 		# removed executable mapped files
 		if($path =~ s/ \(deleted\)$// ||  # Linux
