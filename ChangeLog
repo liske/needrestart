@@ -3,6 +3,8 @@ needrestart (2.9) unstable; urgency=medium
   * Changes:
     - [UI] Add a workaround for bug in Term::ReadKey if STDOUT does not
       print on a TTY (see also Debian Bug#824564).
+    - [l10n] Add RU translation for notify.d stuff.
+      (github issue #29 by @Vladimir-csp)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
