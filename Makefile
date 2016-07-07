@@ -64,5 +64,5 @@ po/needrestart-notify/messages.pot: ex/notify.d/*-*
 
 
 mo-files:
-	make -C po/needrestart
-	make -C po/needrestart-notify
+	$(MAKE) -C po/needrestart
+	$(MAKE) -C po/needrestart-notify
