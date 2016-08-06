@@ -26,5 +26,5 @@ fi
 
 if [ -e "$RUNDIR/unpacked" ]; then
     rm -f "$RUNDIR/unpacked"
-    exec /usr/sbin/needrestart
+    exec /usr/sbin/needrestart "$@"
 fi

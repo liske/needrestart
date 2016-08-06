@@ -7,6 +7,8 @@ needrestart (2.9) unstable; urgency=medium
       (github issue #29 by @Vladimir-csp)
     - [Conf] Add lxcfs to override_rc.
       (Debian Bug#832166 by Evgeni Golov <evgeni@debian.org>)
+    - [Conf] Pass arguments of apt-pinvoke to needrestart.
+      (Debian Bug#826220 by Wolfgang Karall-Ahlborn <lists+debian-bugs@karall-edv.at>)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
