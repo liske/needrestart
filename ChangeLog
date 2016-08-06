@@ -5,6 +5,8 @@ needrestart (2.9) unstable; urgency=medium
       print on a TTY (see also Debian Bug#824564).
     - [l10n] Add RU translation for notify.d stuff.
       (github issue #29 by @Vladimir-csp)
+    - [Conf] Add lxcfs to override_rc.
+      (Debian Bug#832166 by Evgeni Golov <evgeni@debian.org>)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
