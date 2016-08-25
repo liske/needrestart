@@ -208,7 +208,6 @@ unless(defined($opt_k) || defined($opt_l)) {
 
 sub parse_lsbinit($) {
     my $rc = '/etc/init.d/'.shift;
-    my %lsb;
 
     # ignore upstart-job magic
     if(-l $rc && readlink($rc) eq '/lib/init/upstart-job') {
@@ -217,35 +216,60 @@ sub parse_lsbinit($) {
     }
 
     open(HLSB, '<', $rc) || die "Can't open $rc: $!\n";
-    my $found;
+    my %lsb;
+    my $found_lsb;
+    my %chkconfig;
+    my $found_chkconfig;
     while(my $line = <HLSB>) {
-	unless($found) {
-	    $found++ if($line =~ /^### BEGIN INIT INFO/);
+	chomp($line);
+
+	unless($found_chkconfig) {
+	    if($line =~ /^# chkconfig: (\d+) /) {
+		$chkconfig{runlevels} = $1;
+		$found_chkconfig++
+	    }
+	}
+	elsif($line =~ /^# (\S+): (.+)$/) {
+	    $chkconfig{lc($1)} = $2;
+	}
+
+	unless($found_lsb) {
+	    $found_lsb++ if($line =~ /^### BEGIN INIT INFO/);
 	    next;
 	}
 	elsif($line =~ /^### END INIT INFO/) {
 	    last;
 	}
 
-	chomp($line);
 	$lsb{lc($1)} = $2 if($line =~ /^# ([^:]+):\s+(.+)$/);
     }
 
-    unless($found) {
+    # convert chkconfig tags to LSB tags
+    if($found_chkconfig && !$found_lsb) {
+	print STDERR "$LOGPREF $rc is missing LSB tags, found chkconfig tags instead\n" if($nrconf{verbosity} > 1);
+
+	$found_lsb++;
+	$lsb{pidfiles} = [$chkconfig{pidfile}];
+	$lsb{q(default-start)} = [$chkconfig{runlevel}];
+    }
+
+    unless($found_lsb) {
 	print STDERR "WARNING: $rc has no LSB tags!\n" unless(%lsb);
 	return ();
     }
 
     # pid file heuristic
-    $found = 0;
-    my %pidfiles;
-    while(my $line = <HLSB>) {
-	if($line =~ m@(\S*/run/[^/]+.pid)@ && -r $1) {
-	    $pidfiles{$1}++;
-	    $found++;
+    unless(exists($lsb{pidfiles})) {
+	my $found = 0;
+	my %pidfiles;
+	while(my $line = <HLSB>) {
+	    if($line =~ m@(\S*/run/[^/]+.pid)@ && -r $1) {
+		$pidfiles{$1}++;
+		$found++;
+	    }
 	}
+	$lsb{pidfiles} = [keys %pidfiles] if($found);
     }
-    $lsb{pidfiles} = [keys %pidfiles] if($found);
     close(HLSB);
 
     return %lsb;

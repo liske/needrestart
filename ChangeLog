@@ -18,6 +18,8 @@ needrestart (2.9) unstable; urgency=medium
       (github issue #28 by Sven-Haegar Koch @haegar)
     - [Core] Fix odd perl warnings about LSB tags.
       (github issue #33 by Evgenii Terechkov @evgkrsk)
+    - [Core] Sys-V: use chkconfig tags if LSB tags are missing.
+      (github issue #33 by Evgenii Terechkov @evgkrsk)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
