@@ -16,6 +16,8 @@ needrestart (2.9) unstable; urgency=medium
       (github issue #34 by Craig Andrews @candrews)
     - [Core] Don't compare device numbers on anon fs (i.e. OpenVZ's simfs).
       (github issue #28 by Sven-Haegar Koch @haegar)
+    - [Core] Fix odd perl warnings about LSB tags.
+      (github issue #33 by Evgenii Terechkov @evgkrsk)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 

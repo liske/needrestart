@@ -233,7 +233,7 @@ sub parse_lsbinit($) {
 
     unless($found) {
 	print STDERR "WARNING: $rc has no LSB tags!\n" unless(%lsb);
-	return undef;
+	return ();
     }
 
     # pid file heuristic
