@@ -5,12 +5,15 @@ needrestart (2.9) unstable; urgency=medium
       print on a TTY (see also Debian Bug#824564).
     - [l10n] Add RU translation for notify.d stuff.
       (github issue #29 by @Vladimir-csp)
+      (github issue #31 by @Vladimir-csp)
     - [Conf] Add lxcfs to override_rc.
       (Debian Bug#832166 by Evgeni Golov <evgeni@debian.org>)
     - [Conf] Pass arguments of apt-pinvoke to needrestart.
       (Debian Bug#826220 by Wolfgang Karall-Ahlborn <lists+debian-bugs@karall-edv.at>)
     - [Core] Fix orcexec regex to match on removed files, too.
       (Debian Bug#828103 by Paul Wise <pabs@debian.org>)
+    - [Core] Use $(MAKE) instead of make for parallel make.
+      (github issue #34 by Craig Andrews @candrews)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
