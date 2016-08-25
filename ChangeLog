@@ -14,6 +14,8 @@ needrestart (2.9) unstable; urgency=medium
       (Debian Bug#828103 by Paul Wise <pabs@debian.org>)
     - [Core] Use $(MAKE) instead of make for parallel make.
       (github issue #34 by Craig Andrews @candrews)
+    - [Core] Don't compare device numbers on anon fs (i.e. OpenVZ's simfs).
+      (github issue #28 by Sven-Haegar Koch @haegar)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 

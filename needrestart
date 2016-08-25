@@ -421,6 +421,12 @@ if(defined($opt_l)) {
 		    qq(00:00)
 		    );
 
+		# Don't compare device numbers on anon filesystems
+		# w/o a backing device (like OpenVZ's simfs).
+		$mdev = "00:00"
+		    if (((($sdev >> 8) & 0xfff) |
+			 (($sdev >> 32) & ~0xfff)) == 0);
+
 		# compare maps content vs. on-disk
 		unless($minode eq $sinode && ((grep {$mdev eq $_} @sdevs) ||
 					      # BTRFS breaks device ID mapping completely...
