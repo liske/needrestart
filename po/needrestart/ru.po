@@ -1,0 +1,204 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: needrestart 2.8\n"
+"Report-Msgid-Bugs-To: thomas@fiasko-nw.net\n"
+"POT-Creation-Date: 2016-06-11 10:32+0300\n"
+"PO-Revision-Date: 2016-06-11 11:09+0300\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.8\n"
+"Last-Translator: Vladimir Kudrya <vladimir-csp@yandex.ru>\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Language: ru\n"
+
+#: needrestart:350
+msgid "Scanning processes..."
+msgstr "Сканирование процессов..."
+
+#: needrestart:486
+msgid "Scanning candidates..."
+msgstr "Сканирование кандидатов..."
+
+#: needrestart:660
+msgid "Your outdated processes:"
+msgstr "Устаревшие процессы:"
+
+#: needrestart:710
+msgid "Running kernel seems to be up-to-date."
+msgstr "Запущено ядро последней версии."
+
+#: needrestart:710
+msgid "Running kernel seems to be up-to-date (ABI upgrades are not detected)."
+msgstr "Запущено ядро последней версии (обновлений ABI не найдено)."
+
+#: needrestart:714 needrestart:727
+msgid "an outdated kernel image"
+msgstr "устаревший образ ядра"
+
+#: needrestart:718
+#, perl-brace-format
+msgid ""
+"The currently running kernel version is {kversion} and there is an ABI "
+"compatible upgrade pending."
+msgstr ""
+"Версия текущего запущенного ядра: {kversion}, незавершенное обновление ABI в "
+"процессе."
+
+#: needrestart:731
+#, perl-brace-format
+msgid ""
+"The currently running kernel version is {kversion} which is not the expected "
+"kernel version {eversion}."
+msgstr ""
+"Версия текущего запущенного ядра {kversion} не совпадает с ожидаемой версией "
+"{eversion}."
+
+#: needrestart:741
+msgid "Failed to retrieve available kernel versions."
+msgstr "Невозможно получить доступные версии ядра."
+
+#: needrestart:750
+msgid "No services need to be restarted."
+msgstr "Службы не требуют перезапуска."
+
+#: needrestart:759
+msgid "outdated binaries"
+msgstr "устаревшие процессы"
+
+#: needrestart:764 needrestart:829
+msgid "Services to be restarted:"
+msgstr "Службы на перезапуск:"
+
+#: needrestart:765 needrestart:828
+msgid "Restarting services..."
+msgstr "Перезапуск служб..."
+
+#: needrestart:812 needrestart:856
+msgid "Services being skipped:"
+msgstr "Пропущенные службы:"
+
+#: needrestart:875
+msgid "No containers need to be restarted."
+msgstr "Контейнеры не требуют перезапуска."
+
+#: needrestart:884
+msgid "outdated containers"
+msgstr "устаревшие контейнеры"
+
+#: needrestart:889 needrestart:934
+msgid "Containers to be restarted:"
+msgstr "Контейнеры на перезапуск:"
+
+#: needrestart:890 needrestart:933
+msgid "Restarting containers..."
+msgstr "Перезапуск контейнеров..."
+
+#: needrestart:924
+msgid "Containers being skipped:"
+msgstr "Пропущенные контейнеры:"
+
+#: needrestart:946
+msgid "No user sessions are running outdated binaries."
+msgstr "В сеансах пользователей нет устаревших процессов."
+
+#: needrestart:955
+msgid "outdated sessions"
+msgstr "устаревшие сеансы"
+
+#: needrestart:958
+msgid "User sessions running outdated binaries:"
+msgstr "Сеансы пользователей с устаревшими процессами:"
+
+#: needrestart:998
+msgid "and"
+msgstr "и"
+
+#: perl/lib/NeedRestart/Kernel/Linux.pm:129
+msgid "Scanning linux images..."
+msgstr "Сканироване образов linux..."
+
+#: perl/lib/NeedRestart/Kernel/kFreeBSD.pm:49
+msgid "Scanning kfreebsd images..."
+msgstr "Сканирование образов kfreebsd..."
+
+#: perl/lib/NeedRestart/UI/stdio.pm:41
+#, perl-brace-format
+msgid ""
+"Pending kernel upgrade!\n"
+"\n"
+"Running kernel version:\n"
+"  {kversion}\n"
+"\n"
+"Diagnostics:\n"
+"  {message}\n"
+"\n"
+"Restarting the system to load the new kernel will not be handled "
+"automatically, so you should consider rebooting. [Return]\n"
+msgstr ""
+"Незавершенное обновление ядра!\n"
+"\n"
+"Версия текущего ядра:\n"
+"  {kversion}\n"
+"\n"
+"Диагностика:\n"
+"  {message}\n"
+"\n"
+"Перезагрузка системы для запуска нового ядра не будет выполнена "
+"автоматически, поэтому запланируйте перезагрузку. [Return]\n"
+
+#: perl/lib/NeedRestart/UI/stdio.pm:53
+msgid "The currently running kernel has an ABI compatible upgrade pending."
+msgstr "Для текущего ядра есть незавершенное обновление ABI."
+
+#: perl/lib/NeedRestart/UI/stdio.pm:61
+#, perl-brace-format
+msgid ""
+"The currently running kernel version is not the expected kernel version "
+"{eversion}."
+msgstr "Запущенное ядро не соответствует ожидаемой версии {eversion}."
+
+#: perl/lib/NeedRestart/UI/stdio.pm:72
+#, perl-brace-format
+msgid ""
+"\n"
+"This system runs {ehint}. For more details, run «needrestart -m a».\n"
+"\n"
+"You should consider rebooting!\n"
+"\n"
+msgstr ""
+"\n"
+"В системе запущено: {ehint}. Для получения подробностей выполните "
+"«needrestart -m a».\n"
+"\n"
+"Запланируйте перезагрузку!\n"
+"\n"
+
+#: perl/lib/NeedRestart/UI/stdio.pm:104
+msgid "yes"
+msgstr "да"
+
+#: perl/lib/NeedRestart/UI/stdio.pm:104
+msgid "no"
+msgstr "нет"
+
+#: perl/lib/NeedRestart/UI/stdio.pm:126
+msgid ""
+"  (Y)es  - restart this service\n"
+"  (N)o   - do not restart this service\n"
+"  (A)uto - auto restart all remaining services\n"
+"  (S)top - stop restarting services\n"
+"\n"
+msgstr ""
+"  (Y)es  - перезапустить службу\n"
+"  (N)o   - не перезапускать службу\n"
+"  (A)uto - автоматически перезапустить оставшиеся службы\n"
+"  (S)top - прекратить перезапуск служб\n"
+"\n"
+
+#: perl/lib/NeedRestart/UI/stdio.pm:159
+#, perl-brace-format
+msgid "Restart «{rc}»?"
+msgstr "Перезапустить «{rc}»?"

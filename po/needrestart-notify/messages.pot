@@ -41,7 +41,5 @@ msgstr ""
 #: ex/notify.d/400-notify-send:45
 msgid ""
 "Your session is running obsolete binaries or libraries as listed below.\n"
-"<i><b>Please consider a relogin or restart of the affected processes!</b></"
-"i>\n"
-"\n"
+"<i><b>Please consider a relogin or restart of the affected processes!</b></i>"
 msgstr ""

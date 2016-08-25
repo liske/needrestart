@@ -43,9 +43,7 @@ case "$NR_SESSION" in
 
 	MSGTITLE=$(gettext 'Relogin or restarts required!')
 	MSGBODY=$(gettext 'Your session is running obsolete binaries or libraries as listed below.
-<i><b>Please consider a relogin or restart of the affected processes!</b></i>
-
-')$(cat)
+<i><b>Please consider a relogin or restart of the affected processes!</b></i>')'\n'$(cat)
 
 	su -p -s /bin/sh -c "$NSEND -u critical -i dialog-warning \"$MSGTITLE\" \"$MSGBODY\"" "$NR_USERNAME"
 	;;
