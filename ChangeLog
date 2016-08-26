@@ -22,6 +22,8 @@ needrestart (2.9) unstable; urgency=medium
       (github issue #33 by Evgenii Terechkov @evgkrsk)
     - [Core] Make systemctl_combine config option working.
       (Debian Bug#826526 by Paul Wise <pabs@debian.org>)
+    - [Core] Handle newlines in kernel versions gracefully.
+      (Debian Bug#827162 by Martin Steigerwald <martin@lichtvoll.de>)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 

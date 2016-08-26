@@ -159,8 +159,7 @@ sub nr_kernel_check_real($$) {
 
 	my $iversion = $verstr;
 	$iversion =~ s/^Linux version //;
-	chomp($iversion);
-	$iversion =~ s/\s.+$//;
+	$iversion =~ s/\s.+$//s;
 	$kernels{$iversion} = (index($verstr, $release) != -1 && index($verstr, $version) != -1);
 
 	print STDERR "$LOGPREF $fn => $verstr [$iversion]".($kernels{$iversion} ? '*' : '')."\n" if($debug);
