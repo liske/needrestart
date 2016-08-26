@@ -1,8 +1,6 @@
 needrestart (2.9) unstable; urgency=medium
 
   * Changes:
-    - [UI] Add a workaround for bug in Term::ReadKey if STDOUT does not
-      print on a TTY (see also Debian Bug#824564).
     - [l10n] Add RU translation for notify.d stuff.
       (github issue #29 by @Vladimir-csp)
       (github issue #31 by @Vladimir-csp)
@@ -10,22 +8,26 @@ needrestart (2.9) unstable; urgency=medium
       (Debian Bug#832166 by Evgeni Golov <evgeni@debian.org>)
     - [Conf] Pass arguments of apt-pinvoke to needrestart.
       (Debian Bug#826220 by Wolfgang Karall-Ahlborn <lists+debian-bugs@karall-edv.at>)
-    - [Core] Fix orcexec regex to match on removed files, too.
-      (Debian Bug#828103 by Paul Wise <pabs@debian.org>)
     - [Core] Use $(MAKE) instead of make for parallel make.
       (github issue #34 by Craig Andrews @candrews)
+  * Features:
+    - [Core] Sys-V: use chkconfig tags if LSB tags are missing.
+      (github issue #33 by Evgenii Terechkov @evgkrsk)
+    - [Interp] Cache file lists of interpreter processes.
+      (Debian Bug#826247 by Wolfgang Karall-Ahlborn <lists+debian-bugs@karall-edv.at>)
+  * Fixes:
+    - [UI] Add a workaround for bug in Term::ReadKey if STDOUT does not
+      print on a TTY (see also Debian Bug#824564).
+    - [Core] Fix orcexec regex to match on removed files, too.
+      (Debian Bug#828103 by Paul Wise <pabs@debian.org>)
     - [Core] Don't compare device numbers on anon fs (i.e. OpenVZ's simfs).
       (github issue #28 by Sven-Haegar Koch @haegar)
     - [Core] Fix odd perl warnings about LSB tags.
-      (github issue #33 by Evgenii Terechkov @evgkrsk)
-    - [Core] Sys-V: use chkconfig tags if LSB tags are missing.
       (github issue #33 by Evgenii Terechkov @evgkrsk)
     - [Core] Make systemctl_combine config option working.
       (Debian Bug#826526 by Paul Wise <pabs@debian.org>)
     - [Core] Handle newlines in kernel versions gracefully.
       (Debian Bug#827162 by Martin Steigerwald <martin@lichtvoll.de>)
-    - [Interp] Cache file lists of interpreter processes.
-      (Debian Bug#826247 by Wolfgang Karall-Ahlborn <lists+debian-bugs@karall-edv.at>)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
