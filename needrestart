@@ -801,8 +801,7 @@ if(defined($opt_l) && !$uid) {
 	    
 	    foreach my $rc (sort { lc($a) cmp lc($b) } keys %restart) {
 		# always combine restarts in one systemctl command
-		local %nrconf;
-		$nrconf{systemctl_combine} = 1 unless($opt_r eq 'l');
+		local $nrconf{systemctl_combine} = 1 unless($opt_r eq 'l');
 
 		if($opt_b) {
 		    print "NEEDRESTART-SVC: $rc\n" unless($opt_p);
@@ -859,8 +858,7 @@ if(defined($opt_l) && !$uid) {
 	    $ui->query_pkgs(__('Services to be restarted:'), $nrconf{defno}, \%restart, $nrconf{override_rc},
 			    sub {
 				# always combine restarts in one systemctl command
-				local %nrconf;
-				$nrconf{systemctl_combine} = 1;
+				local $nrconf{systemctl_combine} = 1;
 
 				my $rc = shift;
 				@skipped_services = grep { $_ ne $rc; } @skipped_services;
