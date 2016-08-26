@@ -128,6 +128,7 @@ sub source {
 sub files {
     my $self = shift;
     my $pid = shift;
+    my $cache = shift;
     my $ptable = nr_ptable_pid($pid);
     unless($ptable->{cwd}) {
 	print STDERR "$LOGPREF #$pid: could not get current working directory, skipping\n" if($self->{debug});
@@ -165,6 +166,13 @@ sub files {
 	print STDERR "$LOGPREF #$pid: source file not found, skipping\n" if($self->{debug});
 	print STDERR "$LOGPREF #$pid:  reduced ARGV: ".join(' ', @ARGV)."\n" if($self->{debug});
 	return ();
+    }
+    print STDERR "$LOGPREF #$pid: source=$src\n" if($self->{debug});
+
+    # use cached data if avail
+    if(exists($cache->{files}->{(__PACKAGE__)}->{$src})) {
+	print STDERR "$LOGPREF #$pid: use cached file list\n" if($self->{debug});
+	return %{ $cache->{files}->{(__PACKAGE__)}->{$src} };
     }
 
     # prepare include path environment variable
@@ -205,6 +213,8 @@ sub files {
     } keys %files;
 
     chdir($cwd);
+
+    $cache->{files}->{(__PACKAGE__)}->{$src} = \%ret;
     return %ret;
 }
 

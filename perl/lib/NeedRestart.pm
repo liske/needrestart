@@ -122,6 +122,7 @@ sub needrestart_ui {
 
 
 my %Interps;
+my %InterpCache;
 my $idebug;
 
 sub needrestart_interp_register($) {
@@ -153,7 +154,7 @@ sub needrestart_interp_check($$$) {
 	    print STDERR "$LOGPREF #$pid is a ".(ref $interp)."\n" if($debug);
 
 	    my $ps = nr_ptable_pid($pid);
-	    my %files = $interp->files($pid);
+	    my %files = $interp->files($pid, \%InterpCache);
 
 	    if(grep {!defined($_) || $_ > $ps->start} values %files) {
 		if($debug) {
