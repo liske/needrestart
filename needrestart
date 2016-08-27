@@ -250,7 +250,7 @@ sub parse_lsbinit($) {
 
 	$found_lsb++;
 	$lsb{pidfiles} = [$chkconfig{pidfile}];
-	$lsb{q(default-start)} = $chkconfig{runlevel};
+	$lsb{q(default-start)} = $chkconfig{runlevels};
     }
 
     unless($found_lsb) {
