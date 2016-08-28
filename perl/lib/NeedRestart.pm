@@ -46,6 +46,7 @@ our @EXPORT = qw(
     NEEDRESTART_PRIO_HIGH
 
     needrestart_ui
+    needrestart_ui_list
     needrestart_interp_check
     needrestart_interp_source
     needrestart_cont_check
@@ -118,6 +119,14 @@ sub needrestart_ui {
     print STDERR "$LOGPREF Using UI '$ui'...\n" if($verbosity > 1);
 
     return $ui->new($verbosity);
+}
+
+sub needrestart_ui_list {
+    my $verbosity = shift;
+    my $prefui = shift;
+
+    needrestart_ui_init($verbosity, $prefui) unless(%UIs);
+    return (sort { ncmp($UIs{$b}, $UIs{$a}) } keys %UIs);
 }
 
 

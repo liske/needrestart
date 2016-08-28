@@ -50,7 +50,7 @@ sub HELP_MESSAGE {
     print <<USG;
 Usage:
 
-  needrestart [-vn] [-c <cfg>] [-r <mode>] [-f <fe>] [-bkl]
+  needrestart [-vn] [-c <cfg>] [-r <mode>] [-f <fe>] [-u <ui>] [-bkl]
 
     -v		be more verbose
     -q		be quiet
@@ -65,7 +65,8 @@ Usage:
 	a	(a)utomatically restart
     -b		enable batch mode
     -p          enable nagios plugin mode
-    -f <fe>	overwrite debconf frontend
+    -f <fe>	overwrite debconf frontend (DEBIAN_FRONTEND, debconf(7))
+    -u <ui>     use prefered UI package (-u ? shows available packages)
 
   By using the following options only the specified checks are performed:
     -k          check for obsolete kernel
@@ -131,7 +132,8 @@ our $opt_k;
 our $opt_l;
 our $opt_p;
 our $opt_q;
-unless(getopts('c:vr:nm:bf:klpq')) {
+our $opt_u;
+unless(getopts('c:vr:nm:bf:klpqu:')) {
     HELP_MESSAGE;
     exit 1;
 }
@@ -197,6 +199,16 @@ chomp($runlevel);
 $runlevel = 2 unless($runlevel =~ s/^.+run-level (\S)\s.+$/$1/);
 
 # get UI
+if(defined($opt_u)) {
+    if ($opt_u eq '?') {
+	print STDERR join("\n\t", __(q(Available UI packages:)), needrestart_ui_list($nrconf{verbosity}, ($is_tty ? $nrconf{ui} : 'NeedRestart::UI::stdio')))."\n";
+	exit 0;
+    }
+    else {
+	$nrconf{ui} = $opt_u;
+    }
+}
+
 my $ui = ($opt_b ? NeedRestart::UI->new(0) : needrestart_ui($nrconf{verbosity}, ($is_tty ? $nrconf{ui} : 'NeedRestart::UI::stdio')));
 die "Error: no UI class available!\n" unless(defined($ui));
 
