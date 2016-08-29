@@ -32,6 +32,7 @@ use NeedRestart::CONT;
 use Sort::Naturally;
 
 use constant {
+    NEEDRESTART_PRIO_NOAUTO	=> 0,
     NEEDRESTART_PRIO_LOW	=> 1,
     NEEDRESTART_PRIO_MEDIUM	=> 10,
     NEEDRESTART_PRIO_HIGH	=> 100,
@@ -41,6 +42,7 @@ require Exporter;
 our @ISA = qw(Exporter);
 
 our @EXPORT = qw(
+    NEEDRESTART_PRIO_NOAUTO
     NEEDRESTART_PRIO_LOW
     NEEDRESTART_PRIO_MEDIUM
     NEEDRESTART_PRIO_HIGH
@@ -112,7 +114,9 @@ sub needrestart_ui {
     my $prefui = shift;
 
     needrestart_ui_init($verbosity, $prefui) unless(%UIs);
-    my ($ui) = sort { ncmp($UIs{$b}, $UIs{$a}) } keys %UIs;
+    my ($ui) = sort { ncmp($UIs{$b}, $UIs{$a}) } grep {
+	($UIs{$_} != NEEDRESTART_PRIO_NOAUTO) || ( defined($prefui) && ($prefui eq $_) )
+    } keys %UIs;
 
     return undef unless($ui);
 
