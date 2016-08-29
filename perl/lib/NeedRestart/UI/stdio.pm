@@ -101,13 +101,10 @@ sub _query($$) {
 	if($self->{stdio_same}) {
 	    my $s = $self->{stdio_same};
 	    if($s eq 'auto') {
-		$s = ($def eq 'Y' ? __('yes') : __('no'));
-	    }
-	    else {
-		$s = __($s);
+		$s = ($def eq 'Y' ? 'yes' : 'no');
 	    }
 
-	    print "$s\n";
+	    print __($s), "\n";
 	    return $s;
 	}
 
@@ -151,7 +148,7 @@ sub query_pkgs($$$$$$) {
 
     delete($self->{stdio_same});
 
-    $self->wprint(\*STDOUT, '', '', __($out)."\n");
+    $self->wprint(\*STDOUT, '', '', "$out\n");
     foreach my $rc (sort keys %$pkgs) {
 	my ($or) = grep { $rc =~ /$_/; } keys %$overrides;
 	my $d = (defined($or) ? ($overrides->{$or} ? 'Y' : 'N') : ($def ? 'N' : 'Y'));
