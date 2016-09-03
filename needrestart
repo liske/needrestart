@@ -1068,5 +1068,32 @@ if($opt_p) {
 	       ($opt_l ? "Sessions=$nagios{uperf};0;;0" : ()),
 	), "\n";
 
+    if(scalar %restart) {
+	print "Services:", join("\n- ", '', sort keys %restart), "\n";
+    }
+
+    my %conts = needrestart_cont_get($nrconf{verbosity} > 1);
+    if(scalar %conts) {
+	print "Containers:", join("\n- ", '', sort keys %conts), "\n";
+    }
+
+    if(scalar %sessions) {
+	print "Sessions:", join("\n- ", '',
+				map {
+				    my $uid = $_;
+				    my $user = uid2name($uid);
+				    my @ret;
+
+				    foreach my $sess (sort keys %{ $sessions{$uid} }) {
+					push(@ret, "$user \@ $sess");
+				    }
+
+				    @ret;
+				}
+				sort {
+				    ncmp(uid2name($a), uid2name($b));
+				} keys %sessions), "\n";
+    }
+
     exit $ret;
 }
