@@ -1005,7 +1005,7 @@ if(defined($opt_l) && !$uid) {
 	    $ui->notice(__ 'User sessions running outdated binaries:');
 	}
 	if($opt_p) {
-	    my $count = sum map { scalar %{ $sessions{$_} } } keys %sessions;
+	    my $count = sum map { scalar keys %{ $sessions{$_} } } keys %sessions;
 	    $nagios{ustr} = "$count (!)";
 	    $nagios{uret} = $nrconf{q(nagios-severity)}->{sessions};
 	    $nagios{uperf} = $count;
