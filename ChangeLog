@@ -32,7 +32,7 @@ needrestart (2.9) unstable; urgency=medium
       (Debian Bug#827162 by Martin Steigerwald <martin@lichtvoll.de>)
     - [Core] Fix session counter in nagios plugin mode.
 
- -- Thomas Liske <thomas@fiasko-nw.net>  
+ -- Thomas Liske <thomas@fiasko-nw.net>  Sat, 03 Sep 2016 14:52:41 +0200
 
 needrestart (2.8) unstable; urgency=medium
 
