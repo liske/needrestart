@@ -116,6 +116,12 @@ our %nrconf = (
     override_cont => [],
     interpscan => 1,
     kernelhints => 1,
+    q(nagios-severity) => {
+	services => 1,
+	kernel => 2,
+	sessions => 2,
+	containers => 1,
+    },
 );
 
 # backup ARGV (required for Debconf)
@@ -733,12 +739,12 @@ if(defined($opt_k)) {
 		$nagios{kstr} = $kvars{KVERSION};
 		if($kresult == NRK_VERUPGRADE) {
 		    $nagios{kstr} .= "!=$kvars{EVERSION} (!)";
-		    $nagios{kret} = 1;
+		    $nagios{kret} = $nrconf{q(nagios-severity)}->{kernel};
 		    $nagios{kperf} = 2;
 		}
 		elsif($kresult == NRK_ABIUPGRADE) {
 		    $nagios{kstr} .= " (!)";
-		    $nagios{kret} = 1;
+		    $nagios{kret} = $nrconf{q(nagios-severity)}->{kernel};
 		    $nagios{kperf} = 1;
 		}
 		elsif($kresult == NRK_NOUPGRADE) {
@@ -807,7 +813,7 @@ if(defined($opt_l) && !$uid) {
 	    $ui->notice(__ 'Restarting services...') if($opt_r eq 'a');
 	    if($opt_p) {
 		$nagios{sstr} = (scalar keys %restart).' (!)';
-		$nagios{sret} = 2;
+		$nagios{sret} = $nrconf{q(nagios-severity)}->{services};
 		$nagios{sperf} = (scalar keys %restart);
 	    }
 	    
@@ -930,7 +936,7 @@ if(defined($opt_l) && !$uid) {
 	    $ui->notice(__ 'Restarting containers...') if($opt_r eq 'a');
 	    if($opt_p) {
 		$nagios{cstr} = (scalar keys %conts).' (!)';
-		$nagios{cret} = 2;
+		$nagios{cret} = $nrconf{q(nagios-severity)}->{containers};
 		$nagios{cperf} = (scalar keys %conts);
 	    }
 
@@ -999,7 +1005,7 @@ if(defined($opt_l) && !$uid) {
 	}
 	if($opt_p) {
 	    $nagios{ustr} = (scalar keys %sessions).' (!)';
-	    $nagios{uret} = 1;
+	    $nagios{uret} = $nrconf{q(nagios-severity)}->{sessions};
 	    $nagios{uperf} = (scalar keys %sessions);
 	}
 	unless($opt_p || $opt_b) {
