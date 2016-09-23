@@ -112,6 +112,7 @@ our %nrconf = (
     ui_mode => 'a',
     systemctl_combine => 0,
     blacklist => [],
+    blacklist_interp => [],
     blacklist_rc => [],
     override_rc => [],
     override_cont => [],
@@ -484,7 +485,7 @@ if(defined($opt_l)) {
 	}
 
 	unless($restart || !$nrconf{interpscan}) {
-	    $restart++ if(needrestart_interp_check($nrconf{verbosity} > 1, $pid, $exe));
+	    $restart++ if(needrestart_interp_check($nrconf{verbosity} > 1, $pid, $exe, $nrconf{blacklist_interp}));
 	}
 
 	# handle containers (LXC, docker, etc.)
