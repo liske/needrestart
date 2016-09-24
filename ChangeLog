@@ -1,3 +1,11 @@
+needrestart (2.10) unstable; urgency=medium
+
+  * Features:
+    - [Interp] Allow ignoring of interpreted files.
+      (github issue #39 by Wolfgang Karall @wolfgangkarall)
+
+ -- Thomas Liske <thomas@fiasko-nw.net>  
+
 needrestart (2.9) unstable; urgency=medium
 
   * Changes:
