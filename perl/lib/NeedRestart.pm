@@ -155,10 +155,11 @@ sub needrestart_interp_init($) {
     }
 }
 
-sub needrestart_interp_check($$$) {
+sub needrestart_interp_check($$$$) {
     my $debug = shift;
     my $pid = shift;
     my $bin = shift;
+    my $blacklist = shift;
 
     needrestart_interp_init($debug) unless(%Interps);
 
@@ -168,6 +169,12 @@ sub needrestart_interp_check($$$) {
 
 	    my $ps = nr_ptable_pid($pid);
 	    my %files = $interp->files($pid, \%InterpCache);
+
+	    foreach my $path (keys %files) {
+		next unless(scalar grep { $path =~ /$_/; } @{$blacklist});
+		print  STDERR "$LOGPREF blacklisted: $path\n" if($debug);
+		delete($files{$path});
+	    }
 
 	    if(grep {!defined($_) || $_ > $ps->start} values %files) {
 		if($debug) {
