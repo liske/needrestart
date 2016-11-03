@@ -12,6 +12,8 @@ needrestart (2.10) unstable; urgency=medium
       (github issue #41 by @bxkx @r-lindner)
     - [UI] Do not use Text::Wrap while printing restart commands.
       (Debian Bug#838622 by Paul Wise <pabs@debian.org>)
+    - [Core] Do really restart services in automatic mode.
+      (Debian Bug#838355 by Georg <georg@riseup.net>)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 

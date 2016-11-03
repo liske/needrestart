@@ -860,10 +860,13 @@ if(defined($opt_l) && !$uid) {
 		    system(@cmd) if($opt_r eq 'a');
 			    });
 	    }
-	
+
 	    unless($#systemd_restart == -1) {
 		my @cmd = (qq(systemctl), qq(restart), @systemd_restart);
 		$ui->command(join(' ', '', @cmd));
+		$ui->runcmd(sub {
+		    system(@cmd) if($opt_r eq 'a');
+			    });
 	    }
 
 	    @systemd_restart = ();
