@@ -155,10 +155,16 @@ sub files {
     }
 
     @Module::ScanDeps::IncludeLibs = (exists($opts{I}) ? ($opts{I}) : ());
-    my $href = scan_deps(
-	files => [$src],
-	recurse => 1,
-    );
+    my $href;
+    {
+	# Silence warnings of Module::ScanDeps for dynamic loaded modules (github issue #41)
+	local $SIG{__WARN__} = sub { };
+
+	$href = scan_deps(
+	    files => [$src],
+	    recurse => 1,
+	    );
+    }
 
     my %ret = map {
 	my $stat = nr_stat($href->{$_}->{file});

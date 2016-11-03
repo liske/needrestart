@@ -8,6 +8,8 @@ needrestart (2.10) unstable; urgency=medium
       (github issue #46 by @jleroy @eigengrau)
   * Fixes:
     - [Core] Do not ignore processes if maps file could not be read.
+    - [Perl] Silence warnings of Module::ScanDeps for dynamic loaded modules.
+      (github issue #41 by @bxkx @r-lindner)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
