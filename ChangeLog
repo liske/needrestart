@@ -20,7 +20,7 @@ needrestart (2.10) unstable; urgency=medium
       Fixes kernel detection on Raspbian.
       (github issue #38 by @fenhl)
 
- -- Thomas Liske <thomas@fiasko-nw.net>  
+ -- Thomas Liske <thomas@fiasko-nw.net>  Thu, 03 Nov 2016 23:37:05 +0100
 
 needrestart (2.9) unstable; urgency=medium
 
