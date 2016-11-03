@@ -418,70 +418,75 @@ if(defined($opt_l)) {
 
 	# read file mappings (Linux 2.0+)
 	unless($restart) {
-	    open(HMAP, '<', "/proc/$pid/maps") || next;
-	    while(<HMAP>) {
-		chomp;
-		my ($maddr, $mperm, $moffset, $mdev, $minode, $path) = split(/\s+/, $_, 6);
+	    if(open(HMAP, '<', "/proc/$pid/maps")) {
+		while(<HMAP>) {
+		    chomp;
+		    my ($maddr, $mperm, $moffset, $mdev, $minode, $path) = split(/\s+/, $_, 6);
 
-		# skip special handles and non-executable mappings
-		next unless(defined($path) && $minode != 0 && $path ne '' && $mperm =~ /x/);
+		    # skip special handles and non-executable mappings
+		    next unless(defined($path) && $minode != 0 && $path ne '' && $mperm =~ /x/);
 
-		# skip special device paths
-		next if($path =~ m@^/(SYSV00000000$|drm$|dev/)@);
+		    # skip special device paths
+		    next if($path =~ m@^/(SYSV00000000$|drm$|dev/)@);
 
-		# skip aio(7) mapping
-		next if($path =~ m@^/\[aio\]@);
+		    # skip aio(7) mapping
+		    next if($path =~ m@^/\[aio\]@);
 
-		# skip Oil Runtime Compiler's JIT files
-		next if($path =~ m@/orcexec\.[\w\d]+( \(deleted\))?$@);
+		    # skip Oil Runtime Compiler's JIT files
+		    next if($path =~ m@/orcexec\.[\w\d]+( \(deleted\))?$@);
 
-		# removed executable mapped files
-		if($path =~ s/ \(deleted\)$// ||  # Linux
-		   $path =~ s/^\(deleted\)//) {   # Linux VServer
-		    print STDERR "$LOGPREF #$pid uses deleted $path\n" if($nrconf{verbosity} > 1);
-		    $restart++;
-		    last;
-		}
+		    # removed executable mapped files
+		    if($path =~ s/ \(deleted\)$// ||  # Linux
+		       $path =~ s/^\(deleted\)//) {   # Linux VServer
+			print STDERR "$LOGPREF #$pid uses deleted $path\n" if($nrconf{verbosity} > 1);
+			$restart++;
+			last;
+		    }
 
-		# check for non-existing libs
-		my @paths = ("/proc/$pid/map_files/$maddr", "/proc/$pid/root/$path");
-		my ($testp) = grep { -e $_; } @paths;
-		unless($testp) {
-		    unless($path =~ m@^/tmp/@ || $path =~ m@^(/var)?/run/@) {
-			print STDERR "$LOGPREF #$pid uses non-existing $path\n" if($nrconf{verbosity} > 1);
+		    # check for non-existing libs
+		    my @paths = ("/proc/$pid/map_files/$maddr", "/proc/$pid/root/$path");
+		    my ($testp) = grep { -e $_; } @paths;
+		    unless($testp) {
+			unless($path =~ m@^/tmp/@ || $path =~ m@^(/var)?/run/@) {
+			    print STDERR "$LOGPREF #$pid uses non-existing $path\n" if($nrconf{verbosity} > 1);
+			    $restart++;
+			    last;
+			}
+		    }
+
+		    # get on-disk info
+		    my ($sdev, $sinode) = stat($testp);
+		    my @sdevs = (
+			# glibc gnu_dev_* definition from sysmacros.h
+			sprintf("%02x:%02x", (($sdev >> 8) & 0xfff) | (($sdev >> 32) & ~0xfff), (($sdev & 0xff) | (($sdev >> 12) & ~0xff))),
+			# Traditional definition of major(3) and minor(3)
+			sprintf("%02x:%02x", $sdev >> 8, $sdev & 0xff),
+
+			# kFreeBSD: /proc/<pid>/maps does not contain device IDs
+			qq(00:00)
+			);
+
+		    # Don't compare device numbers on anon filesystems
+		    # w/o a backing device (like OpenVZ's simfs).
+		    $mdev = "00:00"
+			if (((($sdev >> 8) & 0xfff) |
+			     (($sdev >> 32) & ~0xfff)) == 0);
+
+		    # compare maps content vs. on-disk
+		    unless($minode eq $sinode && ((grep {$mdev eq $_} @sdevs) ||
+						  # BTRFS breaks device ID mapping completely...
+						  # ignoring unnamed device IDs for now
+						  $mdev =~ /^00:/)) {
+			print STDERR "$LOGPREF #$pid uses obsolete $path\n" if($nrconf{verbosity} > 1);
 			$restart++;
 			last;
 		    }
 		}
-
-		# get on-disk info
-		my ($sdev, $sinode) = stat($testp);
-		my @sdevs = (
-		    # glibc gnu_dev_* definition from sysmacros.h
-		    sprintf("%02x:%02x", (($sdev >> 8) & 0xfff) | (($sdev >> 32) & ~0xfff), (($sdev & 0xff) | (($sdev >> 12) & ~0xff))),
-		    # Traditional definition of major(3) and minor(3)
-		    sprintf("%02x:%02x", $sdev >> 8, $sdev & 0xff),
-		    # kFreeBSD: /proc/<pid>/maps does not contain device IDs
-		    qq(00:00)
-		    );
-
-		# Don't compare device numbers on anon filesystems
-		# w/o a backing device (like OpenVZ's simfs).
-		$mdev = "00:00"
-		    if (((($sdev >> 8) & 0xfff) |
-			 (($sdev >> 32) & ~0xfff)) == 0);
-
-		# compare maps content vs. on-disk
-		unless($minode eq $sinode && ((grep {$mdev eq $_} @sdevs) ||
-					      # BTRFS breaks device ID mapping completely...
-					      # ignoring unnamed device IDs for now
-					      $mdev =~ /^00:/)) {
-		    print STDERR "$LOGPREF #$pid uses obsolete $path\n" if($nrconf{verbosity} > 1);
-		    $restart++;
-		    last;
-		}
+		close(HMAP);
 	    }
-	    close(HMAP);
+	    else {
+		print STDERR "$LOGPREF #$pid could not open maps: $!\n" if($nrconf{verbosity} > 1);
+	    }
 	}
 
 	unless($restart || !$nrconf{interpscan}) {

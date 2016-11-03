@@ -3,6 +3,8 @@ needrestart (2.10) unstable; urgency=medium
   * Features:
     - [Interp] Allow ignoring of interpreted files.
       (github issue #39 by Wolfgang Karall @wolfgangkarall)
+  * Fixes:
+    - [Core] Do not ignore processes if maps file could not be read.
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
