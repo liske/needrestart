@@ -116,6 +116,7 @@ our %nrconf = (
     blacklist_rc => [],
     override_rc => [],
     override_cont => [],
+    skip_mapfiles => 0,
     interpscan => 1,
     kernelhints => 1,
     q(nagios-status) => {
@@ -443,43 +444,47 @@ if(defined($opt_l)) {
 			last;
 		    }
 
-		    # check for non-existing libs
-		    my @paths = ("/proc/$pid/map_files/$maddr", "/proc/$pid/root/$path");
-		    my ($testp) = grep { -e $_; } @paths;
-		    unless($testp) {
-			unless($path =~ m@^/tmp/@ || $path =~ m@^(/var)?/run/@) {
-			    print STDERR "$LOGPREF #$pid uses non-existing $path\n" if($nrconf{verbosity} > 1);
+		    # check for outdated lib mappings
+		    unless($nrconf{skip_mapfiles} == 1) {
+			my @paths = ("/proc/$pid/map_files/$maddr", "/proc/$pid/root/$path");
+			my ($testp) = grep { -e $_; } @paths;
+			unless($testp) {
+			    unless($path =~ m@^/tmp/@ ||
+				   $path =~ m@^(/var)?/run/@ ||
+				   $nrconf{skip_mapfiles} == -1) {
+				print STDERR "$LOGPREF #$pid uses non-existing $path\n" if($nrconf{verbosity} > 1);
+				$restart++;
+				last;
+			    }
+			}
+
+			# get on-disk info
+			my ($sdev, $sinode) = stat($testp);
+			my @sdevs = (
+			    # glibc gnu_dev_* definition from sysmacros.h
+			    sprintf("%02x:%02x", (($sdev >> 8) & 0xfff) | (($sdev >> 32) & ~0xfff), (($sdev & 0xff) | (($sdev >> 12) & ~0xff))),
+			    # Traditional definition of major(3) and minor(3)
+			    sprintf("%02x:%02x", $sdev >> 8, $sdev & 0xff),
+
+			    # kFreeBSD: /proc/<pid>/maps does not contain device IDs
+			    qq(00:00)
+			    );
+
+			# Don't compare device numbers on anon filesystems
+			# w/o a backing device (like OpenVZ's simfs).
+			$mdev = "00:00"
+			    if (((($sdev >> 8) & 0xfff) |
+				 (($sdev >> 32) & ~0xfff)) == 0);
+
+			# compare maps content vs. on-disk
+			unless($minode eq $sinode && ((grep {$mdev eq $_} @sdevs) ||
+						      # BTRFS breaks device ID mapping completely...
+						      # ignoring unnamed device IDs for now
+						      $mdev =~ /^00:/)) {
+			    print STDERR "$LOGPREF #$pid uses obsolete $path\n" if($nrconf{verbosity} > 1);
 			    $restart++;
 			    last;
 			}
-		    }
-
-		    # get on-disk info
-		    my ($sdev, $sinode) = stat($testp);
-		    my @sdevs = (
-			# glibc gnu_dev_* definition from sysmacros.h
-			sprintf("%02x:%02x", (($sdev >> 8) & 0xfff) | (($sdev >> 32) & ~0xfff), (($sdev & 0xff) | (($sdev >> 12) & ~0xff))),
-			# Traditional definition of major(3) and minor(3)
-			sprintf("%02x:%02x", $sdev >> 8, $sdev & 0xff),
-
-			# kFreeBSD: /proc/<pid>/maps does not contain device IDs
-			qq(00:00)
-			);
-
-		    # Don't compare device numbers on anon filesystems
-		    # w/o a backing device (like OpenVZ's simfs).
-		    $mdev = "00:00"
-			if (((($sdev >> 8) & 0xfff) |
-			     (($sdev >> 32) & ~0xfff)) == 0);
-
-		    # compare maps content vs. on-disk
-		    unless($minode eq $sinode && ((grep {$mdev eq $_} @sdevs) ||
-						  # BTRFS breaks device ID mapping completely...
-						  # ignoring unnamed device IDs for now
-						  $mdev =~ /^00:/)) {
-			print STDERR "$LOGPREF #$pid uses obsolete $path\n" if($nrconf{verbosity} > 1);
-			$restart++;
-			last;
 		    }
 		}
 		close(HMAP);

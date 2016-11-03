@@ -3,6 +3,9 @@ needrestart (2.10) unstable; urgency=medium
   * Features:
     - [Interp] Allow ignoring of interpreted files.
       (github issue #39 by Wolfgang Karall @wolfgangkarall)
+    - [Core] Make verification of mapped files in fileystem configurable as a
+      workaround for broken grsecurity kernels.
+      (github issue #46 by @jleroy @eigengrau)
   * Fixes:
     - [Core] Do not ignore processes if maps file could not be read.
 
