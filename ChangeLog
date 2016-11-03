@@ -16,6 +16,9 @@ needrestart (2.10) unstable; urgency=medium
       (Debian Bug#838622 by Paul Wise <pabs@debian.org>)
     - [Core] Do really restart services in automatic mode.
       (Debian Bug#838355 by Georg <georg@riseup.net>)
+    - [Kernel] Include /boot/*.img while looking for linux kernel images.
+      Fixes kernel detection on Raspbian.
+      (github issue #38 by @fenhl)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 

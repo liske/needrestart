@@ -125,7 +125,7 @@ sub nr_kernel_check_real($$) {
 
     die "$LOGPREF Not running on Linux!\n" unless($sysname eq 'Linux');
 
-    my @kfiles = reverse nsort </boot/vmlinu*>;
+    my @kfiles = reverse nsort </boot/vmlinu* /boot/*.img>;
     $ui->progress_prep(scalar @kfiles, __ 'Scanning linux images...');
 
     my %kernels;
