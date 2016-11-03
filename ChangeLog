@@ -6,6 +6,8 @@ needrestart (2.10) unstable; urgency=medium
     - [Core] Make verification of mapped files in fileystem configurable as a
       workaround for broken grsecurity kernels.
       (github issue #46 by @jleroy @eigengrau)
+    - [Core] Make ignore of mapped files configurable.
+      (github issue #45 by @stbuehler)
   * Fixes:
     - [Core] Do not ignore processes if maps file could not be read.
     - [Perl] Silence warnings of Module::ScanDeps for dynamic loaded modules.

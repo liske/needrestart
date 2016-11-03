@@ -114,6 +114,7 @@ our %nrconf = (
     blacklist => [],
     blacklist_interp => [],
     blacklist_rc => [],
+    blacklist_mappings => [],
     override_rc => [],
     override_cont => [],
     skip_mapfiles => 0,
@@ -365,6 +366,7 @@ print "NEEDRESTART-VER: $NeedRestart::VERSION\n" if($opt_b && !$opt_p);
 my %restart;
 my %sessions;
 my @easy_hints;
+
 if(defined($opt_l)) {
     my @ign_pids=($$, getppid());
 
@@ -428,13 +430,7 @@ if(defined($opt_l)) {
 		    next unless(defined($path) && $minode != 0 && $path ne '' && $mperm =~ /x/);
 
 		    # skip special device paths
-		    next if($path =~ m@^/(SYSV00000000$|drm$|dev/)@);
-
-		    # skip aio(7) mapping
-		    next if($path =~ m@^/\[aio\]@);
-
-		    # skip Oil Runtime Compiler's JIT files
-		    next if($path =~ m@/orcexec\.[\w\d]+( \(deleted\))?$@);
+		    next if(scalar grep { $path =~ /$_/; } @{$nrconf{blacklist_mappings}});
 
 		    # removed executable mapped files
 		    if($path =~ s/ \(deleted\)$// ||  # Linux
