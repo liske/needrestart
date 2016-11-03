@@ -127,6 +127,14 @@ sub notice {
 }
 
 
+sub command {
+    my $self = shift;
+    my $out = shift;
+
+    print STDERR "$out\n";
+}
+
+
 sub query_pkgs($$$$$$) {
     my $self = shift;
     my $out = shift;

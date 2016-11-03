@@ -156,6 +156,13 @@ sub notice($$) {
 }
 
 
+sub command() {
+   my $self = shift;
+
+   $self->notice(@_);
+}
+
+
 sub query_pkgs($$$$$) {
 }
 

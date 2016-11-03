@@ -855,7 +855,7 @@ if(defined($opt_l) && !$uid) {
 		my @cmd = restart_cmd($rc);
 		next unless($#cmd > -1);
 
-		$ui->notice(join(' ', '', @cmd));
+		$ui->command(join(' ', '', @cmd));
 		$ui->runcmd(sub {
 		    system(@cmd) if($opt_r eq 'a');
 			    });
@@ -863,7 +863,7 @@ if(defined($opt_l) && !$uid) {
 	
 	    unless($#systemd_restart == -1) {
 		my @cmd = (qq(systemctl), qq(restart), @systemd_restart);
-		$ui->notice(join(' ', '', @cmd));
+		$ui->command(join(' ', '', @cmd));
 	    }
 
 	    @systemd_restart = ();
@@ -871,12 +871,12 @@ if(defined($opt_l) && !$uid) {
 		$ui->notice(__ 'Services being skipped:');
 		foreach my $rc (sort @skipped_services) {
 		    my @cmd = restart_cmd($rc);
-		    $ui->notice(join(' ', '', @cmd)) if($#cmd > -1);
+		    $ui->command(join(' ', '', @cmd)) if($#cmd > -1);
 		}
 
 		unless($#systemd_restart == -1) {
 		    my @cmd = (qq(systemctl), qq(restart), @systemd_restart);
-		    $ui->notice(join(' ', '', @cmd));
+		    $ui->command(join(' ', '', @cmd));
 		}
 	    }
 	}
@@ -896,14 +896,14 @@ if(defined($opt_l) && !$uid) {
 				my @cmd = restart_cmd($rc);
 				return unless($#cmd > -1);
 
-				$ui->notice(join(' ', '', @cmd));
+				$ui->command(join(' ', '', @cmd));
 				system(@cmd);
 			    });
 
 	    if($#systemd_restart > -1) {
 		my @cmd = (qw(systemctl restart), @systemd_restart);
 
-		$ui->notice(join(' ', '', @cmd));
+		$ui->command(join(' ', '', @cmd));
 		$ui->runcmd(sub {
 		    system(@cmd);
 			    });
@@ -914,12 +914,12 @@ if(defined($opt_l) && !$uid) {
 		$ui->notice(__ 'Services being skipped:');
 		foreach my $rc (sort @skipped_services) {
 		    my @cmd = restart_cmd($rc);
-		    $ui->notice(join(' ', '', @cmd)) if($#cmd > -1);
+		    $ui->command(join(' ', '', @cmd)) if($#cmd > -1);
 		}
 
 		unless($#systemd_restart == -1) {
 		    my @cmd = (qq(systemctl), qq(restart), @systemd_restart);
-		    $ui->notice(join(' ', '', @cmd));
+		    $ui->command(join(' ', '', @cmd));
 		}
 	    }
 	}
@@ -972,7 +972,7 @@ if(defined($opt_l) && !$uid) {
 		    next;
 		}
 
-		$ui->notice(join(' ', '', @{ $conts{$cont} }));
+		$ui->command(join(' ', '', @{ $conts{$cont} }));
 		$ui->runcmd(sub {
 		    system(@{ $conts{$cont} }) if($opt_r eq 'a');
 			    });
@@ -981,7 +981,7 @@ if(defined($opt_l) && !$uid) {
 	    if($#skipped_containers > -1) {
 		$ui->notice(__ 'Containers being skipped:');
 		foreach my $cont (sort @skipped_containers) {
-		    $ui->notice(join(' ', '', @{ $conts{$cont} }));
+		    $ui->command(join(' ', '', @{ $conts{$cont} }));
 		}
 	    }
 	}
@@ -992,7 +992,7 @@ if(defined($opt_l) && !$uid) {
 	    $ui->query_conts(__('Containers to be restarted:'), $nrconf{defno}, \%conts, $nrconf{override_rc},
 			     sub {
 				 my $cont = shift;
-				 $ui->notice(join(' ', '', @{ $conts{$cont} }));
+				 $ui->command(join(' ', '', @{ $conts{$cont} }));
 				 system(@{ $conts{$cont} });
 			     });
 	}

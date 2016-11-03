@@ -90,6 +90,14 @@ sub notice($$) {
 }
 
 
+sub command {
+    my $self = shift;
+    my $out = shift;
+
+    print "$out\n";
+}
+
+
 sub _query($$) {
     my $self = shift;
     my($query, $def) = @_;
