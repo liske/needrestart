@@ -20,3 +20,11 @@ nor restart anything. The output format is complient to the
 *apt-dater protocol*[1].
 
 [1] https://github.com/DE-IBH/apt-dater-host/blob/master/doc/
+
+
+The kernel status (`NEEDRESTART-KSTA`) value has the following meaning:
+
+- *0*: unknown or failed to detect
+- *1*: no pending upgrade
+- *2*: ABI compatible upgrade pending
+- *3*: version upgrade pending
