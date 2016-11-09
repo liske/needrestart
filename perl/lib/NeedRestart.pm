@@ -96,7 +96,7 @@ sub needrestart_ui_init($$) {
     my $verbosity = shift;
     my $prefui = shift;
 
-    # load prefered UI module
+    # load preferred UI module
     if(defined($prefui)) {
 	return if(eval "use $prefui; 1;");
     }

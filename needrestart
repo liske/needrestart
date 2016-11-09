@@ -67,7 +67,7 @@ Usage:
     -b		enable batch mode
     -p          enable nagios plugin mode
     -f <fe>	overwrite debconf frontend (DEBIAN_FRONTEND, debconf(7))
-    -u <ui>     use prefered UI package (-u ? shows available packages)
+    -u <ui>     use preferred UI package (-u ? shows available packages)
 
   By using the following options only the specified checks are performed:
     -k          check for obsolete kernel
