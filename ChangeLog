@@ -1,3 +1,11 @@
+needrestart (2.11) unstable; urgency=medium
+
+  * Fixes:
+    - [Core] Fix default config type for override_* settings.
+      (github issue #47 by @mphilipps)
+
+ -- Thomas Liske <thomas@fiasko-nw.net>  
+
 needrestart (2.10) unstable; urgency=medium
 
   * Features:
