@@ -8,6 +8,8 @@ needrestart (2.11) unstable; urgency=medium
     - [Kernel] Strip .img from version string when deducting the kernel
       version from filename.
       (github issue #49 by Evgenii Terechkov @evgkrsk)
+    - [Core] Fix wrong regex quotation in default configuration file.
+      (Debian Bug#844283 by Paul Wise <pabs@debian.org>)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
