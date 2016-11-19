@@ -105,6 +105,7 @@ sub nr_linux_version_generic($$) {
 
     # fallback trying filename
     $fn =~ s/[^-]*-//;
+    $fn =~ s/\.img$//;
     if($fn =~ /^\d+\.\d+/) {
 	print STDERR "$LOGPREF version from filename: $fn\n" if($debug);
 
@@ -125,11 +126,17 @@ sub nr_kernel_check_real($$) {
 
     die "$LOGPREF Not running on Linux!\n" unless($sysname eq 'Linux');
 
-    my @kfiles = reverse nsort </boot/vmlinu* /boot/*.img>;
-    $ui->progress_prep(scalar @kfiles, __ 'Scanning linux images...');
+    my %kfiles = map {
+	$_ => 1,
+    } grep {
+	# filter initrd images
+	(!m@^/boot/init@);
+    } </boot/vmlinu* /boot/*.img>;
+
+    $ui->progress_prep(scalar keys %kfiles, __ 'Scanning linux images...');
 
     my %kernels;
-    foreach my $fn (@kfiles) {
+    foreach my $fn (reverse nsort keys %kfiles) {
 	$ui->progress_step;
 	my $stat = nr_stat($fn);
 

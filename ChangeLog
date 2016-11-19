@@ -3,6 +3,11 @@ needrestart (2.11) unstable; urgency=medium
   * Fixes:
     - [Core] Fix default config type for override_* settings.
       (github issue #47 by @mphilipps)
+    - [Kernel] Ignore initrd filenames while looking for kernel image files.
+      (github issue #49 by Evgenii Terechkov @evgkrsk)
+    - [Kernel] Strip .img from version string when deducting the kernel
+      version from filename.
+      (github issue #49 by Evgenii Terechkov @evgkrsk)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
