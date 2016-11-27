@@ -10,6 +10,8 @@ needrestart (2.11) unstable; urgency=medium
       (github issue #49 by Evgenii Terechkov @evgkrsk)
     - [Core] Fix wrong regex quotation in default configuration file.
       (Debian Bug#844283 by Paul Wise <pabs@debian.org>)
+    - [Core] Add display-manager 'lxdm' to override.
+      (Debian Bug#845996 by Rodrigo Campos <rodrigo@sdfg.com.ar>)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
