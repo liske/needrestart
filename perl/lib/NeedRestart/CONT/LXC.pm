@@ -43,6 +43,10 @@ sub new {
     die "Could not get NS PID of #1!\n" unless(defined($self->{nspid}));
 
     $self->{lxc} = {};
+    $self->{lxd} = {};
+
+    $self->{has_lxd} = -x q(/usr/bin/lxc);
+
     return bless $self, $class;
 }
 
@@ -68,16 +72,17 @@ sub check {
     }
 
     # look for LXC cgroups
-    return 0 unless($cg =~ /^\d+:[^:]+:\/lxc\/([^\/\n]+)($|\/)/m);
+    return unless($cg =~ /^\d+:[^:]+:\/lxc\/([^\/\n]+)($|\/)/m);
 
     my $name = $1;
+    my $type = ($self->{has_lxd} && -d qq(/var/lib/lxd/containers/$name) ? 'LXD' : 'LXC');
     unless($norestart) {
-	print STDERR "$LOGPREF #$pid is part of LXC container '$name' and should be restarted\n" if($self->{debug});
+	print STDERR "$LOGPREF #$pid is part of $type container '$name' and should be restarted\n" if($self->{debug});
 
-	$self->{lxc}->{$name}++;
+	$self->{lc($type)}->{$name}++;
     }
     else {
-	print STDERR "$LOGPREF #$pid is part of LXC container '$name'\n" if($self->{debug});
+	print STDERR "$LOGPREF #$pid is part of $type container '$name'\n" if($self->{debug});
     }
 
     return 1;
@@ -86,9 +91,11 @@ sub check {
 sub get {
     my $self = shift;
 
-    return map {
+    return (map {
 	($_ => [qw(lxc-stop --reboot --name), $_]);
-    } keys %{ $self->{lxc} };
+    } keys %{ $self->{lxc} }), (map {
+	($_ => [qw(lxc restart), $_]);
+    } keys %{ $self->{lxd} });
 }
 
 1;

@@ -3,6 +3,8 @@ needrestart (2.11) unstable; urgency=medium
   * Features:
     - [Core] Allow special treatment to restart services (i.e. dbus).
       (github issue #44 by @Vladimir-csp)
+    - [Cont] Support restarting LXD-based LXC containers.
+      (github issue #26 by James Johnston @JohnstonJ)
   * Fixes:
     - [Core] Fix default config type for override_* settings.
       (github issue #47 by @mphilipps)
