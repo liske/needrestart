@@ -189,6 +189,9 @@ $opt_r = 'l' if($opt_m eq 'e');
 $nrconf{defno}++ if($opt_n);
 $opt_b++ if($opt_p);
 
+# print version in verbose mode
+print STDERR "$LOGPREF needrestart v$NeedRestart::VERSION\n" if($nrconf{verbosity} > 1);
+
 # running mode (user or root)
 my $uid = $<;
 if($uid) {
