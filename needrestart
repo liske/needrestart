@@ -106,6 +106,7 @@ our %nrconf = (
     verbosity => 1,
     hook_d => '/etc/needrestart/hook.d',
     notify_d => '/etc/needrestart/notify.d',
+    restart_d => '/etc/needrestart/restart.d',
     sendnotify => 1,
     restart => 'i',
     defno => 0,
@@ -306,7 +307,12 @@ my @systemd_restart;
 sub restart_cmd($) {
     my $rc = shift;
 
-    if($rc =~ /.+\.service$/) {
+    my $restcmd = "$nrconf{restart_d}/$rc";
+    if(-x $restcmd) {
+	print STDERR "$LOGPREF using restart.d file $rc\n" if($nrconf{verbosity} > 1);
+	($restcmd);
+    }
+    elsif($rc =~ /.+\.service$/) {
 	if($nrconf{systemctl_combine}) {
 	    push(@systemd_restart, $rc);
 	    ();
@@ -314,12 +320,6 @@ sub restart_cmd($) {
 	else {
 	    (qw(systemctl restart), $rc);
 	}
-    }
-    elsif($rc eq q(systemd manager)) {
-	(qw(systemctl daemon-reexec));
-    }
-    elsif($rc eq q(sysv init)) {
-	(qw(telinit u));
     }
     else {
 	if($is_systemd) {
@@ -564,7 +564,7 @@ if(defined($opt_l)) {
 		# systemd manager
 		if($pid == 1 && $exe =~ m@^/lib/systemd/systemd@) {
 		    print STDERR "$LOGPREF #$pid is systemd manager\n" if($nrconf{verbosity} > 1);
-		    $restart{q(systemd manager)}++;
+		    $restart{q(systemd-manager)}++;
 		    next;
 		}
 
@@ -625,7 +625,7 @@ if(defined($opt_l)) {
 		# sysv init
 		if($pid == 1 && $exe =~ m@^/sbin/init@) {
 		    print STDERR "$LOGPREF #$pid is sysv init\n" if($nrconf{verbosity} > 1);
-		    $restart{q(sysv init)}++;
+		    $restart{q(sysv-init)}++;
 		    next;
 		}
 	    }

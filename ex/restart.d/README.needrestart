@@ -1,0 +1,12 @@
+Files located in /etc/needrestart/restart.d are used for services
+requiring a special procedure for restarting instead of
+systemctl/service command.
+
+Needrestart uses executable files matching the complete service
+names. If the host uses systemd the service names have '.service' as a
+suffix (dbus vs. dbus.service). Needrestart uses the systemctl/service
+command if no executable file is available to override the default
+behavior.
+
+The environment variable NR_VERBOSE will be set to '1' if the
+executable should be verbose.

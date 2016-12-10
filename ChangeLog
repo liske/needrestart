@@ -1,5 +1,8 @@
 needrestart (2.11) unstable; urgency=medium
 
+  * Features:
+    - [Core] Allow special treatment to restart services (i.e. dbus).
+      (github issue #44 by @Vladimir-csp)
   * Fixes:
     - [Core] Fix default config type for override_* settings.
       (github issue #47 by @mphilipps)

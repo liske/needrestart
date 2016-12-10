@@ -15,6 +15,8 @@ install: all
 	cp ex/conf.d/* "$(DESTDIR)/etc/needrestart/conf.d/"
 	mkdir -p "$(DESTDIR)/etc/needrestart/notify.d"
 	cp ex/notify.d/* "$(DESTDIR)/etc/needrestart/notify.d/"
+	mkdir -p "$(DESTDIR)/etc/needrestart/restart.d"
+	cp ex/notify.d/* "$(DESTDIR)/etc/needrestart/restart.d/"
 	
 	which apt-get > /dev/null && \
 	    mkdir -p "$(DESTDIR)/etc/apt/apt.conf.d" && cp ex/apt/needrestart-apt_d "$(DESTDIR)/etc/apt/apt.conf.d/99needrestart" && \
