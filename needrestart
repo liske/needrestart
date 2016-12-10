@@ -200,10 +200,10 @@ if($uid) {
 	exit 3;
     }
 
-    print STDERR "$LOGPREF running in user-mode\n" if($nrconf{verbosity} > 1);
+    print STDERR "$LOGPREF running in user mode\n" if($nrconf{verbosity} > 1);
 }
 else {
-    print STDERR "$LOGPREF running in root-mode\n" if($nrconf{verbosity} > 1);
+    print STDERR "$LOGPREF running in root mode\n" if($nrconf{verbosity} > 1);
 }
 
 # get current runlevel, fallback to '2'
