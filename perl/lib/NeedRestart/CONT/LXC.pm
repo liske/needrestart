@@ -68,7 +68,7 @@ sub check {
     }
 
     # look for LXC cgroups
-    return 0 unless($cg =~ /^\d+:[^:]+:\/lxc\/(.+)$/m);
+    return 0 unless($cg =~ /^\d+:[^:]+:\/lxc\/([^\/\n]+)($|\/)/m);
 
     my $name = $1;
     unless($norestart) {
