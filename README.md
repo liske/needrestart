@@ -20,6 +20,12 @@ restarting services
 -------------------
 
 *needrestart* supports but does not require systemd (available since v0.6).
+If systemd is used you should use libpam-systemd, too. If needrestart detects
+systemd it will assume that libpam-systemd is used and relys on cgroup names
+to detect if a process belongs to a user session or a daemon. If you do not
+use libpam-systemd you should set $nrconf{has_pam_systemd} to 0 within
+needrestart.conf.
+
 If systemd is not available or does not return a service name *needrestart*
 uses hooks to identify the corresponding System V init script. The shipped
 hooks support the following package managers:
