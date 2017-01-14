@@ -5,6 +5,9 @@ needrestart (2.11) unstable; urgency=medium
       (github issue #44 by @Vladimir-csp)
     - [Cont] Support restarting LXD-based LXC containers.
       (github issue #26 by James Johnston @JohnstonJ)
+    - [Core] New config option to enforce legacy session detection if systemd
+      is used without PAM integration.
+      (github issue #52 by @micw and Eric S. @Korni22)
   * Fixes:
     - [Core] Fix default config type for override_* settings.
       (github issue #47 by @mphilipps)

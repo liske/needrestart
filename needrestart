@@ -127,6 +127,7 @@ our %nrconf = (
 	sessions => 2,
 	containers => 1,
     },
+    has_pam_systemd => 1,
 );
 
 # backup ARGV (required for Debconf)
@@ -504,7 +505,7 @@ if(defined($opt_l)) {
 	next unless($restart);
 
 	# handle user sessions
-	if($ptable->{$pid}->{ttydev} ne '' && !$is_systemd) {
+	if($ptable->{$pid}->{ttydev} ne '' && (!$is_systemd || !$nrconf{has_pam_systemd})) {
 	    my $ttydev = realpath( $ptable->{$pid}->{ttydev} );
 	    print STDERR "$LOGPREF #$pid part of user session: uid=$ptable->{$pid}->{uid} sess=$ttydev\n" if($nrconf{verbosity} > 1);
 	    push(@{ $sessions{ $ptable->{$pid}->{uid} }->{ $ttydev }->{ $ptable->{$pid}->{fname} } }, $pid);
