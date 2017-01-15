@@ -55,7 +55,7 @@ sub files {
     my $pid = shift;
 
     my %ret = map {
-	my $stat = nr_stat($_);
+	my $stat = nr_stat("/proc/$pid/root/$_");
 	$_ => ( defined($stat) ? $stat->{ctime} : undef );
     } map {
 	my $l = readlink;

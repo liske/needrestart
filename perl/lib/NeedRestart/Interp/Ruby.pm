@@ -85,7 +85,7 @@ sub source {
 	return ();
     }
     my $cwd = getcwd();
-    chdir($ptable->{cwd});
+    chdir("/proc/$pid/root/$ptable->{cwd}");
 
     # get original ARGV
     (my $bin, local @ARGV) = nr_parse_cmd($pid);
@@ -132,7 +132,7 @@ sub files {
 	return ();
     }
     my $cwd = getcwd();
-    chdir($ptable->{cwd});
+    chdir("/proc/$pid/root/$ptable->{cwd}");
 
     # get original ARGV
     (my $bin, local @ARGV) = nr_parse_cmd($pid);
@@ -184,7 +184,7 @@ sub files {
     
     # get include path
     my $rbread = nr_fork_pipe($self->{debug}, $ptable->{exec}, '-e', 'puts $:');
-    my @path = <$rbread>;
+    my @path = map { "/proc/$pid/root/$_"; } <$rbread>;
     close($rbread);
     chomp(@path);
 
@@ -192,7 +192,7 @@ sub files {
     _scan($self->{debug}, $pid, $src, \%files, \@path);
 
     my %ret = map {
-	my $stat = nr_stat($_);
+	my $stat = nr_stat("/proc/$pid/root/$_");
 	$_ => ( defined($stat) ? $stat->{ctime} : undef );
     } keys %files;
 

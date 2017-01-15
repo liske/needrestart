@@ -57,7 +57,7 @@ sub source {
 	return ();
     }
     my $cwd = getcwd();
-    chdir($ptable->{cwd});
+    chdir("/proc/$pid/root/$ptable->{cwd}");
 
     # get original ARGV
     (my $bin, local @ARGV) = nr_parse_cmd($pid);
@@ -104,7 +104,7 @@ sub files {
 	return ();
     }
     my $cwd = getcwd();
-    chdir($ptable->{cwd});
+    chdir("/proc/$pid/root/$ptable->{cwd}");
 
     # get original ARGV
     (my $bin, local @ARGV) = nr_parse_cmd($pid);
@@ -167,7 +167,7 @@ sub files {
     }
 
     my %ret = map {
-	my $stat = nr_stat($href->{$_}->{file});
+	my $stat = nr_stat("/proc/$pid/root/$href->{$_}->{file}");
 	$href->{$_}->{file} => ( defined($stat) ? $stat->{ctime} : undef );
     } keys %$href;
 

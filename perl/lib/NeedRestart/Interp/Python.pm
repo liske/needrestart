@@ -88,7 +88,7 @@ sub source {
 	return ();
     }
     my $cwd = getcwd();
-    chdir($ptable->{cwd});
+    chdir("/proc/$pid/root/$ptable->{cwd}");
 
     # get original ARGV
     (my $bin, local @ARGV) = nr_parse_cmd($pid);
@@ -135,7 +135,7 @@ sub files {
 	return ();
     }
     my $cwd = getcwd();
-    chdir($ptable->{cwd});
+    chdir("/proc/$pid/root/$ptable->{cwd}");
 
     # get original ARGV
     (my $bin, local @ARGV) = nr_parse_cmd($pid);
@@ -198,7 +198,7 @@ sub files {
 	chomp($path);
 	$path =~ s/^\['//;
 	$path =~ s/'\$//;
-	@path = split("', '", $path);
+	@path = map { "/proc/$pid/root/$_"; } split("', '", $path);
     }
     else {
 	print STDERR "$LOGPREF #$pid: failed to retrieve include path\n" if($self->{debug});
@@ -208,7 +208,7 @@ sub files {
     _scan($self->{debug}, $pid, $src, \%files, \@path);
 
     my %ret = map {
-	my $stat = nr_stat($_);
+	my $stat = nr_stat("/proc/$pid/root/$_");
 	$_ => ( defined($stat) ? $stat->{ctime} : undef );
     } keys %files;
 
