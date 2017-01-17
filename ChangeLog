@@ -24,7 +24,7 @@ needrestart (2.11) unstable; urgency=medium
       path of the process.
       (github issue #54 by Tomasz Kontusz @ktosiek)
 
- -- Thomas Liske <thomas@fiasko-nw.net>  
+ -- Thomas Liske <thomas@fiasko-nw.net>  Tue, 17 Jan 2017 15:59:36 +0100
 
 needrestart (2.10) unstable; urgency=medium
 
