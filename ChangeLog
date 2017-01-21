@@ -1,3 +1,11 @@
+needrestart (2.12) unstable; urgency=medium
+
+  * Fixes:
+    - [Core] Makefile: Fix installation of restart.d/ scripts.
+      (Debian Bug#851866 by Sven Hartge <sven@svenhartge.de>)
+
+ -- Thomas Liske <thomas@fiasko-nw.net>  
+
 needrestart (2.11) unstable; urgency=medium
 
   * Features:
