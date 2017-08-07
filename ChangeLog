@@ -3,6 +3,9 @@ needrestart (2.12) unstable; urgency=medium
   * Fixes:
     - [Core] Makefile: Fix installation of restart.d/ scripts.
       (Debian Bug#851866 by Sven Hartge <sven@svenhartge.de>)
+    - [Core] Fix warning in Perl 5.20.x, not triggered in 5.24.x
+      in needrestart.conf (Oil Runtime Compiler's JIT files).
+      (patch by Patrick Matthäi (Debian))
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
