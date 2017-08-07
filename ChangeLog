@@ -8,6 +8,8 @@ needrestart (2.12) unstable; urgency=medium
       (patch by Patrick Matthäi (Debian))
     - [Core] Do not restart oneshot services.
       (Debian Bug#862840 by Alan Jenkins <alan.christopher.jenkins@gmail.com>)
+    - [Core] Ignore rc-local.service.
+      (Debian Bug#852864 by Paul Wise <pabs@debian.org>)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
