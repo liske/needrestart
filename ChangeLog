@@ -12,6 +12,8 @@ needrestart (2.12) unstable; urgency=medium
       (Debian Bug#852864 by Paul Wise <pabs@debian.org>)
     - [Core] Do not restart libvirt by default.
       (github issue #69 by Craig Andrews @candrews)
+    - [Interp/Perl] Add missing cwd restore before a return.
+      (github issues #55 and #70 Craig Andrews @candrews and Stefan Bühler @stbuehler)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
