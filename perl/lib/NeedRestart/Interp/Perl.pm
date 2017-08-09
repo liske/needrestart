@@ -140,6 +140,7 @@ sub files {
 
     # use cached data if avail
     if(exists($cache->{files}->{(__PACKAGE__)}->{$src})) {
+	chdir($cwd);
 	print STDERR "$LOGPREF #$pid: use cached file list\n" if($self->{debug});
 	return %{ $cache->{files}->{(__PACKAGE__)}->{$src} };
     }
