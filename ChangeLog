@@ -10,6 +10,8 @@ needrestart (2.12) unstable; urgency=medium
       (Debian Bug#862840 by Alan Jenkins <alan.christopher.jenkins@gmail.com>)
     - [Core] Ignore rc-local.service.
       (Debian Bug#852864 by Paul Wise <pabs@debian.org>)
+    - [Core] Do not restart libvirt by default.
+      (github issue #69 by Craig Andrews @candrews)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
