@@ -160,7 +160,7 @@ sub files {
 	print STDERR "$LOGPREF #$pid: could not get a source file, skipping\n" if($self->{debug});
 	return ();
     }
-    my $src = $ARGV[0];
+    my $src = abs_path ($ARGV[0]);
     unless(-r $src && -f $src) {
 	chdir($cwd);
 	print STDERR "$LOGPREF #$pid: source file not found, skipping\n" if($self->{debug});
