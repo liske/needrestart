@@ -1,5 +1,10 @@
 needrestart (2.12) unstable; urgency=medium
 
+  * Features:
+    - [Core] Possible to suspend needrestart in apt-get hook using
+      the NEEDRESTART_SUSPEND variable.
+      (github issue #71 by Ludovic Gasc @GMLudo et. al.)
+
   * Fixes:
     - [Core] Makefile: Fix installation of restart.d/ scripts.
       (Debian Bug#851866 by Sven Hartge <sven@svenhartge.de>)
@@ -14,6 +19,13 @@ needrestart (2.12) unstable; urgency=medium
       (github issue #69 by Craig Andrews @candrews)
     - [Interp/Perl] Add missing cwd restore before a return.
       (github issues #55 and #70 Craig Andrews @candrews and Stefan Bühler @stbuehler)
+    - [Core] README.md: Fix spelling.
+      (github issue #74 by Edward Betts @EdwardBetts)
+    - [Core] Add bird to override.
+      (github issue #78 by Björn Lässig @Farom)
+    - [Interp/(Perl|Python)] Use absolute paths used to search the package
+      of a script file.
+      (github issue #79 by Christopher Odenbach @odenbach)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
