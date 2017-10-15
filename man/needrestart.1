@@ -60,6 +60,14 @@ check for obsolete kernel
 .TP
 \fB\-l\fR
 check for obsolete libraries
+.SH ENVIRONMENT
+When used with apt-get(8) needrestart supports the following environment variables:
+.TP
+\fBDEBIAN_FRONT\fR
+The debconf(7) frontend to use, can also set using the \fB\-f\fR parameter.
+.TP
+\fBNEEDRESTART_SUSPEND\fR
+If set to a non-empty value the apt-get(8) hook will not run needrestart after installing or updating packages.
 .SH "AUTHOR"
 Thomas Liske <thomas@fiasko\-nw.net>
 .SH "COPYRIGHT"

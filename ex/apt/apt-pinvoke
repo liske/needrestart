@@ -25,6 +25,11 @@ if [ -e "$RUNDIR/errored" ]; then
 fi
 
 if [ -e "$RUNDIR/unpacked" ]; then
+    if [ -n "$NEEDRESTART_SUSPEND" ]; then
+        echo "packages have been installed but needrestart is suspended"
+        exit 0
+    fi
+
     rm -f "$RUNDIR/unpacked"
     exec /usr/sbin/needrestart "$@"
 fi
