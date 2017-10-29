@@ -1,3 +1,16 @@
+Changes in 2.12
+===============
+
+docker containers
+-----------------
+
+Needrestart ignores processes within docker containers since there are no pending
+library updates within containers by design. Needrestart still detects docker
+containers to mitigate false positives.
+
+More information: README.Cont.md
+
+
 Changes in 2.1
 ==============
 

@@ -42,7 +42,6 @@ sub new {
     my $self = $class->SUPER::new(@_);
     die "Could not get NS PID of #1!\n" unless(defined($self->{nspid}));
 
-    $self->{docker} = {};
     return bless $self, $class;
 }
 
@@ -68,18 +67,10 @@ sub check {
     }
 
     # look for docker cgroups
-    return 0 unless($cg =~ /^\d+:[^:]+:\/system.slice\/docker-(.+)\.scope$/m);
+    return 0 unless($cg =~ /^\d+:[^:]+:\/system.slice\/docker-(.+)\.scope$/m ||
+                    $cg =~ /^\d+:[^:]+:\/docker\/([\da-f]+)$/m);
 
-    my $name = $1;
-    $name =~ s/^([\da-f]{12})[\da-f]{52}$/$1/;
-    unless($norestart) {
-	print STDERR "$LOGPREF #$pid is part of docker container '$name' and should be restarted\n" if($self->{debug});
-
-	$self->{docker}->{$name}++;
-    }
-    else {
-	print STDERR "$LOGPREF #$pid is part of docker container '$name'\n" if($self->{debug});
-    }
+    print STDERR "$LOGPREF #$pid is part of docker container '$name' and will be ignored\n" if($self->{debug});
 
     return 1;
 }
@@ -87,9 +78,7 @@ sub check {
 sub get {
     my $self = shift;
 
-    return map {
-	($_ => [qw(docker restart), $_]);
-    } keys %{ $self->{docker} };
+    return ();
 }
 
 1;

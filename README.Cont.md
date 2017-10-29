@@ -12,10 +12,10 @@ container detection and restarting.
 NeedRestart::CONT::docker
 -------------------------
 
-Recognized by:	cgroup path (`/system.slice/docker-*.scope`)
+Recognized by:	cgroup path (`/system.slice/docker-*.scope` || `/docker/*`)
 
-For each container which should be restarted needrestart calls
-`docker restart $NAME`.
+Docker containers are ignored (needrestart 2.12+) since there are no updates
+within docker containers by design.
 
 
 NeedRestart::CONT::LXC
