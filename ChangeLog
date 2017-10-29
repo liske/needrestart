@@ -28,6 +28,9 @@ needrestart (2.12) unstable; urgency=medium
       (github issue #79 by Christopher Odenbach @odenbach)
     - [Hook] Use rpm -q --filesbypkg rather than rpmquery.
       (github issue #81 by Sven Hartge @shartge)
+    - [CONT] Detect docker container ns running not on systemd.
+    - [CONT] Ignore processes running inside docker containers.
+      (github issue #80 by Christopher Odenbach @odenbach)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
