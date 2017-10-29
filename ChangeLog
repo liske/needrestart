@@ -34,6 +34,8 @@ needrestart (2.12) unstable; urgency=medium
     - [Core] Ignore special filename mappings used by recent versions of
       KDE plasmashell.
       (github issue #65 by @GoTeamAnt)
+    - [Core] Fix handling of library mappings if target does not exist.
+      (github issue #58 by @pigen)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
