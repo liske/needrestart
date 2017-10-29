@@ -26,6 +26,8 @@ needrestart (2.12) unstable; urgency=medium
     - [Interp/(Perl|Python)] Use absolute paths used to search the package
       of a script file.
       (github issue #79 by Christopher Odenbach @odenbach)
+    - [Hook] Use rpm -q --filesbypkg rather than rpmquery.
+      (github issue #81 by Sven Hartge @shartge)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
