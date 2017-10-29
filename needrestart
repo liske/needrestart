@@ -454,8 +454,8 @@ if(defined($opt_l)) {
 				   $nrconf{skip_mapfiles} == -1) {
 				print STDERR "$LOGPREF #$pid uses non-existing $path\n" if($nrconf{verbosity} > 1);
 				$restart++;
-				last;
 			    }
+			    last;
 			}
 
 			# get on-disk info
