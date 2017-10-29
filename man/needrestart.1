@@ -51,7 +51,7 @@ nagios plugin mode: makes output and exit codes nagios compatible
 overwrite debconf(7) frontend, sets the DEBIAN_FRONT environment variable to <fe>
 .TP
 \fB\-u\fR <ui>
-use prefered UI package (-u ? shows available packages)
+use preferred UI package (-u ? shows available packages)
 .PP
 By using one of the following options only the specified checks are performed:
 .TP
@@ -60,10 +60,18 @@ check for obsolete kernel
 .TP
 \fB\-l\fR
 check for obsolete libraries
+.SH ENVIRONMENT
+When used with apt-get(8) needrestart supports the following environment variables:
+.TP
+\fBDEBIAN_FRONT\fR
+The debconf(7) frontend to use, can also set using the \fB\-f\fR parameter.
+.TP
+\fBNEEDRESTART_SUSPEND\fR
+If set to a non-empty value the apt-get(8) hook will not run needrestart after installing or updating packages.
 .SH "AUTHOR"
 Thomas Liske <thomas@fiasko\-nw.net>
 .SH "COPYRIGHT"
-2013 - 2016 (C) Thomas Liske [http://fiasko\-nw.net/~thomas/]
+2013 - 2017 (C) Thomas Liske [http://fiasko\-nw.net/~thomas/]
 .PP
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

@@ -4,7 +4,7 @@
 #   Thomas Liske <thomas@fiasko-nw.net>
 #
 # Copyright Holder:
-#   2013 - 2015 (C) Thomas Liske [http://fiasko-nw.net/~thomas/]
+#   2013 - 2017 (C) Thomas Liske [http://fiasko-nw.net/~thomas/]
 #
 # License:
 #   This program is free software; you can redistribute it and/or modify
@@ -88,7 +88,7 @@ sub source {
 	return ();
     }
     my $cwd = getcwd();
-    chdir($ptable->{cwd});
+    chdir("/proc/$pid/root/$ptable->{cwd}");
 
     # get original ARGV
     (my $bin, local @ARGV) = nr_parse_cmd($pid);
@@ -135,7 +135,7 @@ sub files {
 	return ();
     }
     my $cwd = getcwd();
-    chdir($ptable->{cwd});
+    chdir("/proc/$pid/root/$ptable->{cwd}");
 
     # get original ARGV
     (my $bin, local @ARGV) = nr_parse_cmd($pid);
@@ -160,7 +160,7 @@ sub files {
 	print STDERR "$LOGPREF #$pid: could not get a source file, skipping\n" if($self->{debug});
 	return ();
     }
-    my $src = $ARGV[0];
+    my $src = abs_path ($ARGV[0]);
     unless(-r $src && -f $src) {
 	chdir($cwd);
 	print STDERR "$LOGPREF #$pid: source file not found, skipping\n" if($self->{debug});
@@ -198,7 +198,7 @@ sub files {
 	chomp($path);
 	$path =~ s/^\['//;
 	$path =~ s/'\$//;
-	@path = split("', '", $path);
+	@path = map { "/proc/$pid/root/$_"; } split("', '", $path);
     }
     else {
 	print STDERR "$LOGPREF #$pid: failed to retrieve include path\n" if($self->{debug});
@@ -208,7 +208,7 @@ sub files {
     _scan($self->{debug}, $pid, $src, \%files, \@path);
 
     my %ret = map {
-	my $stat = nr_stat($_);
+	my $stat = nr_stat("/proc/$pid/root/$_");
 	$_ => ( defined($stat) ? $stat->{ctime} : undef );
     } keys %files;
 

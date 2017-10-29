@@ -6,7 +6,7 @@
 #   Thomas Liske <thomas@fiasko-nw.net>
 #
 # Copyright Holder:
-#   2013 - 2015 (C) Thomas Liske [http://fiasko-nw.net/~thomas/]
+#   2013 - 2017 (C) Thomas Liske [http://fiasko-nw.net/~thomas/]
 #
 # License:
 #   This program is free software; you can redistribute it and/or modify
@@ -25,6 +25,11 @@ if [ -e "$RUNDIR/errored" ]; then
 fi
 
 if [ -e "$RUNDIR/unpacked" ]; then
+    if [ -n "$NEEDRESTART_SUSPEND" ]; then
+        echo "packages have been installed but needrestart is suspended"
+        exit 0
+    fi
+
     rm -f "$RUNDIR/unpacked"
     exec /usr/sbin/needrestart "$@"
 fi

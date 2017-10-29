@@ -4,7 +4,7 @@
 #   Thomas Liske <thomas@fiasko-nw.net>
 #
 # Copyright Holder:
-#   2013 - 2015 (C) Thomas Liske [http://fiasko-nw.net/~thomas/]
+#   2013 - 2017 (C) Thomas Liske [http://fiasko-nw.net/~thomas/]
 #
 # License:
 #   This program is free software; you can redistribute it and/or modify
@@ -55,7 +55,7 @@ sub files {
     my $pid = shift;
 
     my %ret = map {
-	my $stat = nr_stat($_);
+	my $stat = nr_stat("/proc/$pid/root/$_");
 	$_ => ( defined($stat) ? $stat->{ctime} : undef );
     } map {
 	my $l = readlink;

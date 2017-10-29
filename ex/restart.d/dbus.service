@@ -1,0 +1,55 @@
+#!/bin/sh
+
+# needrestart - Restart daemons after library updates.
+#
+# Authors:
+#   Thomas Liske <thomas@fiasko-nw.net>
+#
+# Copyright Holder:
+#   2013 - 2017 (C) Thomas Liske [http://fiasko-nw.net/~thomas/]
+#
+# License:
+#   This program is free software; you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation; either version 2 of the License, or
+#   (at your option) any later version.
+#
+
+# Restart dbus and affiliated services under systemd using a procedure
+# suggested by @Vladimir-csp in github issue #44.
+
+# enable xtrace if we should be verbose
+if [ "$NR_VERBOSE" = '1' ]; then
+    set -x
+fi
+
+# check if there is a Display Manager running
+STATE_DM=$(systemctl show display-manager --property=ActiveState)
+
+# prepare well-known list of services requiring restart after restarting D-Bus
+RESTART_CHK="NetworkManager.service"
+RESTART_SVC="systemd-logind.service systemd-journald.service"
+for svc in $RESTART_CHK; do
+    if [ "$(systemctl show $svc --property=ActiveState)" = 'ActiveState=active' ]; then
+	RESTART_ADD="$RESTART_ADD $svc"
+    fi
+done
+
+# stop Display Manager if running
+if [ "$STATE_DM" = 'ActiveState=active' ]; then
+    systemctl stop display-manager.service
+fi
+
+# restard D-Bus
+systemctl restart dbus.service
+
+# reexec systemd
+systemctl daemon-reexec
+
+# restart daemons that directly depend on D-Bus
+systemctl restart $RESTART_SVC
+
+# start Display Manager again
+if [ "$STATE_DM" = 'ActiveState=active' ]; then
+    systemctl start display-manager.service
+fi

@@ -15,6 +15,8 @@ install: all
 	cp ex/conf.d/* "$(DESTDIR)/etc/needrestart/conf.d/"
 	mkdir -p "$(DESTDIR)/etc/needrestart/notify.d"
 	cp ex/notify.d/* "$(DESTDIR)/etc/needrestart/notify.d/"
+	mkdir -p "$(DESTDIR)/etc/needrestart/restart.d"
+	cp ex/restart.d/* "$(DESTDIR)/etc/needrestart/restart.d/"
 	
 	which apt-get > /dev/null && \
 	    mkdir -p "$(DESTDIR)/etc/apt/apt.conf.d" && cp ex/apt/needrestart-apt_d "$(DESTDIR)/etc/apt/apt.conf.d/99needrestart" && \
@@ -52,14 +54,14 @@ po/debconf/templates.pot: ex/debconf/needrestart.templates
 po/needrestart/messages.pot: needrestart $(wildcard perl/lib/NeedRestart/Kernel/*.pm wildcard perl/lib/NeedRestart/UI/*.pm)
 	xgettext -o $@ --msgid-bugs-address=thomas@fiasko-nw.net \
 	    --from-code=UTF-8 \
-	    --package-name=needrestart --package-version=2.9 \
+	    --package-name=needrestart --package-version=2.11 \
 	    --keyword --keyword='$$__' --keyword=__ --keyword=__x \
 	    --keyword=__n:1,2 --keyword=__nx:1,2 --keyword=__xn \
 	    --keyword=N__ --language=perl $^
 
 po/needrestart-notify/messages.pot: ex/notify.d/*-*
 	xgettext -o $@ --msgid-bugs-address=thomas@fiasko-nw.net \
-	    --package-name=needrestart-notify --package-version=2.9 \
+	    --package-name=needrestart-notify --package-version=2.11 \
 	    --language=shell $^
 
 

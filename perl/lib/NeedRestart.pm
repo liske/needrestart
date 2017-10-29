@@ -4,7 +4,7 @@
 #   Thomas Liske <thomas@fiasko-nw.net>
 #
 # Copyright Holder:
-#   2013 - 2016 (C) Thomas Liske [http://fiasko-nw.net/~thomas/]
+#   2013 - 2017 (C) Thomas Liske [http://fiasko-nw.net/~thomas/]
 #
 # License:
 #   This program is free software; you can redistribute it and/or modify
@@ -80,7 +80,7 @@ our %EXPORT_TAGS = (
     )],
 );
 
-our $VERSION = '2.9';
+our $VERSION = '2.11';
 my $LOGPREF = '[Core]';
 
 my %UIs;
@@ -96,7 +96,7 @@ sub needrestart_ui_init($$) {
     my $verbosity = shift;
     my $prefui = shift;
 
-    # load prefered UI module
+    # load preferred UI module
     if(defined($prefui)) {
 	return if(eval "use $prefui; 1;");
     }

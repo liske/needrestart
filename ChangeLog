@@ -1,3 +1,62 @@
+needrestart (2.12) unstable; urgency=medium
+
+  * Features:
+    - [Core] Possible to suspend needrestart in apt-get hook using
+      the NEEDRESTART_SUSPEND variable.
+      (github issue #71 by Ludovic Gasc @GMLudo et. al.)
+
+  * Fixes:
+    - [Core] Makefile: Fix installation of restart.d/ scripts.
+      (Debian Bug#851866 by Sven Hartge <sven@svenhartge.de>)
+    - [Core] Fix warning in Perl 5.20.x, not triggered in 5.24.x
+      in needrestart.conf (Oil Runtime Compiler's JIT files).
+      (patch by Patrick Matthäi (Debian))
+    - [Core] Do not restart oneshot services.
+      (Debian Bug#862840 by Alan Jenkins <alan.christopher.jenkins@gmail.com>)
+    - [Core] Ignore rc-local.service.
+      (Debian Bug#852864 by Paul Wise <pabs@debian.org>)
+    - [Core] Do not restart libvirt by default.
+      (github issue #69 by Craig Andrews @candrews)
+    - [Interp/Perl] Add missing cwd restore before a return.
+      (github issues #55 and #70 Craig Andrews @candrews and Stefan Bühler @stbuehler)
+    - [Core] README.md: Fix spelling.
+      (github issue #74 by Edward Betts @EdwardBetts)
+    - [Core] Add bird to override.
+      (github issue #78 by Björn Lässig @Farom)
+    - [Interp/(Perl|Python)] Use absolute paths used to search the package
+      of a script file.
+      (github issue #79 by Christopher Odenbach @odenbach)
+
+ -- Thomas Liske <thomas@fiasko-nw.net>  
+
+needrestart (2.11) unstable; urgency=medium
+
+  * Features:
+    - [Core] Allow special treatment to restart services (i.e. dbus).
+      (github issue #44 by @Vladimir-csp)
+    - [Cont] Support restarting LXD-based LXC containers.
+      (github issue #26 by James Johnston @JohnstonJ)
+    - [Core] New config option to enforce legacy session detection if systemd
+      is used without PAM integration.
+      (github issue #52 by @micw and Eric S. @Korni22)
+  * Fixes:
+    - [Core] Fix default config type for override_* settings.
+      (github issue #47 by @mphilipps)
+    - [Kernel] Ignore initrd filenames while looking for kernel image files.
+      (github issue #49 by Evgenii Terechkov @evgkrsk)
+    - [Kernel] Strip .img from version string when deducting the kernel
+      version from filename.
+      (github issue #49 by Evgenii Terechkov @evgkrsk)
+    - [Core] Fix wrong regex quotation in default configuration file.
+      (Debian Bug#844283 by Paul Wise <pabs@debian.org>)
+    - [Core] Add display-manager 'lxdm' to override.
+      (Debian Bug#845996 by Rodrigo Campos <rodrigo@sdfg.com.ar>)
+    - [Interp] Make paths when searching source files relative to the root
+      path of the process.
+      (github issue #54 by Tomasz Kontusz @ktosiek)
+
+ -- Thomas Liske <thomas@fiasko-nw.net>  Tue, 17 Jan 2017 15:59:36 +0100
+
 needrestart (2.10) unstable; urgency=medium
 
   * Features:

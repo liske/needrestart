@@ -8,7 +8,7 @@
 #   Thomas Liske <thomas@fiasko-nw.net>
 #
 # Copyright Holder:
-#   2013 - 2016 (C) Thomas Liske [http://fiasko-nw.net/~thomas/]
+#   2013 - 2017 (C) Thomas Liske [http://fiasko-nw.net/~thomas/]
 #
 # License:
 #   This program is free software; you can redistribute it and/or modify
@@ -67,7 +67,7 @@ Usage:
     -b		enable batch mode
     -p          enable nagios plugin mode
     -f <fe>	overwrite debconf frontend (DEBIAN_FRONTEND, debconf(7))
-    -u <ui>     use prefered UI package (-u ? shows available packages)
+    -u <ui>     use preferred UI package (-u ? shows available packages)
 
   By using the following options only the specified checks are performed:
     -k          check for obsolete kernel
@@ -88,7 +88,7 @@ Authors:
   Thomas Liske <thomas\@fiasko-nw.net>
 
 Copyright Holder:
-  2013 - 2016 (C) Thomas Liske [http://fiasko-nw.net/~thomas/]
+  2013 - 2017 (C) Thomas Liske [http://fiasko-nw.net/~thomas/]
 
 Upstream:
   https://github.com/liske/needrestart
@@ -106,6 +106,7 @@ our %nrconf = (
     verbosity => 1,
     hook_d => '/etc/needrestart/hook.d',
     notify_d => '/etc/needrestart/notify.d',
+    restart_d => '/etc/needrestart/restart.d',
     sendnotify => 1,
     restart => 'i',
     defno => 0,
@@ -115,8 +116,8 @@ our %nrconf = (
     blacklist_interp => [],
     blacklist_rc => [],
     blacklist_mappings => [],
-    override_rc => [],
-    override_cont => [],
+    override_rc => {},
+    override_cont => {},
     skip_mapfiles => 0,
     interpscan => 1,
     kernelhints => 1,
@@ -126,6 +127,7 @@ our %nrconf = (
 	sessions => 2,
 	containers => 1,
     },
+    has_pam_systemd => 1,
 );
 
 # backup ARGV (required for Debconf)
@@ -189,6 +191,9 @@ $opt_r = 'l' if($opt_m eq 'e');
 $nrconf{defno}++ if($opt_n);
 $opt_b++ if($opt_p);
 
+# print version in verbose mode
+print STDERR "$LOGPREF needrestart v$NeedRestart::VERSION\n" if($nrconf{verbosity} > 1);
+
 # running mode (user or root)
 my $uid = $<;
 if($uid) {
@@ -197,10 +202,10 @@ if($uid) {
 	exit 3;
     }
 
-    print STDERR "$LOGPREF running in user-mode\n" if($nrconf{verbosity} > 1);
+    print STDERR "$LOGPREF running in user mode\n" if($nrconf{verbosity} > 1);
 }
 else {
-    print STDERR "$LOGPREF running in root-mode\n" if($nrconf{verbosity} > 1);
+    print STDERR "$LOGPREF running in root mode\n" if($nrconf{verbosity} > 1);
 }
 
 # get current runlevel, fallback to '2'
@@ -303,7 +308,12 @@ my @systemd_restart;
 sub restart_cmd($) {
     my $rc = shift;
 
-    if($rc =~ /.+\.service$/) {
+    my $restcmd = "$nrconf{restart_d}/$rc";
+    if(-x $restcmd) {
+	print STDERR "$LOGPREF using restart.d file $rc\n" if($nrconf{verbosity} > 1);
+	($restcmd);
+    }
+    elsif($rc =~ /.+\.service$/) {
 	if($nrconf{systemctl_combine}) {
 	    push(@systemd_restart, $rc);
 	    ();
@@ -311,12 +321,6 @@ sub restart_cmd($) {
 	else {
 	    (qw(systemctl restart), $rc);
 	}
-    }
-    elsif($rc eq q(systemd manager)) {
-	(qw(systemctl daemon-reexec));
-    }
-    elsif($rc eq q(sysv init)) {
-	(qw(telinit u));
     }
     else {
 	if($is_systemd) {
@@ -501,7 +505,7 @@ if(defined($opt_l)) {
 	next unless($restart);
 
 	# handle user sessions
-	if($ptable->{$pid}->{ttydev} ne '' && !$is_systemd) {
+	if($ptable->{$pid}->{ttydev} ne '' && (!$is_systemd || !$nrconf{has_pam_systemd})) {
 	    my $ttydev = realpath( $ptable->{$pid}->{ttydev} );
 	    print STDERR "$LOGPREF #$pid part of user session: uid=$ptable->{$pid}->{uid} sess=$ttydev\n" if($nrconf{verbosity} > 1);
 	    push(@{ $sessions{ $ptable->{$pid}->{uid} }->{ $ttydev }->{ $ptable->{$pid}->{fname} } }, $pid);
@@ -561,7 +565,7 @@ if(defined($opt_l)) {
 		# systemd manager
 		if($pid == 1 && $exe =~ m@^/lib/systemd/systemd@) {
 		    print STDERR "$LOGPREF #$pid is systemd manager\n" if($nrconf{verbosity} > 1);
-		    $restart{q(systemd manager)}++;
+		    $restart{q(systemd-manager)}++;
 		    next;
 		}
 
@@ -622,7 +626,7 @@ if(defined($opt_l)) {
 		# sysv init
 		if($pid == 1 && $exe =~ m@^/sbin/init@) {
 		    print STDERR "$LOGPREF #$pid is sysv init\n" if($nrconf{verbosity} > 1);
-		    $restart{q(sysv init)}++;
+		    $restart{q(sysv-init)}++;
 		    next;
 		}
 	    }
