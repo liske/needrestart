@@ -31,6 +31,9 @@ needrestart (2.12) unstable; urgency=medium
     - [CONT] Detect docker container ns running not on systemd.
     - [CONT] Ignore processes running inside docker containers.
       (github issue #80 by Christopher Odenbach @odenbach)
+    - [Core] Ignore special filename mappings used by recent versions of
+      KDE plasmashell.
+      (github issue #65 by @GoTeamAnt)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
