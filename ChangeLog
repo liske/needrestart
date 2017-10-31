@@ -9,6 +9,7 @@ needrestart (2.12) unstable; urgency=medium
       (github issue #75 by Marc Dequènes @duck-rh)
     - [Kernel] Try to adopt RPM's version sorting to get most recent kernel.
       (github issue #73 by Maximilian Gaß @mxey)
+    - [Core] Tune blacklist_mappings default setting to match on deleted maps.
   * Fixes:
     - [Core] Makefile: Fix installation of restart.d/ scripts.
       (Debian Bug#851866 by Sven Hartge <sven@svenhartge.de>)
