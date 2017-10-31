@@ -70,7 +70,7 @@ sub check {
     return 0 unless($cg =~ /^\d+:[^:]+:\/system.slice\/docker-(.+)\.scope$/m ||
                     $cg =~ /^\d+:[^:]+:\/docker\/([\da-f]+)$/m);
 
-    print STDERR "$LOGPREF #$pid is part of docker container '$name' and will be ignored\n" if($self->{debug});
+    print STDERR "$LOGPREF #$pid is part of docker container '$1' and will be ignored\n" if($self->{debug});
 
     return 1;
 }
