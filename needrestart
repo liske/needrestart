@@ -907,7 +907,7 @@ if(defined($opt_l) && !$uid) {
 
 	    # report services restarts refused by systemd
 	    if($#refused_services > -1) {
-		$ui->notice(__ 'Services restarts being refused by systemd:');
+		$ui->notice(__ 'Service restarts being refused by systemd:');
 		foreach my $rc (sort @refused_services) {
 		    $ui->command(qq( $rc));
 		}
@@ -978,7 +978,7 @@ if(defined($opt_l) && !$uid) {
 
 	    # report services restarts refused by systemd
 	    if($#refused_services > -1) {
-		$ui->notice(__ 'Services restarts being refused by systemd:');
+		$ui->notice(__ 'Service restarts being refused by systemd:');
 		foreach my $rc (sort @refused_services) {
 		    $ui->command(qq( $rc));
 		}

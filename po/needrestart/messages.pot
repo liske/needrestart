@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: needrestart 2.11\n"
 "Report-Msgid-Bugs-To: thomas@fiasko-nw.net\n"
-"POT-Creation-Date: 2017-10-31 17:59+0100\n"
+"POT-Creation-Date: 2017-10-31 21:28+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -84,7 +84,7 @@ msgid "Services being skipped:"
 msgstr ""
 
 #: needrestart:910 needrestart:981
-msgid "Services restarts being refused by systemd:"
+msgid "Service restarts being refused by systemd:"
 msgstr ""
 
 #: needrestart:994
@@ -131,7 +131,7 @@ msgstr ""
 msgid "Scanning kfreebsd images..."
 msgstr ""
 
-#: perl/lib/NeedRestart/UI/Mail.pm:52 perl/lib/NeedRestart/UI/stdio.pm:41
+#: perl/lib/NeedRestart/UI/stdio.pm:41
 #, perl-brace-format
 msgid ""
 "Pending kernel upgrade!\n"
@@ -146,18 +146,18 @@ msgid ""
 "automatically, so you should consider rebooting. [Return]\n"
 msgstr ""
 
-#: perl/lib/NeedRestart/UI/Mail.pm:63 perl/lib/NeedRestart/UI/stdio.pm:53
+#: perl/lib/NeedRestart/UI/stdio.pm:53
 msgid "The currently running kernel has an ABI compatible upgrade pending."
 msgstr ""
 
-#: perl/lib/NeedRestart/UI/Mail.pm:71 perl/lib/NeedRestart/UI/stdio.pm:61
+#: perl/lib/NeedRestart/UI/stdio.pm:61
 #, perl-brace-format
 msgid ""
 "The currently running kernel version is not the expected kernel version "
 "{eversion}."
 msgstr ""
 
-#: perl/lib/NeedRestart/UI/Mail.pm:82 perl/lib/NeedRestart/UI/stdio.pm:72
+#: perl/lib/NeedRestart/UI/stdio.pm:72
 #, perl-brace-format
 msgid ""
 "\n"
