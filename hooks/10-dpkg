@@ -65,7 +65,7 @@ while(<$psearch>) {
     next if(/^local diversion/);
     next unless(/:/);
 
-    next unless(/([^:]+): $FN$/);
+    next unless(/(\S+): $FN$/);
 
     push(@pkgs, $1);
 }

@@ -38,6 +38,8 @@ needrestart (2.12) unstable; urgency=medium
       (github issue #65 by @GoTeamAnt)
     - [Core] Fix handling of library mappings if target does not exist.
       (github issue #58 by @pigen)
+    - [Hook] Fix handling of multiarch packages.
+      (github issue #56 by @mayasd)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
