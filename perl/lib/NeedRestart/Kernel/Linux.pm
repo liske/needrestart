@@ -178,7 +178,13 @@ sub nr_kernel_check_real($$) {
 	return (NRK_UNKNOWN, %vars);
     }
 
-    ($vars{EVERSION}) = reverse sort { nr_kernel_vcmp($a, $b); } keys %kernels;
+    if(-e "/etc/redhat-version" && !-x "/usr/bin/dpkg") {
+	print STDERR "$LOGPREF using RPM version sorting\n" if($debug);
+	($vars{EVERSION}) = reverse sort { nr_kernel_vcmp_rpm($a, $b); } keys %kernels;
+    }
+    else {
+	($vars{EVERSION}) = reverse sort { nr_kernel_vcmp($a, $b); } keys %kernels;
+    }
     print STDERR "$LOGPREF Expected linux version: $vars{EVERSION}\n" if($debug);
 
     return (NRK_VERUPGRADE, %vars) if($vars{KVERSION} ne $vars{EVERSION});

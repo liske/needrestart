@@ -43,6 +43,7 @@ our @ISA = qw(Exporter);
 our @EXPORT = qw(
     nr_kernel_check
     nr_kernel_vcmp
+    nr_kernel_vcmp_rpm
     NRK_UNKNOWN
     NRK_NOUPGRADE
     NRK_ABIUPGRADE
@@ -109,6 +110,7 @@ sub _nr_kversion_strcmp($$) {
     }
 }
 
+# compare kernel version strings according to Debian's dpkg version scheme
 sub nr_kernel_vcmp($$) {
     # sort well known devel tags just as grub does
     my @v = map {
@@ -132,6 +134,37 @@ sub nr_kernel_vcmp($$) {
 	}
 	else {
 	    my $cmp = _nr_kversion_strcmp($a, $b);
+	    return $cmp if($cmp);
+	}
+    }
+}
+
+# compare kernel version strings according to RPM version sorting
+# adopted from RPM::VersionSort
+sub nr_kernel_vcmp_rpm {
+    # split version strings by non-alphanumeric digits 
+    my @a = split(/[^a-z\d]+/i, shift);
+    my @b = split(/[^a-z\d]+/i, shift);
+
+    while(1) {
+	my ($a, $b) = (shift @a, shift @b);
+	return 0 unless(defined($a) || defined($b));
+
+	# shorter version strings looses (by equal beginning)
+	return 1 unless(defined($b));
+	return -1 unless(defined($a));
+
+	# integer part wins over string part
+	return 1 if($a =~ /^\d/ && $b =~ /^[a-z]/i);
+	return -1 if ($a =~ /^[a-z]/i && $b =~ /^\d/);
+
+	# compare version parts as int or string
+	if($a =~ /^\d+$/) {
+	    my $cmp = $a <=> $b;
+	    return $cmp if($cmp);
+	}
+	else {
+	    my $cmp = $a cmp $b;
 	    return $cmp if($cmp);
 	}
     }
