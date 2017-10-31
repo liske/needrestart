@@ -304,6 +304,21 @@ sub parse_lsbinit($) {
 
 print STDERR "$LOGPREF detected systemd\n" if($nrconf{verbosity} > 1 && $is_systemd);
 
+sub systemd_refuse_restart {
+    my $svc = shift;
+
+    my $systemctl = nr_fork_pipe($nrconf{verbosity} > 1, qq(systemctl), qq(show), qq(--property=RefuseManualStop), $svc);
+    my $ret = <$systemctl>;
+    close($systemctl);
+
+    if($ret =~ /^RefuseManualStop=yes/) {
+	print STDERR "$LOGPREF systemd refuses restarts of $svc\n" if($nrconf{verbosity} > 1);
+	return 1;
+    }
+
+    return 0;
+}
+
 my @systemd_restart;
 sub restart_cmd($) {
     my $rc = shift;
@@ -820,6 +835,7 @@ if(defined($opt_l) && !$uid) {
 	}
 	elsif($opt_b || $opt_r ne 'i') {
 	    my @skipped_services;
+	    my @refused_services;
 
 	    $ui->notice(__ 'Services to be restarted:') if($opt_r eq 'l');
 	    $ui->notice(__ 'Restarting services...') if($opt_r eq 'a');
@@ -835,6 +851,12 @@ if(defined($opt_l) && !$uid) {
 
 		if($opt_b) {
 		    print "NEEDRESTART-SVC: $rc\n" unless($opt_p);
+		    next;
+		}
+
+		# record service which can not be restarted
+		if($is_systemd && systemd_refuse_restart($rc)) {
+		    push(@refused_services, $rc);
 		    next;
 		}
 
@@ -882,13 +904,41 @@ if(defined($opt_l) && !$uid) {
 		    $ui->command(join(' ', '', @cmd));
 		}
 	    }
+
+	    # report services restarts refused by systemd
+	    if($#refused_services > -1) {
+		$ui->notice(__ 'Services restarts being refused by systemd:');
+		foreach my $rc (sort @refused_services) {
+		    $ui->command(qq( $rc));
+		}
+	    }
 	}
 	else {
 	    my $o = 0;
 	    my @skipped_services = keys %restart;
 
+	    # filter service units which are refused to be restarted
+	    my @refused_services;
+	    my %rs = map {
+		my $rc = $_;
+
+		if($is_systemd) {
+		    if(systemd_refuse_restart($rc)) {
+			push(@refused_services, $rc);
+			@skipped_services = grep { $_ ne $rc; } @skipped_services;
+			();
+		    }
+		    else {
+			($rc => 1);
+		    }
+		}
+		else {
+		    ($rc => 1);
+		}
+	    } keys %restart;
+
 	    $ui->notice(__ 'Restarting services...');
-	    $ui->query_pkgs(__('Services to be restarted:'), $nrconf{defno}, \%restart, $nrconf{override_rc},
+	    $ui->query_pkgs(__('Services to be restarted:'), $nrconf{defno}, \%rs, $nrconf{override_rc},
 			    sub {
 				# always combine restarts in one systemctl command
 				local $nrconf{systemctl_combine} = 1;
@@ -923,6 +973,14 @@ if(defined($opt_l) && !$uid) {
 		unless($#systemd_restart == -1) {
 		    my @cmd = (qq(systemctl), qq(restart), @systemd_restart);
 		    $ui->command(join(' ', '', @cmd));
+		}
+	    }
+
+	    # report services restarts refused by systemd
+	    if($#refused_services > -1) {
+		$ui->notice(__ 'Services restarts being refused by systemd:');
+		foreach my $rc (sort @refused_services) {
+		    $ui->command(qq( $rc));
 		}
 	    }
 	}
