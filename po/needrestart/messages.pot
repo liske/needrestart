@@ -1,14 +1,14 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
+# This file is distributed under the same license as the needrestart package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: needrestart 2.8\n"
+"Project-Id-Version: needrestart 2.11\n"
 "Report-Msgid-Bugs-To: thomas@fiasko-nw.net\n"
-"POT-Creation-Date: 2016-05-16 18:46+0200\n"
+"POT-Creation-Date: 2017-10-31 17:24+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,113 +17,117 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: needrestart:350
+#: needrestart:219
+msgid "Available UI packages:"
+msgstr ""
+
+#: needrestart:416
 msgid "Scanning processes..."
 msgstr ""
 
-#: needrestart:486
+#: needrestart:561
 msgid "Scanning candidates..."
 msgstr ""
 
-#: needrestart:660
+#: needrestart:735
 msgid "Your outdated processes:"
 msgstr ""
 
-#: needrestart:710
+#: needrestart:785
 msgid "Running kernel seems to be up-to-date."
 msgstr ""
 
-#: needrestart:710
+#: needrestart:785
 msgid "Running kernel seems to be up-to-date (ABI upgrades are not detected)."
 msgstr ""
 
-#: needrestart:714 needrestart:727
+#: needrestart:789 needrestart:802
 msgid "an outdated kernel image"
 msgstr ""
 
-#: needrestart:718
+#: needrestart:793
 #, perl-brace-format
 msgid ""
 "The currently running kernel version is {kversion} and there is an ABI "
 "compatible upgrade pending."
 msgstr ""
 
-#: needrestart:731
+#: needrestart:806
 #, perl-brace-format
 msgid ""
 "The currently running kernel version is {kversion} which is not the expected "
 "kernel version {eversion}."
 msgstr ""
 
-#: needrestart:741
+#: needrestart:816
 msgid "Failed to retrieve available kernel versions."
 msgstr ""
 
-#: needrestart:750
+#: needrestart:825
 msgid "No services need to be restarted."
 msgstr ""
 
-#: needrestart:759
+#: needrestart:834
 msgid "outdated binaries"
 msgstr ""
 
-#: needrestart:764 needrestart:829
+#: needrestart:840 needrestart:941
 msgid "Services to be restarted:"
 msgstr ""
 
-#: needrestart:765 needrestart:828
+#: needrestart:841 needrestart:940
 msgid "Restarting services..."
 msgstr ""
 
-#: needrestart:812 needrestart:856
+#: needrestart:896 needrestart:967
 msgid "Services being skipped:"
 msgstr ""
 
-#: needrestart:875
+#: needrestart:910 needrestart:981
+msgid "Services restarts being refused by systemd:"
+msgstr ""
+
+#: needrestart:994
 msgid "No containers need to be restarted."
 msgstr ""
 
-#: needrestart:884
+#: needrestart:1003
 msgid "outdated containers"
 msgstr ""
 
-#: needrestart:889 needrestart:934
+#: needrestart:1008 needrestart:1053
 msgid "Containers to be restarted:"
 msgstr ""
 
-#: needrestart:890 needrestart:933
+#: needrestart:1009 needrestart:1052
 msgid "Restarting containers..."
 msgstr ""
 
-#: needrestart:924
+#: needrestart:1043
 msgid "Containers being skipped:"
 msgstr ""
 
-#: needrestart:946
+#: needrestart:1065
 msgid "No user sessions are running outdated binaries."
 msgstr ""
 
-#: needrestart:955
+#: needrestart:1074
 msgid "outdated sessions"
 msgstr ""
 
-#: needrestart:958
+#: needrestart:1077
 msgid "User sessions running outdated binaries:"
 msgstr ""
 
-#: needrestart:998
+#: needrestart:1118
 msgid "and"
-msgstr ""
-
-#: perl/lib/NeedRestart/Kernel/Linux.pm:129
-msgid "Scanning linux images..."
 msgstr ""
 
 #: perl/lib/NeedRestart/Kernel/kFreeBSD.pm:49
 msgid "Scanning kfreebsd images..."
 msgstr ""
 
-#: perl/lib/NeedRestart/UI/stdio.pm:41
+#: perl/lib/NeedRestart/UI/Mail.pm:52 perl/lib/NeedRestart/UI/stdio.pm:41
 #, perl-brace-format
 msgid ""
 "Pending kernel upgrade!\n"
@@ -138,18 +142,18 @@ msgid ""
 "automatically, so you should consider rebooting. [Return]\n"
 msgstr ""
 
-#: perl/lib/NeedRestart/UI/stdio.pm:53
+#: perl/lib/NeedRestart/UI/Mail.pm:63 perl/lib/NeedRestart/UI/stdio.pm:53
 msgid "The currently running kernel has an ABI compatible upgrade pending."
 msgstr ""
 
-#: perl/lib/NeedRestart/UI/stdio.pm:61
+#: perl/lib/NeedRestart/UI/Mail.pm:71 perl/lib/NeedRestart/UI/stdio.pm:61
 #, perl-brace-format
 msgid ""
 "The currently running kernel version is not the expected kernel version "
 "{eversion}."
 msgstr ""
 
-#: perl/lib/NeedRestart/UI/stdio.pm:72
+#: perl/lib/NeedRestart/UI/Mail.pm:82 perl/lib/NeedRestart/UI/stdio.pm:72
 #, perl-brace-format
 msgid ""
 "\n"
@@ -159,15 +163,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: perl/lib/NeedRestart/UI/stdio.pm:104
-msgid "yes"
-msgstr ""
-
-#: perl/lib/NeedRestart/UI/stdio.pm:104
-msgid "no"
-msgstr ""
-
-#: perl/lib/NeedRestart/UI/stdio.pm:126
+#: perl/lib/NeedRestart/UI/stdio.pm:131
 msgid ""
 "  (Y)es  - restart this service\n"
 "  (N)o   - do not restart this service\n"
@@ -176,7 +172,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: perl/lib/NeedRestart/UI/stdio.pm:159
+#: perl/lib/NeedRestart/UI/stdio.pm:164
 #, perl-brace-format
 msgid "Restart «{rc}»?"
 msgstr ""
