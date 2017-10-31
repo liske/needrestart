@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: needrestart 2.11\n"
 "Report-Msgid-Bugs-To: thomas@fiasko-nw.net\n"
-"POT-Creation-Date: 2017-10-31 17:24+0100\n"
+"POT-Creation-Date: 2017-10-31 17:59+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -121,6 +121,10 @@ msgstr ""
 
 #: needrestart:1118
 msgid "and"
+msgstr ""
+
+#: perl/lib/NeedRestart/Kernel/Linux.pm:136
+msgid "Scanning linux images..."
 msgstr ""
 
 #: perl/lib/NeedRestart/Kernel/kFreeBSD.pm:49

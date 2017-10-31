@@ -131,7 +131,7 @@ sub nr_kernel_check_real($$) {
     } grep {
 	# filter initrd images
 	(!m@^/boot/init@);
-    } </boot/vmlinu* /boot/*.img>;
+    } (</boot/vmlinu*>, </boot/*.img>);
 
     $ui->progress_prep(scalar keys %kfiles, __ 'Scanning linux images...');
 
