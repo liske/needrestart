@@ -42,7 +42,9 @@ sub _announce {
 					 kversion => $vars{KVERSION},
 					 message => $message,
 		   ));
-    <STDIN>;
+
+    # Expect user input only within a terminal
+    <STDIN> if (-t STDIN && -t STDOUT);
 }
 
 
@@ -85,6 +87,8 @@ sub notice($$) {
     my $out = shift;
     my $indent = ' ';
     $indent .= $1 if($out =~ /^(\s+)/);
+
+    return unless($self->{verbosity});
 
     $self->wprint(\*STDOUT, '', $indent, "$out\n");
 }
