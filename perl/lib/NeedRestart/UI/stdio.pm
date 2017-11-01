@@ -88,6 +88,8 @@ sub notice($$) {
     my $indent = ' ';
     $indent .= $1 if($out =~ /^(\s+)/);
 
+    return unless($self->{verbosity});
+
     $self->wprint(\*STDOUT, '', $indent, "$out\n");
 }
 
