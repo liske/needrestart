@@ -43,6 +43,9 @@ needrestart (2.12) unstable; urgency=medium
       (github issue #58 by @pigen)
     - [Hook] Fix handling of multiarch packages.
       (github issue #56 by @mayasd)
+    - [Interp] Ignore interpreter processes with unreachable root fs (i.e.
+      in different mnt ns).
+      (github issue #72 by Stefan Bühler @stbuehler)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
