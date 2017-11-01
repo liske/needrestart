@@ -116,7 +116,7 @@ sub _query($$) {
 	    return $s;
 	}
 
-	$i = <STDIN>;
+	$i = <STDIN> if(-t *STDIN && -t *STDOUT);
 	unless(defined($i)) {
 	    $i = 'n';
 	    last;
