@@ -42,7 +42,7 @@ sub _announce {
 					 kversion => $vars{KVERSION},
 					 message => $message,
 		   ));
-    <STDIN>;
+    <STDIN> if (-t *STDIN && -t *STDOUT);
 }
 
 
@@ -76,7 +76,7 @@ You should consider rebooting!
 
 EHINT
 
-    <STDIN>;
+    <STDIN> if (-t *STDIN && -t *STDOUT);
 }
 
 

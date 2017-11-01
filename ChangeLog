@@ -49,6 +49,9 @@ needrestart (2.12) unstable; urgency=medium
       (github issue #72 by Stefan Bühler @stbuehler)
     - [Core] Add missing unnamed device major numbers (fix for OpenVZ).
       (Debian Bug#876452 by Piotr Pańczyk <piotr.panczyk@assecobs.pl>)
+    - [UI] Do not call GetTerminalSize() if STDOUT is not a TTY.
+      (Debian Bug#859387 by by Paul Wise <pabs@debian.org>)
+      (github issues #85 and #86 by @guillaume-uH57J9)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 

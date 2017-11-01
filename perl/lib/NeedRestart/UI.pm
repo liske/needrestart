@@ -46,11 +46,17 @@ sub wprint {
     my $sp2 = shift;
     my $message = shift;
 
-    # workaround Debian Bug#824564 in Term::ReadKey: pass filehandle twice
-    my ($cols) = GetTerminalSize($fh, $fh);
-    $columns = $cols if($cols);
+    # only wrap output if it is a terminal
+    if (-t $fh) {
+	# workaround Debian Bug#824564 in Term::ReadKey: pass filehandle twice
+	my ($cols) = GetTerminalSize($fh, $fh);
+	$columns = $cols if($cols);
 
-    print $fh wrap($sp1, $sp2, $message);
+	print $fh wrap($sp1, $sp2, $message);
+    }
+    else {
+	print $fh "$sp1$message";
+    }
 }
 
 sub progress_prep($$$) {
