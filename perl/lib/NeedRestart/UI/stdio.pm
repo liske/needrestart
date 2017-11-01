@@ -83,6 +83,9 @@ EHINT
 sub notice($$) {
     my $self = shift;
     my $out = shift;
+
+    return unless($self->{verbosity});
+
     my $indent = ' ';
     $indent .= $1 if($out =~ /^(\s+)/);
 
