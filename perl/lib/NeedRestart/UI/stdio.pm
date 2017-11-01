@@ -42,7 +42,9 @@ sub _announce {
 					 kversion => $vars{KVERSION},
 					 message => $message,
 		   ));
-    <STDIN>;
+
+    # Expect user input only within a terminal
+    <STDIN> if (-t STDIN && -t STDOUT);
 }
 
 
