@@ -487,9 +487,9 @@ if(defined($opt_l)) {
 
 			# Don't compare device numbers on anon filesystems
 			# w/o a backing device (like OpenVZ's simfs).
+			my $major = (($sdev >> 8) & 0xfff) | (($sdev >> 32) & ~0xfff);
 			$mdev = "00:00"
-			    if (((($sdev >> 8) & 0xfff) |
-				 (($sdev >> 32) & ~0xfff)) == 0);
+			    if ($major == 0 || $major == 144 || $major == 145 || $major == 146);
 
 			# compare maps content vs. on-disk
 			unless($minode eq $sinode && ((grep {$mdev eq $_} @sdevs) ||
