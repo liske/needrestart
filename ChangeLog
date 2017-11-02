@@ -58,6 +58,8 @@ needrestart (2.12) unstable; urgency=medium
     - [UI] Fix switch from interactive to list mode if debconf is run
       noninteractive.
       (Debian Bug#876459 by Piotr Pańczyk <piotr.panczyk@assecobs.pl>)
+    - [man] Add documentation on restart mode if run non-interactive.
+      (Debian Bug#842512 by Antoine Beaupré <anarcat@debian.org>)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
