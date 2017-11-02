@@ -54,6 +54,9 @@ needrestart (2.12) unstable; urgency=medium
     - [UI] Do not call GetTerminalSize() if STDOUT is not a TTY.
       (Debian Bug#859387 by by Paul Wise <pabs@debian.org>)
       (github issues #85 and #86 by @guillaume-uH57J9)
+    - [UI] Fix switch from interactive to list mode if debconf is run
+      noninteractive.
+      (Debian Bug#876459 by Piotr Pańczyk <piotr.panczyk@assecobs.pl>)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
