@@ -178,7 +178,7 @@ sub nr_kernel_check_real($$) {
 	return (NRK_UNKNOWN, %vars);
     }
 
-    if(-e "/etc/redhat-version" && !-x "/usr/bin/dpkg") {
+    if(-e "/etc/redhat-release") {
 	print STDERR "$LOGPREF using RPM version sorting\n" if($debug);
 	($vars{EVERSION}) = reverse sort { nr_kernel_vcmp_rpm($a, $b); } keys %kernels;
     }
