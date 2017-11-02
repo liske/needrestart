@@ -57,6 +57,7 @@ needrestart (2.12) unstable; urgency=medium
     - [UI] Fix switch from interactive to list mode if debconf is run
       noninteractive.
       (Debian Bug#876459 by Piotr Pańczyk <piotr.panczyk@assecobs.pl>)
+    - [UI] Fix ignoring of mappings at temporary directories.
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
