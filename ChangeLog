@@ -44,6 +44,7 @@ needrestart (2.12) unstable; urgency=medium
       (Debian Bug#879091 by Paul Wise <pabs@debian.org>)
     - [Core] Fix handling of library mappings if target does not exist.
       (github issue #58 by @pigen)
+      (Debian Bug#878700 by Richard Hector <richard@walnut.gen.nz>)
     - [Hook] Fix handling of multiarch packages.
       (github issue #56 by @mayasd)
     - [Interp] Ignore interpreter processes with unreachable root fs (i.e.
@@ -57,7 +58,6 @@ needrestart (2.12) unstable; urgency=medium
     - [UI] Fix switch from interactive to list mode if debconf is run
       noninteractive.
       (Debian Bug#876459 by Piotr Pańczyk <piotr.panczyk@assecobs.pl>)
-    - [UI] Fix ignoring of mappings at temporary directories.
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
