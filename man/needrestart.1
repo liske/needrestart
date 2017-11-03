@@ -63,7 +63,13 @@ check for obsolete kernel
 \fB\-l\fR
 check for obsolete libraries
 .SH ENVIRONMENT
-When used with apt-get(8) needrestart supports the following environment variables:
+The following environment variables can be used to override the config file options. Command line parameters do always supersede them.
+.TP
+\fBNEEDRESTART_MODE\fR
+Change the configured restart mode (see also the \fB\-r\fR parameter): (l)ist only, (i)nteractive or (a)utomatically
+.RE
+
+When used with apt-get(8) needrestart supports the following additional environment variables:
 .TP
 \fBDEBIAN_FRONT\fR
 The debconf(7) frontend to use, can also set using the \fB\-f\fR parameter.

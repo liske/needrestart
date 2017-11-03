@@ -2,8 +2,11 @@ needrestart (2.12) unstable; urgency=medium
 
   * Features:
     - [Core] Possible to suspend needrestart in apt-get hook using
-      the NEEDRESTART_SUSPEND variable.
+      the NEEDRESTART_SUSPEND environment variable.
       (github issue #71 by Ludovic Gasc @GMLudo et. al.)
+    - [Core] Possible to override the configured restart mode using
+      the NEEDRESTART_MODE environment variable.
+      (Debian Bug#866105 by Marc Haber <mh+debian-bugs@zugschlus.de>)
   * Changes:
     - [Core] Do not try to restart service units with RefuseManualStop=yes.
       (github issue #75 by Marc Dequènes @duck-rh)
