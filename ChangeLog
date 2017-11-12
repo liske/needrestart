@@ -63,6 +63,9 @@ needrestart (2.12) unstable; urgency=medium
       (Debian Bug#876459 by Piotr Pańczyk <piotr.panczyk@assecobs.pl>)
     - [man] Add documentation on restart mode if run non-interactive.
       (Debian Bug#842512 by Antoine Beaupré <anarcat@debian.org>)
+    - [Core] Ignore some Java false positives (JNA, JFFI).
+      (github pull request #89 by Maximilian Gaß @mxey)
+      (github issue #60 by @ge-fa)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
