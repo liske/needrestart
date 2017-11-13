@@ -199,7 +199,7 @@ print STDERR "$LOGPREF needrestart v$NeedRestart::VERSION\n" if($nrconf{verbosit
 my $uid = $<;
 if($uid) {
     if($opt_p) {
-	print STDERR "UNKN - This plugin needs to be run as root!\n";
+	print "UNKN - This plugin needs to be run as root!\n";
 	exit 3;
     }
 
