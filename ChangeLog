@@ -66,6 +66,8 @@ needrestart (2.12) unstable; urgency=medium
     - [Core] Ignore some Java false positives (JNA, JFFI).
       (github pull request #89 by Maximilian Gaß @mxey)
       (github issue #60 by @ge-fa)
+    - [Core] Output NRPE message "root needed" on stdout.
+      (github pull request #91 by @nirgal)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
