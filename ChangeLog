@@ -68,6 +68,8 @@ needrestart (2.12) unstable; urgency=medium
       (github issue #60 by @ge-fa)
     - [Core] Output NRPE message "root needed" on stdout.
       (github pull request #91 by @nirgal)
+    - [Core] Use override_cont when querying containers.
+      (github pull request #94 by Nigel Kukard @nkukard)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
