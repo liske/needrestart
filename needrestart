@@ -1052,7 +1052,7 @@ if(defined($opt_l) && !$uid) {
 	    my $o = 0;
 
 	    $ui->notice(__ 'Restarting containers...');
-	    $ui->query_conts(__('Containers to be restarted:'), $nrconf{defno}, \%conts, $nrconf{override_rc},
+	    $ui->query_conts(__('Containers to be restarted:'), $nrconf{defno}, \%conts, $nrconf{override_cont},
 			     sub {
 				 my $cont = shift;
 				 $ui->command(join(' ', '', @{ $conts{$cont} }));
