@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: needrestart 2.8\n"
 "Report-Msgid-Bugs-To: thomas@fiasko-nw.net\n"
-"POT-Creation-Date: 2017-10-31 21:28+0100\n"
+"POT-Creation-Date: 2017-12-19 22:12+0100\n"
 "PO-Revision-Date: 2016-05-15 12:17+0200\n"
 "Last-Translator: Thomas Liske <thomas@fiasko-nw.net>\n"
 "Language: de\n"
@@ -10,36 +10,36 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: needrestart:219
+#: needrestart:220
 msgid "Available UI packages:"
-msgstr ""
+msgstr "Verfügbare Oberflächen:"
 
-#: needrestart:416
+#: needrestart:417
 msgid "Scanning processes..."
 msgstr "Prüfe Prozesse..."
 
-#: needrestart:561
+#: needrestart:563
 msgid "Scanning candidates..."
 msgstr "Prüfe Kandidaten..."
 
-#: needrestart:735
+#: needrestart:737
 msgid "Your outdated processes:"
 msgstr "Veraltete Prozesse:"
 
-#: needrestart:785
+#: needrestart:788
 msgid "Running kernel seems to be up-to-date."
 msgstr "Der laufende Kernel ist aktuell."
 
-#: needrestart:785
+#: needrestart:788
 msgid "Running kernel seems to be up-to-date (ABI upgrades are not detected)."
 msgstr ""
 "Der laufende Kernel ist aktuell (ABI Änderungen können nicht erkannt werden)."
 
-#: needrestart:789 needrestart:802
+#: needrestart:792 needrestart:805
 msgid "an outdated kernel image"
 msgstr "eine veraltete Kernel-Version"
 
-#: needrestart:793
+#: needrestart:796
 #, perl-brace-format
 msgid ""
 "The currently running kernel version is {kversion} and there is an ABI "
@@ -48,7 +48,7 @@ msgstr ""
 "Die aktuelle Kernel-Version ist {kversion} und es ist ein ABI-kompatibles "
 "Upgrade ausstehend."
 
-#: needrestart:806
+#: needrestart:809
 #, perl-brace-format
 msgid ""
 "The currently running kernel version is {kversion} which is not the expected "
@@ -57,67 +57,67 @@ msgstr ""
 "Die aktuelle Kernel-Version ist {kversion} was nicht die erwartete Version "
 "{eversion} ist."
 
-#: needrestart:816
+#: needrestart:819
 msgid "Failed to retrieve available kernel versions."
 msgstr "Fehler beim Ermitteln der verfügbaren Kernel-Versionen."
 
-#: needrestart:825
+#: needrestart:830
 msgid "No services need to be restarted."
 msgstr "Es müssen keine Dienste neugestartet werden."
 
-#: needrestart:834
+#: needrestart:839
 msgid "outdated binaries"
 msgstr "veraltete Programme"
 
-#: needrestart:840 needrestart:941
+#: needrestart:845 needrestart:948
 msgid "Services to be restarted:"
 msgstr "Dienste, die neu gestartet werden müssen:"
 
-#: needrestart:841 needrestart:940
+#: needrestart:846 needrestart:947
 msgid "Restarting services..."
 msgstr "Dienste werden neu gestartet..."
 
-#: needrestart:896 needrestart:967
-msgid "Services being skipped:"
-msgstr "ausgelassene Dienste:"
+#: needrestart:902 needrestart:974
+msgid "Service restarts being deferred:"
+msgstr "Dienste deren Neustart verschoben wurde:"
 
-#: needrestart:910 needrestart:981
+#: needrestart:917 needrestart:988
 msgid "Service restarts being refused by systemd:"
 msgstr "Dienste die durch systemd nicht neu gestartet werden:"
 
-#: needrestart:994
+#: needrestart:1002
 msgid "No containers need to be restarted."
 msgstr "Es müssen keine Container neu gestartet werden."
 
-#: needrestart:1003
+#: needrestart:1011
 msgid "outdated containers"
 msgstr "veraltete Containern"
 
-#: needrestart:1008 needrestart:1053
+#: needrestart:1016 needrestart:1061
 msgid "Containers to be restarted:"
 msgstr "Container, die neu gestartet werden müssen:"
 
-#: needrestart:1009 needrestart:1052
+#: needrestart:1017 needrestart:1060
 msgid "Restarting containers..."
 msgstr "Neustart von Containern..."
 
-#: needrestart:1043
-msgid "Containers being skipped:"
-msgstr "Ausgelassene Container:"
+#: needrestart:1051
+msgid "Container restarts being deferred:"
+msgstr "Container deren Neustart verschoben wurde:"
 
-#: needrestart:1065
+#: needrestart:1074
 msgid "No user sessions are running outdated binaries."
 msgstr "Es gibt keine Nutzer-Sitzungen mit veralteten Prozessen."
 
-#: needrestart:1074
+#: needrestart:1083
 msgid "outdated sessions"
 msgstr "veraltete Sitzungen"
 
-#: needrestart:1077
+#: needrestart:1086
 msgid "User sessions running outdated binaries:"
 msgstr "Nutzer-Sitzungen mit veralteten Prozessen:"
 
-#: needrestart:1118
+#: needrestart:1127
 msgid "and"
 msgstr "und"
 
@@ -182,7 +182,7 @@ msgstr ""
 "Ein Neustart sollte durchgeführt werden!\n"
 "\n"
 
-#: perl/lib/NeedRestart/UI/stdio.pm:131
+#: perl/lib/NeedRestart/UI/stdio.pm:142
 msgid ""
 "  (Y)es  - restart this service\n"
 "  (N)o   - do not restart this service\n"
@@ -196,7 +196,7 @@ msgstr ""
 "  (S)top - keine weiteren Dienste neu starten\n"
 "\n"
 
-#: perl/lib/NeedRestart/UI/stdio.pm:164
+#: perl/lib/NeedRestart/UI/stdio.pm:175
 #, perl-brace-format
 msgid "Restart «{rc}»?"
 msgstr "»{rc}« neu starten?"

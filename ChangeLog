@@ -15,6 +15,8 @@ needrestart (2.12) unstable; urgency=medium
     - [Core] Tune blacklist_mappings default setting to match on deleted maps.
     - [UI] Respect verbosity in UI::stdio, just like UI::Debconf.
       (github pull request #88 by @guillaume-uH57J9)
+    - [Core] Improve output formating.
+      (github issue #84 by Stavros Ntentos @stdedos)
   * Fixes:
     - [Core] Makefile: Fix installation of restart.d/ scripts.
       (Debian Bug#851866 by Sven Hartge <sven@svenhartge.de>)

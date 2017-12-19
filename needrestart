@@ -783,6 +783,7 @@ if(defined($opt_k)) {
 	    }
 	}
 	else {
+	    $ui->vspace();
 	    if($kresult == NRK_NOUPGRADE) {
 		$ui->notice(($kvars{ABIDETECT} ? __('Running kernel seems to be up-to-date.') : __('Running kernel seems to be up-to-date (ABI upgrades are not detected).')))
 		    unless($opt_m eq 'e');
@@ -823,6 +824,7 @@ if(defined($opt_k)) {
 
 if(defined($opt_l) && !$uid) {
     ## SERVICES
+    $ui->vspace();
     unless(scalar %restart) {
 	$ui->notice(__ 'No services need to be restarted.') unless($opt_b || $opt_m eq 'e');
 	if($opt_p) {
@@ -895,7 +897,8 @@ if(defined($opt_l) && !$uid) {
 
 	    @systemd_restart = ();
 	    if($#skipped_services > -1) {
-		$ui->notice(__ 'Services being skipped:');
+		$ui->vspace();
+		$ui->notice(__ 'Service restarts being deferred:');
 		foreach my $rc (sort @skipped_services) {
 		    my @cmd = restart_cmd($rc);
 		    $ui->command(join(' ', '', @cmd)) if($#cmd > -1);
@@ -909,6 +912,7 @@ if(defined($opt_l) && !$uid) {
 
 	    # report services restarts refused by systemd
 	    if($#refused_services > -1) {
+		$ui->vspace();
 		$ui->notice(__ 'Service restarts being refused by systemd:');
 		foreach my $rc (sort @refused_services) {
 		    $ui->command(qq( $rc));
@@ -966,7 +970,7 @@ if(defined($opt_l) && !$uid) {
 
 	    @systemd_restart = ();
 	    if($#skipped_services > -1) {
-		$ui->notice(__ 'Services being skipped:');
+		$ui->notice(__ 'Service restarts being deferred:');
 		foreach my $rc (sort @skipped_services) {
 		    my @cmd = restart_cmd($rc);
 		    $ui->command(join(' ', '', @cmd)) if($#cmd > -1);
@@ -990,6 +994,7 @@ if(defined($opt_l) && !$uid) {
 
 
     ## CONTAINERS
+    $ui->vspace();
     @systemd_restart = ();
     my %conts = needrestart_cont_get($nrconf{verbosity} > 1);
     unless(scalar %conts) {
@@ -1042,7 +1047,7 @@ if(defined($opt_l) && !$uid) {
 	    }
 
 	    if($#skipped_containers > -1) {
-		$ui->notice(__ 'Containers being skipped:');
+		$ui->notice(__ 'Container restarts being deferred:');
 		foreach my $cont (sort @skipped_containers) {
 		    $ui->command(join(' ', '', @{ $conts{$cont} }));
 		}
@@ -1062,6 +1067,7 @@ if(defined($opt_l) && !$uid) {
     }
 
     ## SESSIONS
+    $ui->vspace();
     # list and notify user sessions
     unless(scalar keys %sessions) {
 	$ui->notice(__ 'No user sessions are running outdated binaries.') unless($opt_b || $opt_m eq 'e');

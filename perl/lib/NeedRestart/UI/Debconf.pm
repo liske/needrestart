@@ -126,6 +126,14 @@ sub notice {
     $self->wprint(\*STDERR, '', $indent, "$out\n");
 }
 
+sub vspace {
+    my $self = shift;
+
+    return unless($self->{verbosity});
+
+    $self->SUPER::vspace(\*STDERR);
+}
+
 
 sub command {
     my $self = shift;

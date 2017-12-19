@@ -92,6 +92,14 @@ sub notice($$) {
     $self->wprint(\*STDOUT, '', $indent, "$out\n");
 }
 
+sub vspace {
+    my $self = shift;
+
+    return unless($self->{verbosity});
+
+    $self->SUPER::vspace(\*STDOUT);
+}
+
 
 sub command {
     my $self = shift;

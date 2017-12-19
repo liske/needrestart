@@ -161,6 +161,12 @@ sub announce_ver {
 sub notice($$) {
 }
 
+sub vspace {
+    my $self = shift;
+    my $fh = shift;
+
+    print $fh "\n";
+}
 
 sub command() {
    my $self = shift;

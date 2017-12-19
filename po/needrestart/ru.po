@@ -77,7 +77,7 @@ msgid "Restarting services..."
 msgstr "Перезапуск служб..."
 
 #: needrestart:812 needrestart:856
-msgid "Services being skipped:"
+msgid "Service restarts being deferred:"
 msgstr "Пропущенные службы:"
 
 #: needrestart:875
@@ -97,7 +97,7 @@ msgid "Restarting containers..."
 msgstr "Перезапуск контейнеров..."
 
 #: needrestart:924
-msgid "Containers being skipped:"
+msgid "Container restarts being deferred:"
 msgstr "Пропущенные контейнеры:"
 
 #: needrestart:946
