@@ -73,6 +73,8 @@ needrestart (2.12) unstable; urgency=medium
     - [Core] Use override_cont when querying containers.
       (github pull request #94 by Nigel Kukard @nkukard)
     - [Core] Do not restart docker by default.
+    - [Core] Fix typo in man page.
+      (Debian Bug#885448 by Paul Wise <pabs@debian.org>)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
