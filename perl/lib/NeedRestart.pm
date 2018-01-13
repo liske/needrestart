@@ -4,7 +4,7 @@
 #   Thomas Liske <thomas@fiasko-nw.net>
 #
 # Copyright Holder:
-#   2013 - 2017 (C) Thomas Liske [http://fiasko-nw.net/~thomas/]
+#   2013 - 2018 (C) Thomas Liske [http://fiasko-nw.net/~thomas/]
 #
 # License:
 #   This program is free software; you can redistribute it and/or modify
@@ -80,7 +80,7 @@ our %EXPORT_TAGS = (
     )],
 );
 
-our $VERSION = '2.12';
+our $VERSION = '3.0';
 my $LOGPREF = '[Core]';
 
 my %UIs;

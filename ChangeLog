@@ -1,4 +1,4 @@
-needrestart (2.12) unstable; urgency=medium
+needrestart (3.0) unstable; urgency=medium
 
   * Features:
     - [Core] Possible to suspend needrestart in apt-get hook using
