@@ -11,8 +11,8 @@ The detection is currently only supported for Intel CPUs.
 Intel
 -----
 
-Needrestart uses iucode-tool[1] to test for pending microcode updates. On
-Debian GNU/Linux it should be sufficient to install the intel-microcode
+Needrestart uses `iucode-tool`[1] to test for pending microcode updates. On
+Debian GNU/Linux it should be sufficient to install the `intel-microcode`
 package:
 
 ```console
