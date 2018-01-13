@@ -7,6 +7,8 @@ needrestart (2.12) unstable; urgency=medium
     - [Core] Possible to override the configured restart mode using
       the NEEDRESTART_MODE environment variable.
       (Debian Bug#866105 by Marc Haber <mh+debian-bugs@zugschlus.de>)
+    - [uCode] Check for pending Intel microcode updates.
+      (Debian Bug#886445 by Paul Wise <pabs@debian.org>)
   * Changes:
     - [Core] Do not try to restart service units with RefuseManualStop=yes.
       (github issue #75 by Marc Dequènes @duck-rh)
