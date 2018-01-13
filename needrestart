@@ -32,6 +32,7 @@ use NeedRestart;
 use NeedRestart::UI;
 use NeedRestart::Interp;
 use NeedRestart::Kernel;
+use NeedRestart::uCode;
 use NeedRestart::Utils;
 use Sort::Naturally;
 use Locale::TextDomain 'needrestart';
@@ -72,6 +73,7 @@ Usage:
   By using the following options only the specified checks are performed:
     -k          check for obsolete kernel
     -l          check for obsolete libraries
+    -w          check for obsolete CPU microcode
 
     --help      show this help
     --version   show version information
@@ -121,6 +123,7 @@ our %nrconf = (
     skip_mapfiles => 0,
     interpscan => 1,
     kernelhints => 1,
+    ucodehints => 1,
     q(nagios-status) => {
 	services => 1,
 	kernel => 2,
@@ -145,7 +148,8 @@ our $opt_l;
 our $opt_p;
 our $opt_q;
 our $opt_u;
-unless(getopts('c:vr:nm:bf:klpqu:')) {
+our $opt_w;
+unless(getopts('c:vr:nm:bf:klpqu:w')) {
     HELP_MESSAGE;
     exit 1;
 }
@@ -229,9 +233,10 @@ my $ui = ($opt_b ? NeedRestart::UI->new(0) : needrestart_ui($nrconf{verbosity}, 
 die "Error: no UI class available!\n" unless(defined($ui));
 
 # enable/disable checks
-unless(defined($opt_k) || defined($opt_l)) {
+unless(defined($opt_k) || defined($opt_l) || defined($opt_w)) {
     $opt_k = ($uid ? undef : 1);
     $opt_l = 1;
+    $opt_w = ($uid ? undef : 1);
 }
 
 sub parse_lsbinit($) {
@@ -370,6 +375,11 @@ my %nagios = (
     kstr => q(unknown),
     kret => 3,
     kperf => q(U),
+
+    # uCode
+    ustr => q(unknown),
+    uret => 3,
+    uperf => q(U),
 
     # services
     sstr => q(unknown),
@@ -748,10 +758,15 @@ foreach my $rc (keys %restart) {
     delete($restart{$rc});
 }
 
-# Skip kernel stuff within containers
+# Skip kernel and uCode stuff within containers
 if(needrestart_cont_check($nrconf{verbosity} > 1, 1, nr_readlink(1), 1)) {
     print STDERR "$LOGPREF container detected, skipping kernel check\n" if($nrconf{verbosity} > 1);
     $opt_k = undef;
+    $opt_w = undef;
+}
+
+if(defined($opt_w)) {
+    my ($mresult, %mvars) = ($nrconf{ucodehints} || $opt_w ? nr_ucode_check($nrconf{verbosity} > 1, $ui) : ());
 }
 
 if(defined($opt_k)) {
