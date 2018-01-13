@@ -33,6 +33,10 @@ use Sort::Naturally;
 use Locale::TextDomain 'needrestart';
 use File::Which qw(where);
 
+use constant {
+    NRM_INTEL_HELPER => q(/usr/lib/needrestart/iucode-scan-versions),
+};
+
 my $LOGPREF = '[uCode/Intel]';
 
 sub nr_ucode_init {
@@ -48,7 +52,7 @@ sub nr_ucode_check_real {
     my $ui = shift;
     my %vars;
 
-    my $fh = nr_fork_pipe_stderr($debug, qw(iucode_tool -Sl -tb /lib/firmware/intel-ucode -ta), </usr/share/misc/intel-microcode*>);
+    my $fh = nr_fork_pipe($debug, NRM_INTEL_HELPER, $debug);
     while(<$fh>) {
         if (/^iucode_tool:.+signature (0x[\da-f]+)/) {
             $vars{sig_current} = $1;
@@ -65,8 +69,8 @@ sub nr_ucode_check_real {
     close($fh);
 
     unless(exists($vars{sig_current}) && exists($vars{sig_avail})) {
-        print STDERR "$LOGPREF did not get current microcode version\n" if($debug && !exists($vars{current}));
-        print STDERR "$LOGPREF did not get available microcode version\n" if($debug && !exists($vars{current}));
+        print STDERR "$LOGPREF did not get current microcode version\n" if($debug && !exists($vars{sig_current}));
+        print STDERR "$LOGPREF did not get available microcode version\n" if($debug && !exists($vars{sig_avail}));
     
         return (NRM_UNKNOWN, %vars);
     }

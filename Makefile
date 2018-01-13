@@ -34,6 +34,7 @@ install: all
 	cp needrestart "$(DESTDIR)/usr/sbin/"
 	
 	mkdir -p "$(DESTDIR)/usr/lib/needrestart"
+	cp lib/iucode-scan-versions "$(DESTDIR)/usr/lib/needrestart/"
 	cp lib/vmlinuz-get-version "$(DESTDIR)/usr/lib/needrestart/"
 	cp lib/notify.d.sh "$(DESTDIR)/usr/lib/needrestart/"
 	
