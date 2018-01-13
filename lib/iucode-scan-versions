@@ -28,6 +28,8 @@ if [ "$1" = "1" ]; then
     set -x
 fi
 
+IUCODE_TOOL_EXTRA_OPTIONS=""
+
 test -r /etc/default/intel-microcode && . /etc/default/intel-microcode
 
 # do not scan if adding Intel microcode to initrd is disabled
@@ -39,4 +41,4 @@ if [ -r /usr/share/misc/intel-microcode* ]; then
     exit 1
 fi
 
-exec iucode_tool -Sl -tb /lib/firmware/intel-ucode 2>&1
+exec iucode_tool -Sl $IUCODE_TOOL_EXTRA_OPTIONS -tb /lib/firmware/intel-ucode 2>&1
