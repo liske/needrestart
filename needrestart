@@ -377,9 +377,9 @@ my %nagios = (
     kperf => q(U),
 
     # uCode
-    ustr => q(unknown),
-    uret => 3,
-    uperf => q(U),
+    mstr => q(unknown),
+    mret => 3,
+    mperf => q(U),
 
     # services
     sstr => q(unknown),
@@ -765,8 +765,10 @@ if(needrestart_cont_check($nrconf{verbosity} > 1, 1, nr_readlink(1), 1)) {
     $opt_w = undef;
 }
 
+my ($ucode_result, %ucode_vars) = (NRM_UNKNOWN);
 if(defined($opt_w)) {
-    my ($mresult, %mvars) = ($nrconf{ucodehints} || $opt_w ? nr_ucode_check($nrconf{verbosity} > 1, $ui) : ());
+    ($ucode_result, %ucode_vars) = ($nrconf{ucodehints} || $opt_w ? nr_ucode_check($nrconf{verbosity} > 1, $ui) : ());
+    $ucode_result++;
 }
 
 if(defined($opt_k)) {
@@ -798,15 +800,17 @@ if(defined($opt_k)) {
 	    }
 	}
 	else {
-	    $ui->vspace();
 	    if($kresult == NRK_NOUPGRADE) {
-		$ui->notice(($kvars{ABIDETECT} ? __('Running kernel seems to be up-to-date.') : __('Running kernel seems to be up-to-date (ABI upgrades are not detected).')))
-		    unless($opt_m eq 'e');
+            unless($opt_m eq 'e') {
+                $ui->vspace();
+                $ui->notice(($kvars{ABIDETECT} ? __('Running kernel seems to be up-to-date.') : __('Running kernel seems to be up-to-date (ABI upgrades are not detected).')))
+            }
 	    }
 	    elsif($kresult == NRK_ABIUPGRADE) {
 		push(@easy_hints, __ 'an outdated kernel image') if($opt_m eq 'e');
 
 		if($nrconf{kernelhints} < 0) {
+            $ui->vspace();
 		    $ui->notice(__x(
 				    'The currently running kernel version is {kversion} and there is an ABI compatible upgrade pending.',
 				    kversion => $kvars{KVERSION},
@@ -820,6 +824,7 @@ if(defined($opt_k)) {
 		push(@easy_hints, __ 'an outdated kernel image') if($opt_m eq 'e');
 
 		if($nrconf{kernelhints} < 0) {
+            $ui->vspace();
 		    $ui->notice(__x(
 				    'The currently running kernel version is {kversion} which is not the expected kernel version {eversion}.',
 				    kversion => $kvars{KVERSION},
@@ -831,10 +836,50 @@ if(defined($opt_k)) {
 		}
 	    }
 	    else {
-		$ui->notice(__ 'Failed to retrieve available kernel versions.');
+            $ui->vspace();
+            $ui->notice(__ 'Failed to retrieve available kernel versions.');
 	    }
 	}
     }
+}
+
+if(defined($opt_w)) {
+	if($opt_b) {
+        unless($opt_p) {
+            print "NEEDRESTART-UCODE: $$ucode_result\n";
+	    }
+        else {
+            if($ucode_result == NRM_OBSOLETE) {
+                $nagios{mstr} = "OBSOLETE";
+                $nagios{mret} = $nrconf{q(nagios-status)}->{kernel};
+                $nagios{mperf} = 1;
+            }
+            elsif($ucode_result == NRM_CURRENT) {
+                $nagios{mstr} = "CURRENT";
+                $nagios{mret} = 0;
+                $nagios{mperf} = 0;
+            }
+	    }
+	}
+	else {
+	    if($ucode_result == NRM_CURRENT) {
+            unless($opt_m eq 'e') {
+                $ui->vspace();
+                $ui->notice(__('Running processor microcode seems to be up-to-date.'));
+            }
+	    }
+	    elsif($ucode_result == NRM_OBSOLETE) {
+            push(@easy_hints, __ 'outdated processor microcode') if($opt_m eq 'e');
+
+            if($nrconf{ucodehints}) {
+                $ui->announce_ucode(%ucode_vars);
+            }
+	    }
+	    else {
+            $ui->vspace();
+            $ui->notice(__ 'Failed to check for processor microcode upgrades.');
+	    }
+	}
 }
 
 if(defined($opt_l) && !$uid) {
@@ -1150,16 +1195,18 @@ if($opt_p) {
 	3 => q(UNKN),
 	);
     my ($ret) = reverse sort 
-	(($opt_k ? $nagios{kret} : ()),
+	(($opt_k ? $nagios{kret} : ()), ($opt_w ? $nagios{mret} : ()),
 	($opt_l ? ($nagios{sret}, $nagios{cret}, $nagios{uret}) : ()));
 
     print "$states{$ret} - ", join(', ',
 	       ($opt_k ? "Kernel: $nagios{kstr}" : ()),
+	       ($opt_w ? "Microcode: $nagios{mstr}" : ()),
 	       ($opt_l ? "Services: $nagios{sstr}" : ()),
 	       ($opt_l ? "Containers: $nagios{cstr}" : ()),
 	       ($opt_l ? "Sessions: $nagios{ustr}" : ()),
 	), '|', join(' ',
 	       ($opt_k ? "Kernel=$nagios{kperf};0;;0;2" : ()),
+	       ($opt_w ? "Microcode=$nagios{mperf};0;;0;1" : ()),
 	       ($opt_l ? "Services=$nagios{sperf};;0;0" : ()),
 	       ($opt_l ? "Containers=$nagios{cperf};;0;0" : ()),
 	       ($opt_l ? "Sessions=$nagios{uperf};0;;0" : ()),

@@ -38,6 +38,16 @@ Type: note
 _Description: This system runs ${EHINT} - you should consider rebooting!
  For more details, run «needrestart -m a».
 
+Template: needrestart/ui-ucode_title
+Type: title
+_Description: Outdated processor microcode
+
+Template: needrestart/ui-ucode_announce
+Type: note
+_Description: Processor microcode update
+ The currently running kernel version is ${KVERSION} which is not the
+ expected kernel version ${EVERSION}.
+
 Template: needrestart/ui-query_conts_title
 Type: title
 _Description: Containers using outdated libraries

@@ -113,6 +113,21 @@ sub announce_ehint {
     dcres( go );
 }
 
+sub announce_ucode {
+    my $self = shift;
+    my %vars = @_;
+    my $templ = 'needrestart/ui-ucode_announce';
+
+    foreach my $k (keys %vars) {
+        dcres( subst($templ, $k, $vars{$k}) );
+    }
+
+    dcres( fset($templ, 'seen', 0) );
+    dcres( settitle('needrestart/ui-ucode_title') );
+    dcres( input('critical', $templ) );
+    dcres( go );
+}
+
 
 sub notice {
     my $self = shift;

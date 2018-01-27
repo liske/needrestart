@@ -158,6 +158,10 @@ sub announce_ver {
 }
 
 
+sub announce_ucode {
+}
+
+
 sub notice($$) {
 }
 

@@ -38,6 +38,7 @@ sub _announce {
     my $message = shift;
     my %vars = @_;
 
+    print "\n";
     $self->wprint(\*STDOUT, '', '', __x("Pending kernel upgrade!\n\nRunning kernel version:\n  {kversion}\n\nDiagnostics:\n  {message}\n\nRestarting the system to load the new kernel will not be handled automatically, so you should consider rebooting. [Return]\n",
 					 kversion => $vars{KVERSION},
 					 message => $message,
@@ -76,6 +77,19 @@ You should consider rebooting!
 
 EHINT
 
+    <STDIN> if (-t *STDIN && -t *STDOUT);
+}
+
+
+sub announce_ucode {
+    my $self = shift;
+    my %vars = @_;
+
+    print "\n";
+    $self->wprint(\*STDOUT, '', '', __x("Pending processor microcode upgrade!\n\nDiagnostics:\n  The processor microcode{cversion} is not the expected one{eversion}.\n\nRestarting the system to load the new processor microcode will not be handled automatically, so you should consider rebooting. [Return]\n",
+			 cversion => ($vars{CVERSION} ? " ($vars{CVERSION})" : ''),
+			 eversion => ($vars{EVERSION} ? " ($vars{EVERSION})" : ''),
+		   ));
     <STDIN> if (-t *STDIN && -t *STDOUT);
 }
 

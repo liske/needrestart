@@ -64,11 +64,11 @@ sub nr_ucode_check {
     }
 
     unless(scalar @PKGS > 0) {
-        print STDERR "$LOGPREF no supported ucode detection\n" if($debug);
+        print STDERR "$LOGPREF no supported processor microcode detection\n" if($debug);
         return (NRM_UNKNOWN, ());
     }
 
-    $ui->progress_prep(scalar @PKGS, __ 'Scanning CPU microcodes...');
+    $ui->progress_prep(scalar @PKGS, __ 'Scanning processor microcode...');
 
     # autoload ucode modules
     my ($state, @vars) = (NRM_UNKNOWN);
