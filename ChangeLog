@@ -77,6 +77,8 @@ needrestart (3.0) unstable; urgency=medium
     - [Core] Do not restart docker by default.
     - [Core] Fix typo in man page.
       (Debian Bug#885448 by Paul Wise <pabs@debian.org>)
+    - [Interp] Fix perl warning if cwd is unreachable.
+      (github issue #99 by @glitsj16)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 

@@ -138,7 +138,7 @@ sub files {
     chdir("/proc/$pid/root/$ptable->{cwd}");
 
     # skip the process if the cwd is unreachable (i.e. due to mnt ns)
-    unless(-e getcwd()) {
+    unless(getcwd()) {
 	print STDERR "$LOGPREF #$pid: process cwd is unreachable\n" if($self->{debug});
 	return ();
     }
