@@ -317,7 +317,7 @@ sub systemd_refuse_restart {
     my $ret = <$systemctl>;
     close($systemctl);
 
-    if($ret =~ /^RefuseManualStop=yes/) {
+    if($ret && $ret =~ /^RefuseManualStop=yes/) {
 	print STDERR "$LOGPREF systemd refuses restarts of $svc\n" if($nrconf{verbosity} > 1);
 	return 1;
     }
