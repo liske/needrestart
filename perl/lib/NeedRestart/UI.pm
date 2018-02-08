@@ -169,7 +169,7 @@ sub vspace {
     my $self = shift;
     my $fh = shift;
 
-    print $fh "\n";
+    print $fh "\n" if(defined($fh));
 }
 
 sub command() {
