@@ -127,6 +127,7 @@ our %nrconf = (
     q(nagios-status) => {
 	services => 1,
 	kernel => 2,
+	ucode => 2,
 	sessions => 2,
 	containers => 1,
     },
@@ -845,12 +846,14 @@ if(defined($opt_k)) {
 if(defined($opt_w)) {
 	if($opt_b) {
         unless($opt_p) {
-            print "NEEDRESTART-UCODE: $$ucode_result\n";
+            print "NEEDRESTART-UCSTA: $ucode_result\n";
+            print "NEEDRESTART-UCCUR: $ucode_vars{CURRENT}\n";
+            print "NEEDRESTART-UCEXP: $ucode_vars{AVAIL}\n";
 	    }
         else {
             if($ucode_result == NRM_OBSOLETE) {
                 $nagios{mstr} = "OBSOLETE";
-                $nagios{mret} = $nrconf{q(nagios-status)}->{kernel};
+                $nagios{mret} = $nrconf{q(nagios-status)}->{ucode};
                 $nagios{mperf} = 1;
             }
             elsif($ucode_result == NRM_CURRENT) {
