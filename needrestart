@@ -768,7 +768,6 @@ if(needrestart_cont_check($nrconf{verbosity} > 1, 1, nr_readlink(1), 1)) {
 my ($ucode_result, %ucode_vars) = (NRM_UNKNOWN);
 if(defined($opt_w)) {
     ($ucode_result, %ucode_vars) = ($nrconf{ucodehints} || $opt_w ? nr_ucode_check($nrconf{verbosity} > 1, $ui) : ());
-    $ucode_result++;
 }
 
 if(defined($opt_k)) {
