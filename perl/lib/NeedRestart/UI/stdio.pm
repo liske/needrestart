@@ -86,9 +86,9 @@ sub announce_ucode {
     my %vars = @_;
 
     print "\n";
-    $self->wprint(\*STDOUT, '', '', __x("Pending processor microcode upgrade!\n\nDiagnostics:\n  The processor microcode{cversion} is not the expected one{eversion}.\n\nRestarting the system to load the new processor microcode will not be handled automatically, so you should consider rebooting. [Return]\n",
-			 cversion => ($vars{CVERSION} ? " ($vars{CVERSION})" : ''),
-			 eversion => ($vars{EVERSION} ? " ($vars{EVERSION})" : ''),
+    $self->wprint(\*STDOUT, '', '', __x("Pending processor microcode upgrade!\n\nDiagnostics:\n  The currently running processor microcode release is {CURRENT} which is not the expected microcode release {AVAIL}.\n\nRestarting the system to load the new processor microcode will not be handled automatically, so you should consider rebooting. [Return]\n",
+			 current => $vars{CURRENT},
+			 avail => $vars{AVAIL},
 		   ));
     <STDIN> if (-t *STDIN && -t *STDOUT);
 }

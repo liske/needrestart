@@ -55,27 +55,27 @@ sub nr_ucode_check_real {
     my $fh = nr_fork_pipe($debug, NRM_INTEL_HELPER, $debug);
     while(<$fh>) {
         if (/^iucode_tool:.+signature (0x[\da-f]+)/) {
-            $vars{sig_current} = $1;
+            $vars{CURRENT} = $1;
             print STDERR "$LOGPREF current signature: $1\n" if($debug);
             next;
         }
 
         if (/\s+\d+\/\d+: sig (0x[\da-f]+),/) {
-            $vars{sig_avail} = $1;
+            $vars{AVAIL} = $1;
             print STDERR "$LOGPREF available signature: $1\n" if($debug);
             next;
         }
     }
     close($fh);
 
-    unless(exists($vars{sig_current}) && exists($vars{sig_avail})) {
-        print STDERR "$LOGPREF did not get current microcode version\n" if($debug && !exists($vars{sig_current}));
-        print STDERR "$LOGPREF did not get available microcode version\n" if($debug && !exists($vars{sig_avail}));
+    unless(exists($vars{CURRENT}) && exists($vars{AVAIL})) {
+        print STDERR "$LOGPREF did not get current microcode version\n" if($debug && !exists($vars{CURRENT}));
+        print STDERR "$LOGPREF did not get available microcode version\n" if($debug && !exists($vars{AVAIL}));
     
         return (NRM_UNKNOWN, %vars);
     }
 
-    if($vars{sig_current} eq $vars{sig_avail}) {
+    if($vars{CURRENT} eq $vars{AVAIL}) {
         return (NRM_CURRENT, %vars);
     }
 

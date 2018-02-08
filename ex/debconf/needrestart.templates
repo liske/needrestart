@@ -45,8 +45,8 @@ _Description: Outdated processor microcode
 Template: needrestart/ui-ucode_announce
 Type: note
 _Description: Processor microcode update
- The currently running kernel version is ${KVERSION} which is not the
- expected kernel version ${EVERSION}.
+ The currently running processor microcode release is ${CURRENT} which is not
+ the expected microcode release ${AVAIL}.
 
 Template: needrestart/ui-query_conts_title
 Type: title
