@@ -777,27 +777,33 @@ if(defined($opt_k)) {
     if(defined($kresult)) {
 	if($opt_b) {
 	    unless($opt_p) {
-		print "NEEDRESTART-KCUR: $kvars{KVERSION}\n";
-		print "NEEDRESTART-KEXP: $kvars{EVERSION}\n" if(defined($kvars{EVERSION}));
-		print "NEEDRESTART-KSTA: $kresult\n";
+            print "NEEDRESTART-KCUR: $kvars{KVERSION}\n";
+            print "NEEDRESTART-KEXP: $kvars{EVERSION}\n" if(defined($kvars{EVERSION}));
+            print "NEEDRESTART-KSTA: $kresult\n";
 	    }
 	    else {
-		$nagios{kstr} = $kvars{KVERSION};
-		if($kresult == NRK_VERUPGRADE) {
-		    $nagios{kstr} .= "!=$kvars{EVERSION} (!)";
-		    $nagios{kret} = $nrconf{q(nagios-status)}->{kernel};
-		    $nagios{kperf} = 2;
-		}
-		elsif($kresult == NRK_ABIUPGRADE) {
-		    $nagios{kstr} .= " (!)";
-		    $nagios{kret} = $nrconf{q(nagios-status)}->{kernel};
-		    $nagios{kperf} = 1;
-		}
-		elsif($kresult == NRK_NOUPGRADE) {
-		    $nagios{kret} = 0;
-		    $nagios{kperf} = 0;
-		}
-	    }
+            $nagios{kstr} = $kvars{KVERSION};
+            if($kresult == NRK_VERUPGRADE) {
+                $nagios{kstr} .= "!=$kvars{EVERSION}";
+                $nagios{kret} = $nrconf{q(nagios-status)}->{kernel};
+                $nagios{kperf} = 2;
+            }
+            elsif($kresult == NRK_ABIUPGRADE) {
+                $nagios{kret} = $nrconf{q(nagios-status)}->{kernel};
+                $nagios{kperf} = 1;
+            }
+            elsif($kresult == NRK_NOUPGRADE) {
+                $nagios{kret} = 0;
+                $nagios{kperf} = 0;
+            }
+
+            if($nagios{kret} == 1) {
+                $nagios{kstr} .= " (!)";
+            }
+            elsif($nagios{kret} == 2) {
+                $nagios{kstr} .= " (!!)";
+            }
+        }
 	}
 	else {
 	    if($kresult == NRK_NOUPGRADE) {
@@ -861,7 +867,14 @@ if(defined($opt_w)) {
                 $nagios{mret} = 0;
                 $nagios{mperf} = 0;
             }
-	    }
+
+            if($nagios{mret} == 1) {
+                $nagios{mstr} .= " (!)";
+            }
+            elsif($nagios{mret} == 2) {
+                $nagios{mstr} .= " (!!)";
+            }
+        }
 	}
 	else {
 	    if($ucode_result == NRM_CURRENT) {
@@ -906,10 +919,17 @@ if(defined($opt_l) && !$uid) {
 	    $ui->notice(__ 'Services to be restarted:') if($opt_r eq 'l');
 	    $ui->notice(__ 'Restarting services...') if($opt_r eq 'a');
 	    if($opt_p) {
-		$nagios{sstr} = (scalar keys %restart).' (!)';
-		$nagios{sret} = $nrconf{q(nagios-status)}->{services};
-		$nagios{sperf} = (scalar keys %restart);
-	    }
+            $nagios{sstr} = (scalar keys %restart);
+            $nagios{sret} = $nrconf{q(nagios-status)}->{services};
+            $nagios{sperf} = (scalar keys %restart);
+
+            if($nagios{sret} == 1) {
+                $nagios{sstr} .= " (!)";
+            }
+            elsif($nagios{sret} == 2) {
+                $nagios{sstr} .= " (!!)";
+            }
+        }
 	    
 	    foreach my $rc (sort { lc($a) cmp lc($b) } keys %restart) {
 		# always combine restarts in one systemctl command
@@ -1077,9 +1097,16 @@ if(defined($opt_l) && !$uid) {
 	    $ui->notice(__ 'Containers to be restarted:') if($opt_r eq 'l');
 	    $ui->notice(__ 'Restarting containers...') if($opt_r eq 'a');
 	    if($opt_p) {
-		$nagios{cstr} = (scalar keys %conts).' (!)';
-		$nagios{cret} = $nrconf{q(nagios-status)}->{containers};
-		$nagios{cperf} = (scalar keys %conts);
+            $nagios{cstr} = (scalar keys %conts);
+            $nagios{cret} = $nrconf{q(nagios-status)}->{containers};
+            $nagios{cperf} = (scalar keys %conts);
+
+            if($nagios{cret} == 1) {
+                $nagios{cstr} .= " (!)";
+            }
+            elsif($nagios{cret} == 2) {
+                $nagios{cstr} .= " (!!)";
+            }
 	    }
 
 	    foreach my $cont (sort { lc($a) cmp lc($b) } keys %conts) {
@@ -1148,9 +1175,16 @@ if(defined($opt_l) && !$uid) {
 	}
 	if($opt_p) {
 	    my $count = sum map { scalar keys %{ $sessions{$_} } } keys %sessions;
-	    $nagios{ustr} = "$count (!)";
+	    $nagios{ustr} = $count;
 	    $nagios{uret} = $nrconf{q(nagios-status)}->{sessions};
 	    $nagios{uperf} = $count;
+
+        if($nagios{uret} == 1) {
+            $nagios{ustr} .= " (!)";
+        }
+        elsif($nagios{uret} == 2) {
+            $nagios{ustr} .= " (!!)";
+        }
 	}
 	unless($opt_p || $opt_b) {
 	    foreach my $uid (sort { ncmp(uid2name($a), uid2name($b)); } keys %sessions) {
