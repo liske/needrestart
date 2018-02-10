@@ -19,6 +19,7 @@ needrestart (3.0) unstable; urgency=medium
       (github pull request #88 by @guillaume-uH57J9)
     - [Core] Improve output formating.
       (github issue #84 by Stavros Ntentos @stdedos)
+    - [Core] Improve container detection to skip kernel and microcode checks.
   * Fixes:
     - [Core] Makefile: Fix installation of restart.d/ scripts.
       (Debian Bug#851866 by Sven Hartge <sven@svenhartge.de>)

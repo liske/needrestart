@@ -47,6 +47,15 @@ $Getopt::Std::STANDARD_HELP_VERSION++;
 my $LOGPREF = '[main]';
 my $is_systemd = -d qq(/run/systemd/system);
 my $is_tty = (-t *STDERR || -t *STDOUT || -t *STDIN);
+my $is_container;
+
+# check if we are inside of a container
+if (-r "/proc/1/environ") {
+    local $/;
+    open(HENV, '<', '/proc/1/environ');
+    $is_container = scalar(grep {/^container=/;} unpack("(Z*)*", <HENV>));
+    close(HENV)
+}
 
 sub HELP_MESSAGE {
     print <<USG;
@@ -309,7 +318,8 @@ sub parse_lsbinit($) {
     return %lsb;
 }
 
-print STDERR "$LOGPREF detected systemd\n" if($nrconf{verbosity} > 1 && $is_systemd);
+print STDERR "$LOGPREF systemd detected\n" if($nrconf{verbosity} > 1 && $is_systemd);
+print STDERR "$LOGPREF container detected\n" if($nrconf{verbosity} > 1 && $is_container);
 
 sub systemd_refuse_restart {
     my $svc = shift;
@@ -760,8 +770,8 @@ foreach my $rc (keys %restart) {
 }
 
 # Skip kernel and uCode stuff within containers
-if(needrestart_cont_check($nrconf{verbosity} > 1, 1, nr_readlink(1), 1)) {
-    print STDERR "$LOGPREF container detected, skipping kernel check\n" if($nrconf{verbosity} > 1);
+if($is_container || needrestart_cont_check($nrconf{verbosity} > 1, 1, nr_readlink(1), 1)) {
+    print STDERR "$LOGPREF inside container, skipping kernel and microcode checks\n" if($nrconf{verbosity} > 1);
     $opt_k = undef;
     $opt_w = undef;
 }
