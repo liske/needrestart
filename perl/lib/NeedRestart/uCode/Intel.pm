@@ -31,7 +31,6 @@ use NeedRestart::Utils;
 use POSIX qw(uname);
 use Sort::Naturally;
 use Locale::TextDomain 'needrestart';
-use File::Which qw(where);
 
 use constant {
     NRM_INTEL_HELPER => q(/usr/lib/needrestart/iucode-scan-versions),
@@ -44,7 +43,7 @@ sub nr_ucode_init {
     my $is_x86 = ($machine =~ /^(i\d86|x86_64)$/);
 
     die "$LOGPREF Not running on x86!\n" unless($is_x86);
-    die "$LOGPREF iucode-tool not available!\n" unless(where 'iucode_tool');
+    die "$LOGPREF iucode-tool not available!\n" unless(`which iucode_tool`);
 }
 
 sub nr_ucode_check_real {
