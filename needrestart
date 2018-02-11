@@ -890,7 +890,7 @@ if(defined($opt_w)) {
 	    if($ucode_result == NRM_CURRENT) {
             unless($opt_m eq 'e') {
                 $ui->vspace();
-                $ui->notice(__('Running processor microcode seems to be up-to-date.'));
+                $ui->notice(__('The processor microcode seems to be up-to-date.'));
             }
 	    }
 	    elsif($ucode_result == NRM_OBSOLETE) {
