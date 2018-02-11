@@ -47,14 +47,22 @@ the user interface. The following frontends are shipped:
 * *NeedRestart::UI::stdio* fallback using stdio interaction
 
 
+kernel & microcode
+------------------
+
+*needrestart* 0.8 brings a obsolete kernel detection feature. In *needrestart*
+3.0 a [processor microcode update detection feature](README.uCode) for Intel
+CPUs has been added.
+
+
 interpreters
 ------------
 
-*needrestart* 0.8 brings an interpreter scanning feature. Interpreters
-not only map binary (shared) objects but also use plaintext source files.
-The interpreter detection tries to check for outdated source files since
-they may contain security issues, too. This is only a heuristic and might
-fail to detect all relevant source files. The following interpreter
+*needrestart* 0.8 brings an [interpreter scanning feature](README.Interp).
+Interpreters not only map binary (shared) objects but also use plaintext
+source files. The interpreter detection tries to check for outdated source
+files since they may contain security issues, too. This is only a heuristic
+and might fail to detect all relevant source files. The following interpreter
 scanners are shipped:
 
 * *NeedRestart::Interp::Java*
@@ -66,11 +74,11 @@ scanners are shipped:
 containers
 ----------
 
-*needrestart* 2.1 detects some container technologies. If a process is
-part of a container it might not be possible to restart it using
+*needrestart* 2.1 [detects some container technologies](README.Cont). If a
+process is part of a container it might not be possible to restart it using
 Sys-V/systemd.
 
-There are special packages (NeedRestart::CONT::*) implementing the
+There are special perl packages (NeedRestart::CONT::*) implementing the
 container detection and restarting. The following container detectors
 are shipped:
 
