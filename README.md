@@ -1,7 +1,7 @@
 needrestart
 ===========
 
-about
+About
 -----
 
 *needrestart* checks which daemons need to be restarted after library
@@ -13,10 +13,10 @@ There are some hook scripts in the ``ex/`` directory (to be used with
 after any package installation/upgrades.
 
 *needrestart* should work on GNU/Linux. It has limited functionality on
-GNU/kFreeBSD since /proc/<pid>/maps does not show removed file links.
+GNU/kFreeBSD since `/proc/<pid>/maps` does not show removed file links.
 
 
-restarting services
+Restarting Services
 -------------------
 
 *needrestart* supports but does not require systemd (available since v0.6).
@@ -37,7 +37,7 @@ hooks support the following package managers:
 The *service* command is used to run the tradiditional System V init script.
 
 
-frontends
+Frontends
 ---------
 
 *needrestart* uses a modular aproach based on perl packages providing
@@ -47,7 +47,7 @@ the user interface. The following frontends are shipped:
 * *NeedRestart::UI::stdio* fallback using stdio interaction
 
 
-kernel & microcode
+Kernel & Microcode
 ------------------
 
 *needrestart* 0.8 brings a obsolete kernel detection feature. In *needrestart*
@@ -55,7 +55,7 @@ kernel & microcode
 CPUs has been added.
 
 
-interpreters
+Interpreters
 ------------
 
 *needrestart* 0.8 brings an [interpreter scanning feature](README.Interp.md).
@@ -71,7 +71,7 @@ scanners are shipped:
 * *NeedRestart::Interp::Ruby*
 
 
-containers
+Containers
 ----------
 
 *needrestart* 2.1 [detects some container technologies](README.Cont.md). If a
@@ -87,8 +87,8 @@ are shipped:
 * *NeedRestart::CONT::machined*
 
 
-embed needrestart
------------------
+Batch Mode
+----------
 
 *needrestart* can be run in [batch mode](README.batch.md) to use the results
 within other programs or scripts.
