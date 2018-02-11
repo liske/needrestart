@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-05-15 12:21+0200\n"
+"POT-Creation-Date: 2018-02-11 13:55+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -90,11 +90,39 @@ msgstr ""
 #. Type: title
 #. Description
 #: ../needrestart.templates:8001
+msgid "Outdated processor microcode"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../needrestart.templates:9001
+msgid "Processor microcode update"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../needrestart.templates:9001
+msgid ""
+"The currently running processor microcode release is ${CURRENT} which is not "
+"the expected microcode release ${AVAIL}."
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../needrestart.templates:9001
+msgid ""
+"Restarting the system to load the new processor microcode will not be "
+"handled automatically, so you should consider rebooting."
+msgstr ""
+
+#. Type: title
+#. Description
+#: ../needrestart.templates:10001
 msgid "Containers using outdated libraries"
 msgstr ""
 
 #. Type: multiselect
 #. Description
-#: ../needrestart.templates:9001
+#: ../needrestart.templates:11001
 msgid "Which containers should be restarted?"
 msgstr ""
