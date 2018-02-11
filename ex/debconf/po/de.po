@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: needrestart 2.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-05-15 12:21+0200\n"
-"PO-Revision-Date: 2016-05-15 12:21+0200\n"
+"POT-Creation-Date: 2018-02-11 14:11+0100\n"
+"PO-Revision-Date: 2016-05-15 15:17+0100\n"
 "Last-Translator: Thomas Liske <thomas@fiasko-nw.net>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -96,11 +96,43 @@ msgstr "Der Befehl »needrestart -m a« zeigt mehr Details."
 #. Type: title
 #. Description
 #: ../needrestart.templates:8001
+msgid "Outdated processor microcode"
+msgstr "Veralteter Prozessor Mikrocode"
+
+#. Type: note
+#. Description
+#: ../needrestart.templates:9001
+msgid "Processor microcode update"
+msgstr "Prozessor Mikrocode-Update"
+
+#. Type: note
+#. Description
+#: ../needrestart.templates:9001
+msgid ""
+"The currently running processor microcode signature is ${CURRENT} which is "
+"not the expected microcode signature ${AVAIL}."
+msgstr ""
+"Die laufende Prozessor Mikrocode-Signatur ist ${CURRENT}, es wird jedoch die "
+"Signatur ${AVAIL} erwaret."
+
+#. Type: note
+#. Description
+#: ../needrestart.templates:9001
+msgid ""
+"Restarting the system to load the new processor microcode will not be "
+"handled automatically, so you should consider rebooting."
+msgstr ""
+"Das System wird nicht automatisch neu gestartet, um den neuen Prozessor Mikrocode zu "
+"laden. Ein Neustart sollte durchgeführt werden."
+
+#. Type: title
+#. Description
+#: ../needrestart.templates:10001
 msgid "Containers using outdated libraries"
 msgstr "Container, die veraltete Bibliotheken nutzen"
 
 #. Type: multiselect
 #. Description
-#: ../needrestart.templates:9001
+#: ../needrestart.templates:11001
 msgid "Which containers should be restarted?"
 msgstr "Welche Container sollen neu gestartet werden?"

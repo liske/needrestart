@@ -2,44 +2,44 @@ msgid ""
 msgstr ""
 "Project-Id-Version: needrestart 2.8\n"
 "Report-Msgid-Bugs-To: thomas@fiasko-nw.net\n"
-"POT-Creation-Date: 2017-12-19 22:12+0100\n"
-"PO-Revision-Date: 2016-05-15 12:17+0200\n"
+"POT-Creation-Date: 2018-02-11 14:11+0100\n"
+"PO-Revision-Date: 2018-02-11 15:10+0100\n"
 "Last-Translator: Thomas Liske <thomas@fiasko-nw.net>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: needrestart:220
+#: needrestart:234
 msgid "Available UI packages:"
 msgstr "Verfügbare Oberflächen:"
 
-#: needrestart:417
+#: needrestart:438
 msgid "Scanning processes..."
 msgstr "Prüfe Prozesse..."
 
-#: needrestart:563
+#: needrestart:584
 msgid "Scanning candidates..."
 msgstr "Prüfe Kandidaten..."
 
-#: needrestart:737
+#: needrestart:758
 msgid "Your outdated processes:"
 msgstr "Veraltete Prozesse:"
 
-#: needrestart:788
+#: needrestart:822
 msgid "Running kernel seems to be up-to-date."
 msgstr "Der laufende Kernel ist aktuell."
 
-#: needrestart:788
+#: needrestart:822
 msgid "Running kernel seems to be up-to-date (ABI upgrades are not detected)."
 msgstr ""
 "Der laufende Kernel ist aktuell (ABI Änderungen können nicht erkannt werden)."
 
-#: needrestart:792 needrestart:805
+#: needrestart:826 needrestart:840
 msgid "an outdated kernel image"
 msgstr "eine veraltete Kernel-Version"
 
-#: needrestart:796
+#: needrestart:831
 #, perl-brace-format
 msgid ""
 "The currently running kernel version is {kversion} and there is an ABI "
@@ -48,7 +48,7 @@ msgstr ""
 "Die aktuelle Kernel-Version ist {kversion} und es ist ein ABI-kompatibles "
 "Upgrade ausstehend."
 
-#: needrestart:809
+#: needrestart:845
 #, perl-brace-format
 msgid ""
 "The currently running kernel version is {kversion} which is not the expected "
@@ -57,67 +57,79 @@ msgstr ""
 "Die aktuelle Kernel-Version ist {kversion} was nicht die erwartete Version "
 "{eversion} ist."
 
-#: needrestart:819
+#: needrestart:856
 msgid "Failed to retrieve available kernel versions."
 msgstr "Fehler beim Ermitteln der verfügbaren Kernel-Versionen."
 
-#: needrestart:830
+#: needrestart:893
+msgid "The processor microcode seems to be up-to-date."
+msgstr "Der Prozessor Mikrocode ist aktuell."
+
+#: needrestart:897
+msgid "outdated processor microcode"
+msgstr "veralteter Prozesse Mikrocode"
+
+#: needrestart:905
+msgid "Failed to check for processor microcode upgrades."
+msgstr "Fehler beim Ermitteln von verfügbaren Prozessor Mikrocode-Upgrades."
+
+#: needrestart:914
 msgid "No services need to be restarted."
 msgstr "Es müssen keine Dienste neugestartet werden."
 
-#: needrestart:839
+#: needrestart:923
 msgid "outdated binaries"
 msgstr "veraltete Programme"
 
-#: needrestart:845 needrestart:948
+#: needrestart:929 needrestart:1039
 msgid "Services to be restarted:"
 msgstr "Dienste, die neu gestartet werden müssen:"
 
-#: needrestart:846 needrestart:947
+#: needrestart:930 needrestart:1038
 msgid "Restarting services..."
 msgstr "Dienste werden neu gestartet..."
 
-#: needrestart:902 needrestart:974
+#: needrestart:993 needrestart:1065
 msgid "Service restarts being deferred:"
 msgstr "Dienste deren Neustart verschoben wurde:"
 
-#: needrestart:917 needrestart:988
+#: needrestart:1008 needrestart:1079
 msgid "Service restarts being refused by systemd:"
 msgstr "Dienste die durch systemd nicht neu gestartet werden:"
 
-#: needrestart:1002
+#: needrestart:1093
 msgid "No containers need to be restarted."
 msgstr "Es müssen keine Container neu gestartet werden."
 
-#: needrestart:1011
+#: needrestart:1102
 msgid "outdated containers"
 msgstr "veraltete Containern"
 
-#: needrestart:1016 needrestart:1061
+#: needrestart:1107 needrestart:1159
 msgid "Containers to be restarted:"
 msgstr "Container, die neu gestartet werden müssen:"
 
-#: needrestart:1017 needrestart:1060
+#: needrestart:1108 needrestart:1158
 msgid "Restarting containers..."
 msgstr "Neustart von Containern..."
 
-#: needrestart:1051
+#: needrestart:1149
 msgid "Container restarts being deferred:"
 msgstr "Container deren Neustart verschoben wurde:"
 
-#: needrestart:1074
+#: needrestart:1172
 msgid "No user sessions are running outdated binaries."
 msgstr "Es gibt keine Nutzer-Sitzungen mit veralteten Prozessen."
 
-#: needrestart:1083
+#: needrestart:1181
 msgid "outdated sessions"
 msgstr "veraltete Sitzungen"
 
-#: needrestart:1086
+#: needrestart:1184
 msgid "User sessions running outdated binaries:"
 msgstr "Nutzer-Sitzungen mit veralteten Prozessen:"
 
-#: needrestart:1127
+#: needrestart:1232
 msgid "and"
 msgstr "und"
 
@@ -129,7 +141,7 @@ msgstr "Prüfe Linux-Kernel..."
 msgid "Scanning kfreebsd images..."
 msgstr "Prüfe kFreeBSD-Kernel..."
 
-#: perl/lib/NeedRestart/UI/stdio.pm:41
+#: perl/lib/NeedRestart/UI/stdio.pm:42
 #, perl-brace-format
 msgid ""
 "Pending kernel upgrade!\n"
@@ -154,11 +166,11 @@ msgstr ""
 "Das System wird nicht automatisch neu gestartet um den neuen Kernel zu "
 "laden. Ein Neustart sollte durchgeführt werden. [Return]\n"
 
-#: perl/lib/NeedRestart/UI/stdio.pm:53
+#: perl/lib/NeedRestart/UI/stdio.pm:54
 msgid "The currently running kernel has an ABI compatible upgrade pending."
 msgstr "Für den laufende Kernel ist ein ABI-kompatibles Upgrade ausstehend."
 
-#: perl/lib/NeedRestart/UI/stdio.pm:61
+#: perl/lib/NeedRestart/UI/stdio.pm:62
 #, perl-brace-format
 msgid ""
 "The currently running kernel version is not the expected kernel version "
@@ -166,7 +178,7 @@ msgid ""
 msgstr ""
 "Die aktuelle Kernel-Version ist nicht die erwartete Version {eversion}."
 
-#: perl/lib/NeedRestart/UI/stdio.pm:72
+#: perl/lib/NeedRestart/UI/stdio.pm:73
 #, perl-brace-format
 msgid ""
 "\n"
@@ -182,7 +194,28 @@ msgstr ""
 "Ein Neustart sollte durchgeführt werden!\n"
 "\n"
 
-#: perl/lib/NeedRestart/UI/stdio.pm:142
+#: perl/lib/NeedRestart/UI/stdio.pm:89
+#, perl-brace-format
+msgid ""
+"Pending processor microcode upgrade!\n"
+"\n"
+"Diagnostics:\n"
+"  The currently running processor microcode signature is {CURRENT} which is "
+"not the expected microcode signature {AVAIL}.\n"
+"\n"
+"Restarting the system to load the new processor microcode will not be "
+"handled automatically, so you should consider rebooting. [Return]\n"
+msgstr ""
+"Ausstehendes Prozessor Mikrocode-Upgrade!\n"
+"\n"
+"Diagnose:\n"
+"  Die aktuelle Prozessor Mikrocode-Signatur ist {CURRENT} statt der erwarteten "
+"Mikrocode-Signatur {AVAIL}.\n"
+"\n"
+"Das System wird nicht automatisch neu gestartet um den Prozessor Mikrocode zu "
+"laden. Ein Neustart sollte durchgeführt werden. [Return]\n"
+
+#: perl/lib/NeedRestart/UI/stdio.pm:156
 msgid ""
 "  (Y)es  - restart this service\n"
 "  (N)o   - do not restart this service\n"
@@ -196,7 +229,7 @@ msgstr ""
 "  (S)top - keine weiteren Dienste neu starten\n"
 "\n"
 
-#: perl/lib/NeedRestart/UI/stdio.pm:175
+#: perl/lib/NeedRestart/UI/stdio.pm:189
 #, perl-brace-format
 msgid "Restart «{rc}»?"
 msgstr "»{rc}« neu starten?"
