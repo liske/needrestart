@@ -32,7 +32,7 @@ use Getopt::Std;
 use strict;
 use warnings;
 
-system("type rpmquery 1> /dev/null 2> /dev/null");
+system("type rpm 1> /dev/null 2> /dev/null");
 exit 0 if ($? != -1 && $? >> 8);
 
 our $opt_v;
@@ -54,7 +54,7 @@ sub fork_pipe(@) {
 }
 
 my $FN = shift || die "Usage: $0 <filename>\n";
-my $psearch = fork_pipe(qw(rpmquery --file), $FN);
+my $psearch = fork_pipe(qw(rpm -q --file), $FN);
 
 my @pkgs;
 while(<$psearch>) {

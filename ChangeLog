@@ -80,6 +80,8 @@ needrestart (3.0) unstable; urgency=medium
       (Debian Bug#885448 by Paul Wise <pabs@debian.org>)
     - [Interp] Fix perl warning if cwd is unreachable.
       (github issue #99 by @glitsj16)
+    - [Hook] Replace remaining calls of rpmquery by rpm.
+      (github issue #100 by Matthias Hörmann @taladar)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
