@@ -51,14 +51,14 @@ kernel & microcode
 ------------------
 
 *needrestart* 0.8 brings a obsolete kernel detection feature. In *needrestart*
-3.0 a [processor microcode update detection feature](README.uCode) for Intel
+3.0 a [processor microcode update detection feature](README.uCode.md) for Intel
 CPUs has been added.
 
 
 interpreters
 ------------
 
-*needrestart* 0.8 brings an [interpreter scanning feature](README.Interp).
+*needrestart* 0.8 brings an [interpreter scanning feature](README.Interp.md).
 Interpreters not only map binary (shared) objects but also use plaintext
 source files. The interpreter detection tries to check for outdated source
 files since they may contain security issues, too. This is only a heuristic
@@ -74,7 +74,7 @@ scanners are shipped:
 containers
 ----------
 
-*needrestart* 2.1 [detects some container technologies](README.Cont). If a
+*needrestart* 2.1 [detects some container technologies](README.Cont.md). If a
 process is part of a container it might not be possible to restart it using
 Sys-V/systemd.
 
@@ -85,3 +85,12 @@ are shipped:
 * *NeedRestart::CONT::docker*
 * *NeedRestart::CONT::LXC*
 * *NeedRestart::CONT::machined*
+
+
+embed needrestart
+-----------------
+
+*needrestart* can be run in [batch mode](README.batch.md) to use the results
+within other programs or scripts.
+
+There is also a [nagios plugin mode](README.nagios.md) available.
