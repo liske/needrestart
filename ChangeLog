@@ -82,6 +82,8 @@ needrestart (3.0) unstable; urgency=medium
       (github issue #99 by @glitsj16)
     - [Hook] Replace remaining calls of rpmquery by rpm.
       (github issue #100 by Matthias Hörmann @taladar)
+    - [Core] Fix additional unit detection in dbus restart handler.
+      (github issue #104 by Alexander Barton @alexbarton)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
