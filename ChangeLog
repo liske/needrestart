@@ -85,7 +85,7 @@ needrestart (3.0) unstable; urgency=medium
     - [Core] Fix additional unit detection in dbus restart handler.
       (github issue #104 by Alexander Barton @alexbarton)
 
- -- Thomas Liske <thomas@fiasko-nw.net>  
+ -- Thomas Liske <thomas@fiasko-nw.net>  Fri, 23 Feb 2018 13:38:46 +0100
 
 needrestart (2.11) unstable; urgency=medium
 
