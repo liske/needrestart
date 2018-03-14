@@ -1,5 +1,13 @@
 needrestart (3.0) unstable; urgency=medium
 
+  * Fixes:
+    - [uCode] Fix uninitialized value in batch mode.
+      (github issue #105 by Evgenii Terechkov @evgkrsk)
+
+ -- Thomas Liske <thomas@fiasko-nw.net>  
+
+needrestart (3.0) unstable; urgency=medium
+
   * Features:
     - [Core] Possible to suspend needrestart in apt-get hook using
       the NEEDRESTART_SUSPEND environment variable.
