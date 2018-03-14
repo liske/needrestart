@@ -863,8 +863,10 @@ if(defined($opt_w)) {
 	if($opt_b) {
         unless($opt_p) {
             print "NEEDRESTART-UCSTA: $ucode_result\n";
-            print "NEEDRESTART-UCCUR: $ucode_vars{CURRENT}\n";
-            print "NEEDRESTART-UCEXP: $ucode_vars{AVAIL}\n";
+            if($ucode_result != NRM_UNKNOWN) {
+                print "NEEDRESTART-UCCUR: $ucode_vars{CURRENT}\n";
+                print "NEEDRESTART-UCEXP: $ucode_vars{AVAIL}\n";
+            }
 	    }
         else {
             if($ucode_result == NRM_OBSOLETE) {
