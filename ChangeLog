@@ -1,5 +1,10 @@
 needrestart (3.0) unstable; urgency=medium
 
+  * Changes:
+    - [uCode] Handle microcode upgrades in early boot initrd images,
+      required at least on Arch Linux.
+      (github issue #106 by @Wuestengecko)
+
   * Fixes:
     - [uCode] Fix uninitialized value in batch mode.
       (Debian Bug#891923 by Bob Proulx <bob@proulx.com>)

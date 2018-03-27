@@ -28,6 +28,22 @@ if [ "$1" = "1" ]; then
     set -x
 fi
 
+# early boot initrd (required at least on Arch Linux)
+if type bsdtar > /dev/null 2>&1 ; then
+    imgfiles=""
+    for img in /boot/intel-ucode.img /boot/early_ucode.cpio ; do
+        if [ -r "$img" ]; then
+            imgfiles="$imgfiles $img"
+        fi
+    done
+
+    if [ -n "$imgfiles" ]; then
+        cat $imgfiles | bsdtar -Oxf /dev/stdin | iucode_tool -Sl -tb - 2>&1
+        exit $?
+    fi
+fi
+
+# look for microcode updates in the filesystem
 IUCODE_TOOL_EXTRA_OPTIONS=""
 
 test -r /etc/default/intel-microcode && . /etc/default/intel-microcode
