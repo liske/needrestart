@@ -1,4 +1,4 @@
-needrestart (3.0) unstable; urgency=medium
+needrestart (3.1) unstable; urgency=high
 
   * Changes:
     - [uCode] Handle microcode upgrades in early boot initrd images,
@@ -9,11 +9,11 @@ needrestart (3.0) unstable; urgency=medium
     - [uCode] Fix uninitialized value in batch mode.
       (Debian Bug#891923 by Bob Proulx <bob@proulx.com>)
       (github issue #105 by Evgenii Terechkov @evgkrsk)
-    - [uCode] Fix broken update detection to use the revision number.
-      (github issue #108)
-    - [UI] Fix microcode placeholders in NeedRestart::UI::stdio.
+    - [uCode] Fix completely broken microcode update detection.
+      (github issue #108 by @Wuestengecko)
+    - [UI] Fix microcode revision placeholders in NeedRestart::UI::stdio.
 
- -- Thomas Liske <thomas@fiasko-nw.net>  
+ -- Thomas Liske <thomas@fiasko-nw.net>  Thu, 29 Mar 2018 23:22:55 +0200
 
 needrestart (3.0) unstable; urgency=medium
 
