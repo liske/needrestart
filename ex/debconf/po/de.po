@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: needrestart 2.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-11 14:11+0100\n"
+"POT-Creation-Date: 2018-03-29 13:45+0200\n"
 "PO-Revision-Date: 2016-05-15 15:17+0100\n"
 "Last-Translator: Thomas Liske <thomas@fiasko-nw.net>\n"
 "Language: de\n"
@@ -109,11 +109,11 @@ msgstr "Prozessor Mikrocode-Update"
 #. Description
 #: ../needrestart.templates:9001
 msgid ""
-"The currently running processor microcode signature is ${CURRENT} which is "
-"not the expected microcode signature ${AVAIL}."
+"The currently running processor microcode revision is ${CURRENT} which is "
+"not the expected microcode revision ${AVAIL}."
 msgstr ""
-"Die laufende Prozessor Mikrocode-Signatur ist ${CURRENT}, es wird jedoch die "
-"Signatur ${AVAIL} erwaret."
+"Die laufende Prozessor Mikrocode-Revision ist ${CURRENT}, es wird jedoch die "
+"Revision ${AVAIL} erwaret."
 
 #. Type: note
 #. Description
@@ -122,8 +122,8 @@ msgid ""
 "Restarting the system to load the new processor microcode will not be "
 "handled automatically, so you should consider rebooting."
 msgstr ""
-"Das System wird nicht automatisch neu gestartet, um den neuen Prozessor Mikrocode zu "
-"laden. Ein Neustart sollte durchgeführt werden."
+"Das System wird nicht automatisch neu gestartet, um den neuen Prozessor "
+"Mikrocode zu laden. Ein Neustart sollte durchgeführt werden."
 
 #. Type: title
 #. Description

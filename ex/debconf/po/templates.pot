@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-11 14:11+0100\n"
+"POT-Creation-Date: 2018-03-29 13:45+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -103,8 +103,8 @@ msgstr ""
 #. Description
 #: ../needrestart.templates:9001
 msgid ""
-"The currently running processor microcode signature is ${CURRENT} which is "
-"not the expected microcode signature ${AVAIL}."
+"The currently running processor microcode revision is ${CURRENT} which is "
+"not the expected microcode revision ${AVAIL}."
 msgstr ""
 
 #. Type: note

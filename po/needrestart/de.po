@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: needrestart 2.8\n"
 "Report-Msgid-Bugs-To: thomas@fiasko-nw.net\n"
-"POT-Creation-Date: 2018-02-11 14:11+0100\n"
+"POT-Creation-Date: 2018-03-29 13:45+0200\n"
 "PO-Revision-Date: 2018-02-11 15:10+0100\n"
 "Last-Translator: Thomas Liske <thomas@fiasko-nw.net>\n"
 "Language: de\n"
@@ -61,75 +61,75 @@ msgstr ""
 msgid "Failed to retrieve available kernel versions."
 msgstr "Fehler beim Ermitteln der verfügbaren Kernel-Versionen."
 
-#: needrestart:893
+#: needrestart:895
 msgid "The processor microcode seems to be up-to-date."
 msgstr "Der Prozessor Mikrocode ist aktuell."
 
-#: needrestart:897
+#: needrestart:899
 msgid "outdated processor microcode"
 msgstr "veralteter Prozesse Mikrocode"
 
-#: needrestart:905
+#: needrestart:907
 msgid "Failed to check for processor microcode upgrades."
 msgstr "Fehler beim Ermitteln von verfügbaren Prozessor Mikrocode-Upgrades."
 
-#: needrestart:914
+#: needrestart:916
 msgid "No services need to be restarted."
 msgstr "Es müssen keine Dienste neugestartet werden."
 
-#: needrestart:923
+#: needrestart:925
 msgid "outdated binaries"
 msgstr "veraltete Programme"
 
-#: needrestart:929 needrestart:1039
+#: needrestart:931 needrestart:1041
 msgid "Services to be restarted:"
 msgstr "Dienste, die neu gestartet werden müssen:"
 
-#: needrestart:930 needrestart:1038
+#: needrestart:932 needrestart:1040
 msgid "Restarting services..."
 msgstr "Dienste werden neu gestartet..."
 
-#: needrestart:993 needrestart:1065
+#: needrestart:995 needrestart:1067
 msgid "Service restarts being deferred:"
 msgstr "Dienste deren Neustart verschoben wurde:"
 
-#: needrestart:1008 needrestart:1079
+#: needrestart:1010 needrestart:1081
 msgid "Service restarts being refused by systemd:"
 msgstr "Dienste die durch systemd nicht neu gestartet werden:"
 
-#: needrestart:1093
+#: needrestart:1095
 msgid "No containers need to be restarted."
 msgstr "Es müssen keine Container neu gestartet werden."
 
-#: needrestart:1102
+#: needrestart:1104
 msgid "outdated containers"
 msgstr "veraltete Containern"
 
-#: needrestart:1107 needrestart:1159
+#: needrestart:1109 needrestart:1161
 msgid "Containers to be restarted:"
 msgstr "Container, die neu gestartet werden müssen:"
 
-#: needrestart:1108 needrestart:1158
+#: needrestart:1110 needrestart:1160
 msgid "Restarting containers..."
 msgstr "Neustart von Containern..."
 
-#: needrestart:1149
+#: needrestart:1151
 msgid "Container restarts being deferred:"
 msgstr "Container deren Neustart verschoben wurde:"
 
-#: needrestart:1172
+#: needrestart:1174
 msgid "No user sessions are running outdated binaries."
 msgstr "Es gibt keine Nutzer-Sitzungen mit veralteten Prozessen."
 
-#: needrestart:1181
+#: needrestart:1183
 msgid "outdated sessions"
 msgstr "veraltete Sitzungen"
 
-#: needrestart:1184
+#: needrestart:1186
 msgid "User sessions running outdated binaries:"
 msgstr "Nutzer-Sitzungen mit veralteten Prozessen:"
 
-#: needrestart:1232
+#: needrestart:1234
 msgid "and"
 msgstr "und"
 
@@ -200,8 +200,8 @@ msgid ""
 "Pending processor microcode upgrade!\n"
 "\n"
 "Diagnostics:\n"
-"  The currently running processor microcode signature is {CURRENT} which is "
-"not the expected microcode signature {AVAIL}.\n"
+"  The currently running processor microcode revision is {current} which is "
+"not the expected microcode revision {avail}.\n"
 "\n"
 "Restarting the system to load the new processor microcode will not be "
 "handled automatically, so you should consider rebooting. [Return]\n"
@@ -209,11 +209,11 @@ msgstr ""
 "Ausstehendes Prozessor Mikrocode-Upgrade!\n"
 "\n"
 "Diagnose:\n"
-"  Die aktuelle Prozessor Mikrocode-Signatur ist {CURRENT} statt der erwarteten "
-"Mikrocode-Signatur {AVAIL}.\n"
+"  Die aktuelle Prozessor Mikrocode-Revision ist {current} statt der "
+"erwarteten Mikrocode-Revision {avail}.\n"
 "\n"
-"Das System wird nicht automatisch neu gestartet um den Prozessor Mikrocode zu "
-"laden. Ein Neustart sollte durchgeführt werden. [Return]\n"
+"Das System wird nicht automatisch neu gestartet um den Prozessor Mikrocode "
+"zu laden. Ein Neustart sollte durchgeführt werden. [Return]\n"
 
 #: perl/lib/NeedRestart/UI/stdio.pm:156
 msgid ""

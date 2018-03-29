@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: needrestart 2.12\n"
 "Report-Msgid-Bugs-To: thomas@fiasko-nw.net\n"
-"POT-Creation-Date: 2018-02-11 14:11+0100\n"
+"POT-Creation-Date: 2018-03-29 13:45+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -63,75 +63,75 @@ msgstr ""
 msgid "Failed to retrieve available kernel versions."
 msgstr ""
 
-#: needrestart:893
+#: needrestart:895
 msgid "The processor microcode seems to be up-to-date."
 msgstr ""
 
-#: needrestart:897
+#: needrestart:899
 msgid "outdated processor microcode"
 msgstr ""
 
-#: needrestart:905
+#: needrestart:907
 msgid "Failed to check for processor microcode upgrades."
 msgstr ""
 
-#: needrestart:914
+#: needrestart:916
 msgid "No services need to be restarted."
 msgstr ""
 
-#: needrestart:923
+#: needrestart:925
 msgid "outdated binaries"
 msgstr ""
 
-#: needrestart:929 needrestart:1039
+#: needrestart:931 needrestart:1041
 msgid "Services to be restarted:"
 msgstr ""
 
-#: needrestart:930 needrestart:1038
+#: needrestart:932 needrestart:1040
 msgid "Restarting services..."
 msgstr ""
 
-#: needrestart:993 needrestart:1065
+#: needrestart:995 needrestart:1067
 msgid "Service restarts being deferred:"
 msgstr ""
 
-#: needrestart:1008 needrestart:1079
+#: needrestart:1010 needrestart:1081
 msgid "Service restarts being refused by systemd:"
 msgstr ""
 
-#: needrestart:1093
+#: needrestart:1095
 msgid "No containers need to be restarted."
 msgstr ""
 
-#: needrestart:1102
+#: needrestart:1104
 msgid "outdated containers"
 msgstr ""
 
-#: needrestart:1107 needrestart:1159
+#: needrestart:1109 needrestart:1161
 msgid "Containers to be restarted:"
 msgstr ""
 
-#: needrestart:1108 needrestart:1158
+#: needrestart:1110 needrestart:1160
 msgid "Restarting containers..."
 msgstr ""
 
-#: needrestart:1149
+#: needrestart:1151
 msgid "Container restarts being deferred:"
 msgstr ""
 
-#: needrestart:1172
+#: needrestart:1174
 msgid "No user sessions are running outdated binaries."
 msgstr ""
 
-#: needrestart:1181
+#: needrestart:1183
 msgid "outdated sessions"
 msgstr ""
 
-#: needrestart:1184
+#: needrestart:1186
 msgid "User sessions running outdated binaries:"
 msgstr ""
 
-#: needrestart:1232
+#: needrestart:1234
 msgid "and"
 msgstr ""
 
@@ -185,8 +185,8 @@ msgid ""
 "Pending processor microcode upgrade!\n"
 "\n"
 "Diagnostics:\n"
-"  The currently running processor microcode signature is {CURRENT} which is "
-"not the expected microcode signature {AVAIL}.\n"
+"  The currently running processor microcode revision is {current} which is "
+"not the expected microcode revision {avail}.\n"
 "\n"
 "Restarting the system to load the new processor microcode will not be "
 "handled automatically, so you should consider rebooting. [Return]\n"
