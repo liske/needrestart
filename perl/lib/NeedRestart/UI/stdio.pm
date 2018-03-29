@@ -86,7 +86,7 @@ sub announce_ucode {
     my %vars = @_;
 
     print "\n";
-    $self->wprint(\*STDOUT, '', '', __x("Pending processor microcode upgrade!\n\nDiagnostics:\n  The currently running processor microcode revision is {CURRENT} which is not the expected microcode revision {AVAIL}.\n\nRestarting the system to load the new processor microcode will not be handled automatically, so you should consider rebooting. [Return]\n",
+    $self->wprint(\*STDOUT, '', '', __x("Pending processor microcode upgrade!\n\nDiagnostics:\n  The currently running processor microcode revision is {current} which is not the expected microcode revision {avail}.\n\nRestarting the system to load the new processor microcode will not be handled automatically, so you should consider rebooting. [Return]\n",
 			 current => $vars{CURRENT},
 			 avail => $vars{AVAIL},
 		   ));

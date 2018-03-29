@@ -11,6 +11,7 @@ needrestart (3.0) unstable; urgency=medium
       (github issue #105 by Evgenii Terechkov @evgkrsk)
     - [uCode] Fix broken update detection to use the revision number.
       (github issue #108)
+    - [UI] Fix microcode placeholders in NeedRestart::UI::stdio.
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
