@@ -9,6 +9,8 @@ needrestart (3.0) unstable; urgency=medium
     - [uCode] Fix uninitialized value in batch mode.
       (Debian Bug#891923 by Bob Proulx <bob@proulx.com>)
       (github issue #105 by Evgenii Terechkov @evgkrsk)
+    - [uCode] Fix broken update detection to use the revision number.
+      (github issue #108)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 

@@ -45,8 +45,8 @@ _Description: Outdated processor microcode
 Template: needrestart/ui-ucode_announce
 Type: note
 _Description: Processor microcode update
- The currently running processor microcode signature is ${CURRENT} which is not
- the expected microcode signature ${AVAIL}.
+ The currently running processor microcode revision is ${CURRENT} which is not
+ the expected microcode revision ${AVAIL}.
  .
  Restarting the system to load the new processor microcode will not be handled
  automatically, so you should consider rebooting.

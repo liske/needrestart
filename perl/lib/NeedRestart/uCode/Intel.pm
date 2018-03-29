@@ -51,17 +51,27 @@ sub nr_ucode_check_real {
     my $ui = shift;
     my %vars;
 
+    # get current microcode revision
+    if(open(my $fh, '<', '/proc/cpuinfo')) {
+        while (<$fh>) {
+            if (/^microcode\s+:\s+(0x[\da-f]+)/i) {
+                $vars{CURRENT} = sprintf("0x%x", hex($1));
+                last;
+            }
+        }
+        close($fh);
+    }
+    else {
+        print STDERR "$LOGPREF unable to open /proc/cpuinfo: $!\n" if($debug);
+
+        return (NRM_UNKNOWN, %vars);
+    }
+
     my $fh = nr_fork_pipe($debug, NRM_INTEL_HELPER, $debug);
     while(<$fh>) {
-        if (/^iucode_tool:.+signature (0x[\da-f]+)/) {
-            $vars{CURRENT} = $1;
-            print STDERR "$LOGPREF current signature: $1\n" if($debug);
-            next;
-        }
-
-        if (/\s+\d+\/\d+: sig (0x[\da-f]+),/) {
-            $vars{AVAIL} = $1;
-            print STDERR "$LOGPREF available signature: $1\n" if($debug);
+        if (/\s+\d+\/\d+: sig.+, rev (0x[\da-f]+),/) {
+            $vars{AVAIL} = sprintf("0x%x", hex($1));
+            print STDERR "$LOGPREF available revision: $1\n" if($debug);
             next;
         }
     }
