@@ -1,3 +1,11 @@
+needrestart (3.2) unstable; urgency=medium
+
+  * Fixes:
+    - [UI] Do not call GetTerminalSize if STDOUT is not a tty.
+      (github pull request #110 by Michael Scherer @mscherer)
+
+ -- Thomas Liske <thomas@fiasko-nw.net>  
+
 needrestart (3.1) unstable; urgency=high
 
   * Changes:
