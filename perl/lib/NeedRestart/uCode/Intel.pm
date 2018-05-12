@@ -56,6 +56,7 @@ sub nr_ucode_check_real {
         while (<$fh>) {
             if (/^microcode\s+:\s+(0x[\da-f]+)/i) {
                 $vars{CURRENT} = sprintf("0x%x", hex($1));
+                print STDERR "$LOGPREF current revision: $1\n" if($debug);
                 last;
             }
         }
