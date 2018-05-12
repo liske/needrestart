@@ -246,7 +246,7 @@ die "Error: no UI class available!\n" unless(defined($ui));
 unless(defined($opt_k) || defined($opt_l) || defined($opt_w)) {
     $opt_k = ($uid ? undef : 1);
     $opt_l = 1;
-    $opt_w = ($uid ? undef : 1);
+    $opt_w = ($uid ? undef : $nrconf{ucodehints});
 }
 
 sub parse_lsbinit($) {
@@ -859,7 +859,7 @@ if(defined($opt_k)) {
     }
 }
 
-if(defined($opt_w)) {
+if($opt_w) {
 	if($opt_b) {
         unless($opt_p) {
             print "NEEDRESTART-UCSTA: $ucode_result\n";
