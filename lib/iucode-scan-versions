@@ -28,6 +28,12 @@ if [ "$1" = "1" ]; then
     set -x
 fi
 
+# filter for processor signature (and flags if available)
+filter=`iucode_tool --scan-system 2>&1|grep -oE '[^[:space:]]+$'` #'
+if [ -r /sys/devices/system/cpu/cpu0/microcode/processor_flags ]; then
+    filter="$filter,"`cat /sys/devices/system/cpu/cpu0/microcode/processor_flags`
+fi
+
 # early boot initrd (required at least on Arch Linux)
 if type bsdtar > /dev/null 2>&1 ; then
     imgfiles=""
@@ -38,7 +44,7 @@ if type bsdtar > /dev/null 2>&1 ; then
     done
 
     if [ -n "$imgfiles" ]; then
-        cat $imgfiles | bsdtar -Oxf /dev/stdin | iucode_tool -Sl -tb - 2>&1
+        cat $imgfiles | bsdtar -Oxf /dev/stdin | iucode_tool -Sl -s $filter -tb - 2>&1
         exit $?
     fi
 fi
@@ -53,8 +59,8 @@ test "$IUCODE_TOOL_INITRAMFS" = "no" && exit 0
 
 # run iucode_tool to scan for microcodes
 if [ -r /usr/share/misc/intel-microcode* ]; then
-    exec iucode_tool -Sl -tb /lib/firmware/intel-ucode -ta /usr/share/misc/intel-microcode* 2>&1
+    exec iucode_tool -Sl -s $filter -tb /lib/firmware/intel-ucode -ta /usr/share/misc/intel-microcode* 2>&1
     exit 1
 fi
 
-exec iucode_tool -Sl $IUCODE_TOOL_EXTRA_OPTIONS -tb /lib/firmware/intel-ucode 2>&1
+exec iucode_tool -Sl -s $filter $IUCODE_TOOL_EXTRA_OPTIONS -tb /lib/firmware/intel-ucode 2>&1

@@ -9,6 +9,8 @@ needrestart (3.2) unstable; urgency=medium
   * Fixes:
     - [UI] Do not call GetTerminalSize if STDOUT is not a tty.
       (github pull request #110 by Michael Scherer @mscherer)
+    - [uCode] Filter microcode for CPU signature and flags.
+      (github issue #112 by @mgondium)
     - [uCode] Assigning ucodehints a false value disables ucode
       checks.
       (github issue #115 by Johannes Kampmeyer @xschlef)
