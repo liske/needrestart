@@ -73,7 +73,8 @@ foreach my $pkg (@pkgs) {
 
     my $plist = fork_pipe(qw(rpm -q --filesbypkg), $pkg);
     while(<$plist>) {
-	print "RC|$2\n" if(m@^\S+\s+/etc(/rc\.d)?/init\.d/(.+)$@);
+        chomp;
+        print "RC|$2\n" if(m@^\S+\s+/etc(/rc\.d)?/init\.d/(.+)$@ && -x $_);
     }
     close($plist);
 }

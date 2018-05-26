@@ -14,6 +14,8 @@ needrestart (3.2) unstable; urgency=medium
     - [uCode] Assigning ucodehints a false value disables ucode
       checks.
       (github issue #115 by Johannes Kampmeyer @xschlef)
+    - [Hooks] Ignore non-executable init scripts.
+      (github issue #116 by Marc Dequènes (Duck) @duck-rh)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 

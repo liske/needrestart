@@ -78,7 +78,8 @@ foreach my $pkg (@pkgs) {
 
     my $plist = fork_pipe(qw(dpkg-query --listfiles), $pkg);
     while(<$plist>) {
-	print "RC|$1\n" if(m@^/etc/init.d/(.+)$@);
+        chomp;
+        print "RC|$1\n" if(m@^/etc/init.d/(.+)$@ && -x $_);
     }
     close($plist);
 }
