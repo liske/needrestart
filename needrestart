@@ -186,7 +186,12 @@ elsif($opt_v) {
 
 # slurp config file
 print STDERR "$LOGPREF eval $opt_c\n" if($nrconf{verbosity} > 1);
-eval do { local(@ARGV, $/) = $opt_c; <>};
+eval do {
+    local $/;
+    open my $fh, $opt_c or die "ERROR: $!\n";
+    <$fh>;
+    close($fh);
+};
 die "Error parsing $opt_c: $@" if($@);
 
 # fallback to stdio on verbose mode
