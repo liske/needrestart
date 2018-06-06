@@ -5,6 +5,8 @@ needrestart (3.2) unstable; urgency=medium
       kernel images (required for Gentoo)
       (Gentoo Bug 654958 by Klaus Ethgen)
       (github pull request #113 by Craig Andrews @candrews)
+    - [Core] Do not restart ModemManager by default.
+      (github pull request #119 by @bodqhrohro)
 
   * Fixes:
     - [UI] Do not call GetTerminalSize if STDOUT is not a tty.
@@ -16,6 +18,8 @@ needrestart (3.2) unstable; urgency=medium
       (github issue #115 by Johannes Kampmeyer @xschlef)
     - [Hooks] Ignore non-executable init scripts.
       (github issue #116 by Marc Dequènes (Duck) @duck-rh)
+    - [L10n] Fix typo in Russian localization.
+      (github pull request #118 by @bodqhrohro)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
