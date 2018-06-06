@@ -118,7 +118,7 @@ msgstr "и"
 
 #: perl/lib/NeedRestart/Kernel/Linux.pm:129
 msgid "Scanning linux images..."
-msgstr "Сканироване образов linux..."
+msgstr "Сканирование образов linux..."
 
 #: perl/lib/NeedRestart/Kernel/kFreeBSD.pm:49
 msgid "Scanning kfreebsd images..."
