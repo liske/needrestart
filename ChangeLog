@@ -13,6 +13,7 @@ needrestart (3.2) unstable; urgency=medium
       (github pull request #110 by Michael Scherer @mscherer)
     - [uCode] Filter microcode for CPU signature and flags.
       (github issue #112 by @mgondium)
+      (Debian Bug#900298 by Francois Mescam <fmescam@sd-123993.dedibox.fr>)
     - [uCode] Assigning ucodehints a false value disables ucode
       checks.
       (github issue #115 by Johannes Kampmeyer @xschlef)
@@ -23,7 +24,7 @@ needrestart (3.2) unstable; urgency=medium
     - [UI] Do not leak fd into restarted services.
       (Debian Bug#893152 by Stephen Rothwell <debbugs@rothwell.id.au>)
 
- -- Thomas Liske <thomas@fiasko-nw.net>  
+ -- Thomas Liske <thomas@fiasko-nw.net>  Sat, 16 Jun 2018 17:42:51 +0200
 
 needrestart (3.1) unstable; urgency=high
 
