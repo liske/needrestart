@@ -20,6 +20,8 @@ needrestart (3.2) unstable; urgency=medium
       (github issue #116 by Marc Dequènes (Duck) @duck-rh)
     - [L10n] Fix typo in Russian localization.
       (github pull request #118 by @bodqhrohro)
+    - [UI] Do not leak fd into restarted services.
+      (Debian Bug#893152 by Stephen Rothwell <debbugs@rothwell.id.au>)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 

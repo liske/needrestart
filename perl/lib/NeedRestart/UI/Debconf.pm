@@ -269,4 +269,20 @@ sub runcmd {
     close(STDOUT);
 }
 
+# Workaround for Debian Bug#893152
+#
+# Using Debconf leaks a fd to this module's source file. Since Perl seems
+# not to set O_CLOEXEC the fd keeps open if the Debconf package uses fork
+# to restart needrestart piped to Debconf. The FD will leak into restarted
+# daemons if using Sys-V init.
+foreach my $fn (</proc/self/fd/*>) {
+    my $dst = readlink($fn);
+
+    # check if the FD is the package source file
+    if ($dst && ($dst eq __FILE__) && $fn =~ /\/(\d+)$/) {
+        open(my $fh, "<&=", $1) || warn("$!\n");
+        close($fh);
+    }
+}
+
 1;
