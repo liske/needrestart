@@ -113,7 +113,7 @@ sub source {
 
     my $src = abs_path($ARGV[0]);
     chdir($cwd);
-    unless(-r $src && -f $src) {
+    unless(defined($src) && -r $src && -f $src) {
 	print STDERR "$LOGPREF #$pid: source file '$src' not found, skipping\n" if($self->{debug});
 	print STDERR "$LOGPREF #$pid:  reduced ARGV: ".join(' ', @ARGV)."\n" if($self->{debug});
 	return undef;

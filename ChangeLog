@@ -6,6 +6,8 @@ needrestart (3.3) unstable; urgency=high
       (Debian Bug#902031 by Axel Beckert <abe@debian.org>)
       (Debian Bug#902049 by Jon <nuxi@vault24.org>)
       (github issue #121 by Sven Hartge @shartge)
+    - [Interp] Supress uninitalized value if abs_path fails.
+      (github issue #120 by Craig Andrews @candrews)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
