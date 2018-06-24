@@ -9,7 +9,7 @@ needrestart (3.3) unstable; urgency=high
     - [Interp] Supress uninitalized value if abs_path fails.
       (github issue #120 by Craig Andrews @candrews)
 
- -- Thomas Liske <thomas@fiasko-nw.net>  
+ -- Thomas Liske <thomas@fiasko-nw.net>  Sun, 24 Jun 2018 13:32:47 +0200
 
 needrestart (3.2) unstable; urgency=medium
 
