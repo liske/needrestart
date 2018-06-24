@@ -189,8 +189,9 @@ print STDERR "$LOGPREF eval $opt_c\n" if($nrconf{verbosity} > 1);
 eval do {
     local $/;
     open my $fh, $opt_c or die "ERROR: $!\n";
-    <$fh>;
+    my $cfg = <$fh>;
     close($fh);
+    $cfg;
 };
 die "Error parsing $opt_c: $@" if($@);
 

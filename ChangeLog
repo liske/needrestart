@@ -1,3 +1,14 @@
+needrestart (3.3) unstable; urgency=high
+
+  * Fixes:
+    - [Core] Configuration file is ignored.
+      (Debian Bug#901999 by Andreas Schmidt <pi-c@arcor.de>)
+      (Debian Bug#902031 by Axel Beckert <abe@debian.org>)
+      (Debian Bug#902049 by Jon <nuxi@vault24.org>)
+      (github issue #121 by Sven Hartge @shartge)
+
+ -- Thomas Liske <thomas@fiasko-nw.net>  
+
 needrestart (3.2) unstable; urgency=medium
 
   * Changes:
