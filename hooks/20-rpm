@@ -71,9 +71,9 @@ exit(0) unless($#pkgs > -1);
 foreach my $pkg (@pkgs) {
     print "PACKAGE|$pkg\n";
 
-    my $plist = fork_pipe(qw(rpm -q --filesbypkg), $pkg);
+    my $plist = fork_pipe(qw(rpm -q --queryformat), '[%{FILENAMES} %{FILEMODES:perms}\n]', $pkg);
     while(<$plist>) {
-	print "RC|$2\n" if(m@^\S+\s+/etc(/rc\.d)?/init\.d/(.+)$@);
+	print "RC|$2\n" if(m@^/etc(/rc\.d)?/init\.d/(.+)\s+...x@);
     }
     close($plist);
 }
