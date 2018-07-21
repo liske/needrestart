@@ -1,3 +1,11 @@
+needrestart (3.4) unstable; urgency=high
+
+  * Fixes:
+    - [uCode] Ignore broken microcode files (required for CentOS).
+      (github issue #123 by Marc Dequènes (Duck) @duck-rh)
+
+ -- Thomas Liske <thomas@fiasko-nw.net>  
+
 needrestart (3.3) unstable; urgency=high
 
   * Fixes:

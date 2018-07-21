@@ -61,8 +61,8 @@ test "$IUCODE_TOOL_INITRAMFS" = "no" && exit 0
 
 # run iucode_tool to scan for microcodes
 if [ -r /usr/share/misc/intel-microcode* ]; then
-    exec iucode_tool -l $filter -tb /lib/firmware/intel-ucode -ta /usr/share/misc/intel-microcode* 2>&1
+    exec iucode_tool -l $filter --ignore-broken -tb /lib/firmware/intel-ucode -ta /usr/share/misc/intel-microcode* 2>&1
     exit 1
 fi
 
-exec iucode_tool -l $filter $IUCODE_TOOL_EXTRA_OPTIONS -tb /lib/firmware/intel-ucode 2>&1
+exec iucode_tool -l $filter --ignore-broken $IUCODE_TOOL_EXTRA_OPTIONS -tb /lib/firmware/intel-ucode 2>&1
