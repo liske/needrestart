@@ -167,6 +167,7 @@ sub files {
 	# Silence warnings of Module::ScanDeps for dynamic loaded modules (github issue #41)
 	local $SIG{__WARN__} = sub { };
 
+        chdir($cwd);
 	$href = scan_deps(
 	    files => [$src],
 	    recurse => 1,
