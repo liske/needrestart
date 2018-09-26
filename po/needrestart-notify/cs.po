@@ -1,0 +1,55 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the needrestart-notify package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: needrestart-notify 2.12\n"
+"Report-Msgid-Bugs-To: thomas@fiasko-nw.net\n"
+"POT-Creation-Date: 2018-02-11 13:55+0100\n"
+"PO-Revision-Date: 2018-09-26 13:11+0200\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.0.6\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"Language: cs\n"
+
+#: ex/notify.d/200-write:32
+msgid ""
+"Your session is running obsolete binaries or libraries as listed below.\n"
+"Please consider a relogin or restart of the affected processes!"
+msgstr ""
+"Ve vašem sezení jsou spuštěné zastaralé binárky nebo knihovny, jak je "
+"vypsáno níže.\n"
+"Zvažte odhlášení a přihlášení se znovu nebo restart procesů, kterých se týká!"
+
+#: ex/notify.d/600-mail:41
+#, sh-format
+msgid ""
+"Your session on host $_NR_FQDN ($NR_SESSION) is running obsolete binaries or "
+"libraries as listed below."
+msgstr ""
+"Ve vašem sezení na stroji $_NR_FQDN ($NR_SESSION) jsou spuštěné zastaralé "
+"binárky nebo knihovny, jak je vypsáno níže."
+
+#: ex/notify.d/600-mail:44
+msgid "Please consider a relogin or restart of the affected processes!"
+msgstr ""
+"Zvažte odhlášení a přihlášení se znovu nebo restart procesů, kterých se týká!"
+
+#: ex/notify.d/400-notify-send:44
+msgid "Relogin or restarts required!"
+msgstr "Je třeba se odhlásit a znovu přihlásit nebo restartovat!"
+
+#: ex/notify.d/400-notify-send:45
+msgid ""
+"Your session is running obsolete binaries or libraries as listed below.\n"
+"<i><b>Please consider a relogin or restart of the affected processes!</b></i>"
+msgstr ""
+"Ve vašem sezení jsou spuštěné zastaralé binárky nebo knihovny, jak je "
+"vypsáno níže.\n"
+"<i><b>Please consider a relogin or restart of the affected processes!</b></i>"
