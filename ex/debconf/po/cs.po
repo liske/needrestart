@@ -1,0 +1,139 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-03-29 13:45+0200\n"
+"PO-Revision-Date: 2018-09-26 11:10+0200\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.0.6\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"Language: cs\n"
+
+#. Type: title
+#. Description
+#: ../needrestart.templates:1001
+msgid "Daemons using outdated libraries"
+msgstr "Procesy služeb, které používají zastaralé knihovny"
+
+#. Type: multiselect
+#. Description
+#: ../needrestart.templates:2001
+msgid "Which services should be restarted?"
+msgstr "Které služby by měly být restartovány?"
+
+#. Type: note
+#. Description
+#. Type: note
+#. Description
+#: ../needrestart.templates:3001 ../needrestart.templates:4001
+msgid "Newer kernel available"
+msgstr "Je k dispozici novější verze jádra"
+
+#. Type: note
+#. Description
+#: ../needrestart.templates:3001
+msgid ""
+"The currently running kernel version is ${KVERSION} and there is an ABI "
+"compatible upgrade pending."
+msgstr ""
+"Nyní je provozováno na jádru verze ${KVERSION} a přitom je k dispozici "
+"aktualizace, která zachovává kompatibilní ABI rozhraní."
+
+#. Type: note
+#. Description
+#. Type: note
+#. Description
+#: ../needrestart.templates:3001 ../needrestart.templates:4001
+msgid ""
+"Restarting the system to load the new kernel will not be handled "
+"automatically, so you should consider rebooting."
+msgstr ""
+"Restart systému pro načtení nového jádra nebude obsloužen automaticky, "
+"takže byste měli zvážit restart stroje."
+
+#. Type: note
+#. Description
+#: ../needrestart.templates:4001
+msgid ""
+"The currently running kernel version is ${KVERSION} which is not the "
+"expected kernel version ${EVERSION}."
+msgstr ""
+"Nyní provozovaná verze jádra je ${KVERSION}, což není očekávaná verze "
+"${EVERSION}."
+
+#. Type: title
+#. Description
+#: ../needrestart.templates:5001
+msgid "Pending kernel upgrade"
+msgstr "Čekající aktualizace jádra"
+
+#. Type: title
+#. Description
+#: ../needrestart.templates:6001
+msgid "Restart pending..."
+msgstr "Čekající restart…"
+
+#. Type: note
+#. Description
+#: ../needrestart.templates:7001
+msgid "This system runs ${EHINT} - you should consider rebooting!"
+msgstr "Tento systém je spuštěný s ${EHINT} – měli byste zvážit restart!"
+
+#. Type: note
+#. Description
+#: ../needrestart.templates:7001
+msgid "For more details, run «needrestart -m a»."
+msgstr "Další informace získáte spuštěním „needrestart -m a“."
+
+#. Type: title
+#. Description
+#: ../needrestart.templates:8001
+msgid "Outdated processor microcode"
+msgstr "Zastaralý mikrokód procesoru"
+
+#. Type: note
+#. Description
+#: ../needrestart.templates:9001
+msgid "Processor microcode update"
+msgstr "Aktualizace mikrokódu procesoru"
+
+#. Type: note
+#. Description
+#: ../needrestart.templates:9001
+msgid ""
+"The currently running processor microcode revision is ${CURRENT} which is "
+"not the expected microcode revision ${AVAIL}."
+msgstr ""
+"Nyní provozovaná revize mikrokódu procesoru je ${CURRENT}, což není "
+"očekávaná revize ${AVAIL}."
+
+#. Type: note
+#. Description
+#: ../needrestart.templates:9001
+msgid ""
+"Restarting the system to load the new processor microcode will not be "
+"handled automatically, so you should consider rebooting."
+msgstr ""
+"Restart systému pro načtení nového mikrokódu procesoru nebude obsloužen "
+"automaticky, takže byste měli zvážit restart stroje."
+
+#. Type: title
+#. Description
+#: ../needrestart.templates:10001
+msgid "Containers using outdated libraries"
+msgstr "Kontejnery používající zastaralé knihovny"
+
+#. Type: multiselect
+#. Description
+#: ../needrestart.templates:11001
+msgid "Which containers should be restarted?"
+msgstr "Které kontejnery by měly být restartovány?"
