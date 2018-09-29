@@ -1,5 +1,11 @@
 needrestart (3.4) unstable; urgency=high
 
+  * Features:
+    - [L10n] Add Czech localization.
+      (github pull request #131 by @p-bo)
+      (github pull request #132 by @p-bo)
+      (github pull request #133 by @p-bo)
+
   * Fixes:
     - [uCode] Ignore broken microcode files (required for CentOS).
       (github issue #123 by Marc Dequènes (Duck) @duck-rh)
