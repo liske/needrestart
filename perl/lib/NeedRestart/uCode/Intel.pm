@@ -85,7 +85,7 @@ sub nr_ucode_check_real {
         return (NRM_UNKNOWN, %vars);
     }
 
-    if($vars{CURRENT} eq $vars{AVAIL}) {
+    if(hex($vars{CURRENT}) >= hex($vars{AVAIL})) {
         return (NRM_CURRENT, %vars);
     }
 
