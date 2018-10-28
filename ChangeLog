@@ -3,6 +3,8 @@ needrestart (3.4) unstable; urgency=high
   * Fixes:
     - [uCode] Ignore broken microcode files (required for CentOS).
       (github issue #123 by Marc Dequènes (Duck) @duck-rh)
+    - [Core] Ignore temporary mappings of elasticsearch.
+      (github issue #134 by Georg @teadur)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
