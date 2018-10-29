@@ -7,6 +7,8 @@ needrestart (3.4) unstable; urgency=high
       (github pull request #127 by Lutz Heermann @LuHee)
     - [uCode] Prevent microcode false positives for BIOS updates.
       (Debian Bug#906958 by Maik Zumstrull <maik@zumstrull.net>)
+    - [uCode] Handle microcode updates for multiple CPUs in initramfs.
+      (Debian Bug#907372 by Paul Wise <pabs@debian.org>)
     - [Core] Ignore temporary mappings of elasticsearch.
       (github issue #134 by Georg @teadur)
 
