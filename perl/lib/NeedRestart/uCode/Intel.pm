@@ -70,9 +70,9 @@ sub nr_ucode_check_real {
 
     my $fh = nr_fork_pipe($debug, NRM_INTEL_HELPER, $debug);
     while(<$fh>) {
-        if (/\s+\d+\/\d+: sig.+, rev (0x[\da-f]+),/) {
-            $vars{AVAIL} = sprintf("0x%x", hex($1));
-            print STDERR "$LOGPREF available revision: $1\n" if($debug);
+        if (/\s*\d+(\/\d+)?: sig.+, rev (0x[\da-f]+),/) {
+            $vars{AVAIL} = sprintf("0x%x", hex($2));
+            print STDERR "$LOGPREF available revision: $2\n" if($debug);
             next;
         }
     }
@@ -85,7 +85,7 @@ sub nr_ucode_check_real {
         return (NRM_UNKNOWN, %vars);
     }
 
-    if($vars{CURRENT} eq $vars{AVAIL}) {
+    if(hex($vars{CURRENT}) >= hex($vars{AVAIL})) {
         return (NRM_CURRENT, %vars);
     }
 
