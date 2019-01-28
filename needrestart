@@ -45,12 +45,26 @@ $|++;
 $Getopt::Std::STANDARD_HELP_VERSION++;
 
 my $LOGPREF = '[main]';
-my $is_systemd = -d qq(/run/systemd/system);
+my $is_systemd = -d q(/run/systemd/system);
 my $is_tty = (-t *STDERR || -t *STDOUT || -t *STDIN);
+my $is_vm;
 my $is_container;
 
-# check if we are inside of a container
-if (-r "/proc/1/environ") {
+if($is_systemd && -x q(/usr/bin/systemd-detect-virt)) {
+	# check if we are inside of a vm
+	my $ret = system(qw(/usr/bin/systemd-detect-virt --vm --quiet));
+	unless($? == -1 || $? & 127) {
+		$is_vm = ($? >> 8) == 0;
+	}
+
+	# check if we are inside of a container
+	$ret = system(qw(/usr/bin/systemd-detect-virt --container --quiet));
+	unless($? == -1 || $? & 127) {
+		$is_container = ($? >> 8) == 0;
+	}
+}
+elsif (-r "/proc/1/environ") {
+	# check if we are inside of a container (fallback)
     local $/;
     open(HENV, '<', '/proc/1/environ');
     $is_container = scalar(grep {/^container=/;} unpack("(Z*)*", <HENV>));
@@ -325,6 +339,7 @@ sub parse_lsbinit($) {
 }
 
 print STDERR "$LOGPREF systemd detected\n" if($nrconf{verbosity} > 1 && $is_systemd);
+print STDERR "$LOGPREF vm detected\n" if($nrconf{verbosity} > 1 && $is_vm);
 print STDERR "$LOGPREF container detected\n" if($nrconf{verbosity} > 1 && $is_container);
 
 sub systemd_refuse_restart {
@@ -775,10 +790,15 @@ foreach my $rc (keys %restart) {
     delete($restart{$rc});
 }
 
-# Skip kernel and uCode stuff within containers
+# Skip kernel stuff within container
 if($is_container || needrestart_cont_check($nrconf{verbosity} > 1, 1, nr_readlink(1), 1)) {
-    print STDERR "$LOGPREF inside container, skipping kernel and microcode checks\n" if($nrconf{verbosity} > 1);
+    print STDERR "$LOGPREF inside container, skipping kernel checks\n" if($nrconf{verbosity} > 1);
     $opt_k = undef;
+}
+
+# Skip uCode stuff within container or vm
+if($is_container || $is_vm || needrestart_cont_check($nrconf{verbosity} > 1, 1, nr_readlink(1), 1)) {
+    print STDERR "$LOGPREF inside container or vm, skipping microcode checks\n" if($nrconf{verbosity} > 1);
     $opt_w = undef;
 }
 

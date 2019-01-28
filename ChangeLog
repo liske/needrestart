@@ -7,6 +7,8 @@ needrestart (3.4) unstable; urgency=high
       (github pull request #133 by @p-bo)
     - [Core] Add FRR to override.
       (github pull request #138 by David Lamparter @eqvinox)
+    - [Core] Detect if run inside a container or vm using systemd.
+      (github issue #139 by Tobby @tobby88)
 
   * Fixes:
     - [uCode] Ignore broken microcode files (required for CentOS).
