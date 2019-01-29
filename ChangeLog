@@ -21,6 +21,8 @@ needrestart (3.4) unstable; urgency=high
       (Debian Bug#907372 by Paul Wise <pabs@debian.org>)
     - [Core] Ignore temporary mappings of elasticsearch.
       (github issue #134 by Georg @teadur)
+    - [Core] Do not restart oneshot services from systemd-cron.
+      (Debian Bug#917073 by Antti Salmela <asalmela@iki.fi>)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
