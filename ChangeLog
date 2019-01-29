@@ -10,6 +10,11 @@ needrestart (3.4) unstable; urgency=high
     - [Core] Detect if run inside a container or vm using systemd.
       (github issue #139 by Tobby @tobby88)
 
+  * Changes:
+    - [Core] Do restart systemd-journald (again).
+      (see also Debian Bug#771122, #771254 and #898818)
+      (Debian Bug#898818 by Mathieu Parent <sathieu@debian.org>)
+
   * Fixes:
     - [uCode] Ignore broken microcode files (required for CentOS).
       (github issue #123 by Marc Dequènes (Duck) @duck-rh)
