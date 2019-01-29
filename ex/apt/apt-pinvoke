@@ -25,6 +25,21 @@ if [ -e "$RUNDIR/errored" ]; then
 fi
 
 if [ -e "$RUNDIR/unpacked" ]; then
+    # check if system is shutting down, see also Debian Bug#914753
+    if [ -d '/run/systemd/system' ]; then
+        sd=$(dbus-send --system --dest=org.freedesktop.login1 \
+                       --print-reply \
+                       /org/freedesktop/login1 \
+                       org.freedesktop.DBus.Properties.Get \
+                       string:org.freedesktop.login1.Manager \
+                       string:PreparingForShutdown 2> /dev/null)
+
+        if [ "$sd" != "${sd% true}"]; then
+            echo "skipping needrestart since system is preparing for shutdown"
+            exit 0
+        fi
+    fi
+
     if [ -n "$NEEDRESTART_SUSPEND" ]; then
         echo "packages have been installed but needrestart is suspended"
         exit 0

@@ -9,6 +9,8 @@ needrestart (3.4) unstable; urgency=high
       (github pull request #138 by David Lamparter @eqvinox)
     - [Core] Detect if run inside a container or vm using systemd.
       (github issue #139 by Tobby @tobby88)
+    - [Core] Skip needrestart in apt hook if system is shutting down.
+      (Debian Bug#914753 by Balint Reczey <balint.reczey@canonical.com>)
 
   * Changes:
     - [Core] Do restart systemd-journald (again).
