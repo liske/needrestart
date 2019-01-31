@@ -34,7 +34,7 @@ if [ -e "$RUNDIR/unpacked" ]; then
                        string:org.freedesktop.login1.Manager \
                        string:PreparingForShutdown 2> /dev/null)
 
-        if [ "$sd" != "${sd% true}"]; then
+        if [ "$sd" != "${sd% true}" ]; then
             echo "skipping needrestart since system is preparing for shutdown"
             exit 0
         fi
