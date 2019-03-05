@@ -1,55 +1,82 @@
 #!/bin/sh
+# by Vladimir Kudrya
+# https://github.com/Vladimir-csp/
+#
+# This script is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version. See <http://www.gnu.org/licenses/>.
 
-# needrestart - Restart daemons after library updates.
-#
-# Authors:
-#   Thomas Liske <thomas@fiasko-nw.net>
-#
-# Copyright Holder:
-#   2013 - 2018 (C) Thomas Liske [http://fiasko-nw.net/~thomas/]
-#
-# License:
-#   This program is free software; you can redistribute it and/or modify
-#   it under the terms of the GNU General Public License as published by
-#   the Free Software Foundation; either version 2 of the License, or
-#   (at your option) any later version.
-#
-
-# Restart dbus and affiliated services under systemd using a procedure
-# suggested by @Vladimir-csp in github issue #44.
+# This is a replacement for original dbus.service script by Thomas Liske <thomas@fiasko-nw.net>
+# Dbus dependencies are enumerated dynamically and restarted after dbus and systemd daemon reexec
 
 # enable xtrace if we should be verbose
 if [ "$NR_VERBOSE" = '1' ]; then
     set -x
 fi
 
-# check if there is a Display Manager running
-STATE_DM=$(systemctl show display-manager --property=ActiveState)
+PAUSE=5
 
-# prepare well-known list of services requiring restart after restarting D-Bus
-RESTART_CHK="NetworkManager.service"
-RESTART_SVC="systemd-logind.service systemd-journald.service"
-for svc in $RESTART_CHK; do
-    if [ "$(systemctl show $svc --property=ActiveState)" = 'ActiveState=active' ]; then
-	RESTART_SVC="$RESTART_SVC $svc"
-    fi
-done
-
-# stop Display Manager if running
-if [ "$STATE_DM" = 'ActiveState=active' ]; then
-    systemctl stop display-manager.service
+if [ "$(id -ru)" != "0" ]
+then
+	echo "Not root, exiting" >&2
+	exit 1
 fi
 
-# restard D-Bus
-systemctl restart dbus.service
+INIT_EXEC="$(readlink /proc/1/exe)"
 
-# reexec systemd
-systemctl daemon-reexec
-
-# restart daemons that directly depend on D-Bus
-systemctl restart $RESTART_SVC
-
-# start Display Manager again
-if [ "$STATE_DM" = 'ActiveState=active' ]; then
-    systemctl start display-manager.service
+if [ "$(basename "$INIT_EXEC")" != "systemd" ]
+then
+	echo "Init system is not systemd ($INIT_EXEC), doing nothing"
+	exit 0
 fi
+
+get_active_deps(){
+	# return all dbus dependencies, filter out dbus and DM, leave only active
+	{
+		systemctl list-dependencies -l --reverse --plain dbus.socket
+		systemctl list-dependencies -l --reverse --plain dbus.service
+	} | grep -o '[^[:space:]]\+.service' | sort -u | while read SERVICE
+	do
+		if [ "$SERVICE" != "dbus.service" -a "$SERVICE" != "$DISPLAY_MANAGER" ] && systemctl -q is-active "$SERVICE"
+		then
+			echo "$SERVICE"
+		fi
+	done
+}
+
+# if DM is active, return canonical ID
+DISPLAY_MANAGER="$(systemctl -q is-active display-manager.service && systemctl show --value -p Id display-manager.service)"
+
+# get dependencies
+ACTIVE_DEPS="$(get_active_deps)"
+
+# get logind sessions
+SESSIONS="$(loginctl list-sessions --no-legend | grep -o '^[[:space:]]*[0-9]\+' | tr '\n' ' ')"
+
+cat << EOF
+!!! In $PAUSE seconds dbus restart will be performed !!!
+User sessions to be terminated: $SESSIONS
+
+Services to be restarted:
+$ACTIVE_DEPS
+$DISPLAY_MANAGER
+EOF
+
+# prepare list to be a CLI arg
+ACTIVE_DEPS="$(echo "$ACTIVE_DEPS" | tr '\n' ' ')"
+
+sleep $PAUSE
+
+# run restart sequence as transient unit...
+if [ -n "$DISPLAY_MANAGER" ]
+then
+	# terminate user sessions, stop DM, restart dbus, reexec systemd, restart dbus dependencies, start DM
+	systemd-run -G --unit=restart-dbus sh -c "loginctl terminate-session $SESSIONS ; systemctl stop $DISPLAY_MANAGER ; systemctl restart dbus.service ; sleep 1 ; systemctl daemon-reexec ; sleep 1 ; systemctl restart $ACTIVE_DEPS ; systemctl start $DISPLAY_MANAGER"
+else
+	# terminate user sessions, restart dbus, reexec systemd, restart dbus dependencies
+	systemd-run -G --unit=restart-dbus sh -c "loginctl terminate-session $SESSIONS ; systemctl restart dbus.service ; sleep 1 ; systemctl daemon-reexec ; sleep 1 ; systemctl restart $ACTIVE_DEPS"
+fi
+
+# restart sequence runs as a unit, so it is possible to view its output in the log if, any:
+# journalctl -u restart-dbus
