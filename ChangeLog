@@ -1,3 +1,11 @@
+needrestart (3.5) unstable; urgency=high
+
+  * Changes:
+      [Core] Add network.service in the blacklist.
+      (github pull request #145 by Marc Dequènes (Duck) @duck-rh)
+
+ -- Thomas Liske <thomas@fiasko-nw.net>  
+
 needrestart (3.4) unstable; urgency=high
 
   * Features:
