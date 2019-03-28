@@ -4,6 +4,13 @@ needrestart (3.5) unstable; urgency=high
       [Core] Add network.service in the blacklist.
       (github pull request #145 by Marc Dequènes (Duck) @duck-rh)
 
+  * Fixes:
+    - [Core] Do not restart networking.service.
+      (Debian Bug#922725 by Timo Sigurdsson <public_timo.s@silentcreek.de>).
+    - [Core] Fix typo in man page for env variable DEBIAN_FRONT(END).
+      (Debian Bug#922864 by Lee Garrett <debian@rocketjump.eu>)
+      (Debian Bug#923853 by Petter Reinholdtsen <pere@hungry.com>)
+
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
 needrestart (3.4) unstable; urgency=high
