@@ -31,7 +31,7 @@ needrestart (3.4) unstable; urgency=high
     - [Core] Do not restart oneshot services from systemd-cron.
       (Debian Bug#917073 by Antti Salmela <asalmela@iki.fi>)
 
- -- Thomas Liske <thomas@fiasko-nw.net>  
+ -- Thomas Liske <thomas@fiasko-nw.net>  Tue, 05 Feb 2019 22:43:12 +0100
 
 needrestart (3.3) unstable; urgency=high
 
