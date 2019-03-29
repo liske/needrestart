@@ -4,7 +4,7 @@
 #
 # This script is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
+# the Free Software Foundation, either version 2 of the License, or
 # (at your option) any later version. See <http://www.gnu.org/licenses/>.
 
 # This is a replacement for original dbus.service script by Thomas Liske <thomas@fiasko-nw.net>
@@ -14,8 +14,6 @@
 if [ "$NR_VERBOSE" = '1' ]; then
     set -x
 fi
-
-PAUSE=5
 
 if [ "$(id -ru)" != "0" ]
 then
@@ -63,10 +61,10 @@ $ACTIVE_DEPS
 $DISPLAY_MANAGER
 EOF
 
+[ -t 0 ] && read -p "Press Enter to continue > " PRESSENTER
+
 # prepare list to be a CLI arg
 ACTIVE_DEPS="$(echo "$ACTIVE_DEPS" | tr '\n' ' ')"
-
-sleep $PAUSE
 
 # run restart sequence as transient unit...
 if [ -n "$DISPLAY_MANAGER" ]
