@@ -10,6 +10,8 @@ needrestart (3.5) unstable; urgency=high
     - [Core] Fix typo in man page for env variable DEBIAN_FRONT(END).
       (Debian Bug#922864 by Lee Garrett <debian@rocketjump.eu>)
       (Debian Bug#923853 by Petter Reinholdtsen <pere@hungry.com>)
+    - [Interp] Restore cwd when skipping processes with unavailable cwd.
+      (github issue #147 by Stavros Ntentos @stdedos)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
