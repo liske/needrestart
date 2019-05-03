@@ -1,7 +1,7 @@
 needrestart (3.5) unstable; urgency=high
 
   * Changes:
-      [Core] Add network.service in the blacklist.
+      [Core] Add network.service to blacklist.
       (github pull request #145 by Marc Dequènes (Duck) @duck-rh)
 
   * Fixes:
@@ -12,6 +12,8 @@ needrestart (3.5) unstable; urgency=high
       (Debian Bug#923853 by Petter Reinholdtsen <pere@hungry.com>)
     - [Interp] Restore cwd when skipping processes with unavailable cwd.
       (github issue #147 by Stavros Ntentos @stdedos)
+    - [Core] Remove leading zero before testing in map_files.
+      (Debian Bug#928225 by Alexander Galanin <al@galanin.nnov.ru>)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
