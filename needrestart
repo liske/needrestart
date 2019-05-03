@@ -504,6 +504,8 @@ if(defined($opt_l)) {
 
 		    # check for outdated lib mappings
 		    unless($nrconf{skip_mapfiles} == 1) {
+			$maddr =~ s/^0+([^-])/$1/;
+			$maddr =~ s/-0+(.)/-$1/;
 			my @paths = ("/proc/$pid/map_files/$maddr", "/proc/$pid/root/$path");
 			my ($testp) = grep { -e $_; } @paths;
 			unless($testp) {
