@@ -90,7 +90,7 @@ Usage:
 	a	(a)utomatically restart
     -b		enable batch mode
     -p          enable nagios plugin mode
-    -f <fe>	overwrite debconf frontend (DEBIAN_FRONTEND, debconf(7))
+    -f <fe>	override debconf frontend (DEBIAN_FRONTEND, debconf(7))
     -u <ui>     use preferred UI package (-u ? shows available packages)
 
   By using the following options only the specified checks are performed:
@@ -186,7 +186,7 @@ $Getopt::Std::STANDARD_HELP_VERSION = undef;
 
 die "ERROR: Could not read config file '$opt_c'!\n" unless(-r $opt_c || $opt_b);
 
-# overwrite debconf frontend
+# override debconf frontend
 $ENV{DEBIAN_FRONTEND} = $opt_f if($opt_f);
 
 # be quiet
