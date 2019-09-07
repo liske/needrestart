@@ -50,7 +50,7 @@ enable batch mode
 nagios plugin mode: makes output and exit codes nagios compatible
 .TP
 \fB\-f\fR <fe>
-overwrite debconf(7) frontend, sets the DEBIAN_FRONTEND environment variable to <fe>
+override debconf(7) frontend, sets the DEBIAN_FRONTEND environment variable to <fe>
 .TP
 \fB\-u\fR <ui>
 use preferred UI package (-u ? shows available packages)
@@ -71,7 +71,7 @@ Change the configured restart mode (see also the \fB\-r\fR parameter): (l)ist on
 
 When used with apt-get(8) needrestart supports the following additional environment variables:
 .TP
-\fBDEBIAN_FRONT\fR
+\fBDEBIAN_FRONTEND\fR
 The debconf(7) frontend to use, can also set using the \fB\-f\fR parameter.
 .TP
 \fBNEEDRESTART_SUSPEND\fR
