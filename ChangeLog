@@ -14,6 +14,8 @@ needrestart (3.5) unstable; urgency=high
       (github issue #147 by Stavros Ntentos @stdedos)
     - [Core] Remove leading zero before testing in map_files.
       (Debian Bug#928225 by Alexander Galanin <al@galanin.nnov.ru>)
+    - [Core] Fix typos in ex/needrestart.conf.
+      (github pull request #163 by Simon Brand @brandsimon)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
