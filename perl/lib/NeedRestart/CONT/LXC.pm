@@ -45,7 +45,16 @@ sub new {
     $self->{lxc} = {};
     $self->{lxd} = {};
 
-    $self->{has_lxd} = -x q(/usr/bin/lxc);
+    if (-d q(/snap/lxd)) {
+	$self->{has_lxd} = 1;
+	$self->{lxd_bin} = q(/snap/bin/lxc);
+	$self->{lxd_container_path} = q(/var/snap/lxd/common/lxd/containers);
+	print STDERR "$LOGPREF LXD installed via snap\n" if($self->{debug});
+    } else {
+	$self->{has_lxd} = -x q(/usr/bin/lxc);
+	$self->{lxd_bin} = q(/usr/bin/lxc);
+	$self->{lxd_container_path} = q(/var/lib/lxd/containers);
+    }
 
     return bless $self, $class;
 }
@@ -75,7 +84,8 @@ sub check {
     return unless($cg =~ /^\d+:[^:]+:\/lxc\/([^\/\n]+)($|\/)/m);
 
     my $name = $1;
-    my $type = ($self->{has_lxd} && -d qq(/var/lib/lxd/containers/$name) ? 'LXD' : 'LXC');
+    my $type = ($self->{has_lxd} && -d qq($self->{lxd_container_path}/$name) ? 'LXD' : 'LXC');
+
     unless($norestart) {
 	print STDERR "$LOGPREF #$pid is part of $type container '$name' and should be restarted\n" if($self->{debug});
 
@@ -94,7 +104,7 @@ sub get {
     return (map {
 	($_ => [qw(lxc-stop --reboot --name), $_]);
     } keys %{ $self->{lxc} }), (map {
-	($_ => [qw(lxc restart), $_]);
+	($_ => [ $self->{lxd_bin}, "restart", $_]);
     } keys %{ $self->{lxd} });
 }
 
