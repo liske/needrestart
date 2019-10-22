@@ -101,10 +101,20 @@ sub check {
 sub get {
     my $self = shift;
 
+    sub lxd_restart_with_project {
+	my ($bin, $container) = @_;
+	my @parts = split(/_/, $container);
+	if ($#parts == 1) {
+	    return [ $bin, 'restart', qq(--project=$parts[0]), $parts[1] ];
+	} else {
+	    [ $bin, 'restart', $container ]
+	}
+    }
+
     return (map {
 	($_ => [qw(lxc-stop --reboot --name), $_]);
     } keys %{ $self->{lxc} }), (map {
-	($_ => [ $self->{lxd_bin}, "restart", $_]);
+	($_ => lxd_restart_with_project($self->{lxd_bin}, $_));
     } keys %{ $self->{lxd} });
 }
 
