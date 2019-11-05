@@ -441,20 +441,20 @@ if(defined($opt_l)) {
     sub findppid($@) {
 	my $uid = shift;
 	my ($pid, @pids) = @_;
-	
+
 	if($ptable->{$pid}->{ppid} == 1) {
 	    return $pid
 		if($ptable->{$pid}->{uid} == $uid);
-	    
+
 	    return undef;
 	}
-	
+
 	foreach my $pid (@pids) {
 	    my $ppid = &findppid($uid, $pid);
-	    
+
 	    return $ppid if($ppid);
 	}
-	
+
 	return $pid;
     }
 
@@ -972,7 +972,7 @@ if(defined($opt_l) && !$uid) {
                 $nagios{sstr} .= " (!!)";
             }
         }
-	    
+
 	    foreach my $rc (sort { lc($a) cmp lc($b) } keys %restart) {
 		# always combine restarts in one systemctl command
 		local $nrconf{systemctl_combine} = 1 unless($opt_r eq 'l');
@@ -1272,7 +1272,7 @@ if($opt_p) {
 	2 => q(CRIT),
 	3 => q(UNKN),
 	);
-    my ($ret) = reverse sort 
+    my ($ret) = reverse sort
 	(($opt_k ? $nagios{kret} : ()), ($opt_w ? $nagios{mret} : ()),
 	($opt_l ? ($nagios{sret}, $nagios{cret}, $nagios{uret}) : ()));
 
