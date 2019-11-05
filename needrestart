@@ -218,6 +218,8 @@ $opt_r = $nrconf{restart} unless(defined($opt_r));
 die "ERROR: Unknown restart option '$opt_r'!\n" unless($opt_r =~ /^(l|i|a)$/);
 $is_tty = 0 if($opt_r eq 'i' && exists($ENV{DEBIAN_FRONTEND}) && $ENV{DEBIAN_FRONTEND} eq 'noninteractive');
 $opt_r = 'l' if(!$is_tty && $opt_r eq 'i');
+# always run in batch mode if we run noninteractive
+$opt_b++ if(exists($ENV{DEBIAN_FRONTEND}) && $ENV{DEBIAN_FRONTEND} eq 'noninteractive');
 
 $opt_m = $nrconf{ui_mode} unless(defined($opt_m));
 die "ERROR: Unknown UI mode '$opt_m'!\n" unless($opt_m =~ /^(e|a)$/);
