@@ -29,6 +29,33 @@ use warnings;
 use Text::Wrap qw(wrap);
 use Term::ReadKey;
 
+# NeedRestart::UI internals properties
+# ====================================
+#
+# $self->{verbosity}: 1 if needrestart is in verbose mode, 0
+# otherwise.
+#
+# $self->{progress}: if undef, disable the progress bar.  Otherwise:
+#
+#   $self->{progress}->{msg}: message to print (last message printed).
+#
+#   $self->{progress}->{count}: current progress (number of steps done
+#   since the beginning).
+#
+#   $self->{progress}->{max}: Expected total number of steps.  If 0,
+#   the bar will always be at 0.
+#
+# $self->{fhin}, $self->{fhout}: original stdin/stdout filehandles.
+# NeedRestart::UI may change the filehandles to ensure we have a
+# terminal.  The original filehandles are saved in these two
+# attributes in progress_prep, and restored in progress_fin.
+
+
+# my $ui = new NeedRestart::UI(VERBOSITY);
+#
+# VERBOSITY indicates whether needrestart is otherwise verbose (0 or
+# 1).  If VERBOSITY is 1, we disable the progress indicator:
+# otherwise, the output would not be nice.
 sub new {
     my $class = shift;
     my $verbosity = shift;
@@ -69,6 +96,13 @@ sub _get_columns {
     }
 }
 
+# $ui->wprint(FILEHANDLE, SP1, SP2, MESSAGE);
+#
+# Print the MESSAGE to the given FILEHANDLE, wrapping text if we can get
+# the number of columns.
+#
+# SP1 and SP2 are resp. Text::Wrap::wrap's $initial_tab and
+# $subsequent_tab.
 sub wprint {
     my $self = shift;
     my $fh = shift;
@@ -88,6 +122,17 @@ sub wprint {
     }
 }
 
+# $ui->progress_prep(MAX, OUT);
+#
+# Prepare for displaying a new progress bar.
+#
+# Disable the progress bar if we don't have a terminal.  Restore the
+# terminal if necessary.  Reset the progress counter.  Print the
+# initial line.
+#
+# MAX: expected total number of steps.
+#
+# OUT: the message, e.g. "Scanning processes..."
 sub progress_prep($$$) {
     my $self = shift;
     my ($max, $out) = @_;
@@ -116,6 +161,9 @@ sub progress_prep($$$) {
     $self->_progress_msg($out);
 }
 
+# $ui->progress_step();
+#
+# Add one step to the progress and update the display.
 sub progress_step($) {
     my $self = shift;
 
@@ -126,6 +174,9 @@ sub progress_step($) {
     1;
 }
 
+# $ui->progress_fin();
+#
+# Restore stdin/out as they were before the preparation.
 sub progress_fin($) {
     my $self = shift;
 
@@ -140,6 +191,9 @@ sub progress_fin($) {
 	if($self->{fhout});
 }
 
+# $ui->_progress_msg(MESSAGE);
+#
+# Set the current MESSAGE and update the display.
 sub _progress_msg {
     my $self = shift;
 
@@ -149,6 +203,9 @@ sub _progress_msg {
     $self->_progress_out();
 }
 
+# $ui->_progress_inc();
+#
+# Increase progress by one step and redisplay.
 sub _progress_inc {
     my $self = shift;
 
@@ -156,6 +213,9 @@ sub _progress_inc {
     $self->_progress_out();
 }
 
+# $ui->_progress_out();
+#
+# Print the current message and progress bar.
 sub _progress_out {
     my $self = shift;
 
@@ -183,6 +243,9 @@ sub _progress_out {
     printf("%-${wmsg}s [%-${wbar}s]\r", substr($msg, 0, $wmsg), $bar);
 }
 
+# $ui->_progress_fin();
+#
+# Finish the progress.  Redisplay the line, removing the bar.
 sub _progress_fin {
    my $self = shift;
    my $columns = _get_columns;
