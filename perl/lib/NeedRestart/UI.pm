@@ -26,7 +26,7 @@ package NeedRestart::UI;
 
 use strict;
 use warnings;
-use Text::Wrap qw(wrap $columns);
+use Text::Wrap qw(wrap);
 use Term::ReadKey;
 
 sub new {
@@ -39,6 +39,36 @@ sub new {
     }, $class;
 }
 
+# my $nb_columns = _get_terminal_columns(FILEHANDLE);
+# e.g.: my $nb_columns = _get_terminal_columns(\*STDOUT);
+# => 103
+#
+# This is a wrapper for GetTerminalSize to cope with Debian
+# Bug#824564.
+sub _get_terminal_columns {
+    my ($filehandle) = @_;
+    # workaround Debian Bug#824564 in Term::ReadKey: pass filehandle
+    # twice
+    my ($columns) = GetTerminalSize($filehandle, $filehandle);
+    return $columns;
+}
+
+# my $columns = &_get_columns();
+#
+# Return the number of columns to use for output.
+sub _get_columns {
+    my $default_columns = 80;           # Sane default
+    if (-t *STDOUT) {
+        my ($columns) = _get_terminal_columns(\*STDOUT);
+
+        # Cope with 0-width terminals (see Debian bug #942759).
+        return $columns == 0? $default_columns: $columns;
+    }
+    else {
+        return $default_columns;
+    }
+}
+
 sub wprint {
     my $self = shift;
     my $fh = shift;
@@ -48,9 +78,8 @@ sub wprint {
 
     # only wrap output if it is a terminal
     if (-t $fh) {
-	# workaround Debian Bug#824564 in Term::ReadKey: pass filehandle twice
-	my ($cols) = GetTerminalSize($fh, $fh);
-	$columns = $cols if($cols);
+	my ($cols) = _get_terminal_columns($fh, $fh);
+	$Text::Wrap::columns = $cols? $cols: 80;
 
 	print $fh wrap($sp1, $sp2, $message);
     }
@@ -129,25 +158,36 @@ sub _progress_inc {
 
 sub _progress_out {
     my $self = shift;
-    my $columns = 80;
 
-    ($columns) = GetTerminalSize(\*STDOUT) if (-t *STDOUT);
-    
-    $columns -= 3;
-    my $wmsg = int($columns * 0.7);
-    $wmsg = length($self->{progress}->{msg}) if(length($self->{progress}->{msg}) < $wmsg);
-    my $wbar = $columns - $wmsg - 1;
+    my $msg = $self->{progress}->{msg};
+    my $max = $self->{progress}->{max};
+    my $count = $self->{progress}->{count};
 
-    printf("%-${wmsg}s [%-${wbar}s]\r", substr($self->{progress}->{msg}, 0, $wmsg), '=' x ($wbar*( $self->{progress}->{max} > 0 ? $self->{progress}->{count}/$self->{progress}->{max} : 0 )));
+    # The line looks like this:
+    # my message [====                ]
+    # <- wmsg ->..<---- wbar -------->.
+
+    # 3 columns are preassigned (the space and the square brackets);
+    # we need to split the remaining space between the message and the
+    # bar itself.
+    my $remaining_space = _get_columns() - 3;
+
+    # We use 70% max of the remaining space.
+    my $wmsg = int($remaining_space * 0.7);
+    # Shrink if the message is actually shorter.
+    $wmsg = length($msg) if(length($msg) < $wmsg);
+
+    my $wbar = $remaining_space - $wmsg;
+
+    my $bar = '=' x ($wbar*( $max > 0 ? $count/$max : 0 ));
+    printf("%-${wmsg}s [%-${wbar}s]\r", substr($msg, 0, $wmsg), $bar);
 }
 
 sub _progress_fin {
    my $self = shift;
-   my $columns = 80;
+   my $columns = _get_columns;
 
    $self->{progress}->{count} = 0;
-
-   ($columns) = GetTerminalSize(\*STDOUT) if (-t *STDOUT);
 
    print $self->{progress}->{msg}, ' ' x ($columns - length($self->{progress}->{msg})), "\n";
 }
