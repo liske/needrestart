@@ -16,6 +16,8 @@ needrestart (3.5) unstable; urgency=high
       (Debian Bug#928225 by Alexander Galanin <al@galanin.nnov.ru>)
     - [Core] Fix typos in ex/needrestart.conf.
       (github pull request #163 by Simon Brand @brandsimon)
+    - [UI] Don't fail when terminal has zero columns width.
+      (github pull request #167 by @libnoon)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
