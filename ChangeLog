@@ -22,6 +22,8 @@ needrestart (3.5) unstable; urgency=high
       chroot false positives.
       (github issue #158 by @mphilipps)
       (github issue #152 by Ivan Kurnosov @zerkms and @djl)
+    - [Core] Supress warnings from Proc::ProcessTable.
+      (github issue #170 by @mphilipps)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
