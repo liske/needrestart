@@ -18,6 +18,10 @@ needrestart (3.5) unstable; urgency=high
       (github pull request #163 by Simon Brand @brandsimon)
     - [UI] Don't fail when terminal has zero columns width.
       (github pull request #167 by @libnoon)
+    - [Core] Ignore mapped files not found on filesystem (stat) to suppress
+      chroot false positives.
+      (github issue #158 by @mphilipps)
+      (github issue #152 by Ivan Kurnosov @zerkms and @djl)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
