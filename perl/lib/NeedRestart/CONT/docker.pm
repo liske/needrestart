@@ -68,6 +68,7 @@ sub check {
 
     # look for docker cgroups
     return 0 unless($cg =~ /^\d+:[^:]+:\/system.slice\/docker-(.+)\.scope$/m ||
+                    $cg =~ /^\d+:[^:]+:\/system.slice\/docker\.service$/m ||
                     $cg =~ /^\d+:[^:]+:\/docker\/([\da-f]+)$/m);
 
     print STDERR "$LOGPREF #$pid is part of docker container '$1' and will be ignored\n" if($self->{debug});

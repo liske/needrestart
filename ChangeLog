@@ -24,6 +24,8 @@ needrestart (3.5) unstable; urgency=high
       (github issue #152 by Ivan Kurnosov @zerkms and @djl)
     - [Core] Supress warnings from Proc::ProcessTable.
       (github issue #170 by @mphilipps)
+    - [CONT] Fix docker detection on CentOS 7.
+      (github issue #165 by Christian Ruppert @idl0r)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
