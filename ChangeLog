@@ -8,6 +8,7 @@ needrestart (3.5) unstable; urgency=high
   * Changes:
       [Core] Add network.service to blacklist.
       (github pull request #145 by Marc Dequènes (Duck) @duck-rh)
+      [uCode] Check microcode revision of each individual CPUs.
 
   * Fixes:
     - [Core] Do not restart networking.service.
