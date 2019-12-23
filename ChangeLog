@@ -1,5 +1,10 @@
 needrestart (3.5) unstable; urgency=high
 
+  * Features:
+    - [uCode] Check for pending AMD microcode updates (experimental).
+      (Debian Bug#886611 by Paul Wise <pabs@debian.org>)
+      (github issue #150 by Tom Reynolds @tomreyn and Mark Wagie @yochananmarqos)
+
   * Changes:
       [Core] Add network.service to blacklist.
       (github pull request #145 by Marc Dequènes (Duck) @duck-rh)
