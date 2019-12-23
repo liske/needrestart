@@ -9,6 +9,9 @@ needrestart (3.5) unstable; urgency=high
       [Core] Add network.service to blacklist.
       (github pull request #145 by Marc Dequènes (Duck) @duck-rh)
       [uCode] Check microcode revision of each individual CPUs.
+      [Kernel] Support kernel image filename filtering required for Raspbian.
+      (github issue #146 by @takichikawa)
+      (github issue #155 by Fenhl @fenhl and Christian @git-developer)
 
   * Fixes:
     - [Core] Do not restart networking.service.

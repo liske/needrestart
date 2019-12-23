@@ -52,8 +52,9 @@ our @EXPORT = qw(
 
 my $LOGPREF = '[Kernel]';
 
-sub nr_kernel_check($$) {
+sub nr_kernel_check {
     my $debug = shift;
+    my $filter = shift;
     my $ui = shift;
     my %vars;
 
@@ -65,7 +66,7 @@ sub nr_kernel_check($$) {
     # autoload Kernel modules
     foreach my $module (findsubmod NeedRestart::Kernel) {
 	my @ret;
-	unless(eval "use $module; \@ret = ${module}::nr_kernel_check_real(\$debug, \$ui);") {
+	unless(eval "use $module; \@ret = ${module}::nr_kernel_check_real(\$debug, \$filter, \$ui);") {
 	    warn "Failed to load $module: $@" if($@ && $debug);
 	}
 	else {

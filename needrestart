@@ -146,6 +146,7 @@ our %nrconf = (
     skip_mapfiles => -1,
     interpscan => 1,
     kernelhints => 1,
+	kernelfilter => qr(),
     ucodehints => 1,
     q(nagios-status) => {
 	services => 1,
@@ -810,7 +811,7 @@ if(defined($opt_w)) {
 }
 
 if(defined($opt_k)) {
-    my ($kresult, %kvars) = ($nrconf{kernelhints} || $opt_b ? nr_kernel_check($nrconf{verbosity} > 1, $ui) : ());
+    my ($kresult, %kvars) = ($nrconf{kernelhints} || $opt_b ? nr_kernel_check($nrconf{verbosity} > 1, $nrconf{kernelfilter}, $ui) : ());
 
     if(defined($kresult)) {
 	if($opt_b) {

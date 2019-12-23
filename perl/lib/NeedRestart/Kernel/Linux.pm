@@ -115,8 +115,9 @@ sub nr_linux_version_generic($$) {
     return undef;
 }
 
-sub nr_kernel_check_real($$) {
+sub nr_kernel_check_real {
     my $debug = shift;
+    my $filter = shift;
     my $ui = shift;
     my %vars;
 
@@ -129,6 +130,10 @@ sub nr_kernel_check_real($$) {
     my %kfiles = map {
 	$_ => 1,
     } grep {
+        # whitelist kernel images
+        m/$filter/;
+    }
+    grep {
 	# filter initrd images
 	(!m@^/boot/init@);
     } (</boot/vmlinu*>, </boot/*.img>, </boot/kernel*>);
