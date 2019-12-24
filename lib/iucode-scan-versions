@@ -36,6 +36,9 @@ else
     filter="-S"
 fi
 
+# allow local command override
+test -r /etc/needrestart/iucode.sh && . /etc/needrestart/iucode.sh
+
 # early boot initrd (required at least on Arch Linux)
 if type bsdtar > /dev/null 2>&1 ; then
     imgfiles=""
@@ -62,7 +65,7 @@ test "$IUCODE_TOOL_INITRAMFS" = "no" && exit 0
 # run iucode_tool to scan for microcodes
 if [ -r /usr/share/misc/intel-microcode* ]; then
     exec iucode_tool -l $filter --ignore-broken -tb /lib/firmware/intel-ucode -ta /usr/share/misc/intel-microcode* 2>&1
-    exit 1
+    exit $?
 fi
 
 iucode_tool -l $filter --ignore-broken $IUCODE_TOOL_EXTRA_OPTIONS -tb /lib/firmware/intel-ucode 2>&1 | grep "$sig"

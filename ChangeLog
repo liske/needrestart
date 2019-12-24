@@ -12,6 +12,8 @@ needrestart (3.5) unstable; urgency=high
       [Kernel] Support kernel image filename filtering required for Raspbian.
       (github issue #146 by @takichikawa)
       (github issue #155 by Fenhl @fenhl and Christian @git-developer)
+      [uCode] Support local override for iucode_tool call.
+      (github issue #148 by @mphilipps and Marc Dequènes (Duck) @duck-rh)
 
   * Fixes:
     - [Core] Do not restart networking.service.
