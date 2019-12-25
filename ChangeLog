@@ -37,6 +37,8 @@ needrestart (3.5) unstable; urgency=high
       (github issue #170 by @mphilipps)
     - [CONT] Fix docker detection on CentOS 7.
       (github issue #165 by Christian Ruppert @idl0r)
+    - [notify] Fix notify-send not working with dbus-user-session.
+      (github issue #76 by @Vladimir-csp)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 

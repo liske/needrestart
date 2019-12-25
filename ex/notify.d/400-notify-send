@@ -29,8 +29,11 @@ fi
 
 case "$NR_SESSION" in
     session*)
-        # cleanup environment
-	unset DBUS_SESSION_BUS_ADDRESS
+	DBUS_SESSION_BUS_ADDRESS=$(sed -z -n s/^DBUS_SESSION_BUS_ADDRESS=//p "/proc/$NR_SESSPPID/environ")
+	if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
+		unset DBUS_SESSION_BUS_ADDRESS
+	fi
+
 	export DISPLAY=$(sed -z -n s/^DISPLAY=//p "/proc/$NR_SESSPPID/environ")
 	export XAUTHORITY=$(sed -z -n s/^XAUTHORITY=//p "/proc/$NR_SESSPPID/environ")
 
