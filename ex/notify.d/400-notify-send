@@ -48,7 +48,7 @@ case "$NR_SESSION" in
 	MSGBODY=$(gettext 'Your session is running obsolete binaries or libraries as listed below.
 <i><b>Please consider a relogin or restart of the affected processes!</b></i>')'\n'$(cat)
 
-	su -p -s /bin/sh -c "$NSEND -u critical -i dialog-warning \"$MSGTITLE\" \"$MSGBODY\"" "$NR_USERNAME"
+	su -p -s /bin/sh -c "$NSEND -a needrestart -u critical -i dialog-warning \"$MSGTITLE\" \"$MSGBODY\"" "$NR_USERNAME"
 	;;
     *)
  	echo "[$0] skip session '$NR_SESSION'" 1>&2
