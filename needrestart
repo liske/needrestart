@@ -510,9 +510,7 @@ if(defined($opt_l)) {
 			my @paths = ("/proc/$pid/map_files/$maddr", "/proc/$pid/root/$path");
 			my ($testp) = grep { -e $_; } @paths;
 			unless($testp) {
-			    unless($path =~ m@^(/var)?/tmp/@ ||
-				   $path =~ m@^(/var)?/run/@ ||
-				   $nrconf{skip_mapfiles} == -1) {
+			    unless($nrconf{skip_mapfiles} == -1) {
 				print STDERR "$LOGPREF #$pid uses non-existing $path\n" if($nrconf{verbosity} > 1);
 				$restart++;
 				last;

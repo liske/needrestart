@@ -41,6 +41,8 @@ needrestart (3.5) unstable; urgency=high
       (github issue #165 by Christian Ruppert @idl0r)
     - [notify] Fix notify-send not working with dbus-user-session.
       (github issue #76 by @Vladimir-csp)
+    - [Core] Ignore mapped files in temporary directories.
+      (Debian Bug#925408 by Donald Pellegrino <donald.a.pellegrino@gmail.com>)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
