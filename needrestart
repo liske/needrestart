@@ -149,11 +149,11 @@ our %nrconf = (
     kernelfilter => qr(.),
     ucodehints => 1,
     q(nagios-status) => {
-	services => 1,
-	kernel => 2,
-	ucode => 2,
-	sessions => 2,
-	containers => 1,
+    services => 1,
+    kernel => 2,
+    ucode => 2,
+    sessions => 2,
+    containers => 1,
     },
     has_pam_systemd => 1,
 );
