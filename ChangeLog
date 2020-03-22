@@ -44,7 +44,7 @@ needrestart (3.5) unstable; urgency=high
     - [Core] Ignore mapped files in temporary directories.
       (Debian Bug#925408 by Donald Pellegrino <donald.a.pellegrino@gmail.com>)
 
- -- Thomas Liske <thomas@fiasko-nw.net>  
+ -- Thomas Liske <thomas@fiasko-nw.net>  Sun, 22 Mar 2020 17:36:57 +0100
 
 needrestart (3.4) unstable; urgency=high
 
