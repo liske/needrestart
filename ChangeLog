@@ -6,13 +6,13 @@ needrestart (3.5) unstable; urgency=high
       (github issue #150 by Tom Reynolds @tomreyn and Mark Wagie @yochananmarqos)
 
   * Changes:
-      [Core] Add network.service to blacklist.
+    - [Core] Add network.service to blacklist.
       (github pull request #145 by Marc Dequènes (Duck) @duck-rh)
-      [uCode] Check microcode revision of each individual CPUs.
-      [Kernel] Support kernel image filename filtering required for Raspbian.
+    - [uCode] Check microcode revision of each individual CPUs.
+    - [Kernel] Support kernel image filename filtering required for Raspbian.
       (github issue #146 by @takichikawa)
       (github issue #155 by Fenhl @fenhl and Christian @git-developer)
-      [uCode] Support local override for iucode_tool call.
+    - [uCode] Support local override for iucode_tool call.
       (github issue #148 by @mphilipps and Marc Dequènes (Duck) @duck-rh)
     - [notify] Add app name to notify-send call.
       (github issue #76 by @Vladimir-csp)
