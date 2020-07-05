@@ -1,4 +1,12 @@
-needrestart (3.5) unstable; urgency=high
+needrestart 3.6
+
+  * Fixes:
+    - [Core] Fix comment for default value of `skip_mapfiles`.
+      (github pull request #179 by @iasdeoupxe)
+
+ -- Thomas Liske <thomas@fiasko-nw.net>  
+
+needrestart 3.5
 
   * Features:
     - [uCode] Check for pending AMD microcode updates (experimental).
@@ -46,7 +54,7 @@ needrestart (3.5) unstable; urgency=high
 
  -- Thomas Liske <thomas@fiasko-nw.net>  Sun, 22 Mar 2020 17:36:57 +0100
 
-needrestart (3.4) unstable; urgency=high
+needrestart 3.4
 
   * Features:
     - [L10n] Add Czech localization.
@@ -81,7 +89,7 @@ needrestart (3.4) unstable; urgency=high
 
  -- Thomas Liske <thomas@fiasko-nw.net>  Tue, 05 Feb 2019 22:43:12 +0100
 
-needrestart (3.3) unstable; urgency=high
+needrestart 3.3
 
   * Fixes:
     - [Core] Configuration file is ignored.
@@ -94,7 +102,7 @@ needrestart (3.3) unstable; urgency=high
 
  -- Thomas Liske <thomas@fiasko-nw.net>  Sun, 24 Jun 2018 13:32:47 +0200
 
-needrestart (3.2) unstable; urgency=medium
+needrestart 3.2
 
   * Changes:
     - [Kernel] Include /boot/kernel* while looking for linux
@@ -122,7 +130,7 @@ needrestart (3.2) unstable; urgency=medium
 
  -- Thomas Liske <thomas@fiasko-nw.net>  Sat, 16 Jun 2018 17:42:51 +0200
 
-needrestart (3.1) unstable; urgency=high
+needrestart 3.1
 
   * Changes:
     - [uCode] Handle microcode upgrades in early boot initrd images,
@@ -139,7 +147,7 @@ needrestart (3.1) unstable; urgency=high
 
  -- Thomas Liske <thomas@fiasko-nw.net>  Thu, 29 Mar 2018 23:22:55 +0200
 
-needrestart (3.0) unstable; urgency=medium
+needrestart 3.0
 
   * Features:
     - [Core] Possible to suspend needrestart in apt-get hook using
@@ -228,7 +236,7 @@ needrestart (3.0) unstable; urgency=medium
 
  -- Thomas Liske <thomas@fiasko-nw.net>  Fri, 23 Feb 2018 13:38:46 +0100
 
-needrestart (2.11) unstable; urgency=medium
+needrestart 2.11
 
   * Features:
     - [Core] Allow special treatment to restart services (i.e. dbus).
@@ -256,7 +264,7 @@ needrestart (2.11) unstable; urgency=medium
 
  -- Thomas Liske <thomas@fiasko-nw.net>  Tue, 17 Jan 2017 15:59:36 +0100
 
-needrestart (2.10) unstable; urgency=medium
+needrestart 2.10
 
   * Features:
     - [Interp] Allow ignoring of interpreted files.
@@ -280,7 +288,7 @@ needrestart (2.10) unstable; urgency=medium
 
  -- Thomas Liske <thomas@fiasko-nw.net>  Thu, 03 Nov 2016 23:37:05 +0100
 
-needrestart (2.9) unstable; urgency=medium
+needrestart 2.9
 
   * Changes:
     - [l10n] Add RU translation for notify.d stuff.
@@ -316,7 +324,7 @@ needrestart (2.9) unstable; urgency=medium
 
  -- Thomas Liske <thomas@fiasko-nw.net>  Sat, 03 Sep 2016 14:52:41 +0200
 
-needrestart (2.8) unstable; urgency=medium
+needrestart 2.8
 
   * Changes:
     - [Core] Restart SysV init services on systemd using systemctl.
@@ -354,7 +362,7 @@ needrestart (2.8) unstable; urgency=medium
 
  -- Thomas Liske <thomas@fiasko-nw.net>  Mon, 16 May 2016 18:45:51 +0200
 
-needrestart (2.7) unstable; urgency=medium
+needrestart 2.7
 
   * [Bug] Ignore init rc being symlinks to upstart-job.
     (github issue #16 by Jonas Genannt @hggh)
@@ -376,7 +384,7 @@ needrestart (2.7) unstable; urgency=medium
 
  -- Thomas Liske <thomas@fiasko-nw.net>  Sun, 06 Mar 2016 14:46:45 +0100
 
-needrestart (2.6) unstable; urgency=high
+needrestart 2.6
 
   * [Bug] Do not notify system users via email.
     (Debian Bug#812399 by Marc Haber <mh+debian-packages@zugschlus.de>)
@@ -389,14 +397,14 @@ needrestart (2.6) unstable; urgency=high
 
  -- Thomas Liske <thomas@fiasko-nw.net>  Wed, 17 Feb 2016 22:14:32 +0100
 
-needrestart (2.5) unstable; urgency=medium
+needrestart 2.5
 
   * [Bug] Fix broken kernel detection due to syntax error.
     (Debian Bug#810031 by Martin Steigerwald <martin@lichtvoll.de>)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  Tue, 05 Jan 2016 23:17:53 +0100
 
-needrestart (2.4) unstable; urgency=medium
+needrestart 2.4
 
   * [Bug] Drop unused dependency on File::Slurp.
     (Debian Bug#799733 by Christoph Anton Mitterer <calestyo@scientia.net>)
@@ -413,7 +421,7 @@ needrestart (2.4) unstable; urgency=medium
 
  -- Thomas Liske <thomas@fiasko-nw.net>  Fri, 01 Jan 2016 21:54:47 +0100
 
-needrestart (2.3) unstable; urgency=medium
+needrestart 2.3
 
   * [Bug] Add lightdm to override.
     (Debian Bug#791649 by Martin Steigerwald <martin@lichtvoll.de>)
@@ -434,7 +442,7 @@ needrestart (2.3) unstable; urgency=medium
 
  -- Thomas Liske <thomas@fiasko-nw.net>  Sat, 19 Sep 2015 20:38:19 +0200
 
-needrestart (2.2) unstable; urgency=medium
+needrestart 2.2
 
   * [regression] Processes using chroot were always detected as obsolete
     since missing binaries in /proc/PID/root/.
@@ -442,7 +450,7 @@ needrestart (2.2) unstable; urgency=medium
 
  -- Thomas Liske <thomas@fiasko-nw.net>  Tue, 26 May 2015 23:56:11 +0200
 
-needrestart (2.1) unstable; urgency=medium
+needrestart 2.1
 
   * [Bug] Ignore /usr/bin/apt-get.
     (Debian Bug#784237 by Thijs Kinkhorst <thijs@debian.org>)
@@ -476,7 +484,7 @@ needrestart (2.1) unstable; urgency=medium
 
  -- Thomas Liske <thomas@fiasko-nw.net>  Fri, 22 May 2015 01:45:17 +0200
 
-needrestart (2.0) unstable; urgency=medium
+needrestart 2.0
 
   * [regression] List commands in list mode.
     (Debian Bug#764042 by Paul Wise <pabs@debian.org>)
@@ -502,7 +510,7 @@ needrestart (2.0) unstable; urgency=medium
 
  -- Thomas Liske <thomas@fiasko-nw.net>  Fri, 23 Jan 2015 00:46:13 +0100
 
-needrestart (1.2) unstable; urgency=medium
+needrestart 1.2
 
   * Prepare po-debconf usage and add German translation.
     (Debian Bug#761068 by David Prévot <taffit@debian.org>)
@@ -522,7 +530,7 @@ needrestart (1.2) unstable; urgency=medium
 
  -- Thomas Liske <thomas@fiasko-nw.net>  Sun, 28 Sep 2014 23:48:42 +0200
 
-needrestart (1.1) unstable; urgency=medium
+needrestart 1.1
 
   * Ignore DHCP clients.
     (Debian Bug#752111 by Axel Beckert <abe@debian.org>)
@@ -531,7 +539,7 @@ needrestart (1.1) unstable; urgency=medium
 
  -- Thomas Liske <thomas@fiasko-nw.net>  Sat, 16 Aug 2014 09:57:29 +0200
 
-needrestart (1.0) unstable; urgency=medium
+needrestart 1.0
 
   * Fix grammar errors and use a additional debconf template.
     (Debian Bug#748652 by Justin B Rye <justin.byam.rye@gmail.com>)
@@ -554,7 +562,7 @@ needrestart (1.0) unstable; urgency=medium
 
  -- Thomas Liske <thomas@fiasko-nw.net>  Tue, 17 Jun 2014 15:21:15 +0200
 
-needrestart (0.9) unstable; urgency=medium
+needrestart 0.9
 
   * Drop external dependency on strings command from binutils.
   * Fix "uninitialized value" by apparent kernel threads.
@@ -573,7 +581,7 @@ needrestart (0.9) unstable; urgency=medium
 
  -- Thomas Liske <thomas@fiasko-nw.net>  Sun, 11 May 2014 22:48:42 +0200
 
-needrestart (0.8) unstable; urgency=low
+needrestart 0.8
 
   * Fix non-numeric argument on progress_prep call.
     (Debian Bug#744961 by Cristian Ionescu-Idbohrn
@@ -591,7 +599,7 @@ needrestart (0.8) unstable; urgency=low
 
  -- Thomas Liske <thomas@fiasko-nw.net>  Sun, 27 Apr 2014 10:15:35 +0200
 
-needrestart (0.7) unstable; urgency=medium
+needrestart 0.7
 
   * Improved rc script detection, e.g.: previous releases failed to
     detect apache2's init script after upgrading libssl1.0.0.
@@ -616,7 +624,7 @@ needrestart (0.7) unstable; urgency=medium
 
  -- Thomas Liske <thomas@fiasko-nw.net>  Mon, 14 Apr 2014 21:50:15 +0200
 
-needrestart (0.6) unstable; urgency=low
+needrestart 0.6
 
   * Add lightdm to blacklist.
     (Debian Bug#735027 by Michael Gilbert <mgilbert@debian.org>)
@@ -630,7 +638,7 @@ needrestart (0.6) unstable; urgency=low
 
  -- Thomas Liske <thomas@fiasko-nw.net>  Mon, 07 Apr 2014 22:52:18 +0200
 
-needrestart (0.5) unstable; urgency=low
+needrestart 0.5
 
   * Ignore mapped files in /tmp.
   * Handle LSB tags case insensitivly.
@@ -642,7 +650,7 @@ needrestart (0.5) unstable; urgency=low
 
  -- Thomas Liske <thomas@fiasko-nw.net>  Thu, 02 Jan 2014 19:55:49 +0100
 
-needrestart (0.4) unstable; urgency=low
+needrestart 0.4
 
   * Fix spelling:
     - typo in debconf template (s/restartet/restarted/;)
@@ -663,7 +671,7 @@ needrestart (0.4) unstable; urgency=low
 
  -- Thomas Liske <thomas@fiasko-nw.net>  Thu, 28 Nov 2013 19:30:06 +0100
 
-needrestart (0.3) unstable; urgency=low
+needrestart 0.3
 
   * Fix typo reported by Patrick Matthäi.
   * Add man page provided by Patrick Matthäi (Debian).
@@ -681,7 +689,7 @@ needrestart (0.3) unstable; urgency=low
 
  -- Thomas Liske <thomas@fiasko-nw.net>  Sat, 14 Sep 2013 12:55:16 +0200
 
-needrestart (0.2) unstable; urgency=low
+needrestart 0.2
 
   * Support (l)ist only, (i)nteractive restart and
     (a)utomaticly restart modes.
@@ -693,7 +701,7 @@ needrestart (0.2) unstable; urgency=low
 
  -- Thomas Liske <thomas@fiasko-nw.net>  Tue, 02 Apr 2013 21:51:48 +0200
 
-needrestart (0.1) unstable; urgency=low
+needrestart 0.1
 
   * Initial release.
 
