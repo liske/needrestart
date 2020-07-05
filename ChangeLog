@@ -3,6 +3,8 @@ needrestart 3.6
   * Fixes:
     - [Core] Fix comment for default value of `skip_mapfiles`.
       (github pull request #179 by @iasdeoupxe)
+    - [Interp] Fix detection for ruby script started from relative paths.
+      (github pull request #182 by Alexander Neumann @rtpt-alex)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
