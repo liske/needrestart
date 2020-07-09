@@ -34,7 +34,7 @@ hooks support the following package managers:
 * *rpm*
 * *pacman*
 
-The *service* command is used to run the tradiditional System V init script.
+The *service* command is used to run the traditional System V init script.
 
 
 Frontends
