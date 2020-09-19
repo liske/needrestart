@@ -5,6 +5,13 @@ needrestart 3.6
       (github pull request #179 by @iasdeoupxe)
     - [Interp] Fix detection for ruby script started from relative paths.
       (github pull request #182 by Alexander Neumann @rtpt-alex)
+    - [Cont] Improve LXD container support.
+      (github pull request #188 by James TD Smith @ahktenzero)
+
+  * Fixes:
+    - [Core] Fix typos.
+      (github pull request #189 by @wwuck)
+      (github pull request #193 by Stefan Weil @stweil)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
