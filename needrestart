@@ -46,6 +46,7 @@ $Getopt::Std::STANDARD_HELP_VERSION++;
 
 my $LOGPREF = '[main]';
 my $is_systemd = -d q(/run/systemd/system);
+my $is_runit = -e q(/run/runit.stopit);
 my $is_tty = (-t *STDERR || -t *STDOUT || -t *STDIN);
 my $is_vm;
 my $is_container;
@@ -384,6 +385,14 @@ sub restart_cmd($) {
 	    }
 	    else {
 		(qw(systemctl restart), qq($rc.service));
+	    }
+	}
+	elsif($is_runit && -d qq(/etc/sv/$rc)) {
+	    if(-e qq(/etc/service/$rc)) {
+		(qw(sv restart), $rc);
+	    }
+	    else {
+		(q(service), $rc, q(restart));
 	    }
 	}
 	else {
