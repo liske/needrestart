@@ -632,7 +632,7 @@ if(defined($opt_l)) {
 
 	    if($is_systemd) {
 		# systemd manager
-		if($pid == 1 && $exe =~ m@^/lib/systemd/systemd@) {
+		if($pid == 1 && $exe =~ m@^(/usr)?/lib/systemd/systemd@) {
 		    print STDERR "$LOGPREF #$pid is systemd manager\n" if($nrconf{verbosity} > 1);
 		    $restart{q(systemd-manager)}++;
 		    next;
