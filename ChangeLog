@@ -7,6 +7,8 @@ needrestart 3.6
   * Changes:
     - [Cont] Improve LXD container support.
       (github pull request #188 by James TD Smith @ahktenzero)
+    - [Core] Support systemd manager restart on Ubuntu 20.04+.
+      (github pull request #195 by Lars Kollstedt @LarsKollstedt)
 
   * Fixes:
     - [Core] Fix comment for default value of `skip_mapfiles`.
