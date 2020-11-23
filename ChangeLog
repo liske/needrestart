@@ -18,6 +18,8 @@ needrestart 3.6
     - [Core] Fix typos.
       (github pull request #189 by @wwuck)
       (github pull request #193 by Stefan Weil @stweil)
+    - [Core] Fix verbose/verbosity confusion in needrestart.conf.
+      (github pull request #197 by Jan-Philipp Litza @jplitza)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
