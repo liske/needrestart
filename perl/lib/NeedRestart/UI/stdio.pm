@@ -33,6 +33,14 @@ use Locale::TextDomain 'needrestart';
 
 needrestart_ui_register(__PACKAGE__, NEEDRESTART_PRIO_LOW);
 
+# The default is to be interactive
+my $INTERACTIVE = 1;
+
+sub interactive {
+    my $self = shift;
+    $INTERACTIVE = shift;
+}
+
 sub _announce {
     my $self = shift;
     my $message = shift;
@@ -43,7 +51,7 @@ sub _announce {
 					 kversion => $vars{KVERSION},
 					 message => $message,
 		   ));
-    <STDIN> if (-t *STDIN && -t *STDOUT);
+    <STDIN> if (-t *STDIN && -t *STDOUT && $INTERACTIVE);
 }
 
 
@@ -77,7 +85,7 @@ You should consider rebooting!
 
 EHINT
 
-    <STDIN> if (-t *STDIN && -t *STDOUT);
+    <STDIN> if (-t *STDIN && -t *STDOUT && $INTERACTIVE);
 }
 
 
@@ -90,7 +98,7 @@ sub announce_ucode {
 			 current => $vars{CURRENT},
 			 avail => $vars{AVAIL},
 		   ));
-    <STDIN> if (-t *STDIN && -t *STDOUT);
+    <STDIN> if (-t *STDIN && -t *STDOUT && $INTERACTIVE);
 }
 
 
