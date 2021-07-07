@@ -81,7 +81,7 @@ sub check {
     }
 
     # look for LXC cgroups
-    return unless($cg =~ /^\d+:[^:]+:\/lxc(?:.payload)?\/([^\/\n]+)($|\/)/m);
+    return unless($cg =~ /^\d+:[^:]+:\/lxc(?:.payload)?[.\/]([^\/\n]+)($|\/)/m);
 
     my $name = $1;
     my $type = ($self->{has_lxd} && -d qq($self->{lxd_container_path}/$name) ? 'LXD' : 'LXC');
