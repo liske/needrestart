@@ -441,6 +441,7 @@ print "NEEDRESTART-VER: $NeedRestart::VERSION\n" if($opt_b && !$opt_p);
 
 my %restart;
 my %sessions;
+my @guests;
 my @easy_hints;
 
 if(defined($opt_l)) {
@@ -617,7 +618,7 @@ if(defined($opt_l)) {
 
     if(scalar keys %stage2 && !$uid) {
 	$ui->progress_prep(scalar keys %stage2, __ 'Scanning candidates...');
-	foreach my $pid (sort {$a <=> $b} keys %stage2) {
+	PIDLOOP: foreach my $pid (sort {$a <=> $b} keys %stage2) {
 	    $ui->progress_step;
 
 	    # skip myself
@@ -659,6 +660,25 @@ if(defined($opt_l)) {
 			    if($value =~ m@/user\@(\d+)\.service@) {
 				print STDERR "$LOGPREF #$pid part of user manager service: uid=$1\n" if($nrconf{verbosity} > 1);
 				push(@{ $sessions{$1}->{'user manager service'}->{ $ptable->{$pid}->{fname} } }, $pid);
+				next;
+			    }
+				if($value =~ m@/machine.slice/machine.qemu(.*).scope@) {
+				for my $cmdlineidx (0 .. $#{$ptable->{$pid}->{cmdline}} ) {
+					if ( ${$ptable->{$pid}->{cmdline}}[$cmdlineidx] eq "-name") {
+						foreach ( split(/,/, ${$ptable->{$pid}->{cmdline}}[$cmdlineidx+1]) ) {
+							if ( index($_, "guest=") == 0 ) {
+								my @namearg = split(/=/, $_, 2);
+								if ($#{namearg} == 1) {
+									print STDERR "$LOGPREF #$pid detected as VM guest '$namearg[1]' in group '$value'\n" if($nrconf{verbosity} > 1);
+									push(@guests, "VM '$namearg[1]' with pid $pid" );
+								}
+								next PIDLOOP;
+							}
+						}
+					}
+				}
+				print STDERR "$LOGPREF #$pid detected as VM guest with unknown name in group '$value'\n" if($nrconf{verbosity} > 1);
+				push(@guests, "'Unkown VM' with pid $pid" );
 				next;
 			    }
 			    elsif($value =~ m@/([^/]+\.service)$@) {
@@ -761,6 +781,7 @@ if(defined($opt_l)) {
 		}
 
 		# No perfect hit - call any rc scripts instead.
+                print STDERR "$LOGPREF #$pid running $hook no perfect hit found $found pids $#nopids\n" if($nrconf{verbosity} > 1);
 		if(!$found && $#nopids > -1) {
 		    foreach my $rc (@nopids) {
 			if($is_systemd && exists($restart{"$rc.service"})) {
@@ -1265,6 +1286,25 @@ if(defined($opt_l) && !$uid) {
 	    }
 	}
     }
+
+	## GUESTS
+	$ui->vspace();
+	if (! @guests) {
+		$ui->notice(__ 'No VM guests are running outdated binaries.') unless($opt_b || $opt_m eq 'e');
+	}
+	else {
+		if($opt_m eq 'e') {
+			push(@easy_hints, __ 'outdated VM guests');
+		}
+		else {
+			unless($opt_p || $opt_b) {
+				$ui->notice(__ 'VM guests running outdated binaries:');
+				foreach ( @guests ) {
+				$ui->notice(__ " $_");
+				}
+			}
+		}
+	}
 }
 
 # easy mode: print hint on outdated stuff
