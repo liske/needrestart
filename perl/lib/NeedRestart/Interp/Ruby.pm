@@ -195,7 +195,7 @@ sub files {
     elsif(exists($ENV{RUBYLIB})) {
 	delete($ENV{RUBYLIB});
     }
-    
+
     # get include path
     my $rbread = nr_fork_pipe($self->{debug}, $ptable->{exec}, '-e', 'puts $:');
     my @path = map { "/proc/$pid/root/$_"; } <$rbread>;

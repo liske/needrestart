@@ -1,7 +1,7 @@
 LOCALEDIR=/usr/share/locale
 
 all: mo-files
-	cd perl && perl Makefile.PL PREFIX=$(PREFIX) INSTALLDIRS=vendor 
+	cd perl && perl Makefile.PL PREFIX=$(PREFIX) INSTALLDIRS=vendor
 	cd perl && $(MAKE)
 
 install: all

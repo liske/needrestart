@@ -143,7 +143,7 @@ sub nr_kernel_vcmp($$) {
 # compare kernel version strings according to RPM version sorting
 # adopted from RPM::VersionSort
 sub nr_kernel_vcmp_rpm {
-    # split version strings by non-alphanumeric digits 
+    # split version strings by non-alphanumeric digits
     my @a = split(/[^a-z\d]+/i, shift);
     my @b = split(/[^a-z\d]+/i, shift);
 

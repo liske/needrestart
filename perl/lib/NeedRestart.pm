@@ -258,7 +258,7 @@ sub needrestart_cont_get($) {
 	$n =~ s/^NeedRestart::CONT:://;
 
 	my %c = $cont->get;
-	
+
 	map {
 	    ("$n $_" => $c{$_});
 	} sort keys %c;
