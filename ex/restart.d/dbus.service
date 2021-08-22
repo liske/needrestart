@@ -19,7 +19,7 @@ RESTART_CHK="NetworkManager.service"
 RESTART_SVC="systemd-logind.service systemd-journald.service"
 for svc in $RESTART_CHK; do
     if [ "$(systemctl show $svc --property=ActiveState)" = 'ActiveState=active' ]; then
-	RESTART_SVC="$RESTART_SVC $svc"
+        RESTART_SVC="$RESTART_SVC $svc"
     fi
 done
 

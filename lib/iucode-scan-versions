@@ -29,9 +29,9 @@ if [ "$1" = "1" ]; then
 fi
 
 # filter for processor signature (and flags if available)
-sig=`iucode_tool --scan-system 2>&1|grep -oE '[^[:space:]]+$'` #'
+sig=$(iucode_tool --scan-system 2>&1 | grep -oE '[^[:space:]]+$') #'
 if [ -r /sys/devices/system/cpu/cpu0/microcode/processor_flags ]; then
-    filter="-s $sig,"`cat /sys/devices/system/cpu/cpu0/microcode/processor_flags`
+    filter="-s $sig,"$(cat /sys/devices/system/cpu/cpu0/microcode/processor_flags)
 else
     filter="-S"
 fi
