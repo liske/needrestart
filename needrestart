@@ -726,7 +726,7 @@ if(defined($opt_l)) {
 			    print STDERR "$LOGPREF no LSB headers found at $v[1]\n" if($nrconf{verbosity} > 1);
 			    push(@nopids, $v[1]);
 			}
-			# In the run-levels S and 1 no daemons are being started (normaly).
+			# In the run-levels S and 1 no daemons are being started (normally).
 			# We don't call any rc.d script not started in the current run-level.
 			elsif($lsb{'default-start'} =~ /$runlevel/) {
 			    # If a pidfile has been found, try to look for the daemon and ignore
@@ -760,7 +760,7 @@ if(defined($opt_l)) {
 		if(!$found && $#nopids > -1) {
 		    foreach my $rc (@nopids) {
 			if($is_systemd && exists($restart{"$rc.service"})) {
-			    print STDERR "$LOGPREF #$pid rc.d script $rc seems to be superseeded by $rc.service\n" if($nrconf{verbosity} > 1);
+			    print STDERR "$LOGPREF #$pid rc.d script $rc seems to be superseded by $rc.service\n" if($nrconf{verbosity} > 1);
 			}
 			else {
 			    $restart{$rc}++;

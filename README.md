@@ -40,7 +40,7 @@ The *service* command is used to run the traditional System V init script.
 Frontends
 ---------
 
-*needrestart* uses a modular aproach based on perl packages providing
+*needrestart* uses a modular approach based on perl packages providing
 the user interface. The following frontends are shipped:
 
 * *NeedRestart::UI::Debconf* using *debconf*
