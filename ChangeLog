@@ -7,8 +7,14 @@ needrestart 3.6
   * Changes:
     - [Cont] Improve LXD container support.
       (github pull request #188 by James TD Smith @ahktenzero)
+    - [Cont] Update cgroup regex for LXC 4.0.
+      (github pull request #215 by James TD Smith @ahktenzero)
     - [Core] Support systemd manager restart on Ubuntu 20.04+.
       (github pull request #195 by Lars Kollstedt @LarsKollstedt)
+    - [Core] Do not restart bluetooth.service by default.
+      (github pull request #209 by Erik Tews @eriktews)
+    - [Core] Do not restart elogind by default.
+      (github issue #205 by @HumanG33k)
 
   * Fixes:
     - [Core] Fix comment for default value of `skip_mapfiles`.
@@ -20,6 +26,8 @@ needrestart 3.6
       (github pull request #193 by Stefan Weil @stweil)
     - [Core] Fix verbose/verbosity confusion in needrestart.conf.
       (github pull request #197 by Jan-Philipp Litza @jplitza)
+    - [Core] Ignore memfd files like used by nvidia's binary drivers.
+      (github pull request #200 by Jan Visser @starquake)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
