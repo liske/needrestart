@@ -28,30 +28,30 @@ if [ "$NR_NOTIFYD_DISABLE_NOTIFY_SEND" = '1' ]; then
 fi
 
 case "$NR_SESSION" in
-    session*)
-	DBUS_SESSION_BUS_ADDRESS=$(sed -z -n s/^DBUS_SESSION_BUS_ADDRESS=//p "/proc/$NR_SESSPPID/environ")
-	if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
-		unset DBUS_SESSION_BUS_ADDRESS
-	fi
+  session*)
+    DBUS_SESSION_BUS_ADDRESS=$(sed -z -n s/^DBUS_SESSION_BUS_ADDRESS=//p "/proc/$NR_SESSPPID/environ")
+    if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
+        unset DBUS_SESSION_BUS_ADDRESS
+    fi
 
-	export DISPLAY=$(sed -z -n s/^DISPLAY=//p "/proc/$NR_SESSPPID/environ")
-	export XAUTHORITY=$(sed -z -n s/^XAUTHORITY=//p "/proc/$NR_SESSPPID/environ")
+    export DISPLAY=$(sed -z -n s/^DISPLAY=//p "/proc/$NR_SESSPPID/environ")
+    export XAUTHORITY=$(sed -z -n s/^XAUTHORITY=//p "/proc/$NR_SESSPPID/environ")
 
-	if [ -z "$DISPLAY" ]; then
- 	    echo "[$0] could not find DISPLAY for $NR_USERNAME on $NR_SESSION" 1>&2
-	    exit 1
-	fi
+    if [ -z "$DISPLAY" ]; then
+        echo "[$0] could not find DISPLAY for $NR_USERNAME on $NR_SESSION" 1>&2
+        exit 1
+    fi
 
- 	echo "[$0] notify user $NR_USERNAME on $DISPLAY" 1>&2
+    echo "[$0] notify user $NR_USERNAME on $DISPLAY" 1>&2
 
-	MSGTITLE=$(gettext 'Relogin or restarts required!')
-	MSGBODY=$(gettext 'Your session is running obsolete binaries or libraries as listed below.
+    MSGTITLE=$(gettext 'Relogin or restarts required!')
+    MSGBODY=$(gettext 'Your session is running obsolete binaries or libraries as listed below.
 <i><b>Please consider a relogin or restart of the affected processes!</b></i>')'\n'$(cat)
 
-	su -p -s /bin/sh -c "$NSEND -a needrestart -u critical -i dialog-warning \"$MSGTITLE\" \"$MSGBODY\"" "$NR_USERNAME"
-	;;
-    *)
- 	echo "[$0] skip session '$NR_SESSION'" 1>&2
-	exit 1;
-	;;
+    su -p -s /bin/sh -c "$NSEND -a needrestart -u critical -i dialog-warning \"$MSGTITLE\" \"$MSGBODY\"" "$NR_USERNAME"
+    ;;
+  *)
+    echo "[$0] skip session '$NR_SESSION'" 1>&2
+    exit 1;
+    ;;
 esac

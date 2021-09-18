@@ -198,14 +198,14 @@ sub files {
     elsif(exists($ENV{PYTHONPATH})) {
 	delete($ENV{PYTHONPATH});
     }
-    
+
     # get include path
     my ($pyread, $pywrite) = nr_fork_pipe2($self->{debug}, $ptable->{exec}, '-');
     print $pywrite "import sys\nprint(sys.path)\n";
     close($pywrite);
     my ($path) = <$pyread>;
     close($pyread);
-    
+
     # look for module source files
     my @path;
     if(defined($path)) {
@@ -217,7 +217,7 @@ sub files {
     else {
 	print STDERR "$LOGPREF #$pid: failed to retrieve include path\n" if($self->{debug});
     }
-    
+
     my %files;
     _scan($self->{debug}, $pid, $src, \%files, \@path);
 

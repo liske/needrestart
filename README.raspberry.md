@@ -1,7 +1,7 @@
 needrestart - Raspberry Pi
 ==========================
 
-Raspbian and other linux distris are installing multiple kernel images in
+Raspbian and other linux distros are installing multiple kernel images in
 parallel:
 
 - `kernel.img`
