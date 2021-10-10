@@ -15,6 +15,8 @@ needrestart 3.6
       (github pull request #209 by Erik Tews @eriktews)
     - [Core] Do not restart elogind by default.
       (github issue #205 by @HumanG33k)
+    - [Kernel] Replace strings(1) by GNU grep to drop binutils dependency.
+      (Debian Bug#986507 by Trent W. Buck <trentbuck@gmail.com>)
 
   * Fixes:
     - [Core] Fix comment for default value of `skip_mapfiles`.

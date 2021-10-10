@@ -20,7 +20,7 @@
 get_version()
 {
     # search and output version string pattern
-    strings "$1" | grep -m 1 '^Linux version ' && exit 0
+    grep -aom 1 'Linux version [0123456789].*' "$1" && exit 0
 }
 
 try_decompress()
