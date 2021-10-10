@@ -28,6 +28,8 @@ needrestart 3.6
       (github pull request #197 by Jan-Philipp Litza @jplitza)
     - [Core] Ignore memfd files like used by nvidia's binary drivers.
       (github pull request #200 by Jan Visser @starquake)
+    - [Core] Ignore all memfd mappings.
+      (Debian Bug#972685 by Michail Bachmann <m.bachmann@cms.hu-berlin.de>)
     - [Core] Ignore Java Native Access mappings.
       (github issue #142 by @nirgal)
       (github issue #185 by Ivan Zaera @izaera)
