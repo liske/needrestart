@@ -85,6 +85,9 @@ sub _scan_ucodes {
 
             if ( $pkg_cpuid > 0 ) {
                 $_ucodes->{cpuid}->{$pkg_cpuid} = $pkg_prid;
+		printf STDERR
+		    "$LOGPREF cpuid 0x%08x: found processor id 0x%08x\n", $pkg_cpuid, $pkg_prid
+		    if ($debug);
             }
         }
 
@@ -99,6 +102,9 @@ sub _scan_ucodes {
             ) = unpack( 'VVvCCVVVv', $buf );
 
             $_ucodes->{prid}->{$pat_prid} = $pat_pid;
+	    printf STDERR
+		"$LOGPREF processor id 0x%08x: available ucode 0x%08x\n", $pat_prid, $pat_pid
+		if ($debug);
         }
     }
 }
