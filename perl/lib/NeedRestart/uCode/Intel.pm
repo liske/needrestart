@@ -83,22 +83,7 @@ sub nr_ucode_check_real {
     }
     $vars{AVAIL} = $_avail if ( defined($_avail) );
 
-    unless ( exists( $vars{CURRENT} ) && exists( $vars{AVAIL} ) ) {
-        print STDERR
-          "$LOGPREF #$info->{processor} did not get current microcode version\n"
-          if ( $debug && !exists( $vars{CURRENT} ) );
-        print STDERR
-"$LOGPREF #$info->{processor} did not get available microcode version\n"
-          if ( $debug && !exists( $vars{AVAIL} ) );
-
-        return ( NRM_UNKNOWN, %vars );
-    }
-
-    if ( hex( $vars{CURRENT} ) >= hex( $vars{AVAIL} ) ) {
-        return ( NRM_CURRENT, %vars );
-    }
-
-    return ( NRM_OBSOLETE, %vars );
+    return ( $info->{processor}, %vars );
 }
 
 1;
