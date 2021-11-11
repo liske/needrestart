@@ -186,23 +186,26 @@ sub nr_ucode_check_real {
         my $prid = $_ucodes->{cpuid}->{$cpuid};
         if ( exists( $_ucodes->{prid}->{$prid} ) ) {
             $vars{AVAIL} = sprintf( "0x%08x", $_ucodes->{prid}->{$prid} ),
-
-              print STDERR "$LOGPREF #$info->{processor} found ucode $vars{AVAIL}\n" if ($debug);
-            if ( $_ucodes->{prid}->{$prid} > $ucode ) {
-                return ( NRM_OBSOLETE, %vars );
-            }
-        }
-        else {
-            print STDERR "$LOGPREF #$info->{processor} no ucode updates available\n" if ($debug);
-        }
-        return ( NRM_CURRENT, %vars );
-    }
-    else {
-        print STDERR "$LOGPREF #$info->{processor} no ucode updates available\n" if ($debug);
-        return ( NRM_CURRENT, %vars );
+		print STDERR "$LOGPREF #$info->{processor} found ucode $vars{AVAIL}\n" if ($debug);
+	}
     }
 
-    return ( NRM_UNKNOWN, %vars );
+    unless ( exists( $vars{CURRENT} ) && exists( $vars{AVAIL} ) ) {
+        print STDERR
+          "$LOGPREF #$info->{processor} did not get current microcode version\n"
+          if ( $debug && !exists( $vars{CURRENT} ) );
+        print STDERR
+"$LOGPREF #$info->{processor} did not get available microcode version\n"
+          if ( $debug && !exists( $vars{AVAIL} ) );
+
+        return ( NRM_UNKNOWN, %vars );
+    }
+
+    if ( hex( $vars{CURRENT} ) >= hex( $vars{AVAIL} ) ) {
+        return ( NRM_CURRENT, %vars );
+    }
+
+    return ( NRM_OBSOLETE, %vars );
 }
 
 1;
