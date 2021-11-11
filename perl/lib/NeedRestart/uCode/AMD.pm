@@ -170,7 +170,7 @@ sub nr_ucode_check_real {
     printf( STDERR "$LOGPREF #$info->{processor} running ucode 0x%08x\n", $ucode ) if ($debug);
 
     unless ( defined($_ucodes) ) {
-        _scan_ucodes();
+        _scan_ucodes( $debug );
     }
 
     my %vars = ( CURRENT => sprintf( "0x%08x", $ucode ), );
