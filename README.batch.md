@@ -12,6 +12,8 @@ NEEDRESTART-KSTA: 1
 NEEDRESTART-SVC: systemd-journald.service
 NEEDRESTART-SVC: systemd-machined.service
 NEEDRESTART-CONT: LXC web1
+NEEDRESTART-SESS: metabase @ user manager service
+NEEDRESTART-SESS: root @ session #28017
 ```
 
 Batch mode can be used to use the results of needrestart in other scripts.
