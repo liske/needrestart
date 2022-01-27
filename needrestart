@@ -1270,6 +1270,27 @@ if(scalar @easy_hints) {
     $ui->announce_ehint(EHINT => ($h ? join(' ', $h, __ 'and', '') : '') . $t);
 }
 
+my @sessions_list;
+if(scalar %sessions) {
+    # build a sorted list of user @ session strings
+    #
+    # used in the nagios and batch outputs below
+    @sessions_list = map {
+        my $uid = $_;
+        my $user = uid2name($uid);
+        my @ret;
+
+        foreach my $sess (sort keys %{ $sessions{$uid} }) {
+            push(@ret, "$user \@ $sess");
+        }
+
+        @ret;
+    }
+    sort {
+        ncmp(uid2name($a), uid2name($b));
+    } keys %sessions
+}
+
 # nagios plugin output
 if($opt_p) {
     my %states = (
@@ -1306,22 +1327,14 @@ if($opt_p) {
     }
 
     if(scalar %sessions) {
-	print "Sessions:", join("\n- ", '',
-				map {
-				    my $uid = $_;
-				    my $user = uid2name($uid);
-				    my @ret;
-
-				    foreach my $sess (sort keys %{ $sessions{$uid} }) {
-					push(@ret, "$user \@ $sess");
-				    }
-
-				    @ret;
-				}
-				sort {
-				    ncmp(uid2name($a), uid2name($b));
-				} keys %sessions), "\n";
+	print "Sessions:", join("\n- ", '', @sessions_list), "\n";
     }
 
     exit $ret;
+}
+
+if ($opt_b and scalar %sessions) {
+    for my $sess (@sessions_list) {
+    	print "NEEDRESTART-SESS: $sess\n";
+    }
 }
