@@ -155,11 +155,12 @@ sub needrestart_interp_init($) {
     }
 }
 
-sub needrestart_interp_check($$$$) {
+sub needrestart_interp_check($$$$$) {
     my $debug = shift;
     my $pid = shift;
     my $bin = shift;
     my $blacklist = shift;
+    my $tolerance = shift;
 
     needrestart_interp_init($debug) unless(%Interps);
 
@@ -176,7 +177,7 @@ sub needrestart_interp_check($$$$) {
 		delete($files{$path});
 	    }
 
-	    if(grep {!defined($_) || $_ > $ps->start} values %files) {
+	    if(grep {!defined($_) || $_ > $ps->start + $tolerance} values %files) {
 		if($debug) {
 		    print STDERR "$LOGPREF #$pid uses obsolete script file(s):";
 		    print STDERR join("\n$LOGPREF #$pid  ", '', map {(!defined($files{$_}) || $files{$_} > $ps->start ? $_ : ())} keys %files);

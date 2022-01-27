@@ -92,6 +92,7 @@ Usage:
     -b		enable batch mode
     -p          enable nagios plugin mode
     -f <fe>	override debconf frontend (DEBIAN_FRONTEND, debconf(7))
+    -t <seconds> tolerate interpreter process start times within this value
     -u <ui>     use preferred UI package (-u ? shows available packages)
 
   By using the following options only the specified checks are performed:
@@ -157,6 +158,7 @@ our %nrconf = (
     containers => 1,
     },
     has_pam_systemd => 1,
+    tolerance => 2,
 );
 
 # backup ARGV (required for Debconf)
@@ -173,9 +175,10 @@ our $opt_k;
 our $opt_l;
 our $opt_p;
 our $opt_q;
+our $opt_t;
 our $opt_u;
 our $opt_w;
-unless(getopts('c:vr:nm:bf:klpqu:w')) {
+unless(getopts('c:vr:nm:bf:klpqt:u:w')) {
     HELP_MESSAGE;
     exit 1;
 }
@@ -224,6 +227,7 @@ $opt_r = 'l' if(!$is_tty && $opt_r eq 'i');
 $opt_m = $nrconf{ui_mode} unless(defined($opt_m));
 die "ERROR: Unknown UI mode '$opt_m'!\n" unless($opt_m =~ /^(e|a)$/);
 $opt_r = 'l' if($opt_m eq 'e');
+$opt_t = $nrconf{tolerance} unless(defined($opt_t));
 
 $nrconf{defno}++ if($opt_n);
 $opt_b++ if($opt_p);
@@ -564,11 +568,11 @@ if(defined($opt_l)) {
 	}
 
 	unless($restart || !$nrconf{interpscan}) {
-	    $restart++ if(needrestart_interp_check($nrconf{verbosity} > 1, $pid, $exe, $nrconf{blacklist_interp}));
+	    $restart++ if(needrestart_interp_check($nrconf{verbosity} > 1, $pid, $exe, $nrconf{blacklist_interp}, $opt_t));
 	}
 
 	# handle containers (LXC, docker, etc.)
-	next if($restart && needrestart_cont_check($nrconf{verbosity} > 1, $pid, $exe));
+	next if($restart && needrestart_cont_check($nrconf{verbosity} > 1, $pid, $exe, $opt_t));
 
 	# restart needed?
 	next unless($restart);

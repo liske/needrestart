@@ -52,6 +52,9 @@ nagios plugin mode: makes output and exit codes nagios compatible
 \fB\-f\fR <fe>
 override debconf(7) frontend, sets the DEBIAN_FRONTEND environment variable to <fe>
 .TP
+\fB\-t\fR <seconds>
+When checking running interpreter processes, allow process start times that are close to timestamps of files the interpreter uses, within this tolerance (default 2). The default value of 2 seconds is best for checks of Linux hosts, on which system limitations prevent more accurate measurements of process start times. Values higher than 0 should prevent false positives yet may in extreme cases cause false negatives; values higher than 2 should not be necessary.
+.TP
 \fB\-u\fR <ui>
 use preferred UI package (-u ? shows available packages)
 .PP
