@@ -1310,11 +1310,11 @@ if($opt_p) {
 	       ($opt_l ? "Containers: $nagios{cstr}" : ()),
 	       ($opt_l ? "Sessions: $nagios{ustr}" : ()),
 	), '|', join(' ',
-	       ($opt_k ? "Kernel=$nagios{kperf};0;;0;2" : ()),
-	       ($opt_w ? "Microcode=$nagios{mperf};0;;0;1" : ()),
-	       ($opt_l ? "Services=$nagios{sperf};;0;0" : ()),
-	       ($opt_l ? "Containers=$nagios{cperf};;0;0" : ()),
-	       ($opt_l ? "Sessions=$nagios{uperf};0;;0" : ()),
+	       ( ($opt_k && $nagios{kret} != 3) ? "Kernel=$nagios{kperf};0;;0;2" : ()),
+	       ( ($opt_w && $nagios{mret} != 3) ? "Microcode=$nagios{mperf};0;;0;1" : ()),
+	       ( ($opt_l && $nagios{sret} != 3) ? "Services=$nagios{sperf};;0;0" : ()),
+	       ( ($opt_l && $nagios{cret} != 3) ? "Containers=$nagios{cperf};;0;0" : ()),
+	       ( ($opt_l && $nagios{uret} != 3) ? "Sessions=$nagios{uperf};0;;0" : ()),
 	), "\n";
 
     if(scalar %restart) {
