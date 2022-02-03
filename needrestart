@@ -781,7 +781,7 @@ if(defined($opt_l)) {
 		}
 
 		# No perfect hit - call any rc scripts instead.
-                print STDERR "$LOGPREF #$pid running $hook no perfect hit found $found pids $#nopids\n" if($nrconf{verbosity} > 1);
+		print STDERR "$LOGPREF #$pid running $hook no perfect hit found $found pids $#nopids\n" if($nrconf{verbosity} > 1);
 		if(!$found && $#nopids > -1) {
 		    foreach my $rc (@nopids) {
 			if($is_systemd && exists($restart{"$rc.service"})) {
