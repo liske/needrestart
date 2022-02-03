@@ -1290,7 +1290,7 @@ if(defined($opt_l) && !$uid) {
 	## GUESTS
 	$ui->vspace();
 	if (! @guests) {
-		$ui->notice(__ 'No VM guests are running outdated binaries.') unless($opt_b || $opt_m eq 'e');
+		$ui->notice(__ 'No VM guests are running outdated hypervisor (qemu) binaries on this host.') unless($opt_b || $opt_m eq 'e');
 	}
 	else {
 		if($opt_m eq 'e') {
@@ -1298,7 +1298,7 @@ if(defined($opt_l) && !$uid) {
 		}
 		else {
 			unless($opt_p || $opt_b) {
-				$ui->notice(__ 'VM guests running outdated binaries:');
+				$ui->notice(__ 'VM guests are running outdated hypervisor (qemu) binaries on this host:');
 				foreach ( @guests ) {
 				$ui->notice(__ " $_");
 				}
