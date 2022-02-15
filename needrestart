@@ -1300,7 +1300,7 @@ if(defined($opt_l) && !$uid) {
 			unless($opt_p || $opt_b) {
 				$ui->notice(__ 'VM guests are running outdated hypervisor (qemu) binaries on this host:');
 				foreach ( @guests ) {
-				$ui->notice(__ " $_");
+				$ui->notice(" $_");
 				}
 			}
 		}
