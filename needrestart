@@ -670,7 +670,7 @@ if(defined($opt_l)) {
 								my @namearg = split(/=/, $_, 2);
 								if ($#{namearg} == 1) {
 									print STDERR "$LOGPREF #$pid detected as VM guest '$namearg[1]' in group '$value'\n" if($nrconf{verbosity} > 1);
-									push(@guests, "VM '$namearg[1]' with pid $pid" );
+									push(@guests, __x("'{name}' with pid {pid}", name => $namearg[1], pid=>$pid) );
 								}
 								next PIDLOOP;
 							}
@@ -678,7 +678,7 @@ if(defined($opt_l)) {
 					}
 				}
 				print STDERR "$LOGPREF #$pid detected as VM guest with unknown name in group '$value'\n" if($nrconf{verbosity} > 1);
-				push(@guests, "'Unkown VM' with pid $pid" );
+				push(@guests, __x("'Unkown VM' with pid {pid}", pid=>$pid) );
 				next;
 			    }
 			    elsif($value =~ m@/([^/]+\.service)$@) {
