@@ -68,7 +68,7 @@ sub check {
     }
 
     # look for machined cgroups
-    return 0 unless($cg =~ /^\d+:[^:]+:\/machine.slice\/machine-(.+)\.scope$/m);
+    return 0 unless($cg =~ /^\d+:[^:]*:\/machine.slice\/machine-(.+)\.scope$/m);
 
     my $name = $1;
     unless($norestart) {
