@@ -11,6 +11,6 @@
 # exec iucode_tool -l $filter --ignore-broken -tb /lib/firmware/intel-ucode -ta /usr/share/misc/intel-microcode* 2>&1
 # exit $?
 
-# Example (CentOS):
-# lsinitrd -f kernel/x86/microcode/GenuineIntel.bin $(/boot/initramfs-*.img|sort -n|tail -n 1) | iucode_tool -t b -l -
+# Example (RHEL and derivatives):
+# lsinitrd -f kernel/x86/microcode/GenuineIntel.bin | iucode_tool -t b -l -
 # exit $?
