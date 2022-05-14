@@ -85,6 +85,9 @@ sub _scan_ucodes {
 
             if ( $pkg_cpuid > 0 ) {
                 $_ucodes->{cpuid}->{$pkg_cpuid} = $pkg_prid;
+		printf STDERR
+		    "$LOGPREF cpuid 0x%08x: found processor id 0x%08x\n", $pkg_cpuid, $pkg_prid
+		    if ($debug);
             }
         }
 
@@ -99,6 +102,9 @@ sub _scan_ucodes {
             ) = unpack( 'VVvCCVVVv', $buf );
 
             $_ucodes->{prid}->{$pat_prid} = $pat_pid;
+	    printf STDERR
+		"$LOGPREF processor id 0x%08x: available ucode 0x%08x\n", $pat_prid, $pat_pid
+		if ($debug);
         }
     }
 }
@@ -170,7 +176,7 @@ sub nr_ucode_check_real {
     printf( STDERR "$LOGPREF #$info->{processor} running ucode 0x%08x\n", $ucode ) if ($debug);
 
     unless ( defined($_ucodes) ) {
-        _scan_ucodes();
+        _scan_ucodes( $debug );
     }
 
     my %vars = ( CURRENT => sprintf( "0x%08x", $ucode ), );
@@ -180,23 +186,11 @@ sub nr_ucode_check_real {
         my $prid = $_ucodes->{cpuid}->{$cpuid};
         if ( exists( $_ucodes->{prid}->{$prid} ) ) {
             $vars{AVAIL} = sprintf( "0x%08x", $_ucodes->{prid}->{$prid} ),
-
-              print STDERR "$LOGPREF #$info->{processor} found ucode $vars{AVAIL}\n" if ($debug);
-            if ( $_ucodes->{prid}->{$prid} > $ucode ) {
-                return ( NRM_OBSOLETE, %vars );
-            }
-        }
-        else {
-            print STDERR "$LOGPREF #$info->{processor} no ucode updates available\n" if ($debug);
-        }
-        return ( NRM_CURRENT, %vars );
-    }
-    else {
-        print STDERR "$LOGPREF #$info->{processor} no ucode updates available\n" if ($debug);
-        return ( NRM_CURRENT, %vars );
+		print STDERR "$LOGPREF #$info->{processor} found ucode $vars{AVAIL}\n" if ($debug);
+	}
     }
 
-    return ( NRM_UNKNOWN, %vars );
+    return ( $info->{processor}, %vars );
 }
 
 1;

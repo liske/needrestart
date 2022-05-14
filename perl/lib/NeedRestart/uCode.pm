@@ -49,6 +49,27 @@ our @EXPORT = qw(
 
 my $LOGPREF = '[ucode]';
 
+sub compare_ucode_versions {
+    my ($debug, $processor, %vars) = @_;
+
+    unless ( exists( $vars{CURRENT} ) && exists( $vars{AVAIL} ) ) {
+        print STDERR
+	    "$LOGPREF #$processor did not get current microcode version\n"
+	    if ( $debug && !exists( $vars{CURRENT} ) );
+        print STDERR
+	    "$LOGPREF #$processor did not get available microcode version\n"
+	    if ( $debug && !exists( $vars{AVAIL} ) );
+
+        return NRM_UNKNOWN;
+    }
+
+    if ( hex( $vars{CURRENT} ) >= hex( $vars{AVAIL} ) ) {
+        return NRM_CURRENT;
+    }
+
+    return NRM_OBSOLETE;
+}
+
 sub nr_ucode_check {
     my $debug = shift;
     my $ui    = shift;
@@ -118,13 +139,13 @@ sub nr_ucode_check {
 
         # call ucode modules
         foreach my $pkg (@PKGS) {
-            my ( $nstate, @nvars ) = (NRM_UNKNOWN);
-            eval
-"(\$nstate, \@nvars) = ${pkg}::nr_ucode_check_real(\$debug, \$ui, \$processors{\$pid});";
+            my ( $processor, @nvars) = ('?');
+            eval "(\$processor, \@nvars) = ${pkg}::nr_ucode_check_real(\$debug, \$ui, \$processors{\$pid});";
             print STDERR $@
               if ( $@ && $debug );
             $ui->progress_step;
 
+	    my $nstate = compare_ucode_versions( $debug, $processor, @nvars );
             if ( $nstate > $state ) {
                 ( $state, @vars ) = ( $nstate, @nvars );
             }
