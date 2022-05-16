@@ -3,18 +3,29 @@ needrestart 3.6
   * Features:
     - [Core] Add support for runit.
       (Debian Bug#972685 by Lorenzo Puliti <plorenzo@disroot.org>)
+    - [VM] Add support to detect outdated VM processes (i.e. qemu).
+      (github pull request #216 by )Christian Ehrhardt @cpaelzer)
 
   * Changes:
     - [Cont] Improve LXD container support.
       (github pull request #188 by James TD Smith @ahktenzero)
     - [Cont] Update cgroup regex for LXC 4.0.
       (github pull request #215 by James TD Smith @ahktenzero)
+    - [Cont] Support cgroup v2 for docker.
+      (github pull request #234 by Markus Frosch @lazyfrosch)
+    - [Cont] Support cgroup v2 for LXC/LXD.
+      (github pull request #238 by Trent Lloyd @lathiat)
+    - [Core] Support cgroup v2 for services and user sessions.
     - [Core] Support systemd manager restart on Ubuntu 20.04+.
       (github pull request #195 by Lars Kollstedt @LarsKollstedt)
     - [Core] Do not restart bluetooth.service by default.
       (github pull request #209 by Erik Tews @eriktews)
     - [Core] Do not restart elogind by default.
       (github issue #205 by @HumanG33k)
+    - [Core] Output user sessions in batch mode.
+      (github pull request #232 by @anarcat)
+    - [Interp] Add tolerance when checking script file ctimes to avoid false positives.
+      (github pull request #233 by Corey Hickey @bugfood)
     - [Kernel] Replace strings(1) by GNU grep to drop binutils dependency.
       (Debian Bug#986507 by Trent W. Buck <trentbuck@gmail.com>)
 
@@ -35,6 +46,20 @@ needrestart 3.6
     - [Core] Ignore Java Native Access mappings.
       (github issue #142 by @nirgal)
       (github issue #185 by Ivan Zaera @izaera)
+    - [Core] nagios: Do not print perfdata data in unkown state.
+      (github pull request #222 by Lorenz @RincewindsHat)
+    - [uCode] Fix 'uninitialized value' on AMD.
+      (github pull request #226 by Christian Garbs @mmitch)
+
+  * Misc:
+    - Minor cleanups (whitespaces, shellcheck, ...).
+      (github pull request #217 by @a1346054)
+    - Update README.batch.md.
+      (github pull request #219 by Stavros Ntentos @stdedos)
+    - Add icinga2 example config.
+      (github pull request #223 by Lorenz @RincewindsHat)
+    - [uCode] Fix lsinitrd example.
+      (github pull request #240 by Corey Hickey @bugfood)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  
 
