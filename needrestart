@@ -648,7 +648,7 @@ if(defined($opt_l)) {
 		    my ($rc) = map {
 			chomp;
 			my ($id, $type, $value) = split(/:/);
-			if($type ne q(name=systemd)) {
+			if($id != 0 && $type ne q(name=systemd)) {
 			    ();
 			}
 			else {
