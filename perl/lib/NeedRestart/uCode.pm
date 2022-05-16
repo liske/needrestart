@@ -139,13 +139,16 @@ sub nr_ucode_check {
 
         # call ucode modules
         foreach my $pkg (@PKGS) {
-            my ( $processor, @nvars) = ('?');
-            eval "(\$processor, \@nvars) = ${pkg}::nr_ucode_check_real(\$debug, \$ui, \$processors{\$pid});";
-            print STDERR $@
-              if ( $@ && $debug );
+            my @nvars;
+            eval "\@nvars = ${pkg}::nr_ucode_check_real(\$debug, \$ui, \$processors{\$pid});";
+            if ( $@ && $debug ) {
+                print STDERR $@;
+                $ui->progress_step;
+                next;
+            }
             $ui->progress_step;
 
-	    my $nstate = compare_ucode_versions( $debug, $processor, @nvars );
+            my $nstate = compare_ucode_versions( $debug, $processors{processor}, @nvars );
             if ( $nstate > $state ) {
                 ( $state, @vars ) = ( $nstate, @nvars );
             }

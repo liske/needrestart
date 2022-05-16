@@ -64,7 +64,7 @@ sub nr_ucode_check_real {
 "$LOGPREF #$info->{processor} current microcode revision not found in /proc/cpuinfo: $!\n"
           if ($debug);
 
-        return ( NRM_UNKNOWN, %vars );
+        return %vars;
     }
 
     # find and cache microcode updates
@@ -83,7 +83,7 @@ sub nr_ucode_check_real {
     }
     $vars{AVAIL} = $_avail if ( defined($_avail) );
 
-    return ( $info->{processor}, %vars );
+    return %vars;
 }
 
 1;

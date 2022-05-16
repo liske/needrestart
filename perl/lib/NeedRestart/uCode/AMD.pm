@@ -190,7 +190,7 @@ sub nr_ucode_check_real {
 	}
     }
 
-    return ( $info->{processor}, %vars );
+    return %vars;
 }
 
 1;
