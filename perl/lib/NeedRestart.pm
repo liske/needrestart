@@ -4,7 +4,7 @@
 #   Thomas Liske <thomas@fiasko-nw.net>
 #
 # Copyright Holder:
-#   2013 - 2018 (C) Thomas Liske [http://fiasko-nw.net/~thomas/]
+#   2013 - 2022 (C) Thomas Liske [http://fiasko-nw.net/~thomas/]
 #
 # License:
 #   This program is free software; you can redistribute it and/or modify
@@ -80,7 +80,7 @@ our %EXPORT_TAGS = (
     )],
 );
 
-our $VERSION = '3.4';
+our $VERSION = '3.5';
 my $LOGPREF = '[Core]';
 
 my %UIs;
@@ -155,11 +155,12 @@ sub needrestart_interp_init($) {
     }
 }
 
-sub needrestart_interp_check($$$$) {
+sub needrestart_interp_check($$$$$) {
     my $debug = shift;
     my $pid = shift;
     my $bin = shift;
     my $blacklist = shift;
+    my $tolerance = shift;
 
     needrestart_interp_init($debug) unless(%Interps);
 
@@ -176,7 +177,7 @@ sub needrestart_interp_check($$$$) {
 		delete($files{$path});
 	    }
 
-	    if(grep {!defined($_) || $_ > $ps->start} values %files) {
+	    if(grep {!defined($_) || $_ > $ps->start + $tolerance} values %files) {
 		if($debug) {
 		    print STDERR "$LOGPREF #$pid uses obsolete script file(s):";
 		    print STDERR join("\n$LOGPREF #$pid  ", '', map {(!defined($files{$_}) || $files{$_} > $ps->start ? $_ : ())} keys %files);
@@ -258,7 +259,7 @@ sub needrestart_cont_get($) {
 	$n =~ s/^NeedRestart::CONT:://;
 
 	my %c = $cont->get;
-	
+
 	map {
 	    ("$n $_" => $c{$_});
 	} sort keys %c;

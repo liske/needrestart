@@ -4,7 +4,7 @@
 #   Thomas Liske <thomas@fiasko-nw.net>
 #
 # Copyright Holder:
-#   2013 - 2018 (C) Thomas Liske [http://fiasko-nw.net/~thomas/]
+#   2013 - 2022 (C) Thomas Liske [http://fiasko-nw.net/~thomas/]
 #
 # License:
 #   This program is free software; you can redistribute it and/or modify
@@ -45,7 +45,11 @@ our @EXPORT = qw(
     nr_fork_pipe2
 );
 
-my %ptable = map {$_->pid => $_} @{ new Proc::ProcessTable(enable_ttys => 1)->table };
+my %ptable;
+{
+    local $SIG{__WARN__} = sub {};
+    %ptable = map {$_->pid => $_} @{ new Proc::ProcessTable(enable_ttys => 1)->table };
+}
 
 sub nr_ptable() {
     return \%ptable;

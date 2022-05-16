@@ -4,7 +4,7 @@
 #   Thomas Liske <thomas@fiasko-nw.net>
 #
 # Copyright Holder:
-#   2013 - 2018 (C) Thomas Liske [http://fiasko-nw.net/~thomas/]
+#   2013 - 2022 (C) Thomas Liske [http://fiasko-nw.net/~thomas/]
 #
 # License:
 #   This program is free software; you can redistribute it and/or modify
@@ -68,7 +68,7 @@ sub check {
     }
 
     # look for machined cgroups
-    return 0 unless($cg =~ /^\d+:[^:]+:\/machine.slice\/machine-(.+)\.scope$/m);
+    return 0 unless($cg =~ /^\d+:[^:]*:\/machine.slice\/machine-(.+)\.scope$/m);
 
     my $name = $1;
     unless($norestart) {

@@ -113,7 +113,7 @@ msgid ""
 "not the expected microcode revision ${AVAIL}."
 msgstr ""
 "Die laufende Prozessor Mikrocode-Revision ist ${CURRENT}, es wird jedoch die "
-"Revision ${AVAIL} erwaret."
+"Revision ${AVAIL} erwartet."
 
 #. Type: note
 #. Description

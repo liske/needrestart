@@ -4,7 +4,7 @@
 #   Thomas Liske <thomas@fiasko-nw.net>
 #
 # Copyright Holder:
-#   2013 - 2018 (C) Thomas Liske [http://fiasko-nw.net/~thomas/]
+#   2013 - 2022 (C) Thomas Liske [http://fiasko-nw.net/~thomas/]
 #
 # License:
 #   This program is free software; you can redistribute it and/or modify
@@ -52,8 +52,9 @@ our @EXPORT = qw(
 
 my $LOGPREF = '[Kernel]';
 
-sub nr_kernel_check($$) {
+sub nr_kernel_check {
     my $debug = shift;
+    my $filter = shift;
     my $ui = shift;
     my %vars;
 
@@ -65,7 +66,7 @@ sub nr_kernel_check($$) {
     # autoload Kernel modules
     foreach my $module (findsubmod NeedRestart::Kernel) {
 	my @ret;
-	unless(eval "use $module; \@ret = ${module}::nr_kernel_check_real(\$debug, \$ui);") {
+	unless(eval "use $module; \@ret = ${module}::nr_kernel_check_real(\$debug, \$filter, \$ui);") {
 	    warn "Failed to load $module: $@" if($@ && $debug);
 	}
 	else {
@@ -142,7 +143,7 @@ sub nr_kernel_vcmp($$) {
 # compare kernel version strings according to RPM version sorting
 # adopted from RPM::VersionSort
 sub nr_kernel_vcmp_rpm {
-    # split version strings by non-alphanumeric digits 
+    # split version strings by non-alphanumeric digits
     my @a = split(/[^a-z\d]+/i, shift);
     my @b = split(/[^a-z\d]+/i, shift);
 

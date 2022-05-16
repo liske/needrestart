@@ -6,7 +6,7 @@
 #   Thomas Liske <thomas@fiasko-nw.net>
 #
 # Copyright Holder:
-#   2013 - 2018 (C) Thomas Liske [http://fiasko-nw.net/~thomas/]
+#   2013 - 2022 (C) Thomas Liske [http://fiasko-nw.net/~thomas/]
 #
 # License:
 #   This program is free software; you can redistribute it and/or modify
@@ -28,8 +28,8 @@ if [ "$NR_NOTIFYD_DISABLE_MAIL" = '1' ]; then
 fi
 
 # Skip system users
-NR_USERID=`id -u "$NR_USERNAME"`
-if [ "0$NR_USERID" -gt 0 -a "0$NR_USERID" -lt 1000 ]; then
+NR_USERID=$(id -u "$NR_USERNAME")
+if [ "0$NR_USERID" -gt 0 ] && [ "0$NR_USERID" -lt 1000 ]; then
     echo "[$0] do not notify system-user $NR_USERNAME via mail" 1>&2
     exit 1
 fi

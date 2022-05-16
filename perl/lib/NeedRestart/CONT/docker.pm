@@ -4,7 +4,7 @@
 #   Thomas Liske <thomas@fiasko-nw.net>
 #
 # Copyright Holder:
-#   2013 - 2018 (C) Thomas Liske [http://fiasko-nw.net/~thomas/]
+#   2013 - 2022 (C) Thomas Liske [http://fiasko-nw.net/~thomas/]
 #
 # License:
 #   This program is free software; you can redistribute it and/or modify
@@ -67,8 +67,9 @@ sub check {
     }
 
     # look for docker cgroups
-    return 0 unless($cg =~ /^\d+:[^:]+:\/system.slice\/docker-(.+)\.scope$/m ||
-                    $cg =~ /^\d+:[^:]+:\/docker\/([\da-f]+)$/m);
+    return 0 unless($cg =~ /^\d+:[^:]*:\/system.slice\/docker-(.+)\.scope$/m ||
+                    $cg =~ /^\d+:[^:]*:\/system.slice\/docker\.service$/m ||
+                    $cg =~ /^\d+:[^:]*:\/docker\/([\da-f]+)$/m);
 
     print STDERR "$LOGPREF #$pid is part of docker container '$1' and will be ignored\n" if($self->{debug});
 

@@ -4,7 +4,7 @@
 #   Thomas Liske <thomas@fiasko-nw.net>
 #
 # Copyright Holder:
-#   2013 - 2018 (C) Thomas Liske [http://fiasko-nw.net/~thomas/]
+#   2013 - 2022 (C) Thomas Liske [http://fiasko-nw.net/~thomas/]
 #
 # License:
 #   This program is free software; you can redistribute it and/or modify
@@ -35,8 +35,9 @@ use Locale::TextDomain 'needrestart';
 
 my $LOGPREF = '[Kernel/kFreeBSD]';
 
-sub nr_kernel_check_real($$) {
+sub nr_kernel_check_real {
     my $debug = shift;
+    my $filter = shift;
     my $ui = shift;
     my %vars;
 
@@ -45,7 +46,7 @@ sub nr_kernel_check_real($$) {
 
     die "$LOGPREF Not running on GNU/kFreeBSD!\n" unless($sysname eq 'GNU/kFreeBSD');
 
-    my @kfiles = reverse nsort </boot/kfreebsd-*>;
+    my @kfiles = grep {m/$filter/;} reverse nsort </boot/kfreebsd-*>;
     $ui->progress_prep(scalar @kfiles, __ 'Scanning kfreebsd images...');
 
     my %kernels;

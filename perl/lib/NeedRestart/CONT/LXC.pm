@@ -4,7 +4,7 @@
 #   Thomas Liske <thomas@fiasko-nw.net>
 #
 # Copyright Holder:
-#   2013 - 2018 (C) Thomas Liske [http://fiasko-nw.net/~thomas/]
+#   2013 - 2022 (C) Thomas Liske [http://fiasko-nw.net/~thomas/]
 #
 # License:
 #   This program is free software; you can redistribute it and/or modify
@@ -45,7 +45,16 @@ sub new {
     $self->{lxc} = {};
     $self->{lxd} = {};
 
-    $self->{has_lxd} = -x q(/usr/bin/lxc);
+    if (-d q(/snap/lxd)) {
+	$self->{has_lxd} = 1;
+	$self->{lxd_bin} = q(/snap/bin/lxc);
+	$self->{lxd_container_path} = q(/var/snap/lxd/common/lxd/containers);
+	print STDERR "$LOGPREF LXD installed via snap\n" if($self->{debug});
+    } else {
+	$self->{has_lxd} = -x q(/usr/bin/lxc);
+	$self->{lxd_bin} = q(/usr/bin/lxc);
+	$self->{lxd_container_path} = q(/var/lib/lxd/containers);
+    }
 
     return bless $self, $class;
 }
@@ -72,10 +81,11 @@ sub check {
     }
 
     # look for LXC cgroups
-    return unless($cg =~ /^\d+:[^:]+:\/lxc\/([^\/\n]+)($|\/)/m);
+    return unless($cg =~ /^\d+:[^:]*:\/lxc(?:.payload)?[.\/]([^\/\n]+)($|\/)/m);
 
     my $name = $1;
-    my $type = ($self->{has_lxd} && -d qq(/var/lib/lxd/containers/$name) ? 'LXD' : 'LXC');
+    my $type = ($self->{has_lxd} && -d qq($self->{lxd_container_path}/$name) ? 'LXD' : 'LXC');
+
     unless($norestart) {
 	print STDERR "$LOGPREF #$pid is part of $type container '$name' and should be restarted\n" if($self->{debug});
 
@@ -91,10 +101,20 @@ sub check {
 sub get {
     my $self = shift;
 
+    sub lxd_restart_with_project {
+	my ($bin, $container) = @_;
+	my @parts = split(/_/, $container);
+	if ($#parts == 1) {
+	    return [ $bin, 'restart', qq(--project=$parts[0]), $parts[1] ];
+	} else {
+	    [ $bin, 'restart', $container ]
+	}
+    }
+
     return (map {
 	($_ => [qw(lxc-stop --reboot --name), $_]);
     } keys %{ $self->{lxc} }), (map {
-	($_ => [qw(lxc restart), $_]);
+	($_ => lxd_restart_with_project($self->{lxd_bin}, $_));
     } keys %{ $self->{lxd} });
 }
 

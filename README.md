@@ -34,13 +34,13 @@ hooks support the following package managers:
 * *rpm*
 * *pacman*
 
-The *service* command is used to run the tradiditional System V init script.
+The *service* command is used to run the traditional System V init script.
 
 
 Frontends
 ---------
 
-*needrestart* uses a modular aproach based on perl packages providing
+*needrestart* uses a modular approach based on perl packages providing
 the user interface. The following frontends are shipped:
 
 * *NeedRestart::UI::Debconf* using *debconf*
@@ -50,9 +50,13 @@ the user interface. The following frontends are shipped:
 Kernel & Microcode
 ------------------
 
-*needrestart* 0.8 brings a obsolete kernel detection feature. In *needrestart*
-3.0 a [processor microcode update detection feature](README.uCode.md) for Intel
-CPUs has been added.
+*needrestart* 0.8 brings a obsolete kernel detection feature. Since
+*needrestart* 3.5 it is possible to filter kernel image filenames (required on
+[Raspberry Pi](README.raspberry.md)).
+
+In *needrestart* 3.0 a [processor microcode update detection
+feature](README.uCode.md) for Intel CPUs has been added. Since *needrestart* 3.5
+the AMD CPU support has been added.
 
 
 Interpreters

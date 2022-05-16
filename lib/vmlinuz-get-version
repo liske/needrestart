@@ -20,7 +20,7 @@
 get_version()
 {
     # search and output version string pattern
-    strings "$1" | grep -m 1 '^Linux version ' && exit 0
+    grep -aom 1 'Linux version [0123456789].*' "$1" && exit 0
 }
 
 try_decompress()
@@ -29,19 +29,17 @@ try_decompress()
     # "grep" that report the byte offset of the line instead of the pattern.
 
     # Try to find the header ($1) and decompress from here
-    for	pos in `tr "$1\n$2" "\n$2=" < "$img" | grep -abo "^$2"`
-    do
-	pos=${pos%%:*}
-	tail -c+$pos "$img" | $3 > $tmp 2> /dev/null
-	get_version $tmp
+    for pos in $(tr "$1\n$2" "\n$2=" < "$img" | grep -abo "^$2"); do
+        pos=${pos%%:*}
+        tail -c+$pos "$img" | $3 > $tmp 2>/dev/null
+        get_version $tmp
     done
 }
 
 # Check invocation:
 me=${0##*/}
 img=$1
-if	[ $# -lt 1 -o $# -gt 2  -o ! -s "$img" ]
-then
+if [ $# -lt 1 ] || [ $# -gt 2 ] || [ ! -s "$img" ]; then
     echo "Usage: $me <kernel-image> [debug]" >&2
     exit 2
 fi

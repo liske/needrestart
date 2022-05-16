@@ -21,11 +21,13 @@ within docker containers by design.
 NeedRestart::CONT::LXC
 ----------------------
 
-Recognized by:	cgroup path (`/lxc/*`)
+Recognized by:	cgroup path (`/lxc/*` || `/lxc.payload/*`)
 
 For each container which should be restarted needrestart calls
 `lxc-stop --reboot --name $NAME`.
 
+This package also supports LXD containers, which are restarted by `lxc restart
+$NAME` or `lxc restart --project=$PROJECT $NAME` for containers in projects.
 
 NeedRestart::CONT::machined
 ---------------------------

@@ -4,7 +4,7 @@
 #   Thomas Liske <thomas@fiasko-nw.net>
 #
 # Copyright Holder:
-#   2013 - 2018 (C) Thomas Liske [http://fiasko-nw.net/~thomas/]
+#   2013 - 2022 (C) Thomas Liske [http://fiasko-nw.net/~thomas/]
 #
 # License:
 #   This program is free software; you can redistribute it and/or modify
@@ -85,10 +85,17 @@ sub source {
     my $ptable = nr_ptable_pid($pid);
     unless($ptable->{cwd}) {
 	print STDERR "$LOGPREF #$pid: could not get current working directory, skipping\n" if($self->{debug});
-	return ();
+	return undef;
     }
     my $cwd = getcwd();
     chdir("/proc/$pid/root/$ptable->{cwd}");
+
+    # skip the process if the cwd is unreachable (i.e. due to mnt ns)
+    unless(getcwd()) {
+	chdir($cwd);
+	print STDERR "$LOGPREF #$pid: process cwd is unreachable\n" if($self->{debug});
+	return undef;
+    }
 
     # get original ARGV
     (my $bin, local @ARGV) = nr_parse_cmd($pid);
@@ -139,6 +146,7 @@ sub files {
 
     # skip the process if the cwd is unreachable (i.e. due to mnt ns)
     unless(getcwd()) {
+	chdir($cwd);
 	print STDERR "$LOGPREF #$pid: process cwd is unreachable\n" if($self->{debug});
 	return ();
     }
@@ -190,14 +198,14 @@ sub files {
     elsif(exists($ENV{PYTHONPATH})) {
 	delete($ENV{PYTHONPATH});
     }
-    
+
     # get include path
     my ($pyread, $pywrite) = nr_fork_pipe2($self->{debug}, $ptable->{exec}, '-');
     print $pywrite "import sys\nprint(sys.path)\n";
     close($pywrite);
     my ($path) = <$pyread>;
     close($pyread);
-    
+
     # look for module source files
     my @path;
     if(defined($path)) {
@@ -209,7 +217,7 @@ sub files {
     else {
 	print STDERR "$LOGPREF #$pid: failed to retrieve include path\n" if($self->{debug});
     }
-    
+
     my %files;
     _scan($self->{debug}, $pid, $src, \%files, \@path);
 

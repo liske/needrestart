@@ -1,0 +1,10 @@
+# needrestart nagios plugin sudoers.d config file
+# -----------------------------------------------
+#
+# Please consider a look at /etc/sudoers.d/README howto enable this file.
+#
+
+# Allow nagios to execute the needrestart command on debian based systems (icinga user is called "nagios")
+nagios ALL=NOPASSWD: /usr/sbin/needrestart
+# Allow nagios to execute the needrestart command on centos and family (icinga user is called "icinga")
+icinga ALL=NOPASSWD: /usr/sbin/needrestart

@@ -12,11 +12,13 @@ NEEDRESTART-KSTA: 1
 NEEDRESTART-SVC: systemd-journald.service
 NEEDRESTART-SVC: systemd-machined.service
 NEEDRESTART-CONT: LXC web1
+NEEDRESTART-SESS: metabase @ user manager service
+NEEDRESTART-SESS: root @ session #28017
 ```
 
 Batch mode can be used to use the results of needrestart in other scripts.
 While needrestart is run in batch mode it will never show any UI dialogs
-nor restart anything. The output format is complient to the
+nor restart anything. The output format is compliant with the
 *apt-dater protocol*[1].
 
 [1] https://github.com/DE-IBH/apt-dater-host/blob/master/doc/
