@@ -51,7 +51,7 @@ my $is_tty = (-t *STDERR || -t *STDOUT || -t *STDIN);
 my $is_vm;
 my $is_container;
 
-if($is_systemd && -x q(/usr/bin/systemd-detect-virt)) {
+if($is_systemd && -x q(/usr/bin/systemds-detect-virt)) {
 	# check if we are inside of a vm
 	my $ret = system(qw(/usr/bin/systemd-detect-virt --vm --quiet));
 	unless($? == -1 || $? & 127) {
@@ -63,6 +63,14 @@ if($is_systemd && -x q(/usr/bin/systemd-detect-virt)) {
 	unless($? == -1 || $? & 127) {
 		$is_container = ($? >> 8) == 0;
 	}
+}
+elsif(eval "use ImVirt; 1;") {
+	require ImVirt;
+	ImVirt->import();
+	my $imvirt = ImVirt::imv_get(ImVirt->IMV_PROB_DEFAULT);
+
+	$is_vm = $imvirt ne ImVirt->IMV_PHYSICAL;
+	$is_container = $imvirt eq ImVirt->IMV_CONTAINER;
 }
 elsif (-r "/proc/1/environ") {
 	# check if we are inside of a container (fallback)

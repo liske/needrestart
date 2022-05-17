@@ -24,6 +24,8 @@ needrestart 3.6
       (github issue #205 by @HumanG33k)
     - [Core] Output user sessions in batch mode.
       (github pull request #232 by @anarcat)
+    - [Core] Use ImVirt for virtualization detection if not running on systemd.
+      (Debian Bug#984789 by Patrik Schindler <poc@pocnet.net>)
     - [Interp] Add tolerance when checking script file ctimes to avoid false positives.
       (github pull request #233 by Corey Hickey @bugfood)
     - [Kernel] Replace strings(1) by GNU grep to drop binutils dependency.
