@@ -43,7 +43,7 @@ sub isa {
     my $pid = shift;
     my $bin = shift;
 
-    return 1 if($bin =~ m@/usr/(local/)?bin/perl@);
+    return 1 if($bin =~ m@^/usr/(local/)?bin/perl(5[.\d]*)?$@);
 
     return 0;
 }

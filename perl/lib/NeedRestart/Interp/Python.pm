@@ -42,7 +42,7 @@ sub isa {
     my $pid = shift;
     my $bin = shift;
 
-    return 1 if($bin =~ m@/usr/(local/)?bin/python@);
+    return 1 if($bin =~ m@^/usr/(local/)?bin/python([23][.\d]*)?$@);
 
     return 0;
 }
