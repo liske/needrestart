@@ -1,5 +1,9 @@
 needrestart 3.6
 
+  * Security:
+    - [Interp] CVE-2022-30688: Anchor interpreter regex to prevent local privilege escalation.
+      (responsibly reported by Jakub Wilk)
+
   * Features:
     - [Core] Add support for runit.
       (Debian Bug#972685 by Lorenzo Puliti <plorenzo@disroot.org>)
@@ -63,7 +67,7 @@ needrestart 3.6
     - [uCode] Fix lsinitrd example.
       (github pull request #240 by Corey Hickey @bugfood)
 
- -- Thomas Liske <thomas@fiasko-nw.net>  
+ -- Thomas Liske <thomas@fiasko-nw.net>  Tue, 17 May 2022 17:00:00 +0200
 
 needrestart 3.5
 
