@@ -51,7 +51,7 @@ my $is_tty = (-t *STDERR || -t *STDOUT || -t *STDIN);
 my $is_vm;
 my $is_container;
 
-if($is_systemd && -x q(/usr/bin/systemds-detect-virt)) {
+if($is_systemd && -x q(/usr/bin/systemd-detect-virt)) {
 	# check if we are inside of a vm
 	my $ret = system(qw(/usr/bin/systemd-detect-virt --vm --quiet));
 	unless($? == -1 || $? & 127) {
