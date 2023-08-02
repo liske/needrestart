@@ -13,7 +13,7 @@
 
 # enable xtrace if we should be verbose
 if [ "$NR_VERBOSE" = '1' ]; then
-    set -x
+	set -x
 fi
 
 if [ "$(id -ru)" != "0" ]
@@ -30,52 +30,90 @@ then
 	exit 0
 fi
 
-get_active_deps(){
+# start from the name of the hook, get real unit ID (for example, dbus-broker replaces dbus)
+DBUS_SERVICE_NAME=$(
+	systemctl show --value -p Id "$(basename "$0")"
+)
+
+# if DM is active, return canonical ID
+DISPLAY_MANAGER=$(
+	systemctl -q is-active display-manager.service && \
+	  systemctl show --value -p Id display-manager.service
+)
+
+# get dependencies
+ACTIVE_DEPS=$(
 	# return all dbus dependencies, filter out dbus and DM, leave only active
 	{
 		systemctl list-dependencies -l --reverse --plain dbus.socket
-		systemctl list-dependencies -l --reverse --plain dbus.service
+		systemctl list-dependencies -l --reverse --plain $DBUS_SERVICE_NAME
 	} | grep -o '[^[:space:]]\+.service' | sort -u | while read SERVICE
 	do
-		if [ "$SERVICE" != "dbus.service" -a "$SERVICE" != "$DISPLAY_MANAGER" ] && systemctl -q is-active "$SERVICE"
+		if [ "$SERVICE" != "$DBUS_SERVICE_NAME" ] && \
+		  [ "$SERVICE" != "$DISPLAY_MANAGER" ] && \
+		  systemctl -q is-active "$SERVICE"
 		then
 			echo "$SERVICE"
 		fi
-	done
-}
-
-# if DM is active, return canonical ID
-DISPLAY_MANAGER="$(systemctl -q is-active display-manager.service && systemctl show --value -p Id display-manager.service)"
-
-# get dependencies
-ACTIVE_DEPS="$(get_active_deps)"
+	done | tr '\n' ' ' | tr -s ' '
+)
 
 # get logind sessions
-SESSIONS="$(loginctl list-sessions --no-legend | grep -o '^[[:space:]]*[0-9]\+' | tr '\n' ' ')"
+SESSIONS=$(loginctl list-sessions --no-legend | grep -o '^[[:space:]]*[0-9]\+' | tr '\n' ' ')
+
+# get current dbus service PIDs
+DBUS_PIDS=$(
+	ps -eo pid,unit | grep -E "[[:space:]]+${DBUS_SERVICE_NAME}[[:space:]]*$" \
+	  | grep -oE '^[[:space:]]*[0-9]+' \
+	  | tr '\n' ' ' | tr -s ' '
+)
+
+# assemble commands
+COMMANDS=''
+# terminate sessions
+[ -n "$SESSIONS" ] && COMMANDS="${COMMANDS}${COMMANDS:+ ; }loginctl terminate-session $SESSIONS"
+# stop display manager
+[ -n "$DISPLAY_MANAGER" ] && COMMANDS="${COMMANDS}${COMMANDS:+ ; }systemctl stop $DISPLAY_MANAGER"
+# restart dbus
+COMMANDS="${COMMANDS}${COMMANDS:+ ; }sleep 1 ; systemctl restart $DBUS_SERVICE_NAME"
+# kill previous dbus pids
+[ -n "$DBUS_PIDS" ] && COMMANDS="${COMMANDS}${COMMANDS:+ ; }sleep 1 ; kill $DBUS_PIDS 2>/dev/null"
+# restart active dependencies
+COMMANDS="${COMMANDS}${COMMANDS:+ ; }sleep 1 ; systemctl restart $ACTIVE_DEPS"
+# start display manager
+[ -n "$DISPLAY_MANAGER" ] && COMMANDS="${COMMANDS}${COMMANDS:+ ; }systemctl start $DISPLAY_MANAGER"
+# normalize to single line
+COMMANDS=$(echo "$COMMANDS" | tr '\n' ' ' | tr -s ' ')
 
 cat << EOF
-!!! In $PAUSE seconds dbus restart will be performed !!!
+!!! $DBUS_SERVICE_NAME restart will be performed !!!
+
 User sessions to be terminated: $SESSIONS
 
 Services to be restarted:
-$ACTIVE_DEPS
-$DISPLAY_MANAGER
+$(echo $ACTIVE_DEPS | tr ' ' '\n' | sed 's/^/  /')
+
+Display manager will be restarted: ${DISPLAY_MANAGER:-no active DM found}
+
+Command set to run as transient unit restart-dbus.service:
+  $(echo $COMMANDS | sed -r 's/ ; /\n  /g')
+
+Logs can be viewed by: journalctl -u restart-dbus
 EOF
 
-[ -t 0 ] && read -p "Press Enter to continue > " PRESSENTER
-
-# prepare list to be a CLI arg
-ACTIVE_DEPS="$(echo "$ACTIVE_DEPS" | tr '\n' ' ')"
-
-# run restart sequence as transient unit...
-if [ -n "$DISPLAY_MANAGER" ]
+# if interactive, ask for continuation
+if [ -t 0 ]
 then
-	# terminate user sessions, stop DM, restart dbus, reexec systemd, restart dbus dependencies, start DM
-	systemd-run -G --unit=restart-dbus sh -c "loginctl terminate-session $SESSIONS ; systemctl stop $DISPLAY_MANAGER ; systemctl restart dbus.service ; sleep 1 ; systemctl daemon-reexec ; sleep 1 ; systemctl restart $ACTIVE_DEPS ; systemctl start $DISPLAY_MANAGER"
+	read -p "
+Press Enter to continue > " PRESSENTER
 else
-	# terminate user sessions, restart dbus, reexec systemd, restart dbus dependencies
-	systemd-run -G --unit=restart-dbus sh -c "loginctl terminate-session $SESSIONS ; systemctl restart dbus.service ; sleep 1 ; systemctl daemon-reexec ; sleep 1 ; systemctl restart $ACTIVE_DEPS"
+	echo "
+Restart in 5 seconds..."
+	sleep 5
+	echo "Restarting..."
 fi
 
-# restart sequence runs as a unit, so it is possible to view its output in the log if, any:
+# run restart sequence as transient unit...
+# it is possible to view its output in the log if any:
 # journalctl -u restart-dbus
+systemd-run -G --unit=restart-dbus --description="transient dbus restarter" sh -c "$COMMANDS"
