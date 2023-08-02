@@ -11,12 +11,23 @@
 # This is a replacement for original dbus.service script by Thomas Liske <thomas@fiasko-nw.net>
 # Dbus dependencies are enumerated dynamically and restarted after dbus and systemd daemon reexec
 
-# delay in non-interactive mode
-NONINTERACTIVE_DELAY=10
+# delay in semi-interactive mode
+DELAY_SECONDS=10
 
 # enable xtrace if we should be verbose
 if [ "$NR_VERBOSE" = '1' ]; then
 	set -x
+fi
+
+# choose interactivity mode
+if [ "${DEBIAN_FRONTEND:-other}" = "noninteractive" ]
+then
+	CONSOLE_MODE=skip
+elif [ -t 0 ]
+then
+	CONSOLE_MODE=interactive
+else
+	CONSOLE_MODE=delay
 fi
 
 if [ "$(id -ru)" != "0" ]
@@ -88,18 +99,14 @@ COMMANDS="${COMMANDS}${COMMANDS:+ ; }sleep 1 ; systemctl restart $ACTIVE_DEPS"
 # normalize to single line
 COMMANDS=$(echo "$COMMANDS" | tr '\n' ' ' | tr -s ' ')
 
-if [ -t 0 ]
-then
-	INTERACTIVE=true
-else
-	INTERACTIVE=false
-fi
-
-if [ "$INTERACTIVE" = "true" ]
+if [ "$CONSOLE_MODE" = "interactive" ]
 then
 	cat
-else
+elif [ "$CONSOLE_MODE" = "delay" ]
+then
 	cat >&2
+else
+	true
 fi << EOF
 !!! $DBUS_SERVICE_NAME restart will be performed !!!
 
@@ -117,15 +124,18 @@ Logs can be viewed by: journalctl -u restart-dbus
 EOF
 
 # if interactive, ask for continuation
-if [ "$INTERACTIVE" = "true" ]
+if [ "$CONSOLE_MODE" = "interactive" ]
 then
 	read -p "
 Press Enter to continue > " PRESSENTER
-else
+elif [ "$CONSOLE_MODE" = "delay" ]
+then
 	echo "
-Restart in $NONINTERACTIVE_DELAY seconds..." >&2
-	sleep $NONINTERACTIVE_DELAY
+Restart in $DELAY_SECONDS seconds..." >&2
+	sleep $DELAY_SECONDS
 	echo "Restarting..." >&2
+else
+	true
 fi
 
 # run restart sequence as transient unit...
