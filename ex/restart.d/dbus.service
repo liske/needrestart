@@ -11,6 +11,9 @@
 # This is a replacement for original dbus.service script by Thomas Liske <thomas@fiasko-nw.net>
 # Dbus dependencies are enumerated dynamically and restarted after dbus and systemd daemon reexec
 
+# delay in non-interactive mode
+NONINTERACTIVE_DELAY=10
+
 # enable xtrace if we should be verbose
 if [ "$NR_VERBOSE" = '1' ]; then
 	set -x
@@ -85,7 +88,19 @@ COMMANDS="${COMMANDS}${COMMANDS:+ ; }sleep 1 ; systemctl restart $ACTIVE_DEPS"
 # normalize to single line
 COMMANDS=$(echo "$COMMANDS" | tr '\n' ' ' | tr -s ' ')
 
-cat << EOF
+if [ -t 0 ]
+then
+	INTERACTIVE=true
+else
+	INTERACTIVE=false
+fi
+
+if [ "$INTERACTIVE" = "true" ]
+then
+	cat
+else
+	cat >&2
+fi << EOF
 !!! $DBUS_SERVICE_NAME restart will be performed !!!
 
 User sessions to be terminated: $SESSIONS
@@ -93,7 +108,7 @@ User sessions to be terminated: $SESSIONS
 Services to be restarted:
 $(echo $ACTIVE_DEPS | tr ' ' '\n' | sed 's/^/  /')
 
-Display manager will be restarted: ${DISPLAY_MANAGER:-no active DM found}
+Display manager to be restarted: ${DISPLAY_MANAGER:-no active DM found}
 
 Command set to run as transient unit restart-dbus.service:
   $(echo $COMMANDS | sed -r 's/ ; /\n  /g')
@@ -102,15 +117,15 @@ Logs can be viewed by: journalctl -u restart-dbus
 EOF
 
 # if interactive, ask for continuation
-if [ -t 0 ]
+if [ "$INTERACTIVE" = "true" ]
 then
 	read -p "
 Press Enter to continue > " PRESSENTER
 else
 	echo "
-Restart in 5 seconds..."
-	sleep 5
-	echo "Restarting..."
+Restart in $NONINTERACTIVE_DELAY seconds..." >&2
+	sleep $NONINTERACTIVE_DELAY
+	echo "Restarting..." >&2
 fi
 
 # run restart sequence as transient unit...
