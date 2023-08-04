@@ -72,8 +72,13 @@ ACTIVE_DEPS=$(
 	done | tr '\n' ' ' | tr -s ' '
 )
 
-# get logind sessions
-SESSIONS=$(loginctl list-sessions --no-legend | grep -o '^[[:space:]]*[0-9]\+' | tr '\n' ' ')
+# get logind users
+USERS=$(
+	loginctl list-users --no-legend \
+	  | grep -oE '^[[:space:]]*[0-9]+[[:space:]]+[^[:space:]]+' \
+	  | grep -oE '[^[:space:]]+$' \
+	  | tr '\n' ' ' | tr -s ' '
+)
 
 # get current dbus service PIDs
 DBUS_PIDS=$(
@@ -84,8 +89,8 @@ DBUS_PIDS=$(
 
 # assemble commands
 COMMANDS=''
-# terminate sessions
-[ -n "$SESSIONS" ] && COMMANDS="${COMMANDS}${COMMANDS:+ ; }loginctl terminate-session $SESSIONS"
+# terminate users
+[ -n "$USERS" ] && COMMANDS="${COMMANDS}${COMMANDS:+ ; }loginctl terminate-user $USERS"
 # stop display manager
 [ -n "$DISPLAY_MANAGER" ] && COMMANDS="${COMMANDS}${COMMANDS:+ ; }systemctl stop $DISPLAY_MANAGER"
 # restart dbus
@@ -110,7 +115,7 @@ else
 fi << EOF
 !!! $DBUS_SERVICE_NAME restart will be performed !!!
 
-User sessions to be terminated: $SESSIONS
+Users to be terminated: $USERS
 
 Services to be restarted:
 $(echo $ACTIVE_DEPS | tr ' ' '\n' | sed 's/^/  /')
