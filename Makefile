@@ -19,12 +19,12 @@ install: all
 	mkdir -p "$(DESTDIR)/etc/needrestart/restart.d"
 	cp ex/restart.d/* "$(DESTDIR)/etc/needrestart/restart.d/"
 	
-	which apt-get > /dev/null && \
+	command -v apt-get > /dev/null && \
 	    mkdir -p "$(DESTDIR)/etc/apt/apt.conf.d" && cp ex/apt/needrestart-apt_d "$(DESTDIR)/etc/apt/apt.conf.d/99needrestart" && \
 	    mkdir -p "$(DESTDIR)/etc/dpkg/dpkg.cfg.d" && cp ex/apt/needrestart-dpkg_d "$(DESTDIR)/etc/dpkg/dpkg.cfg.d/needrestart" && \
 	    mkdir -p "$(DESTDIR)/usr/lib/needrestart" && cp ex/apt/dpkg-status ex/apt/apt-pinvoke "$(DESTDIR)/usr/lib/needrestart" || true
 	
-	which debconf > /dev/null && \
+	command -v debconf > /dev/null && \
 	    mkdir -p "$(DESTDIR)/usr/share/needrestart" && \
 	    po2debconf ex/debconf/needrestart.templates > "$(DESTDIR)/usr/share/needrestart/needrestart.templates" || true
 	
