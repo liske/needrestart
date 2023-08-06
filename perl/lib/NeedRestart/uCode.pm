@@ -148,7 +148,7 @@ sub nr_ucode_check {
             }
             $ui->progress_step;
 
-            my $nstate = compare_ucode_versions( $debug, $processors{processor}, @nvars );
+            my $nstate = compare_ucode_versions( $debug, $pid, @nvars );
             if ( $nstate > $state ) {
                 ( $state, @vars ) = ( $nstate, @nvars );
             }
