@@ -1016,6 +1016,8 @@ if(defined($opt_l) && !$uid) {
             }
         }
 
+        my @sorted_override_rc_keys = sort keys %{$nrconf{override_rc}};
+
 	    foreach my $rc (sort { lc($a) cmp lc($b) } keys %restart) {
 		# always combine restarts in one systemctl command
 		local $nrconf{systemctl_combine} = 1 unless($opt_r eq 'l');
@@ -1033,7 +1035,7 @@ if(defined($opt_l) && !$uid) {
 
 		# don't restart greylisted services...
 		my $restart = !$nrconf{defno};
-		foreach my $re (keys %{$nrconf{override_rc}}) {
+		foreach my $re (@sorted_override_rc_keys) {
 		    next unless($rc =~ /$re/);
 
 		    $restart = $nrconf{override_rc}->{$re};
