@@ -33,7 +33,7 @@ use NeedRestart::Utils;
 
 my $LOGPREF = '[Java]';
 
-needrestart_interp_register(__PACKAGE__);
+needrestart_interp_register(__PACKAGE__, "java");
 
 sub isa {
     my $self = shift;

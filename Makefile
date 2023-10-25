@@ -41,6 +41,8 @@ install: all
 	
 	mkdir -p "$(DESTDIR)$(LOCALEDIR)"
 	cp -r po/.build/* "$(DESTDIR)$(LOCALEDIR)/"
+	
+	mkdir -p "$(DESTDIR)/var/cache/needrestart"
 
 clean:
 	[ ! -f perl/Makefile ] || ( cd perl && $(MAKE) realclean )
