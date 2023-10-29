@@ -52,6 +52,8 @@ my $LOGPREF = '[ucode]';
 sub compare_ucode_versions {
     my ($debug, $processor, %vars) = @_;
 
+    print STDERR "$LOGPREF DEBUG: ", join(", ", map { "$_ => $vars{$_}" } keys %vars), "\n", if ($debug);
+
     unless ( exists( $vars{CURRENT} ) && exists( $vars{AVAIL} ) ) {
         print STDERR
 	    "$LOGPREF #$processor did not get current microcode version\n"
