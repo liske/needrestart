@@ -52,6 +52,13 @@ sub nr_ucode_check_real {
     my $info  = shift;
     my %vars;
 
+    # check for Intel cpu
+    unless ( defined( $info->{vendor_id} )
+        && $info->{vendor_id} =~ /intel/i )
+    {
+        die "$LOGPREF #$info->{processor} cpu vendor id mismatch\n";
+    }
+
     # get current microcode revision
     if ( defined( $info->{microcode} ) ) {
         $vars{CURRENT} = sprintf( "0x%04x", hex( $info->{microcode} ) );
