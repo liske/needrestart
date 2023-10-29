@@ -189,6 +189,10 @@ sub nr_ucode_check_real {
 		print STDERR "$LOGPREF #$info->{processor} found ucode $vars{AVAIL}\n" if ($debug);
 	}
     }
+    elsif (keys %{ $_ucodes->{cpuid} } > 0) {
+        printf( STDERR "$LOGPREF Found microcode, but no matching cpuid for #$info->{processor} 0x%08x\n", $cpuid ) if ($debug);
+        $vars{AVAIL} = 0;
+    }
 
     return %vars;
 }
