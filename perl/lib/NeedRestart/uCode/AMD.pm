@@ -116,7 +116,7 @@ sub nr_ucode_check_real {
 
     # check for AMD cpu
     unless ( defined( $info->{vendor_id} )
-        && $info->{vendor_id} eq 'AuthenticAMD' )
+        && $info->{vendor_id} =~ /amd/i )
     {
         die "$LOGPREF #$info->{processor} cpu vendor id mismatch\n";
     }
