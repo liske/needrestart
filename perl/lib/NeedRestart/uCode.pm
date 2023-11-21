@@ -52,13 +52,26 @@ my $LOGPREF = '[ucode]';
 sub compare_ucode_versions {
     my ($debug, $processor, %vars) = @_;
 
-    unless ( exists( $vars{CURRENT} ) && exists( $vars{AVAIL} ) ) {
-        print STDERR
-	    "$LOGPREF #$processor did not get current microcode version\n"
-	    if ( $debug && !exists( $vars{CURRENT} ) );
+    # if no firmware is available for the current CPU, that's
+    # considered up to date. the rationale here is that if we warn on
+    # this, we're actually going to warn for certain new CPUs that
+    # have an up-to-date, built-in firmware without any update. that,
+    # in turn, creates alert fatigue and makes operators more likely
+    # to ignore warnings.
+    unless ( exists( $vars{AVAIL} ) ) {
         print STDERR
 	    "$LOGPREF #$processor did not get available microcode version\n"
-	    if ( $debug && !exists( $vars{AVAIL} ) );
+	    if ( $debug );
+        return NRM_CURRENT;
+    }
+    # from here on, there is a microcode file available
+    #
+    # if we can't find a microcode firmware for the current CPU,
+    # *that* is a problem.
+    unless ( exists( $vars{CURRENT} )  ) {
+        print STDERR
+            "$LOGPREF #$processor did not get current microcode version\n"
+            if ( $debug);
 
         return NRM_UNKNOWN;
     }
