@@ -20,26 +20,22 @@ if [ "$NR_VERBOSE" = '1' ]; then
 fi
 
 # choose interactivity mode
-if [ "${DEBIAN_FRONTEND:-other}" = "noninteractive" ]
-then
+if [ "${DEBIAN_FRONTEND:-other}" = "noninteractive" ]; then
 	CONSOLE_MODE=skip
-elif [ -t 0 ]
-then
+elif [ -t 0 ]; then
 	CONSOLE_MODE=interactive
 else
 	CONSOLE_MODE=delay
 fi
 
-if [ "$(id -ru)" != "0" ]
-then
+if [ "$(id -ru)" != "0" ]; then
 	echo "Not root, exiting" >&2
 	exit 1
 fi
 
 INIT_EXEC="$(readlink /proc/1/exe)"
 
-if [ "$(basename "$INIT_EXEC")" != "systemd" ]
-then
+if [ "$(basename "$INIT_EXEC")" != "systemd" ]; then
 	echo "Init system is not systemd ($INIT_EXEC), doing nothing"
 	exit 0
 fi
@@ -51,41 +47,46 @@ DBUS_SERVICE_NAME=$(
 
 # if DM is active, return canonical ID
 DISPLAY_MANAGER=$(
-	systemctl -q is-active display-manager.service && \
-	  systemctl show --value -p Id display-manager.service
+	systemctl -q is-active display-manager.service \
+		&& systemctl show --value -p Id display-manager.service
 )
 
 # get dependencies
-ACTIVE_DEPS=$(
-	# return all dbus dependencies, filter out dbus and DM, leave only active
-	{
+ACTIVE_DEPS=''
+while read -r service; do
+	case "$service" in
+	"$DISPLAY_MANAGER" | "$DBUS_SERVICE_NAME") continue ;;
+	*.service)
+		case " $ACTIVE_DEPS " in
+		*" $service "*) true ;;
+		*) systemctl -q is-active "$service" && ACTIVE_DEPS="${ACTIVE_DEPS}${ACTIVE_DEPS:+ }${service}" ;;
+		esac
+		;;
+	esac
+done <<- EOF
+	$(
 		systemctl list-dependencies -l --reverse --plain dbus.socket
-		systemctl list-dependencies -l --reverse --plain $DBUS_SERVICE_NAME
-	} | grep -o '[^[:space:]]\+.service' | sort -u | while read SERVICE
-	do
-		if [ "$SERVICE" != "$DBUS_SERVICE_NAME" ] && \
-		  [ "$SERVICE" != "$DISPLAY_MANAGER" ] && \
-		  systemctl -q is-active "$SERVICE"
-		then
-			echo "$SERVICE"
-		fi
-	done | tr '\n' ' ' | tr -s ' '
-)
+		systemctl list-dependencies -l --reverse --plain "$DBUS_SERVICE_NAME"
+	)
+EOF
 
 # get logind users
-USERS=$(
-	loginctl list-users --no-legend \
-	  | grep -oE '^[[:space:]]*[0-9]+[[:space:]]+[^[:space:]]+' \
-	  | grep -oE '[^[:space:]]+$' \
-	  | tr '\n' ' ' | tr -s ' '
-)
+USERS=''
+while read -r uid user linger state; do
+	USERS="${USERS}${USERS:+ }${user}"
+done <<- EOF
+	$(loginctl list-users --no-legend)
+EOF
 
 # get current dbus service PIDs
-DBUS_PIDS=$(
-	ps -eo pid,unit | grep -E "[[:space:]]+${DBUS_SERVICE_NAME}[[:space:]]*$" \
-	  | grep -oE '^[[:space:]]*[0-9]+' \
-	  | tr '\n' ' ' | tr -s ' '
-)
+DBUS_PIDS=''
+while read -r pid unit; do
+	case "$unit" in
+	"${DBUS_SERVICE_NAME}") DBUS_PIDS="${DBUS_PIDS}${DBUS_PIDS:+ }${pid}" ;;
+	esac
+done <<- EOF
+	$(ps -eo pid,unit)
+EOF
 
 # assemble commands
 COMMANDS=''
@@ -104,46 +105,46 @@ COMMANDS="${COMMANDS}${COMMANDS:+ ; }sleep 1 ; systemctl restart $ACTIVE_DEPS"
 # normalize to single line
 COMMANDS=$(echo "$COMMANDS" | tr '\n' ' ' | tr -s ' ')
 
-if [ "$CONSOLE_MODE" = "interactive" ]
-then
-	cat
-elif [ "$CONSOLE_MODE" = "delay" ]
-then
-	cat >&2
-else
-	true
-fi << EOF
-!!! $DBUS_SERVICE_NAME restart will be performed !!!
+shcat() {
+	while IFS='' read -r line; do
+		printf '%s\n' "$line"
+	done
+}
 
-Users to be terminated: $USERS
+case "$CONSOLE_MODE" in
+interactive) shcat ;;
+delay) shcat >&2 ;;
+*) shcat > /dev/null ;;
+esac <<- EOF
+	!!! $DBUS_SERVICE_NAME restart will be performed !!!
 
-Services to be restarted:
-$(echo $ACTIVE_DEPS | tr ' ' '\n' | sed 's/^/  /')
+	Users to be terminated: $USERS
 
-Display manager to be restarted: ${DISPLAY_MANAGER:-no active DM found}
+	Services to be restarted:
+	$(printf '  %s\n' $ACTIVE_DEPS)
 
-Command set to run as transient unit restart-dbus.service:
-  $(echo $COMMANDS | sed -r 's/ ; /\n  /g')
+	Display manager to be restarted: ${DISPLAY_MANAGER:-no active DM found}
 
-Logs can be viewed by: journalctl -u restart-dbus
+	Command set to run as transient unit restart-dbus.service:
+	  $(IFS=';' printf '  %s\n' $COMMANDS)
+
+	Logs can be viewed by: journalctl -u restart-dbus
 EOF
 
 # if interactive, ask for continuation
-if [ "$CONSOLE_MODE" = "interactive" ]
-then
-	read -p "
-Press Enter to continue > " PRESSENTER
-elif [ "$CONSOLE_MODE" = "delay" ]
-then
-	echo "
-Restart in $DELAY_SECONDS seconds..." >&2
+case "$CONSOLE_MODE" in
+interactive)
+	printf '\n%s' "Press Enter to continue > "
+	read -r PRESSENTER
+	;;
+delay)
+	printf '\n%s\n' "Restart in $DELAY_SECONDS seconds..." >&2
 	sleep $DELAY_SECONDS
 	echo "Restarting..." >&2
-else
-	true
-fi
+	;;
+esac
 
 # run restart sequence as transient unit...
 # it is possible to view its output in the log if any:
 # journalctl -u restart-dbus
-systemd-run -G --unit=restart-dbus --description="transient dbus restarter" sh -c "$COMMANDS"
+systemd-run -G --unit=restart-dbus --description="Transient dbus restarter" sh -c "$COMMANDS"
