@@ -116,9 +116,11 @@ interactive) shcat ;;
 delay) shcat >&2 ;;
 *) shcat > /dev/null ;;
 esac <<- EOF
+
 	!!! $DBUS_SERVICE_NAME restart will be performed !!!
 
-	Users to be terminated: $USERS
+	Users to be terminated:
+	$(printf '  %s\n' $USERS)
 
 	Services to be restarted:
 	$(printf '  %s\n' $ACTIVE_DEPS)
@@ -126,7 +128,7 @@ esac <<- EOF
 	Display manager to be restarted: ${DISPLAY_MANAGER:-no active DM found}
 
 	Command set to run as transient unit restart-dbus.service:
-	  $(IFS=';' printf '  %s\n' $COMMANDS)
+	 $(IFS=';' ; printf ' %s\n' $COMMANDS)
 
 	Logs can be viewed by: journalctl -u restart-dbus
 EOF
