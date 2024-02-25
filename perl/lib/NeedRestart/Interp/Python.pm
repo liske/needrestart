@@ -35,7 +35,7 @@ use NeedRestart::Utils;
 
 my $LOGPREF = '[Python]';
 
-needrestart_interp_register(__PACKAGE__);
+needrestart_interp_register(__PACKAGE__, "python");
 
 sub isa {
     my $self = shift;

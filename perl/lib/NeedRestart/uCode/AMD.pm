@@ -187,7 +187,7 @@ sub nr_ucode_check_real {
         if ( exists( $_ucodes->{prid}->{$prid} ) ) {
             $vars{AVAIL} = sprintf( "0x%08x", $_ucodes->{prid}->{$prid} );
             print STDERR "$LOGPREF #$info->{processor} found ucode $vars{AVAIL}\n" if ($debug);
-	}
+        }
     }
 
     return %vars;
