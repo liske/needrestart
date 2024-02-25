@@ -36,7 +36,7 @@ use Module::ScanDeps;
 
 my $LOGPREF = '[Perl]';
 
-needrestart_interp_register(__PACKAGE__);
+needrestart_interp_register(__PACKAGE__, "perl");
 
 sub isa {
     my $self = shift;
@@ -178,6 +178,7 @@ sub files {
 	$href = scan_deps(
 	    files => [$src],
 	    recurse => 1,
+            cache_file => $self->{conf}->{cache_file},
 	    );
     }
 

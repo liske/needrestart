@@ -30,9 +30,11 @@ use warnings;
 sub new {
     my $class = shift;
     my $debug = shift;
+    my $conf = shift;
 
     return bless {
 	debug => $debug,
+        conf => $conf,
     }, $class;
 }
 

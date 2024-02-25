@@ -155,6 +155,7 @@ our %nrconf = (
     override_cont => {},
     skip_mapfiles => -1,
     interpscan => 1,
+    perlcache => undef,
     kernelhints => 1,
     kernelfilter => qr(.),
     ucodehints => 1,
@@ -240,6 +241,12 @@ $opt_t = $nrconf{tolerance} unless(defined($opt_t));
 
 $nrconf{defno}++ if($opt_n);
 $opt_b++ if($opt_p);
+
+needrestart_interp_configure({
+    perl => {
+        cache_file => $nrconf{perlcache},
+    },
+});
 
 # print version in verbose mode
 print STDERR "$LOGPREF needrestart v$NeedRestart::VERSION\n" if($nrconf{verbosity} > 1);
