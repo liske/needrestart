@@ -68,7 +68,7 @@ sub nr_linux_version_x86($$) {
 
     # get kernel_version string
     seek($fh, 0x200 + $offset, SEEK_SET);
-    read($fh, $buf, 128);
+    read($fh, $buf, 512);
     close($fh);
 
     $buf =~ s/\000.*$//;
