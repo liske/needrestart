@@ -592,7 +592,7 @@ if(defined($opt_l)) {
 	}
 
 	# handle containers (LXC, docker, etc.)
-	next if($restart && needrestart_cont_check($nrconf{verbosity} > 1, $pid, $exe, $opt_t));
+	next if($restart && needrestart_cont_check($nrconf{verbosity} > 1, $pid, $exe));
 
 	# restart needed?
 	next unless($restart);
