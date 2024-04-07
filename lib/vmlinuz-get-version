@@ -50,7 +50,7 @@ fi
 
 # Prepare temp files:
 tmp=$(mktemp)
-trap "rm -f $tmp" 0
+trap 'rm -f "$tmp"' 0
 
 # Initial attempt for uncompressed images or objects:
 get_version $img
