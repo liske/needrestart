@@ -37,7 +37,7 @@ get_active_deps(){
 		systemctl list-dependencies -l --reverse --plain dbus.service
 	} | grep -o '[^[:space:]]\+.service' | sort -u | while read -r SERVICE
 	do
-		if [ "$SERVICE" != "dbus.service" -a "$SERVICE" != "$DISPLAY_MANAGER" ] && systemctl -q is-active "$SERVICE"
+		if [ "$SERVICE" != "dbus.service" ] && [ "$SERVICE" != "$DISPLAY_MANAGER" ] && systemctl -q is-active "$SERVICE"
 		then
 			echo "$SERVICE"
 		fi
