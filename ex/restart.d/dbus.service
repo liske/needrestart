@@ -35,7 +35,7 @@ get_active_deps(){
 	{
 		systemctl list-dependencies -l --reverse --plain dbus.socket
 		systemctl list-dependencies -l --reverse --plain dbus.service
-	} | grep -o '[^[:space:]]\+.service' | sort -u | while read SERVICE
+	} | grep -o '[^[:space:]]\+.service' | sort -u | while read -r SERVICE
 	do
 		if [ "$SERVICE" != "dbus.service" -a "$SERVICE" != "$DISPLAY_MANAGER" ] && systemctl -q is-active "$SERVICE"
 		then
@@ -62,7 +62,7 @@ $ACTIVE_DEPS
 $DISPLAY_MANAGER
 EOF
 
-[ -t 0 ] && read -p "Press Enter to continue > " PRESSENTER
+[ -t 0 ] && read -pr "Press Enter to continue > " PRESSENTER
 
 # prepare list to be a CLI arg
 ACTIVE_DEPS="$(echo "$ACTIVE_DEPS" | tr '\n' ' ')"
