@@ -34,8 +34,10 @@ case "$NR_SESSION" in
         unset DBUS_SESSION_BUS_ADDRESS
     fi
 
-    export DISPLAY=$(sed -z -n s/^DISPLAY=//p "/proc/$NR_SESSPPID/environ")
-    export XAUTHORITY=$(sed -z -n s/^XAUTHORITY=//p "/proc/$NR_SESSPPID/environ")
+    DISPLAY=$(sed -z -n s/^DISPLAY=//p "/proc/$NR_SESSPPID/environ")
+    export DISPLAY
+    XAUTHORITY=$(sed -z -n s/^XAUTHORITY=//p "/proc/$NR_SESSPPID/environ")
+    export XAUTHORITY
 
     if [ -z "$DISPLAY" ]; then
         echo "[$0] could not find DISPLAY for $NR_USERNAME on $NR_SESSION" 1>&2
