@@ -698,15 +698,22 @@ if(defined($opt_l)) {
 	    next if(grep { $exe =~ /$_/; } @{$nrconf{blacklist}});
 
 	    if($is_systemd) {
+		# get unit name from /proc/<pid>/cgroup
+		my $cgroup = nr_get_cgroup($pid);
 		# systemd manager
-		if($pid == 1 && $exe =~ m@^(/usr)?/lib/systemd/systemd@) {
+		if($cgroup =~ m@^/init\.scope$@ || ($pid == 1 && $exe =~ m@^(/usr)?/lib/systemd/systemd@)) {
 		    print STDERR "$LOGPREF #$pid is systemd manager\n" if($nrconf{verbosity} > 1);
 		    $restart{q(systemd-manager)}++;
 		    next;
 		}
+		# `systemd --user` manager
+		if($cgroup =~ m@/user\@(\d+)\.service/init\.scope$@ && $ptable->{$pid}->{fname} ne "(sd-pam)") {
+		    print STDERR "$LOGPREF #$pid is user systemd manager: uid=$1\n" if($nrconf{verbosity} > 1);
+		    # TODO: restart specific `systemd --user` instance?
+		    $restart{q(systemd-user)}++;
+		    next;
+		}
 
-		# get unit name from /proc/<pid>/cgroup
-		my $cgroup = nr_get_cgroup($pid);
 		if($cgroup =~ m@/user-(\d+)\.slice/session-(\d+)\.scope@) {
 		    print STDERR "$LOGPREF #$pid part of user session: uid=$1 sess=$2\n" if($nrconf{verbosity} > 1);
 		    push(@{ $sessions{$1}->{"session #$2"}->{ $ptable->{$pid}->{fname} } }, $pid);
