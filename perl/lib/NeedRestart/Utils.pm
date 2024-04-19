@@ -43,6 +43,7 @@ our @EXPORT = qw(
     nr_fork_pipe_stderr
     nr_fork_pipew
     nr_fork_pipe2
+    nr_get_cgroup
 );
 
 my %ptable;
@@ -59,6 +60,28 @@ sub nr_ptable_pid($) {
     my $pid = shift;
 
     return $ptable{$pid};
+}
+
+sub nr_get_cgroup($) {
+    my $pid = shift;
+
+    # get unit name from /proc/<pid>/cgroup
+    if(open(HCGROUP, qq(/proc/$pid/cgroup))) {
+	my ($cgroup) = map {
+	    chomp;
+	    my ($id, $type, $value) = split(/:/);
+	    if(($id == 0 && $type eq "") || ($type eq q(name=systemd))) {
+		($value);
+	    } else {
+		();
+	    }
+	} <HCGROUP>;
+	close(HCGROUP);
+
+	return $cgroup;
+    }
+
+    return undef;
 }
 
 sub nr_parse_cmd($) {
