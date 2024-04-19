@@ -44,6 +44,7 @@ our @EXPORT = qw(
     nr_fork_pipew
     nr_fork_pipe2
     nr_get_cgroup
+    nr_is_systemd_manager
 );
 
 my %ptable;
@@ -82,6 +83,14 @@ sub nr_get_cgroup($) {
     }
 
     return undef;
+}
+
+sub nr_is_systemd_manager($) {
+    my $pid = shift;
+    my $cgroup = nr_get_cgroup($pid);
+
+    return $cgroup =~ m@(^|/user\@(\d+)\.service)/init\.scope$@ if($cgroup);
+    return 0;
 }
 
 sub nr_parse_cmd($) {
