@@ -706,59 +706,44 @@ if(defined($opt_l)) {
 		}
 
 		# get unit name from /proc/<pid>/cgroup
-		if(open(HCGROUP, qq(/proc/$pid/cgroup))) {
-		    my ($rc) = map {
-			chomp;
-			my ($id, $type, $value) = split(/:/);
-			if($id != 0 && $type ne q(name=systemd)) {
-			    ();
-			}
-			else {
-			    if($value =~ m@/user-(\d+)\.slice/session-(\d+)\.scope@) {
-				print STDERR "$LOGPREF #$pid part of user session: uid=$1 sess=$2\n" if($nrconf{verbosity} > 1);
-				push(@{ $sessions{$1}->{"session #$2"}->{ $ptable->{$pid}->{fname} } }, $pid);
-				next;
-			    }
-			    if($value =~ m@/user\@(\d+)\.service@) {
-				print STDERR "$LOGPREF #$pid part of user manager service: uid=$1\n" if($nrconf{verbosity} > 1);
-				push(@{ $sessions{$1}->{'user manager service'}->{ $ptable->{$pid}->{fname} } }, $pid);
-				next;
-			    }
-			    if($value =~ m@/machine.slice/machine.qemu(.*).scope@) {
-				for my $cmdlineidx (0 .. $#{$ptable->{$pid}->{cmdline}} ) {
-				    if ( ${$ptable->{$pid}->{cmdline}}[$cmdlineidx] eq "-name") {
-					foreach ( split(/,/, ${$ptable->{$pid}->{cmdline}}[$cmdlineidx+1]) ) {
-					    if ( index($_, "guest=") == 0 ) {
-						my @namearg = split(/=/, $_, 2);
-						if ($#{namearg} == 1) {
-						    print STDERR "$LOGPREF #$pid detected as VM guest '$namearg[1]' in group '$value'\n" if($nrconf{verbosity} > 1);
-						    push(@guests, __x("'{name}' with pid {pid}", name => $namearg[1], pid=>$pid) );
-						}
-						next PIDLOOP;
-					    }
-					}
+		my $cgroup = nr_get_cgroup($pid);
+		if($cgroup =~ m@/user-(\d+)\.slice/session-(\d+)\.scope@) {
+		    print STDERR "$LOGPREF #$pid part of user session: uid=$1 sess=$2\n" if($nrconf{verbosity} > 1);
+		    push(@{ $sessions{$1}->{"session #$2"}->{ $ptable->{$pid}->{fname} } }, $pid);
+		    next;
+		}
+		if($cgroup =~ m@/user\@(\d+)\.service@) {
+		    print STDERR "$LOGPREF #$pid part of user manager service: uid=$1\n" if($nrconf{verbosity} > 1);
+		    push(@{ $sessions{$1}->{'user manager service'}->{ $ptable->{$pid}->{fname} } }, $pid);
+		    next;
+		}
+		if($cgroup =~ m@/machine.slice/machine.qemu(.*).scope@) {
+		    for my $cmdlineidx (0 .. $#{$ptable->{$pid}->{cmdline}} ) {
+			if ( ${$ptable->{$pid}->{cmdline}}[$cmdlineidx] eq "-name") {
+			    foreach ( split(/,/, ${$ptable->{$pid}->{cmdline}}[$cmdlineidx+1]) ) {
+				if ( index($_, "guest=") == 0 ) {
+				    my @namearg = split(/=/, $_, 2);
+				    if ($#{namearg} == 1) {
+					print STDERR "$LOGPREF #$pid detected as VM guest '$namearg[1]' in group '$cgroup'\n" if($nrconf{verbosity} > 1);
+					push(@guests, __x("'{name}' with pid {pid}", name => $namearg[1], pid=>$pid) );
 				    }
+				    next PIDLOOP;
 				}
-				print STDERR "$LOGPREF #$pid detected as VM guest with unknown name in group '$value'\n" if($nrconf{verbosity} > 1);
-				push(@guests, __x("'Unknown VM' with pid {pid}", pid=>$pid) );
-				next;
-			    }
-			    elsif($value =~ m@/([^/]+\.service)$@) {
-				($1);
-			    }
-			    else {
-				print STDERR "$LOGPREF #$pid unexpected cgroup '$value'\n" if($nrconf{verbosity} > 1);
-				();
 			    }
 			}
-		    } <HCGROUP>;
-		    close(HCGROUP);
-
-		    if($rc) {
-			print STDERR "$LOGPREF #$pid is $rc\n" if($nrconf{verbosity} > 1);
-			$restart{$rc}++;
-			next;
 		    }
+		    print STDERR "$LOGPREF #$pid detected as VM guest with unknown name in group '$cgroup'\n" if($nrconf{verbosity} > 1);
+		    push(@guests, __x("'Unknown VM' with pid {pid}", pid=>$pid) );
+		    next;
+		}
+		elsif($cgroup =~ m@/([^/]+\.service)$@) {
+		    my $unit = $1;
+		    print STDERR "$LOGPREF #$pid is $unit\n" if($nrconf{verbosity} > 1);
+		    $restart{$unit}++;
+		    next;
+		}
+		elsif($cgroup) {
+		    print STDERR "$LOGPREF #$pid unexpected cgroup '$cgroup'\n" if($nrconf{verbosity} > 1);
 		}
 
 		# did not get the unit name, yet - try systemctl status
