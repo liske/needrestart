@@ -1,0 +1,24 @@
+#!/bin/sh
+
+# needrestart - Restart daemons after library updates.
+#
+# Restarting `systemd --user` by signaling it with SIGRTMIN+25.
+# (documented in systemd(1) as equivalent to `systemctl --user daemon-reexec`,
+#  but easier to do outside of a user session)
+#
+
+# enable xtrace if we should be verbose
+if [ "$NR_VERBOSE" = '1' ]; then
+    set -x
+fi
+
+# also possible to use `--value` (systemd 230+)
+systemctl show --state=active --property=MainPID 'user@*.service' | while IFS='=' read -r _ pid; do
+    # skip empty lines produced by `systemctl show` if the property
+    # did not exist or could not be queried
+    if [ -z "$pid" ]; then continue; fi
+
+    # also possible as: `systemctl kill --kill-whom=main --signal='SIGRTMIN+25' "$unit"` (systemd 252+)
+    # also possible as: `systemctl -M "$uid@.host" --user daemon-reexec` (systemd 248+)
+    command kill -SIGRTMIN+25 "$pid"
+done
