@@ -654,7 +654,7 @@ if(defined($opt_l)) {
 
 	# find parent process
 	my $ppid = $ptable->{$pid}->{ppid};
-	if($ppid != $pid && $ppid > 1 && !$uid) {
+	if($ppid != $pid && $ppid > 1) {
 	    print STDERR "$LOGPREF #$pid is a child of #$ppid\n" if($nrconf{verbosity} > 1);
 
 	    if($uid && $ptable->{$ppid}->{uid} != $uid) {
