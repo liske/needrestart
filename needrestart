@@ -724,20 +724,20 @@ if(defined($opt_l)) {
 				push(@{ $sessions{$1}->{'user manager service'}->{ $ptable->{$pid}->{fname} } }, $pid);
 				next;
 			    }
-				if($value =~ m@/machine.slice/machine.qemu(.*).scope@) {
+			    if($value =~ m@/machine.slice/machine.qemu(.*).scope@) {
 				for my $cmdlineidx (0 .. $#{$ptable->{$pid}->{cmdline}} ) {
-					if ( ${$ptable->{$pid}->{cmdline}}[$cmdlineidx] eq "-name") {
-						foreach ( split(/,/, ${$ptable->{$pid}->{cmdline}}[$cmdlineidx+1]) ) {
-							if ( index($_, "guest=") == 0 ) {
-								my @namearg = split(/=/, $_, 2);
-								if ($#{namearg} == 1) {
-									print STDERR "$LOGPREF #$pid detected as VM guest '$namearg[1]' in group '$value'\n" if($nrconf{verbosity} > 1);
-									push(@guests, __x("'{name}' with pid {pid}", name => $namearg[1], pid=>$pid) );
-								}
-								next PIDLOOP;
-							}
+				    if ( ${$ptable->{$pid}->{cmdline}}[$cmdlineidx] eq "-name") {
+					foreach ( split(/,/, ${$ptable->{$pid}->{cmdline}}[$cmdlineidx+1]) ) {
+					    if ( index($_, "guest=") == 0 ) {
+						my @namearg = split(/=/, $_, 2);
+						if ($#{namearg} == 1) {
+						    print STDERR "$LOGPREF #$pid detected as VM guest '$namearg[1]' in group '$value'\n" if($nrconf{verbosity} > 1);
+						    push(@guests, __x("'{name}' with pid {pid}", name => $namearg[1], pid=>$pid) );
 						}
+						next PIDLOOP;
+					    }
 					}
+				    }
 				}
 				print STDERR "$LOGPREF #$pid detected as VM guest with unknown name in group '$value'\n" if($nrconf{verbosity} > 1);
 				push(@guests, __x("'Unknown VM' with pid {pid}", pid=>$pid) );
