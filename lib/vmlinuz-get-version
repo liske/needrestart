@@ -19,8 +19,10 @@
 
 get_version()
 {
-    # search and output version string pattern
-    grep -aom 1 'Linux version [0123456789].*' "$1" && exit 0
+    # search and output version string pattern,
+    # prefer the final version string (linux 6.1+)
+    grep -aoEm 1 'Linux version [[:digit:]].*#[^[:space:]]' "$1" && exit 0
+    grep -aoEm 1 'Linux version [[:digit:]].*#' "$1" && exit 0
 }
 
 try_decompress()
