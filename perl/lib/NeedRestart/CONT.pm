@@ -30,7 +30,7 @@ use NeedRestart::Utils;
 
 my $LOGPREF = '[CONT]';
 
-my $nspid = get_nspid(undef, 1);
+my $nspid = nr_get_pid_ns(1);
 my $ptable = nr_ptable();
 
 sub new {
@@ -55,24 +55,13 @@ sub get {
     return ();
 }
 
-sub get_nspid {
-    my $self = shift;
-    my $pid = shift;
-
-    my $stat = nr_stat(qq(/proc/$pid/ns/pid));
-
-    return $stat->{ino} if($stat);
-
-    return undef;
-}
-
 sub find_nsparent {
     my $self = shift;
     my $pid = shift;
 
     return undef unless(exists($ptable->{$pid}));
 
-    my $ns = $self->get_nspid($ptable->{$pid}->{ppid});
+    my $ns = nr_get_pid_ns($ptable->{$pid}->{ppid});
 
     return $ptable->{$pid}->{ppid} if($ns && $ns == $nspid);
 
