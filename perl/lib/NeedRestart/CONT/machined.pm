@@ -56,17 +56,20 @@ sub check {
 
     my $cg = nr_get_cgroup($pid);
 
-    # look for machined cgroups
-    return 0 unless($cg =~ m@^/machine\.slice/machine-(.+)\.scope$@m);
+    # look for machined or systemd-nspawn cgroups
+    return 0 unless($cg =~ m@^/machine\.slice/(machine)-([^.]+)\.scope(/|$)@m ||
+                    $cg =~ m@^/machine\.slice/(systemd-nspawn)\@([^.]+)\.service(/|$)@);
 
-    my $name = $1;
+    my $name = $2;
+    my $mgr = ($1 eq "machine") ? "systemd-machined" : $1;
+
     unless($norestart) {
-	print STDERR "$LOGPREF #$pid is part of systemd-machined container '$name' and should be restarted\n" if($self->{debug});
+	print STDERR "$LOGPREF #$pid is part of $mgr container '$name' and should be restarted\n" if($self->{debug});
 
 	$self->{machined}->{$name}++;
     }
     else {
-	print STDERR "$LOGPREF #$pid is part of systemd-machined container '$name'\n" if($self->{debug});
+	print STDERR "$LOGPREF #$pid is part of $mgr container '$name'\n" if($self->{debug});
     }
 
     return 1;
