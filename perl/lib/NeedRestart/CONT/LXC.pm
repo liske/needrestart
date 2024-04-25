@@ -40,7 +40,6 @@ sub new {
     my $class = shift;
 
     my $self = $class->SUPER::new(@_);
-    die "Could not get NS PID of #1!\n" unless(defined($self->{nspid}));
 
     $self->{lxc} = {};
     $self->{lxd} = {};
@@ -71,7 +70,7 @@ sub check {
     my $ns = nr_get_pid_ns($pid);
 
     # stop here if no dedicated PID namespace is used
-    return 0 if(!$ns || $ns == $self->{nspid});
+    return 0 if(!$ns || $ns == $self->{pidns});
 
     my $cg = nr_get_cgroup($pid);
 
