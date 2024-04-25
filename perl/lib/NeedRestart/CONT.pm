@@ -57,6 +57,14 @@ sub get {
     return ();
 }
 
+sub in_pidns {
+    my $self = shift;
+    my $pid = shift;
+
+    my $ns = nr_get_pid_ns($pid);
+    return $ns && $ns != $self->{pidns};
+}
+
 sub find_nsparent {
     my $self = shift;
     my $pid = shift;

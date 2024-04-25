@@ -67,10 +67,9 @@ sub check {
     my $pid = shift;
     my $bin = shift;
     my $norestart = shift;
-    my $ns = nr_get_pid_ns($pid);
 
     # stop here if no dedicated PID namespace is used
-    return 0 if(!$ns || $ns == $self->{pidns});
+    return 0 unless $self->in_pidns($pid);
 
     my $cg = nr_get_cgroup($pid);
 
