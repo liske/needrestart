@@ -55,21 +55,12 @@ sub check {
     # stop here if no dedicated PID namespace is used
     return 0 if(!$ns || $ns == $self->{nspid});
 
-    unless(open(FCG, qq(/proc/$pid/cgroup))) {
-	print STDERR "$LOGPREF #$pid: unable to open cgroup ($!)\n" if($self->{debug});
-	return 0;
-    }
-    my $cg;
-    {
-	local $/;
-	$cg = <FCG>;
-	close(FCG);
-    }
+    my $cg = nr_get_cgroup($pid);
 
     # look for docker cgroups
-    return 0 unless($cg =~ /^\d+:[^:]*:\/system.slice\/docker-(.+)\.scope$/m ||
-                    $cg =~ /^\d+:[^:]*:\/system.slice\/docker\.service$/m ||
-                    $cg =~ /^\d+:[^:]*:\/docker\/([\da-f]+)$/m);
+    return 0 unless($cg =~ m@^/system.slice/docker-(.+)\.scope$@ ||
+                    $cg =~ m@^/system.slice/docker\.service$@ ||
+                    $cg =~ m@^/docker/([\da-f]+)$@);
 
     print STDERR "$LOGPREF #$pid is part of docker container '$1' and will be ignored\n" if($self->{debug});
 

@@ -56,19 +56,10 @@ sub check {
     # stop here if no dedicated PID namespace is used
     return 0 if(!$ns || $ns == $self->{nspid});
 
-    unless(open(FCG, qq(/proc/$pid/cgroup))) {
-	print STDERR "$LOGPREF #$pid: unable to open cgroup ($!)\n" if($self->{debug});
-	return 0;
-    }
-    my $cg;
-    {
-	local $/;
-	$cg = <FCG>;
-	close(FCG);
-    }
+    my $cg = nr_get_cgroup($pid);
 
     # look for machined cgroups
-    return 0 unless($cg =~ /^\d+:[^:]*:\/machine.slice\/machine-(.+)\.scope$/m);
+    return 0 unless($cg =~ m@^/machine\.slice/machine-(.+)\.scope$@m);
 
     my $name = $1;
     unless($norestart) {

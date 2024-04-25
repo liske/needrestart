@@ -73,19 +73,10 @@ sub check {
     # stop here if no dedicated PID namespace is used
     return 0 if(!$ns || $ns == $self->{nspid});
 
-    unless(open(FCG, qq(/proc/$pid/cgroup))) {
-	print STDERR "$LOGPREF #$pid: unable to open cgroup ($!)\n" if($self->{debug});
-	return 0;
-    }
-    my $cg;
-    {
-	local $/;
-	$cg = <FCG>;
-	close(FCG);
-    }
+    my $cg = nr_get_cgroup($pid);
 
     # look for LXC cgroups
-    return unless($cg =~ /^\d+:[^:]*:\/lxc(?:.payload)?[.\/]([^\/\n]+)($|\/)/m);
+    return unless($cg =~ m@^/lxc(?:.payload)?[./]([^/\n]+)($|/)@);
 
     my $name = $1;
     my $type = ($self->{has_lxd} && -d qq($self->{lxd_container_path}/$name) ? 'LXD' : 'LXC');
