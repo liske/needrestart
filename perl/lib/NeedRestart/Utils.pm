@@ -43,6 +43,8 @@ our @EXPORT = qw(
     nr_fork_pipe_stderr
     nr_fork_pipew
     nr_fork_pipe2
+    nr_get_cgroup
+    nr_is_systemd_manager
 );
 
 my %ptable;
@@ -59,6 +61,36 @@ sub nr_ptable_pid($) {
     my $pid = shift;
 
     return $ptable{$pid};
+}
+
+sub nr_get_cgroup($) {
+    my $pid = shift;
+
+    # get unit name from /proc/<pid>/cgroup
+    if(open(HCGROUP, qq(/proc/$pid/cgroup))) {
+	my ($cgroup) = map {
+	    chomp;
+	    my ($id, $type, $value) = split(/:/);
+	    if(($id == 0 && $type eq "") || ($type eq q(name=systemd))) {
+		($value);
+	    } else {
+		();
+	    }
+	} <HCGROUP>;
+	close(HCGROUP);
+
+	return $cgroup;
+    }
+
+    return undef;
+}
+
+sub nr_is_systemd_manager($) {
+    my $pid = shift;
+    my $cgroup = nr_get_cgroup($pid);
+
+    return $cgroup =~ m@(^|/user\@(\d+)\.service)/init\.scope$@ if($cgroup);
+    return 0;
 }
 
 sub nr_parse_cmd($) {

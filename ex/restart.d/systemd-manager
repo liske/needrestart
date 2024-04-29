@@ -10,4 +10,9 @@ if [ "$NR_VERBOSE" = '1' ]; then
     set -x
 fi
 
-exec systemctl daemon-reexec
+trace() {
+    echo "-> $*" >&2
+    "$@"
+}
+
+trace systemctl daemon-reexec
