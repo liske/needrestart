@@ -14,6 +14,9 @@
 # delay in semi-interactive mode
 DELAY_SECONDS=10
 
+# service units to always restart after dbus restart (whitespace-separated)
+ALWAYS_RESTART_SERVICES='systemd-timesyncd.service'
+
 # enable xtrace if we should be verbose
 if [ "$NR_VERBOSE" = '1' ]; then
 	set -x
@@ -65,8 +68,8 @@ while read -r service; do
 	esac
 done <<- EOF
 	$(
-		systemctl list-dependencies -l --reverse --plain dbus.socket
-		systemctl list-dependencies -l --reverse --plain "$DBUS_SERVICE_NAME"
+		systemctl list-dependencies -l --reverse --plain dbus.socket "$DBUS_SERVICE_NAME"
+		printf '%s\n' $ALWAYS_RESTART_SERVICES
 	)
 EOF
 
