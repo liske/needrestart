@@ -75,7 +75,7 @@ EOF
 
 # get logind users
 USERS=''
-while read -r uid user linger state; do
+while read -r _uid user _linger _state; do
 	USERS="${USERS}${USERS:+ }${user}"
 done <<- EOF
 	$(loginctl list-users --no-legend)
@@ -114,6 +114,7 @@ shcat() {
 	done
 }
 
+# shellcheck disable=SC2086
 case "$CONSOLE_MODE" in
 interactive) shcat ;;
 delay) shcat >&2 ;;
@@ -140,7 +141,7 @@ EOF
 case "$CONSOLE_MODE" in
 interactive)
 	printf '\n%s' "Press Enter to continue > "
-	read -r PRESSENTER
+	read -r _PRESSENTER
 	;;
 delay)
 	printf '\n%s\n' "Restart in $DELAY_SECONDS seconds..." >&2
