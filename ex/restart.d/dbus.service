@@ -36,16 +36,20 @@ if [ "$(id -ru)" != "0" ]; then
 	exit 1
 fi
 
-INIT_EXEC="$(readlink /proc/1/exe)"
+# get init system process name
+INIT_EXEC="$(ps -p 1 -o comm=)"
 
-if [ "$(basename "$INIT_EXEC")" != "systemd" ]; then
+case "$INIT_EXEC" in
+systemd | */systemd) true ;;
+*)
 	echo "Init system is not systemd ($INIT_EXEC), doing nothing"
 	exit 0
-fi
+	;;
+esac
 
 # start from the name of the hook, get real unit ID (for example, dbus-broker replaces dbus)
 DBUS_SERVICE_NAME=$(
-	systemctl show --value -p Id "$(basename "$0")"
+	systemctl show --value -p Id "${0##*/}"
 )
 
 # if DM is active, return canonical ID
@@ -132,7 +136,12 @@ esac <<- EOF
 	Display manager to be restarted: ${DISPLAY_MANAGER:-no active DM found}
 
 	Command set to run as transient unit restart-dbus.service:
-	 $(IFS=';' ; printf ' %s\n' $COMMANDS)
+	$(
+		IFS=';'
+		# consequent commands have a space after preceeding semicolons, compensate for that
+		printf '%s' ' '
+		printf ' %s\n' $COMMANDS
+	)
 
 	Logs can be viewed by: journalctl -u restart-dbus
 EOF
