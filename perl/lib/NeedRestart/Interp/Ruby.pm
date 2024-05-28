@@ -35,7 +35,7 @@ use NeedRestart::Utils;
 
 my $LOGPREF = '[Ruby]';
 
-needrestart_interp_register(__PACKAGE__);
+needrestart_interp_register(__PACKAGE__, "ruby");
 
 sub isa {
     my $self = shift;

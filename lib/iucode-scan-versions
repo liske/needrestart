@@ -63,7 +63,7 @@ test -r /etc/default/intel-microcode && . /etc/default/intel-microcode
 test "$IUCODE_TOOL_INITRAMFS" = "no" && exit 0
 
 # run iucode_tool to scan for microcodes
-if [ -r /usr/share/misc/intel-microcode* ]; then
+if [ -n "$(find /usr/share/misc -maxdepth 1 -type f -name 'intel-microcode*' -perm /u+r)" ]; then
     exec iucode_tool -l $filter --ignore-broken -tb /lib/firmware/intel-ucode -ta /usr/share/misc/intel-microcode* 2>&1
     exit $?
 fi

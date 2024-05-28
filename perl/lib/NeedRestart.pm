@@ -49,6 +49,7 @@ our @EXPORT = qw(
 
     needrestart_ui
     needrestart_ui_list
+    needrestart_interp_configure
     needrestart_interp_check
     needrestart_interp_source
     needrestart_cont_check
@@ -135,13 +136,20 @@ sub needrestart_ui_list {
 
 
 my %Interps;
+my $InterpConf;
 my %InterpCache;
 my $idebug;
 
-sub needrestart_interp_register($) {
-    my $pkg = shift;
+sub needrestart_interp_configure($) {
+    my $conf = shift;
+    $InterpConf = $conf;
+}
 
-    $Interps{$pkg} = new $pkg($idebug);
+sub needrestart_interp_register($$) {
+    my $pkg = shift;
+    my $confkey = shift;
+
+    $Interps{$pkg} = new $pkg($idebug, $InterpConf->{$confkey});
 }
 
 sub needrestart_interp_init($) {
