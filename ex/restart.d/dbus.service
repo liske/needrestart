@@ -77,37 +77,48 @@ done <<- EOF
 EOF
 
 # get active services with BusName
-capture_id=false
+current_busname=''
+current_id=''
 while IFS='=' read -r option value; do
-	case "${capture_id}:${option}=${value}" in
-	# empty BusName, disable Id capture
-	*':BusName=')
-		capture_id=false
+	case "${option}" in
+	BusName)
+		current_busname="$value"
 		continue
 		;;
-	# non-empty BusName, enable Id capture
-	*':BusName='*)
-		capture_id=true
+	Id)
+		current_id="$value"
 		continue
 		;;
-	*":Id=${DISPLAY_MANAGER}" | *':Id=dbus.service' | *":Id=$DBUS_SERVICE_NAME") continue ;;
-	# Id capture is enabled, do it, add to list
-	'true:Id='*)
-		service="$value"
+	'')
+		if [ -z "$current_busname" ] || [ -z "$current_id" ]; then
+			current_busname=''
+			current_id=''
+			continue
+		fi
+		service=$current_id
+		current_busname=''
+		current_id=''
+		case "$service" in
+		"$DISPLAY_MANAGER" | dbus.service | "$DBUS_SERVICE_NAME") continue ;;
+		esac
 		case " $ACTIVE_DEPS " in
 		*" $service "*) true ;;
 		*) ACTIVE_DEPS="${ACTIVE_DEPS}${ACTIVE_DEPS:+ }${service}" ;;
 		esac
 		;;
-	*) continue ;;
+	*)
+		current_busname=''
+		current_id=''
+		;;
 	esac
 done <<- EOF
 	$(
 		systemctl show --plain --all \
 			--type=service \
 			--state=active,reloading,failed,activating \
-			--property=BusName --property=Id
+			--property=BusName,Id
 	)
+	=end
 EOF
 
 # get logind users
