@@ -14,9 +14,6 @@
 # delay in semi-interactive mode
 DELAY_SECONDS=10
 
-# service units to always restart after dbus restart (whitespace-separated)
-ALWAYS_RESTART_SERVICES='systemd-timesyncd.service'
-
 # enable xtrace if we should be verbose
 if [ "$NR_VERBOSE" = '1' ]; then
 	set -x
@@ -58,22 +55,58 @@ DISPLAY_MANAGER=$(
 		&& systemctl show --value -p Id display-manager.service
 )
 
-# get dependencies
+# get active dependencies
 ACTIVE_DEPS=''
 while read -r service; do
 	case "$service" in
-	"$DISPLAY_MANAGER" | "$DBUS_SERVICE_NAME") continue ;;
+	"$DISPLAY_MANAGER" | dbus.service | "$DBUS_SERVICE_NAME") continue ;;
 	*.service)
 		case " $ACTIVE_DEPS " in
 		*" $service "*) true ;;
-		*) systemctl -q is-active "$service" && ACTIVE_DEPS="${ACTIVE_DEPS}${ACTIVE_DEPS:+ }${service}" ;;
+		*) ACTIVE_DEPS="${ACTIVE_DEPS}${ACTIVE_DEPS:+ }${service}" ;;
 		esac
 		;;
 	esac
 done <<- EOF
 	$(
-		systemctl list-dependencies -l --reverse --plain dbus.socket "$DBUS_SERVICE_NAME"
-		printf '%s\n' $ALWAYS_RESTART_SERVICES
+		systemctl list-dependencies -l --reverse --plain --all \
+			--type=service \
+			--state=active,reloading,failed,activating \
+			dbus.socket dbus.service "$DBUS_SERVICE_NAME"
+	)
+EOF
+
+# get active services with BusName
+capture_id=false
+while IFS='=' read -r option value; do
+	case "${capture_id}:${option}=${value}" in
+	# empty BusName, disable Id capture
+	*':BusName=')
+		capture_id=false
+		continue
+		;;
+	# non-empty BusName, enable Id capture
+	*':BusName='*)
+		capture_id=true
+		continue
+		;;
+	*":Id=${DISPLAY_MANAGER}" | *':Id=dbus.service' | *":Id=$DBUS_SERVICE_NAME") continue ;;
+	# Id capture is enabled, do it, add to list
+	'true:Id='*)
+		service="$value"
+		case " $ACTIVE_DEPS " in
+		*" $service "*) true ;;
+		*) ACTIVE_DEPS="${ACTIVE_DEPS}${ACTIVE_DEPS:+ }${service}" ;;
+		esac
+		;;
+	*) continue ;;
+	esac
+done <<- EOF
+	$(
+		systemctl show --plain --all \
+			--type=service \
+			--state=active,reloading,failed,activating \
+			--property=BusName --property=Id
 	)
 EOF
 
