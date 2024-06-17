@@ -13,6 +13,16 @@ This might result in a continuous pending kernel update false positive. There
 is a configuration option in needrestart to filter the kernel image filenames to
 ignore the unused image files.
 
+### RPi 1 or RPi 1B
+
+```shell
+$ cat << 'EOF' > /etc/needrestart/conf.d/kernel.conf
+# Filter kernel image filenames by regex. This is required on Raspian having
+# multiple kernel image variants installed in parallel.
+$nrconf{kernelfilter} = qr(vmlinuz-.*-v6$);
+EOF
+```
+
 ### RPi 2 or RPi 3
 
 ```shell
