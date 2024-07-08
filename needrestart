@@ -978,7 +978,15 @@ if($opt_w) {
 	    elsif($ucode_result == NRM_OBSOLETE) {
             push(@easy_hints, __ 'outdated processor microcode') if($opt_m eq 'e');
 
-            if($nrconf{ucodehints}) {
+            if($nrconf{ucodehints} < 0) {
+                $ui->vspace();
+                $ui->notice(__x(
+                    'The currently running processor microcode revision is {crev} which is not the expected microcode revision {erev}.',
+                    crev => $ucode_vars{CURRENT},
+                    erev => $ucode_vars{AVAIL},
+                ));
+            }
+            elsif($nrconf{ucodehints}) {
                 $ui->announce_ucode(%ucode_vars);
             }
 	    }
