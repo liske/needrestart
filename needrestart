@@ -84,7 +84,7 @@ sub HELP_MESSAGE {
     print <<USG;
 Usage:
 
-  needrestart [-vn] [-c <cfg>] [-r <mode>] [-f <fe>] [-u <ui>] [-bkl]
+  needrestart [-vn] [-c <cfg>] [-r <mode>] [-f <fe>] [-u <ui>] [-(b|p|o)] [-klw]
 
     -v		be more verbose
     -q		be quiet
@@ -99,6 +99,7 @@ Usage:
 	a	(a)utomatically restart
     -b		enable batch mode
     -p          enable nagios plugin mode
+    -o          enable OpenMetrics output mode, implies batch mode, cannot be used simultaneously with -p
     -f <fe>	override debconf frontend (DEBIAN_FRONTEND, debconf(7))
     -t <seconds> tolerate interpreter process start times within this value
     -u <ui>     use preferred UI package (-u ? shows available packages)
@@ -183,11 +184,12 @@ our $opt_f;
 our $opt_k;
 our $opt_l;
 our $opt_p;
+our $opt_o;
 our $opt_q;
 our $opt_t;
 our $opt_u;
 our $opt_w;
-unless(getopts('c:vr:nm:bf:klpqt:u:w')) {
+unless(getopts('c:vr:nm:bf:klpoqt:u:w')) {
     HELP_MESSAGE;
     exit 1;
 }
@@ -240,7 +242,8 @@ $opt_r = 'l' if($opt_m eq 'e');
 $opt_t = $nrconf{tolerance} unless(defined($opt_t));
 
 $nrconf{defno}++ if($opt_n);
-$opt_b++ if($opt_p);
+die "Options -p and -o cannot be defined simultaneously\n" if ($opt_p && $opt_o);
+$opt_b++ if($opt_p || $opt_o);
 
 needrestart_interp_configure({
     perl => {
@@ -260,6 +263,12 @@ if($uid) {
     }
 
     print STDERR "$LOGPREF running in user mode\n" if($nrconf{verbosity} > 1);
+
+    # we need to run as root in order to list system-wide outdated libraries
+    if ($opt_o && $opt_l) {
+	print STDERR "$LOGPREF OpenMetrics output needs root access to list processes with outdated libraries\n";
+	exit 1;
+    }
 }
 else {
     print STDERR "$LOGPREF running in root mode\n" if($nrconf{verbosity} > 1);
@@ -456,7 +465,13 @@ my %nagios = (
     uret => 3,
     uperf => q(U),
  );
-print "NEEDRESTART-VER: $NeedRestart::VERSION\n" if($opt_b && !$opt_p);
+print "NEEDRESTART-VER: $NeedRestart::VERSION\n" if($opt_b && !$opt_p && !$opt_o);
+
+my %ometric_kernel_values = (
+    kresult => q(unknown),
+    krunning => q(unknown),
+    kexpected => q(unknown),
+);
 
 my %restart;
 my %sessions;
@@ -866,12 +881,12 @@ if(defined($opt_k)) {
 
     if(defined($kresult)) {
 	if($opt_b) {
-	    unless($opt_p) {
+	    unless($opt_p || $opt_o) {
             print "NEEDRESTART-KCUR: $kvars{KVERSION}\n";
             print "NEEDRESTART-KEXP: $kvars{EVERSION}\n" if(defined($kvars{EVERSION}));
             print "NEEDRESTART-KSTA: $kresult\n";
 	    }
-	    else {
+	    elsif ($opt_p) {
             $nagios{kstr} = $kvars{KVERSION};
             if($kresult == NRK_VERUPGRADE) {
                 $nagios{kstr} .= "!=$kvars{EVERSION}";
@@ -893,6 +908,11 @@ if(defined($opt_k)) {
             elsif($nagios{kret} == 2) {
                 $nagios{kstr} .= " (!!)";
             }
+        }
+        elsif ($opt_o) {
+            $ometric_kernel_values{kresult} = $kresult;
+            $ometric_kernel_values{krunning} = $kvars{KVERSION};
+            $ometric_kernel_values{kexpected} = $kvars{EVERSION};
         }
 	}
 	else {
@@ -941,7 +961,7 @@ if(defined($opt_k)) {
 
 if($opt_w) {
 	if($opt_b) {
-        unless($opt_p) {
+        unless($opt_p || $opt_o) {
             print "NEEDRESTART-UCSTA: $ucode_result\n";
             if($ucode_result != NRM_UNKNOWN) {
                 print "NEEDRESTART-UCCUR: $ucode_vars{CURRENT}\n";
@@ -1030,7 +1050,7 @@ if(defined($opt_l) && !$uid) {
 		local $nrconf{systemctl_combine} = 1 unless($opt_r eq 'l');
 
 		if($opt_b) {
-		    print "NEEDRESTART-SVC: $rc\n" unless($opt_p);
+		    print "NEEDRESTART-SVC: $rc\n" unless($opt_p || $opt_o);
 		    next;
 		}
 
@@ -1205,7 +1225,7 @@ if(defined($opt_l) && !$uid) {
 
 	    foreach my $cont (sort { lc($a) cmp lc($b) } keys %conts) {
 		if($opt_b) {
-		    print "NEEDRESTART-CONT: $cont\n" unless($opt_p);
+		    print "NEEDRESTART-CONT: $cont\n" unless($opt_p || $opt_o);
 		    next;
 		}
 
@@ -1396,6 +1416,44 @@ if($opt_p) {
     }
 
     exit $ret;
+}
+if ($opt_o) {
+    print "# TYPE needrestart_build info\n";
+    print "# HELP needrestart_build information about needrestart's runtime build\n";
+    print "needrestart_build_info{version=$NeedRestart::VERSION,perl_version=$^V} 1\n";
+
+    if ($opt_k) {
+        my @ometric_kernel_status = map { $_ == $ometric_kernel_values{kresult} ? 1 : 0 } (NRK_NOUPGRADE, NRK_ABIUPGRADE, NRK_VERUPGRADE);
+        print "# TYPE needrestart_kernel_status stateset\n";
+        print "# HELP needrestart_kernel_status status of kernel as reported by needrestart\n";
+        print "needrestart_kernel_status{needrestart_kernel_status=\"current\"} $ometric_kernel_status[0]\n";
+        print "needrestart_kernel_status{needrestart_kernel_status=\"abi_upgrade\"} $ometric_kernel_status[1]\n";
+        print "needrestart_kernel_status{needrestart_kernel_status=\"version_upgrade\"} $ometric_kernel_status[2]\n";
+	print "# TYPE needrestart_kernel info\n";
+	print "# HELP needrestart_kernel version information for currenly running and most up to date kernels\n";
+	print "needrestart_kernel_info{running=\"$ometric_kernel_values{krunning}\",expected=\"$ometric_kernel_values{kexpected}\"} 1\n";
+    }
+    if ($opt_w) {
+        my $ometric_ucode_current = $ucode_result != NRM_UNKNOWN ? $ucode_vars{CURRENT} : "unknown";
+        my $ometric_ucode_expected = $ucode_result != NRM_UNKNOWN ? $ucode_vars{AVAIL} : "unknown";
+        my @ometric_ucode_status = map { $_ == $ucode_result ? 1 : 0 } (NRM_CURRENT, NRM_OBSOLETE, NRM_UNKNOWN);
+        print "# TYPE needrestart_ucode_status stateset\n";
+        print "# HELP needrestart_ucode_status status of the host's CPU microcode as reported by needrestart\n";
+        print "needrestart_ucode_status{needrestart_ucode_status=\"current\"} $ometric_ucode_status[0]\n";
+        print "needrestart_ucode_status{needrestart_ucode_status=\"obsolete\"} $ometric_ucode_status[1]\n";
+        print "needrestart_ucode_status{needrestart_ucode_status=\"unknown\"} $ometric_ucode_status[2]\n";
+	print "# TYPE needrestart_ucode info\n";
+	print "# HELP needrestart_ucode version informaion for currently used and available microcode\n";
+	print "needrestart_ucode_info{running=\"$ometric_ucode_current\",expected=\"$ometric_ucode_expected\"} 1\n";
+    }
+    if ($opt_l) {
+        my $ometric_num_services = scalar %restart;
+        print "# TYPE needrestart_processes_with_outdated_libraries gauge\n";
+        print "# HELP needrestart_processes_with_outdated_libraries number of processes requiring a restart\n";
+        print "needrestart_processes_with_outdated_libraries $ometric_num_services\n";
+    }
+    print "# EOF\n";
+    exit 0;
 }
 
 if ($opt_b and scalar %sessions) {
