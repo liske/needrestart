@@ -54,7 +54,7 @@ sub nr_ucode_check_real {
 
     # check for Intel cpu
     unless ( defined( $info->{vendor_id} )
-        && $info->{vendor_id} =~ /intel/i )
+        && $info->{vendor_id} eq 'GenuineIntel' )
     {
         die "$LOGPREF #$info->{processor} cpu vendor id mismatch\n";
     }
