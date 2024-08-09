@@ -6,7 +6,7 @@ needrestart checks which daemons need to be restarted after library upgrades.
 .SH USAGE
 Usage:
 .IP
-needrestart [\-(v|q)] [\-n] [\-c <cfg>] [\-r <mode>] [\-f <fe>] [\-u <ui>] [\-(b|p)] [\-kl]
+needrestart [\-(v|q)] [\-n] [\-c <cfg>] [\-r <mode>] [\-f <fe>] [\-u <ui>] [\-(b|p|o)] [\-kl]
 .TP
 \fB\-v\fR
 be more verbose
@@ -48,6 +48,9 @@ enable batch mode
 .TP
 \fB\-p\fR
 nagios plugin mode: makes output and exit codes nagios compatible
+.TP
+\fB\-o\fR
+OpenMetrics output mode: output information that can be scraped by OpenMetrics-compatible services. Implies batch mode. By combining with any of `-l`, `-k` and `-w` you can decide whether the metrics will expose outdated libraries, kernel and microcode, respectively. Note that in order to list system-wide outdated libraries, needrestart needs to be run as root. When listing outdated libraries, a gauge-type metric exposes the number of running processes with such outdated libraries. When exposing kernel or microcode metrics, each one will expose a StateSet-type metric which indicates the current status. Kernel and microcode will also each expose an additional Info-type metric which informs of the versions of the current vs expected kernel or microcode.
 .TP
 \fB\-f\fR <fe>
 override debconf(7) frontend, sets the DEBIAN_FRONTEND environment variable to <fe>
