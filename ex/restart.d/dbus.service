@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # by Vladimir Kudrya
 # https://github.com/Vladimir-csp/
@@ -11,71 +11,199 @@
 # This is a replacement for original dbus.service script by Thomas Liske <thomas@fiasko-nw.net>
 # Dbus dependencies are enumerated dynamically and restarted after dbus and systemd daemon reexec
 
+# delay in semi-interactive mode
+DELAY_SECONDS=10
+
 # enable xtrace if we should be verbose
 if [ "$NR_VERBOSE" = '1' ]; then
-    set -x
+	set -x
 fi
 
-if [ "$(id -ru)" != "0" ]
-then
+# choose interactivity mode
+if [ "${DEBIAN_FRONTEND:-other}" = "noninteractive" ]; then
+	CONSOLE_MODE=skip
+elif [ -t 0 ]; then
+	CONSOLE_MODE=interactive
+else
+	CONSOLE_MODE=delay
+fi
+
+if [ "$(id -ru)" != "0" ]; then
 	echo "Not root, exiting" >&2
 	exit 1
 fi
 
-INIT_EXEC="$(readlink /proc/1/exe)"
+# get init system process name
+INIT_EXEC="$(ps -p 1 -o comm=)"
 
-if [ "$(basename "$INIT_EXEC")" != "systemd" ]
-then
+case "$INIT_EXEC" in
+systemd | */systemd) true ;;
+*)
 	echo "Init system is not systemd ($INIT_EXEC), doing nothing"
 	exit 0
-fi
+	;;
+esac
 
-get_active_deps(){
-	# return all dbus dependencies, filter out dbus and DM, leave only active
-	{
-		systemctl list-dependencies -l --reverse --plain dbus.socket
-		systemctl list-dependencies -l --reverse --plain dbus.service
-	} | grep -o '[^[:space:]]\+.service' | sort -u | while read -r SERVICE
-	do
-		if [ "$SERVICE" != "dbus.service" ] && [ "$SERVICE" != "$DISPLAY_MANAGER" ] && systemctl -q is-active "$SERVICE"
-		then
-			echo "$SERVICE"
+# start from the name of the hook, get real unit ID (for example, dbus-broker replaces dbus)
+DBUS_SERVICE_NAME=$(
+	systemctl show --value -p Id "${0##*/}"
+)
+
+# if DM is active, return canonical ID
+DISPLAY_MANAGER=$(
+	systemctl -q is-active display-manager.service \
+		&& systemctl show --value -p Id display-manager.service
+)
+
+# get active dependencies
+ACTIVE_DEPS=''
+while read -r service; do
+	case "$service" in
+	"$DISPLAY_MANAGER" | dbus.service | "$DBUS_SERVICE_NAME") continue ;;
+	*.service)
+		case " $ACTIVE_DEPS " in
+		*" $service "*) true ;;
+		*) ACTIVE_DEPS="${ACTIVE_DEPS}${ACTIVE_DEPS:+ }${service}" ;;
+		esac
+		;;
+	esac
+done <<- EOF
+	$(
+		systemctl list-dependencies -l --reverse --plain --all \
+			--type=service \
+			--state=active,reloading,failed,activating \
+			dbus.socket dbus.service "$DBUS_SERVICE_NAME"
+	)
+EOF
+
+# get active services with BusName
+current_busname=''
+current_id=''
+while IFS='=' read -r option value; do
+	case "${option}" in
+	BusName)
+		current_busname="$value"
+		continue
+		;;
+	Id)
+		current_id="$value"
+		continue
+		;;
+	'')
+		if [ -z "$current_busname" ] || [ -z "$current_id" ]; then
+			current_busname=''
+			current_id=''
+			continue
 		fi
+		service=$current_id
+		current_busname=''
+		current_id=''
+		case "$service" in
+		"$DISPLAY_MANAGER" | dbus.service | "$DBUS_SERVICE_NAME") continue ;;
+		esac
+		case " $ACTIVE_DEPS " in
+		*" $service "*) true ;;
+		*) ACTIVE_DEPS="${ACTIVE_DEPS}${ACTIVE_DEPS:+ }${service}" ;;
+		esac
+		;;
+	*)
+		current_busname=''
+		current_id=''
+		;;
+	esac
+done <<- EOF
+	$(
+		systemctl show --plain --all \
+			--type=service \
+			--state=active,reloading,failed,activating \
+			--property=BusName,Id
+	)
+	=end
+EOF
+
+# get logind users
+USERS=''
+while read -r _uid user _linger _state; do
+	USERS="${USERS}${USERS:+ }${user}"
+done <<- EOF
+	$(loginctl list-users --no-legend)
+EOF
+
+# get current dbus service PIDs
+DBUS_PIDS=''
+while read -r pid unit; do
+	case "$unit" in
+	"${DBUS_SERVICE_NAME}") DBUS_PIDS="${DBUS_PIDS}${DBUS_PIDS:+ }${pid}" ;;
+	esac
+done <<- EOF
+	$(ps -eo pid,unit)
+EOF
+
+# assemble commands
+COMMANDS=''
+# terminate users
+[ -n "$USERS" ] && COMMANDS="${COMMANDS}${COMMANDS:+ ; }loginctl terminate-user $USERS"
+# stop display manager
+[ -n "$DISPLAY_MANAGER" ] && COMMANDS="${COMMANDS}${COMMANDS:+ ; }systemctl stop $DISPLAY_MANAGER"
+# restart dbus
+COMMANDS="${COMMANDS}${COMMANDS:+ ; }sleep 1 ; systemctl restart $DBUS_SERVICE_NAME"
+# kill previous dbus pids
+[ -n "$DBUS_PIDS" ] && COMMANDS="${COMMANDS}${COMMANDS:+ ; }sleep 1 ; kill $DBUS_PIDS 2>/dev/null"
+# restart active dependencies
+COMMANDS="${COMMANDS}${COMMANDS:+ ; }sleep 1 ; systemctl restart $ACTIVE_DEPS"
+# start display manager
+[ -n "$DISPLAY_MANAGER" ] && COMMANDS="${COMMANDS}${COMMANDS:+ ; }systemctl start $DISPLAY_MANAGER"
+# normalize to single line
+COMMANDS=$(echo "$COMMANDS" | tr '\n' ' ' | tr -s ' ')
+
+shcat() {
+	while IFS='' read -r line; do
+		printf '%s\n' "$line"
 	done
 }
 
-# if DM is active, return canonical ID
-DISPLAY_MANAGER="$(systemctl -q is-active display-manager.service && systemctl show --value -p Id display-manager.service)"
+# shellcheck disable=SC2086
+case "$CONSOLE_MODE" in
+interactive) shcat ;;
+delay) shcat >&2 ;;
+*) shcat > /dev/null ;;
+esac <<- EOF
 
-# get dependencies
-ACTIVE_DEPS="$(get_active_deps)"
+	!!! $DBUS_SERVICE_NAME restart will be performed !!!
 
-# get logind sessions
-SESSIONS="$(loginctl list-sessions --no-legend | grep -o '^[[:space:]]*[0-9]\+' | tr '\n' ' ')"
+	Users to be terminated:
+	$(printf '  %s\n' $USERS)
 
-cat << EOF
-!!! In $PAUSE seconds dbus restart will be performed !!!
-User sessions to be terminated: $SESSIONS
+	Services to be restarted:
+	$(printf '  %s\n' $ACTIVE_DEPS)
 
-Services to be restarted:
-$ACTIVE_DEPS
-$DISPLAY_MANAGER
+	Display manager to be restarted: ${DISPLAY_MANAGER:-no active DM found}
+
+	Command set to run as transient unit restart-dbus.service:
+	$(
+		IFS=';'
+		# consequent commands have a space after preceeding semicolons, compensate for that
+		printf '%s' ' '
+		printf ' %s\n' $COMMANDS
+	)
+
+	Logs can be viewed by: journalctl -u restart-dbus
 EOF
 
-[ -t 0 ] && read -pr "Press Enter to continue > " PRESSENTER
-
-# prepare list to be a CLI arg
-ACTIVE_DEPS="$(echo "$ACTIVE_DEPS" | tr '\n' ' ')"
+# if interactive, ask for continuation
+case "$CONSOLE_MODE" in
+interactive)
+	printf '\n%s' "Press Enter to continue > "
+	read -r _PRESSENTER
+	;;
+delay)
+	printf '\n%s\n' "Restart in $DELAY_SECONDS seconds..." >&2
+	sleep $DELAY_SECONDS
+	echo "Restarting..." >&2
+	;;
+esac
 
 # run restart sequence as transient unit...
-if [ -n "$DISPLAY_MANAGER" ]
-then
-	# terminate user sessions, stop DM, restart dbus, reexec systemd, restart dbus dependencies, start DM
-	systemd-run -G --unit=restart-dbus sh -c "loginctl terminate-session $SESSIONS ; systemctl stop $DISPLAY_MANAGER ; systemctl restart dbus.service ; sleep 1 ; systemctl daemon-reexec ; sleep 1 ; systemctl restart $ACTIVE_DEPS ; systemctl start $DISPLAY_MANAGER"
-else
-	# terminate user sessions, restart dbus, reexec systemd, restart dbus dependencies
-	systemd-run -G --unit=restart-dbus sh -c "loginctl terminate-session $SESSIONS ; systemctl restart dbus.service ; sleep 1 ; systemctl daemon-reexec ; sleep 1 ; systemctl restart $ACTIVE_DEPS"
-fi
-
-# restart sequence runs as a unit, so it is possible to view its output in the log if, any:
+# it is possible to view its output in the log if any:
 # journalctl -u restart-dbus
+systemd-run -G --unit=restart-dbus --description="Transient dbus restarter" sh -c "$COMMANDS"
