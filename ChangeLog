@@ -1,3 +1,57 @@
+needrestart 3.7
+
+  * Features:
+    - [Interp] Add optional persistent cache support for perl scanning.
+      (github pull request #282 by Jean-Marc Saffroy @saffroy)
+    - [Core] Add OpenMetrics time series output.
+      (github pull request #308 by Gabriel Filion @lelutin)
+
+  * Changes:
+    - [Core] Replace `which` by `command -v`.
+      (github pull request #254 by @a1346054)
+    - [Core] Ignore USBGuard.
+      (github pull request #257 by Christoph Anton Mitterer @calestyo)
+    - [Core] Do not ignore dhclient but prevent restart ifup automaticly.
+      (github pull request #262 by @anarcat)
+    - [Core] Add greetd to the list of restart exclusions.
+      (github pull request #266 by Iván Zaera @ivan-zaera)
+    - [Core] Support dbus replacements.
+      (github pull request #276 by @Vladimir-csp)
+    - [Core] Apply override_rc deterministically.
+      (github pull request #280 by Corey Hickey @bugfood)
+    - [uCode] Test vendor id before check for Intel ucode.
+      (github pull request #284 by FRITZ|FRITZ @fritz-fritz)
+    - [uCode] Fix AMD ucode checking in non-debug mode.
+      (github pull request #288 by @anarcat)
+    - [uCode] Mark unavailable ucode as CURRENT.
+      (github pull request #290 by @anarcat)
+    - [Kernel] Increase read size for version strings.
+      (github pull request #293 by @jaycci)
+    - [README] Add RPi5 details.
+      (github pull request #298 by @Opa-)
+    - [README] Add RPi1 details.
+      (github pull request #304 by @juadde)
+    - [uCode] Add an option to print uCode hints w/o acknowledgement.
+      (github pull request #307 by Adam @adsr)
+
+  * Fixes:
+    - [README] Prevent shell expansion in example.
+      (github pull request #252 by David Taylor @dtaylor84)
+    - [Core] Fix VM detection regression introduced in f54d85c.
+      (github pull request #248 by @zxyrepf)
+    - [uCode] Fix uninitialized value regression.
+      (github pull request #273 by Stefan Bühler @stbuehler)
+    - [uCode] Fix AMD uCode check in non-debug mode.
+      (github pull request #278 by Jan-Philipp Litza @jplitza)
+    - [CONT] Fix always ignoring lxc/lxd instances.
+      (github issue #245 by Mitsuya Shibata @m-shibata)
+    - [Core] Fix shellcheck issues.
+      (github issue #300 by Eisuke Kawashima @e-kwsm)
+    - [Kernel] Fix kernel version detection for kernel images >= 6.0.
+      (github issue #245 by Stefan Bühler @tik-stbuehler)
+
+ -- Thomas Liske <thomas@fiasko-nw.net>  
+
 needrestart 3.6
 
   * Security:
@@ -8,7 +62,7 @@ needrestart 3.6
     - [Core] Add support for runit.
       (Debian Bug#972685 by Lorenzo Puliti <plorenzo@disroot.org>)
     - [VM] Add support to detect outdated VM processes (i.e. qemu).
-      (github pull request #216 by )Christian Ehrhardt @cpaelzer)
+      (github pull request #216 by Christian Ehrhardt @cpaelzer)
 
   * Changes:
     - [Cont] Improve LXD container support.
