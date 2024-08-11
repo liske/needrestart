@@ -81,7 +81,7 @@ our %EXPORT_TAGS = (
     )],
 );
 
-our $VERSION = '3.6';
+our $VERSION = '3.7';
 my $LOGPREF = '[Core]';
 
 my %UIs;

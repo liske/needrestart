@@ -50,7 +50,7 @@ needrestart 3.7
     - [Kernel] Fix kernel version detection for kernel images >= 6.0.
       (github issue #245 by Stefan Bühler @tik-stbuehler)
 
- -- Thomas Liske <thomas@fiasko-nw.net>  
+ -- Thomas Liske <thomas@fiasko-nw.net>  Sun, 11 Aug 2024 22:59:32 +0200
 
 needrestart 3.6
 
