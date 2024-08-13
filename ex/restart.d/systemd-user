@@ -1,0 +1,27 @@
+#!/bin/sh
+
+# needrestart - Restart daemons after library updates.
+#
+# Restarting `systemd --user` using special systemctl call.
+#
+
+# enable xtrace if we should be verbose
+if [ "$NR_VERBOSE" = '1' ]; then
+    set -x
+fi
+
+trace() {
+    echo "-> $*" >&2
+    "$@"
+}
+
+rc=0
+
+systemctl show --state=active --property=User --value 'user@*.service' | while IFS='' read -r uid; do
+    # skip empty lines produced by `systemctl show` if the property
+    # did not exist or could not be queried
+    if [ -z "$uid" ]; then continue; fi
+    trace systemctl -M "$uid@.host" --user daemon-reexec || rc=1
+done
+
+exit $rc

@@ -62,6 +62,7 @@ our @EXPORT_OK = qw(
     needrestart_ui_init
     needrestart_interp_register
     needrestart_cont_register
+    needrestart_cont_register_fallback
 );
 
 our %EXPORT_TAGS = (
@@ -78,6 +79,7 @@ our %EXPORT_TAGS = (
     )],
     cont => [qw(
 	needrestart_cont_register
+	needrestart_cont_register_fallback
     )],
 );
 
@@ -224,12 +226,19 @@ sub needrestart_interp_source($$$) {
 
 
 my %CONT;
+my %FALLBACK;
 my $ndebug;
 
 sub needrestart_cont_register($) {
     my $pkg = shift;
 
     $CONT{$pkg} = new $pkg($ndebug);
+}
+
+sub needrestart_cont_register_fallback($) {
+    my $pkg = shift;
+
+    $FALLBACK{$pkg} = new $pkg($ndebug);
 }
 
 sub needrestart_cont_init($) {
@@ -252,6 +261,9 @@ sub needrestart_cont_check($$$;$) {
     needrestart_cont_init($debug) unless(scalar keys %CONT);
 
     foreach my $cont (values %CONT) {
+	return 1 if($cont->check($pid, $bin, $norestart));
+    }
+    foreach my $cont (values %FALLBACK) {
 	return 1 if($cont->check($pid, $bin, $norestart));
     }
 
