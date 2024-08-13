@@ -626,7 +626,7 @@ if(defined($opt_l)) {
 
 	# find parent process
 	my $ppid = $ptable->{$pid}->{ppid};
-	if($ppid != $pid && $ppid > 1 && !$uid) {
+	if($ppid != $pid && $ppid > 1 && !($is_systemd && nr_is_systemd_manager($ppid))) {
 	    print STDERR "$LOGPREF #$pid is a child of #$ppid\n" if($nrconf{verbosity} > 1);
 
 	    if($uid && $ptable->{$ppid}->{uid} != $uid) {
@@ -670,67 +670,64 @@ if(defined($opt_l)) {
 	    next if(grep { $exe =~ /$_/; } @{$nrconf{blacklist}});
 
 	    if($is_systemd) {
+		# get unit name from /proc/<pid>/cgroup
+		my $cgroup = nr_get_cgroup($pid);
 		# systemd manager
-		if($pid == 1 && $exe =~ m@^(/usr)?/lib/systemd/systemd@) {
+		if($cgroup =~ m@^/init\.scope$@ || ($pid == 1 && $exe =~ m@^(/usr)?/lib/systemd/systemd@)) {
 		    print STDERR "$LOGPREF #$pid is systemd manager\n" if($nrconf{verbosity} > 1);
 		    $restart{q(systemd-manager)}++;
 		    next;
 		}
+		# `systemd --user` manager
+		if($cgroup =~ m@/user\@(\d+)\.service/init\.scope$@ && $ptable->{$pid}->{fname} ne "(sd-pam)") {
+		    print STDERR "$LOGPREF #$pid is user systemd manager: uid=$1\n" if($nrconf{verbosity} > 1);
+		    # TODO: restart specific `systemd --user` instance?
+		    $restart{q(systemd-user)}++;
+		    next;
+		}
 
-		# get unit name from /proc/<pid>/cgroup
-		if(open(HCGROUP, qq(/proc/$pid/cgroup))) {
-		    my ($rc) = map {
-			chomp;
-			my ($id, $type, $value) = split(/:/);
-			if($id != 0 && $type ne q(name=systemd)) {
-			    ();
-			}
-			else {
-			    if($value =~ m@/user-(\d+)\.slice/session-(\d+)\.scope@) {
-				print STDERR "$LOGPREF #$pid part of user session: uid=$1 sess=$2\n" if($nrconf{verbosity} > 1);
-				push(@{ $sessions{$1}->{"session #$2"}->{ $ptable->{$pid}->{fname} } }, $pid);
-				next;
-			    }
-			    if($value =~ m@/user\@(\d+)\.service@) {
-				print STDERR "$LOGPREF #$pid part of user manager service: uid=$1\n" if($nrconf{verbosity} > 1);
-				push(@{ $sessions{$1}->{'user manager service'}->{ $ptable->{$pid}->{fname} } }, $pid);
-				next;
-			    }
-				if($value =~ m@/machine.slice/machine.qemu(.*).scope@) {
-				for my $cmdlineidx (0 .. $#{$ptable->{$pid}->{cmdline}} ) {
-					if ( ${$ptable->{$pid}->{cmdline}}[$cmdlineidx] eq "-name") {
-						foreach ( split(/,/, ${$ptable->{$pid}->{cmdline}}[$cmdlineidx+1]) ) {
-							if ( index($_, "guest=") == 0 ) {
-								my @namearg = split(/=/, $_, 2);
-								if ($#{namearg} == 1) {
-									print STDERR "$LOGPREF #$pid detected as VM guest '$namearg[1]' in group '$value'\n" if($nrconf{verbosity} > 1);
-									push(@guests, __x("'{name}' with pid {pid}", name => $namearg[1], pid=>$pid) );
-								}
-								next PIDLOOP;
-							}
-						}
-					}
+		if($cgroup =~ m@/user-(\d+)\.slice/session-(\d+)\.scope@) {
+		    print STDERR "$LOGPREF #$pid part of user session: uid=$1 sess=$2\n" if($nrconf{verbosity} > 1);
+		    push(@{ $sessions{$1}->{"session #$2"}->{ $ptable->{$pid}->{fname} } }, $pid);
+		    next;
+		}
+		if($cgroup =~ m@/user\@(\d+)\.service(/.+)?/([^/]+\.service)$@) {
+		    print STDERR "$LOGPREF #$pid part of user service: uid=$1 unit=$3\n" if($nrconf{verbosity} > 1);
+		    push(@{ $sessions{$1}->{'user service'}->{ $3 } }, $pid);
+		    next;
+		}
+		if($cgroup =~ m@/user\@(\d+)\.service@) {
+		    print STDERR "$LOGPREF #$pid part of user manageruid=$1\n" if($nrconf{verbosity} > 1);
+		    push(@{ $sessions{$1}->{'user manager'}->{ $ptable->{$pid}->{fname} } }, $pid);
+		    next;
+		}
+		if($cgroup =~ m@/machine.slice/machine.qemu(.*).scope@) {
+		    for my $cmdlineidx (0 .. $#{$ptable->{$pid}->{cmdline}} ) {
+			if ( ${$ptable->{$pid}->{cmdline}}[$cmdlineidx] eq "-name") {
+			    foreach ( split(/,/, ${$ptable->{$pid}->{cmdline}}[$cmdlineidx+1]) ) {
+				if ( index($_, "guest=") == 0 ) {
+				    my @namearg = split(/=/, $_, 2);
+				    if ($#{namearg} == 1) {
+					print STDERR "$LOGPREF #$pid detected as VM guest '$namearg[1]' in group '$cgroup'\n" if($nrconf{verbosity} > 1);
+					push(@guests, __x("'{name}' with pid {pid}", name => $namearg[1], pid=>$pid) );
+				    }
+				    next PIDLOOP;
 				}
-				print STDERR "$LOGPREF #$pid detected as VM guest with unknown name in group '$value'\n" if($nrconf{verbosity} > 1);
-				push(@guests, __x("'Unkown VM' with pid {pid}", pid=>$pid) );
-				next;
-			    }
-			    elsif($value =~ m@/([^/]+\.service)$@) {
-				($1);
-			    }
-			    else {
-				print STDERR "$LOGPREF #$pid unexpected cgroup '$value'\n" if($nrconf{verbosity} > 1);
-				();
 			    }
 			}
-		    } <HCGROUP>;
-		    close(HCGROUP);
-
-		    if($rc) {
-			print STDERR "$LOGPREF #$pid is $rc\n" if($nrconf{verbosity} > 1);
-			$restart{$rc}++;
-			next;
 		    }
+		    print STDERR "$LOGPREF #$pid detected as VM guest with unknown name in group '$cgroup'\n" if($nrconf{verbosity} > 1);
+		    push(@guests, __x("'Unkown VM' with pid {pid}", pid=>$pid) );
+		    next;
+		}
+		elsif($cgroup =~ m@/([^/]+\.service)$@) {
+		    my $unit = $1;
+		    print STDERR "$LOGPREF #$pid is $unit\n" if($nrconf{verbosity} > 1);
+		    $restart{$unit}++;
+		    next;
+		}
+		elsif($cgroup) {
+		    print STDERR "$LOGPREF #$pid unexpected cgroup '$cgroup'\n" if($nrconf{verbosity} > 1);
 		}
 
 		# did not get the unit name, yet - try systemctl status
