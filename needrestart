@@ -712,7 +712,7 @@ if(defined($opt_l)) {
 					}
 				}
 				print STDERR "$LOGPREF #$pid detected as VM guest with unknown name in group '$value'\n" if($nrconf{verbosity} > 1);
-				push(@guests, __x("'Unkown VM' with pid {pid}", pid=>$pid) );
+				push(@guests, __x("'Unknown VM' with pid {pid}", pid=>$pid) );
 				next;
 			    }
 			    elsif($value =~ m@/([^/]+\.service)$@) {
