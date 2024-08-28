@@ -1428,7 +1428,7 @@ if($opt_p) {
 if ($opt_o) {
     print "# TYPE needrestart_build info\n";
     print "# HELP needrestart_build information about needrestart's runtime build\n";
-    print "needrestart_build_info{version=$NeedRestart::VERSION,perl_version=$^V} 1\n";
+    print "needrestart_build_info{version=\"$NeedRestart::VERSION\",perl_version=\"$^V\"} 1\n";
 
     if ($opt_k) {
         my @ometric_kernel_status = map { $_ == $ometric_kernel_values{kresult} ? 1 : 0 } (NRK_NOUPGRADE, NRK_ABIUPGRADE, NRK_VERUPGRADE);
