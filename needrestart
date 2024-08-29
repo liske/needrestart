@@ -1456,16 +1456,16 @@ if ($opt_o) {
         print "# TYPE needrestart_kernel_status gauge\n";
         print "# HELP needrestart_kernel_status status of kernel as reported by needrestart\n";
         print "needrestart_kernel_status{needrestart_kernel_status=\"$ometric_kernel_values{kresult}\"} 1\n";
-	print "# TYPE needrestart_kernel gauge\n";
-	print "# HELP needrestart_kernel version information for currenly running and most up to date kernels\n";
+	print "# TYPE needrestart_kernel_info gauge\n";
+	print "# HELP needrestart_kernel_info version information for currenly running and most up to date kernels\n";
 	print "needrestart_kernel{running=\"$ometric_kernel_values{krunning}\",expected=\"$ometric_kernel_values{kexpected}\"} 1\n";
     }
     if ($opt_w) {
         print "# TYPE needrestart_ucode_status gauge\n";
         print "# HELP needrestart_ucode_status status of the host's CPU microcode as reported by needrestart\n";
         print "needrestart_ucode_status{needrestart_ucode_status=\"$ometric_ucode_values{status}\"} 1\n";
-	print "# TYPE needrestart_ucode gauge\n";
-	print "# HELP needrestart_ucode version informaion for currently used and available microcode\n";
+	print "# TYPE needrestart_ucode_info gauge\n";
+	print "# HELP needrestart_ucode_info version informaion for currently used and available microcode\n";
 	print "needrestart_ucode{running=\"$ometric_ucode_values{current}\",expected=\"$ometric_ucode_values{expected}\"} 1\n";
     }
     if ($opt_l) {
