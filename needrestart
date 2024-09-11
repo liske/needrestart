@@ -472,6 +472,11 @@ my %ometric_kernel_values = (
     krunning => q(unknown),
     kexpected => q(unknown),
 );
+my %ometric_ucode_values = (
+    status => q(unknown),
+    current => q(unknown),
+    expected => q(unkown),
+);
 
 my %restart;
 my %sessions;
@@ -910,7 +915,12 @@ if(defined($opt_k)) {
             }
         }
         elsif ($opt_o) {
-            $ometric_kernel_values{kresult} = $kresult;
+	    my %kernel_states = (
+		&NRK_NOUPGRADE => "current",
+		&NRK_ABIUPGRADE => "abi_upgrade",
+		&NRK_VERUPGRADE => "version_upgrade",
+	    );
+            $ometric_kernel_values{kresult} = $kernel_states{$kresult};
             $ometric_kernel_values{krunning} = $kvars{KVERSION};
             $ometric_kernel_values{kexpected} = $kvars{EVERSION};
         }
@@ -969,23 +979,35 @@ if($opt_w) {
             }
 	    }
         else {
-            if($ucode_result == NRM_OBSOLETE) {
-                $nagios{mstr} = "OBSOLETE";
-                $nagios{mret} = $nrconf{q(nagios-status)}->{ucode};
-                $nagios{mperf} = 1;
-            }
-            elsif($ucode_result == NRM_CURRENT) {
-                $nagios{mstr} = "CURRENT";
-                $nagios{mret} = 0;
-                $nagios{mperf} = 0;
-            }
+	    if ($opt_p) {
+		if($ucode_result == NRM_OBSOLETE) {
+		    $nagios{mstr} = "OBSOLETE";
+		    $nagios{mret} = $nrconf{q(nagios-status)}->{ucode};
+		    $nagios{mperf} = 1;
+		}
+		elsif($ucode_result == NRM_CURRENT) {
+		    $nagios{mstr} = "CURRENT";
+		    $nagios{mret} = 0;
+		    $nagios{mperf} = 0;
+		}
 
-            if($nagios{mret} == 1) {
-                $nagios{mstr} .= " (!)";
-            }
-            elsif($nagios{mret} == 2) {
-                $nagios{mstr} .= " (!!)";
-            }
+		if($nagios{mret} == 1) {
+		    $nagios{mstr} .= " (!)";
+		}
+		elsif($nagios{mret} == 2) {
+		    $nagios{mstr} .= " (!!)";
+		}
+	    }
+	    elsif ($opt_o) {
+		my %ucode_states = (
+		    &NRM_CURRENT => "current",
+		    &NRM_OBSOLETE => "obsolete",
+		    &NRM_UNKNOWN => "unknown",
+		);
+		$ometric_ucode_values{status} = $ucode_states{$ucode_result};
+		$ometric_ucode_values{current} = $ucode_result != NRM_UNKNOWN ? $ucode_vars{CURRENT} : "unknown";
+		$ometric_ucode_values{expected} = $ucode_result != NRM_UNKNOWN ? $ucode_vars{AVAIL} : "unknown";
+	    }
         }
 	}
 	else {
@@ -1426,33 +1448,25 @@ if($opt_p) {
     exit $ret;
 }
 if ($opt_o) {
-    print "# TYPE needrestart_build info\n";
-    print "# HELP needrestart_build information about needrestart's runtime build\n";
-    print "needrestart_build_info{version=$NeedRestart::VERSION,perl_version=$^V} 1\n";
+    print "# TYPE needrestart_build_info gauge\n";
+    print "# HELP needrestart_build_info information about needrestart's runtime build\n";
+    print "needrestart_build_info{version=\"$NeedRestart::VERSION\",perl_version=\"$^V\"} 1\n";
 
     if ($opt_k) {
-        my @ometric_kernel_status = map { $_ == $ometric_kernel_values{kresult} ? 1 : 0 } (NRK_NOUPGRADE, NRK_ABIUPGRADE, NRK_VERUPGRADE);
-        print "# TYPE needrestart_kernel_status stateset\n";
+        print "# TYPE needrestart_kernel_status gauge\n";
         print "# HELP needrestart_kernel_status status of kernel as reported by needrestart\n";
-        print "needrestart_kernel_status{needrestart_kernel_status=\"current\"} $ometric_kernel_status[0]\n";
-        print "needrestart_kernel_status{needrestart_kernel_status=\"abi_upgrade\"} $ometric_kernel_status[1]\n";
-        print "needrestart_kernel_status{needrestart_kernel_status=\"version_upgrade\"} $ometric_kernel_status[2]\n";
-	print "# TYPE needrestart_kernel info\n";
-	print "# HELP needrestart_kernel version information for currenly running and most up to date kernels\n";
-	print "needrestart_kernel_info{running=\"$ometric_kernel_values{krunning}\",expected=\"$ometric_kernel_values{kexpected}\"} 1\n";
+        print "needrestart_kernel_status{needrestart_kernel_status=\"$ometric_kernel_values{kresult}\"} 1\n";
+	print "# TYPE needrestart_kernel_info gauge\n";
+	print "# HELP needrestart_kernel_info version information for currenly running and most up to date kernels\n";
+	print "needrestart_kernel{running=\"$ometric_kernel_values{krunning}\",expected=\"$ometric_kernel_values{kexpected}\"} 1\n";
     }
     if ($opt_w) {
-        my $ometric_ucode_current = $ucode_result != NRM_UNKNOWN ? $ucode_vars{CURRENT} : "unknown";
-        my $ometric_ucode_expected = $ucode_result != NRM_UNKNOWN ? $ucode_vars{AVAIL} : "unknown";
-        my @ometric_ucode_status = map { $_ == $ucode_result ? 1 : 0 } (NRM_CURRENT, NRM_OBSOLETE, NRM_UNKNOWN);
-        print "# TYPE needrestart_ucode_status stateset\n";
+        print "# TYPE needrestart_ucode_status gauge\n";
         print "# HELP needrestart_ucode_status status of the host's CPU microcode as reported by needrestart\n";
-        print "needrestart_ucode_status{needrestart_ucode_status=\"current\"} $ometric_ucode_status[0]\n";
-        print "needrestart_ucode_status{needrestart_ucode_status=\"obsolete\"} $ometric_ucode_status[1]\n";
-        print "needrestart_ucode_status{needrestart_ucode_status=\"unknown\"} $ometric_ucode_status[2]\n";
-	print "# TYPE needrestart_ucode info\n";
-	print "# HELP needrestart_ucode version informaion for currently used and available microcode\n";
-	print "needrestart_ucode_info{running=\"$ometric_ucode_current\",expected=\"$ometric_ucode_expected\"} 1\n";
+        print "needrestart_ucode_status{needrestart_ucode_status=\"$ometric_ucode_values{status}\"} 1\n";
+	print "# TYPE needrestart_ucode_info gauge\n";
+	print "# HELP needrestart_ucode_info version informaion for currently used and available microcode\n";
+	print "needrestart_ucode{running=\"$ometric_ucode_values{current}\",expected=\"$ometric_ucode_values{expected}\"} 1\n";
     }
     if ($opt_l) {
         my $ometric_num_services = scalar %restart;
