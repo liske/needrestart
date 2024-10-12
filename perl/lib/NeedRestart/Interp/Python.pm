@@ -190,16 +190,16 @@ sub files {
     }
 
     # prepare include path environment variable
-    my %e = nr_parse_env($pid);
+    my @path;
     local %ENV;
+
+    # get include path from env
+    my %e = nr_parse_env($pid);
     if(exists($e{PYTHONPATH})) {
-	$ENV{PYTHONPATH} = $e{PYTHONPATH};
-    }
-    elsif(exists($ENV{PYTHONPATH})) {
-	delete($ENV{PYTHONPATH});
+	@path = map { "/proc/$pid/root/$_"; } split(':', $e{PYTHONPATH});
     }
 
-    # get include path
+    # get include path from sys.path
     my ($pyread, $pywrite) = nr_fork_pipe2($self->{debug}, $ptable->{exec}, '-');
     print $pywrite "import sys\nprint(sys.path)\n";
     close($pywrite);
@@ -207,12 +207,11 @@ sub files {
     close($pyread);
 
     # look for module source files
-    my @path;
     if(defined($path)) {
 	chomp($path);
 	$path =~ s/^\['//;
 	$path =~ s/'\$//;
-	@path = map { "/proc/$pid/root/$_"; } split("', '", $path);
+	push(@path, map { "/proc/$pid/root/$_"; } split("', '", $path));
     }
     else {
 	print STDERR "$LOGPREF #$pid: failed to retrieve include path\n" if($self->{debug});
