@@ -530,10 +530,15 @@ if(defined($opt_l)) {
 	# orphaned binary
 	$restart++ if (defined($exe) && $exe =~ s/ \(deleted\)$//);  # Linux
 	$restart++ if (defined($exe) && $exe =~ s/^\(deleted\)//);   # Linux VServer
+	$restart++ unless(defined($ptable->{$pid}->{exec}));
 	print STDERR "$LOGPREF #$pid uses obsolete binary $exe\n" if($restart && $nrconf{verbosity} > 1);
 
 	# ignore blacklisted binaries
 	next if(grep { $exe =~ /$_/; } @{$nrconf{blacklist}});
+
+	# Sync $exe with the initial value from Proc:ProcessTable to prevent race
+	# conditions in later checks.
+	$exe = $ptable->{$pid}->{exec} if(defined($ptable->{$pid}->{exec}));
 
 	# read file mappings (Linux 2.0+)
 	unless($restart) {
