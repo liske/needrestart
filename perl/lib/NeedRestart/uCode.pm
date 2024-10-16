@@ -154,8 +154,9 @@ sub nr_ucode_check {
         foreach my $pkg (@PKGS) {
             my @nvars;
             eval "\@nvars = ${pkg}::nr_ucode_check_real(\$debug, \$ui, \$processors{\$pid});";
-            if ( $@ && $debug ) {
-                print STDERR $@;
+            if ( $@ ) {
+                print STDERR $@
+                    if ($debug);
                 $ui->progress_step;
                 next;
             }
