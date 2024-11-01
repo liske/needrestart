@@ -573,6 +573,12 @@ if(defined($opt_l)) {
 
 			# get on-disk info
 			my ($sdev, $sinode) = stat($testp);
+			unless($sdev) {
+			    unless($nrconf{skip_mapfiles} == -1) {
+				print STDERR "$LOGPREF #$pid map stat for $testp failed: $!\n" if($nrconf{verbosity} > 1);
+			    }
+                next;
+            }
 			my @sdevs = (
 			    # glibc gnu_dev_* definition from sysmacros.h
 			    sprintf("%02x:%02x", (($sdev >> 8) & 0xfff) | (($sdev >> 32) & ~0xfff), (($sdev & 0xff) | (($sdev >> 12) & ~0xff))),
