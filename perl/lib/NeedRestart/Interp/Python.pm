@@ -29,11 +29,13 @@ use warnings;
 
 use parent qw(NeedRestart::Interp);
 use Cwd qw(abs_path getcwd);
+use File::Temp qw(tempdir);
 use Getopt::Std;
 use NeedRestart qw(:interp);
 use NeedRestart::Utils;
 
 my $LOGPREF = '[Python]';
+my $empty_dir;
 
 needrestart_interp_register(__PACKAGE__, "python");
 
@@ -77,6 +79,14 @@ sub _scan($$$$$) {
 	    }
 	}
     }
+}
+
+# chdir into empty directory to prevent python parsing arbitrary files
+sub chdir_empty() {
+    unless(defined($empty_dir)) {
+        $empty_dir = tempdir(CLEANUP => 1);
+    }
+    chdir($empty_dir);
 }
 
 sub source {
@@ -185,6 +195,7 @@ sub files {
 
     # use cached data if avail
     if(exists($cache->{files}->{(__PACKAGE__)}->{$src})) {
+	chdir($cwd);
 	print STDERR "$LOGPREF #$pid: use cached file list\n" if($self->{debug});
 	return %{ $cache->{files}->{(__PACKAGE__)}->{$src} };
     }
@@ -200,11 +211,13 @@ sub files {
     }
 
     # get include path from sys.path
+    chdir_empty();
     my ($pyread, $pywrite) = nr_fork_pipe2($self->{debug}, $ptable->{exec}, '-');
     print $pywrite "import sys\nprint(sys.path)\n";
     close($pywrite);
     my ($path) = <$pyread>;
     close($pyread);
+    chdir("/proc/$pid/root/$ptable->{cwd}");
 
     # look for module source files
     if(defined($path)) {
