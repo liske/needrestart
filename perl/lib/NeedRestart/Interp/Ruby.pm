@@ -29,11 +29,13 @@ use warnings;
 
 use parent qw(NeedRestart::Interp);
 use Cwd qw(abs_path getcwd);
+use File::Temp qw(tempdir);
 use Getopt::Std;
 use NeedRestart qw(:interp);
 use NeedRestart::Utils;
 
 my $LOGPREF = '[Ruby]';
+my $empty_dir;
 
 needrestart_interp_register(__PACKAGE__, "ruby");
 
@@ -74,6 +76,14 @@ sub _scan($$$$$) {
 	    }
 	}
     }
+}
+
+# chdir into empty directory to prevent ruby parsing arbitrary files
+sub chdir_empty() {
+    unless(defined($empty_dir)) {
+        $empty_dir = tempdir(CLEANUP => 1);
+    }
+    chdir($empty_dir);
 }
 
 sub source {
@@ -182,25 +192,28 @@ sub files {
 
     # use cached data if avail
     if(exists($cache->{files}->{(__PACKAGE__)}->{$src})) {
+	chdir($cwd);
 	print STDERR "$LOGPREF #$pid: use cached file list\n" if($self->{debug});
 	return %{ $cache->{files}->{(__PACKAGE__)}->{$src} };
     }
 
     # prepare include path environment variable
-    my %e = nr_parse_env($pid);
+    my @path;
     local %ENV;
+
+    # get include path from env
+    my %e = nr_parse_env($pid);
     if(exists($e{RUBYLIB})) {
-	$ENV{RUBYLIB} = $e{RUBYLIB};
-    }
-    elsif(exists($ENV{RUBYLIB})) {
-	delete($ENV{RUBYLIB});
+	@path = map { "/proc/$pid/root/$_"; } split(':', $e{RUBYLIB});
     }
 
     # get include path
+    chdir_empty();
     my $rbread = nr_fork_pipe($self->{debug}, $ptable->{exec}, '-e', 'puts $:');
-    my @path = map { "/proc/$pid/root/$_"; } <$rbread>;
+    push(@path, map { "/proc/$pid/root/$_"; } <$rbread>);
     close($rbread);
     chomp(@path);
+    chdir("/proc/$pid/root/$ptable->{cwd}");
 
     my %files;
     _scan($self->{debug}, $pid, $src, \%files, \@path);
