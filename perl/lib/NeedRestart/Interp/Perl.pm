@@ -32,7 +32,6 @@ use Cwd qw(abs_path getcwd);
 use Getopt::Std;
 use NeedRestart qw(:interp);
 use NeedRestart::Utils;
-use Module::ScanDeps;
 
 my $LOGPREF = '[Perl]';
 
@@ -46,6 +45,41 @@ sub isa {
     return 1 if($bin =~ m@^/usr/(local/)?bin/perl(5[.\d]*)?$@);
 
     return 0;
+}
+
+sub _scan($$$$$) {
+    my $debug = shift;
+    my $pid = shift;
+    my $src = shift;
+    my $files = shift;
+    my $path = shift;
+
+    my $fh;
+    open($fh, '<', $src) || return;
+    # find used modules
+    my %modules = map {
+	(/^\s*use\s+([a-zA-Z][\w:]+)/ ? ($1 => 1) : ())
+    } <$fh>;
+    close($fh);
+
+    # track file
+    $files->{$src}++;
+
+    # scan module files
+    if(scalar keys %modules) {
+	foreach my $module (keys %modules) {
+        # skip some well-known Perl pragmas
+        next if ($module =~ /^(constant|strict|vars|v5(\.\d+)?|warnings)$/);
+
+	    $module =~ s@::@/@g;
+	    $module .= '.pm';
+
+	    foreach my $p (@$path) {
+		my $fn = ($p ne '' ? "$p/" : '').$module;
+		&_scan($debug, $pid, $fn, $files, $path) if(!exists($files->{$fn}) && -r $fn && -f $fn);
+	    }
+	}
+    }
 }
 
 sub source {
@@ -160,32 +194,28 @@ sub files {
     }
 
     # prepare include path environment variable
-    my %e = nr_parse_env($pid);
+    my @path;
     local %ENV;
+
+    # get include path from env
+    my %e = nr_parse_env($pid);
     if(exists($e{PERL5LIB})) {
-	$ENV{PERL5LIB} = $e{PERL5LIB};
-    }
-    elsif(exists($ENV{PERL5LIB})) {
-	delete($ENV{PERL5LIB});
+	@path = map { "/proc/$pid/root/$_"; } split(':', $e{PERL5LIB});
     }
 
-    @Module::ScanDeps::IncludeLibs = (exists($opts{I}) ? ($opts{I}) : ());
-    my $href;
-    {
-	# Silence warnings of Module::ScanDeps for dynamic loaded modules (github issue #41)
-	local $SIG{__WARN__} = sub { };
+    # get include path from @INC
+    my $plread = nr_fork_pipe($self->{debug}, $ptable->{exec}, '-e', 'print(join("\n", @INC));');
+    push(@path, map { "/proc/$pid/root/$_"; } <$plread>);
+    close($plread);
+    chomp(@path);
 
-	$href = scan_deps(
-	    files => [$src],
-	    recurse => 1,
-            cache_file => $self->{conf}->{cache_file},
-	    );
-    }
+    my %files;
+    _scan($self->{debug}, $pid, $src, \%files, \@path);
 
     my %ret = map {
-	my $stat = nr_stat("/proc/$pid/root/$href->{$_}->{file}");
-	$href->{$_}->{file} => ( defined($stat) ? $stat->{ctime} : undef );
-    } keys %$href;
+	my $stat = nr_stat("/proc/$pid/root/$_");
+	$_ => ( defined($stat) ? $stat->{ctime} : undef );
+    } keys %files;
 
     chdir($cwd);
 

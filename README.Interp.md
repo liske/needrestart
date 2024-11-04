@@ -35,8 +35,13 @@ NeedRestart::Interp::Perl
 Recognized binaries:	/usr/(local/)?bin/perl
 Find source file by:	command line interpretation
 
-We are using `Module::ScanDeps` to find used packages. This should work on
-any static loaded packages, dynamic stuff will fail.
+The source file is scanned only for 'use' lines, other module loading
+mechanisms will not be recognized.
+
+*This function used the Module::ScanDeps package to get the used Perl packages
+until needrestart 3.7. Module::ScanDeps is not used any more as it seems not
+to be designed to work with untrustworthy perl sources which would allow an
+attacker to use needrestart for local privilege escalation.*
 
 
 NeedRestart::Interp::Python
