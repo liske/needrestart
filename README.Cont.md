@@ -27,7 +27,9 @@ For each container which should be restarted needrestart calls
 `lxc-stop --reboot --name $NAME`.
 
 This package also supports LXD containers, which are restarted by `lxc restart
-$NAME` or `lxc restart --project=$PROJECT $NAME` for containers in projects.
+$NAME` or `lxc restart --project=$PROJECT $NAME` for containers in projects,
+and Incus containers, which are restarted by `incus restart $NAME` or `incus
+restart --project=$PROJECT $NAME` for containers in projects.
 
 NeedRestart::CONT::machined
 ---------------------------

@@ -50,6 +50,10 @@ sub new {
 	$self->{lxd_bin} = q(/snap/bin/lxc);
 	$self->{lxd_container_path} = q(/var/snap/lxd/common/lxd/containers);
 	print STDERR "$LOGPREF LXD installed via snap\n" if($self->{debug});
+    } elsif (-x q(/usr/bin/incus)) {
+	$self->{has_lxd} = 1;
+	$self->{lxd_bin} = q(/usr/bin/incus);
+	$self->{lxd_container_path} = q(/var/lib/incus/containers);
     } else {
 	$self->{has_lxd} = -x q(/usr/bin/lxc);
 	$self->{lxd_bin} = q(/usr/bin/lxc);
