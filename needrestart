@@ -579,25 +579,30 @@ if(defined($opt_l)) {
 			}
 			my @sdevs = (
 			    # glibc gnu_dev_* definition from sysmacros.h
-			    sprintf("%02x:%02x", (($sdev >> 8) & 0xfff) | (($sdev >> 32) & ~0xfff), (($sdev & 0xff) | (($sdev >> 12) & ~0xff))),
+			    sprintf("%x:%x", (($sdev >> 8) & 0xfff) | (($sdev >> 32) & ~0xfff), ($sdev & 0xff) | (($sdev >> 12) & ~0xff)),
 			    # Traditional definition of major(3) and minor(3)
-			    sprintf("%02x:%02x", $sdev >> 8, $sdev & 0xff),
+			    sprintf("%x:%x", $sdev >> 8, $sdev & 0xff),
 
 			    # kFreeBSD: /proc/<pid>/maps does not contain device IDs
-			    qq(00:00)
+			    qq(0:0)
 			    );
 
 			# Don't compare device numbers on anon filesystems
 			# w/o a backing device (like OpenVZ's simfs).
 			my $major = (($sdev >> 8) & 0xfff) | (($sdev >> 32) & ~0xfff);
-			$mdev = "00:00"
-			    if ($major == 0 || $major == 144 || $major == 145 || $major == 146);
+			if ($major == 0 || $major == 144 || $major == 145 || $major == 146) {
+			    $mdev = "0:0";
+			}
+			else {
+			    # strip leading zeros
+			    $mdev =~ s/(^|:)0+([\da-f]+)/$1$2/g;
+			}
 
 			# compare maps content vs. on-disk
 			unless($minode eq $sinode && ((grep {$mdev eq $_} @sdevs) ||
 						      # BTRFS breaks device ID mapping completely...
 						      # ignoring unnamed device IDs for now
-						      $mdev =~ /^00:/)) {
+						      $mdev =~ /^0:/)) {
 			    print STDERR "$LOGPREF #$pid uses obsolete $path\n" if($nrconf{verbosity} > 1);
 			    $restart++;
 			    last;
