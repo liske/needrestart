@@ -1,3 +1,54 @@
+needrestart 3.8
+
+  * Security:
+    - [Core] CVE-2024-48991: Prevent race condition on /proc/$PID/exec evaluation.
+      (responsibly reported by Qualys)
+    - [Interp] CVE-2024-11003: Drop usage of Module::ScanDeps to prevent LPE.
+      (responsibly reported by Qualys)
+    - [Interp] CVE-2024-48990: Do not set PYTHONPATH environment variable to prevent a LPE.
+      (responsibly reported by Qualys)
+    - [Interp] CVE-2024-48992: Do not set RUBYLIB environment variable to prevent a LPE.
+      (responsibly reported by Qualys)
+
+  * Features:
+    - [CONT] Add Incus support.
+      (github pull request #315 by Colin Watson @cjwatson)
+
+  * Changes:
+    - [Core] Refactor device number comparison to be independent of leading zeros.
+      (closes #286)
+    - [Interp] Enable ruby check for versioned ruby binary names.
+      (suggested by Qualys)
+    - [Interp] Chdir into empty directory to prevent python parsing arbitrary files.
+      (motivated by Qualys)
+
+  * Fixes:
+    - [VM] Fix spelling mistake.
+      (github pull request #309 by @fritz-fritz)
+    - [Core] Make OpenMetrics output prometheus compatible.
+      (github pull request #311 by Gabriel Filion @lelutin)
+    - [uCode] Fix error handling logic being dependent on debug level.
+      (github pull request #313 by Aristarkh Zagorodnikov @onyxmaster)
+    - [Core] Fix "Use of uninitialized value $sdev in right bitshift".
+      (github pull request #314 by Aristarkh Zagorodnikov @onyxmaster)
+
+
+  This release contains some critical security fixes in the interpreter module.
+  While the default configuration was vulnerable it is possible to migitate
+  the issues by disabling the interpeter heuristic: `$nrconf{interpscan} = 0;`
+
+  All CVEs received a CVSS core of:
+    CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H [7.8 HIGH]
+
+  Qualys Security Advisory:
+    https://www.qualys.com/2024/11/19/needrestart/needrestart.txt
+
+  Many thanks to the Qualys Security Advisory team and Mark Esler from the
+  Ubuntu Security Team for the responsible disclosure, reviewing patches and
+  coordinating the disclosure of these security issues.
+
+ -- Thomas Liske <thomas@fiasko-nw.net>  Tue, 19 Nov 2024 17:00:00 +0100
+
 needrestart 3.7
 
   * Features:
