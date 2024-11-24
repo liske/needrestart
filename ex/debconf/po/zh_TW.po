@@ -1,0 +1,127 @@
+# Traditional Chinese translation for needrestart.
+# Copyright (C) 2024 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the needrestart package.
+# Peter Dave Hello <hsu@peterdavehello.org>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-03-29 13:45+0200\n"
+"PO-Revision-Date: 2024-11-22 19:26+0800\n"
+"Last-Translator: Peter Dave Hello <hsu@peterdavehello.org>\n"
+"Language-Team: Traditional Chinese\n"
+"Language: zh_TW\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Type: title
+#. Description
+#: ../needrestart.templates:1001
+msgid "Daemons using outdated libraries"
+msgstr "使用過時涵式庫的常駐程式"
+
+#. Type: multiselect
+#. Description
+#: ../needrestart.templates:2001
+msgid "Which services should be restarted?"
+msgstr "需要重新啟動哪些服務？"
+
+#. Type: note
+#. Description
+#. Type: note
+#. Description
+#: ../needrestart.templates:3001 ../needrestart.templates:4001
+msgid "Newer kernel available"
+msgstr "有可用的新版核心"
+
+#. Type: note
+#. Description
+#: ../needrestart.templates:3001
+msgid ""
+"The currently running kernel version is ${KVERSION} and there is an ABI "
+"compatible upgrade pending."
+msgstr "目前運作中的核心版本為 ${KVERSION}，且有 ABI 相容的升級待處理。"
+
+#. Type: note
+#. Description
+#. Type: note
+#. Description
+#: ../needrestart.templates:3001 ../needrestart.templates:4001
+msgid ""
+"Restarting the system to load the new kernel will not be handled "
+"automatically, so you should consider rebooting."
+msgstr "系統不會自動重新啟動來載入新核心，建議您手動重新開機。"
+
+#. Type: note
+#. Description
+#: ../needrestart.templates:4001
+msgid ""
+"The currently running kernel version is ${KVERSION} which is not the "
+"expected kernel version ${EVERSION}."
+msgstr "目前運作中的核心版本為 ${KVERSION}，與預期核心版本 ${EVERSION} 不符。"
+
+#. Type: title
+#. Description
+#: ../needrestart.templates:5001
+msgid "Pending kernel upgrade"
+msgstr "待處理的核心升級"
+
+#. Type: title
+#. Description
+#: ../needrestart.templates:6001
+msgid "Restart pending..."
+msgstr "等待重新啟動..."
+
+#. Type: note
+#. Description
+#: ../needrestart.templates:7001
+msgid "This system runs ${EHINT} - you should consider rebooting!"
+msgstr "此系統正在執行 ${EHINT} - 建議您重新開機！"
+
+#. Type: note
+#. Description
+#: ../needrestart.templates:7001
+msgid "For more details, run «needrestart -m a»."
+msgstr "如需更多細節，請執行「needrestart -m a」。"
+
+#. Type: title
+#. Description
+#: ../needrestart.templates:8001
+msgid "Outdated processor microcode"
+msgstr "過時的處理器微碼"
+
+#. Type: note
+#. Description
+#: ../needrestart.templates:9001
+msgid "Processor microcode update"
+msgstr "處理器微碼更新"
+
+#. Type: note
+#. Description
+#: ../needrestart.templates:9001
+msgid ""
+"The currently running processor microcode revision is ${CURRENT} which is "
+"not the expected microcode revision ${AVAIL}."
+msgstr "目前執行中的處理器微碼版本為 ${CURRENT}，與預期微碼版本 ${AVAIL} 不符。"
+
+#. Type: note
+#. Description
+#: ../needrestart.templates:9001
+msgid ""
+"Restarting the system to load the new processor microcode will not be "
+"handled automatically, so you should consider rebooting."
+msgstr "系統不會自動重新啟動來載入新的處理器微碼，建議您手動重新開機。"
+
+#. Type: title
+#. Description
+#: ../needrestart.templates:10001
+msgid "Containers using outdated libraries"
+msgstr "使用過時涵式庫的容器"
+
+#. Type: multiselect
+#. Description
+#: ../needrestart.templates:11001
+msgid "Which containers should be restarted?"
+msgstr "需要重新啟動哪些容器？"

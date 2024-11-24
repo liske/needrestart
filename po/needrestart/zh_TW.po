@@ -1,0 +1,231 @@
+# Traditional Chinese translation for needrestart.
+# Copyright (C) 2024 THE needrestart'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the needrestart package.
+# Peter Dave Hello <hsu@peterdavehello.org>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: needrestart 2.12\n"
+"Report-Msgid-Bugs-To: thomas@fiasko-nw.net\n"
+"POT-Creation-Date: 2018-03-29 13:45+0200\n"
+"PO-Revision-Date: 2024-11-22 19:25+0800\n"
+"Last-Translator: Peter Dave Hello <hsu@peterdavehello.org>\n"
+"Language-Team: Traditional Chinese\n"
+"Language: zh_TW\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: needrestart:234
+msgid "Available UI packages:"
+msgstr "可用的使用者介面套件："
+
+#: needrestart:438
+msgid "Scanning processes..."
+msgstr "正在掃描處理程序..."
+
+#: needrestart:584
+msgid "Scanning candidates..."
+msgstr "正在掃描候選項目..."
+
+#: needrestart:758
+msgid "Your outdated processes:"
+msgstr "您過時的處理程序："
+
+#: needrestart:822
+msgid "Running kernel seems to be up-to-date."
+msgstr "目前運作中的核心似乎是最新版。"
+
+#: needrestart:822
+msgid "Running kernel seems to be up-to-date (ABI upgrades are not detected)."
+msgstr "目前運作中的核心似乎是最新版 (未偵測到 ABI 升級)。"
+
+#: needrestart:826 needrestart:840
+msgid "an outdated kernel image"
+msgstr "過時的核心映像檔"
+
+#: needrestart:831
+#, perl-brace-format
+msgid ""
+"The currently running kernel version is {kversion} and there is an ABI "
+"compatible upgrade pending."
+msgstr "目前運作中的核心版本為 {kversion}，有一個 ABI 相容的升級待處理。"
+
+#: needrestart:845
+#, perl-brace-format
+msgid ""
+"The currently running kernel version is {kversion} which is not the expected "
+"kernel version {eversion}."
+msgstr "目前運作中的核心版本為 {kversion}，與預期的核心版本 {eversion} 不符。"
+
+#: needrestart:856
+msgid "Failed to retrieve available kernel versions."
+msgstr "無法取得可用的核心版本。"
+
+#: needrestart:895
+msgid "The processor microcode seems to be up-to-date."
+msgstr "處理器微碼似乎是最新版。"
+
+#: needrestart:899
+msgid "outdated processor microcode"
+msgstr "過時的處理器微碼"
+
+#: needrestart:907
+msgid "Failed to check for processor microcode upgrades."
+msgstr "無法檢查處理器微碼升級。"
+
+#: needrestart:916
+msgid "No services need to be restarted."
+msgstr "沒有服務需要重新啟動。"
+
+#: needrestart:925
+msgid "outdated binaries"
+msgstr "過時的執行檔"
+
+#: needrestart:931 needrestart:1041
+msgid "Services to be restarted:"
+msgstr "需要重新啟動的服務："
+
+#: needrestart:932 needrestart:1040
+msgid "Restarting services..."
+msgstr "正在重新啟動服務..."
+
+#: needrestart:995 needrestart:1067
+msgid "Service restarts being deferred:"
+msgstr "延遲重新啟動的服務："
+
+#: needrestart:1010 needrestart:1081
+msgid "Service restarts being refused by systemd:"
+msgstr "被 systemd 拒絕重新啟動的服務："
+
+#: needrestart:1095
+msgid "No containers need to be restarted."
+msgstr "沒有容器需要重新啟動。"
+
+#: needrestart:1104
+msgid "outdated containers"
+msgstr "過時的容器"
+
+#: needrestart:1109 needrestart:1161
+msgid "Containers to be restarted:"
+msgstr "需要重新啟動的容器："
+
+#: needrestart:1110 needrestart:1160
+msgid "Restarting containers..."
+msgstr "正在重新啟動容器..."
+
+#: needrestart:1151
+msgid "Container restarts being deferred:"
+msgstr "延遲重新啟動的容器："
+
+#: needrestart:1174
+msgid "No user sessions are running outdated binaries."
+msgstr "沒有使用者工作階段正在執行過時的執行檔。"
+
+#: needrestart:1183
+msgid "outdated sessions"
+msgstr "過時的工作階段"
+
+#: needrestart:1186
+msgid "User sessions running outdated binaries:"
+msgstr "正在執行過時執行檔的使用者工作階段："
+
+#: needrestart:1234
+msgid "and"
+msgstr "及"
+
+#: perl/lib/NeedRestart/Kernel/Linux.pm:136
+msgid "Scanning linux images..."
+msgstr "正在掃描 Linux 映像檔..."
+
+#: perl/lib/NeedRestart/Kernel/kFreeBSD.pm:49
+msgid "Scanning kfreebsd images..."
+msgstr "正在掃描 kFreeBSD 映像檔..."
+
+#: perl/lib/NeedRestart/UI/stdio.pm:42
+#, perl-brace-format
+msgid ""
+"Pending kernel upgrade!\n"
+"\n"
+"Running kernel version:\n"
+"  {kversion}\n"
+"\n"
+"Diagnostics:\n"
+"  {message}\n"
+"\n"
+"Restarting the system to load the new kernel will not be handled "
+"automatically, so you should consider rebooting. [Return]\n"
+msgstr ""
+"核心升級待處理！\n"
+"\n"
+"運作中的核心版本：\n"
+"  {kversion}\n"
+"\n"
+"診斷：\n"
+"  {message}\n"
+"\n"
+"系統不會自動重新啟動來載入新核心，建議您手動重新開機。 [Enter]\n"
+
+#: perl/lib/NeedRestart/UI/stdio.pm:54
+msgid "The currently running kernel has an ABI compatible upgrade pending."
+msgstr "目前運作中的核心有一個 ABI 相容的升級待處理。"
+
+#: perl/lib/NeedRestart/UI/stdio.pm:62
+#, perl-brace-format
+msgid ""
+"The currently running kernel version is not the expected kernel version "
+"{eversion}."
+msgstr "目前運作中的核心版本與預期的核心版本 {eversion} 不符。"
+
+#: perl/lib/NeedRestart/UI/stdio.pm:73
+#, perl-brace-format
+msgid ""
+"\n"
+"This system runs {ehint}. For more details, run «needrestart -m a».\n"
+"\n"
+"You should consider rebooting!\n"
+"\n"
+msgstr ""
+"\n"
+"此系統執行 {ehint}。欲取得更多資訊，請執行 «needrestart -m a»。\n"
+"\n"
+"建議您手動重新開機！\n"
+"\n"
+
+#: perl/lib/NeedRestart/UI/stdio.pm:89
+#, perl-brace-format
+msgid ""
+"Pending processor microcode upgrade!\n"
+"\n"
+"Diagnostics:\n"
+"  The currently running processor microcode revision is {current} which is "
+"not the expected microcode revision {avail}.\n"
+"\n"
+"Restarting the system to load the new processor microcode will not be "
+"handled automatically, so you should consider rebooting. [Return]\n"
+msgstr ""
+"處理器微碼升級待處理！\n"
+"\n"
+"診斷：\n"
+"  目前執行中的處理器微碼版本為 {current}，與預期的微碼版本 {avail} 不符。\n"
+"\n"
+"系統不會自動重新啟動來載入新的處理器微碼，建議您手動重新開機。 [Enter]\n"
+
+#: perl/lib/NeedRestart/UI/stdio.pm:156
+msgid ""
+"  (Y)es  - restart this service\n"
+"  (N)o   - do not restart this service\n"
+"  (A)uto - auto restart all remaining services\n"
+"  (S)top - stop restarting services\n"
+"\n"
+msgstr ""
+"  (Y)es  - 重新啟動此服務\n"
+"  (N)o   - 不要重新啟動此服務\n"
+"  (A)uto - 自動重新啟動所有剩餘服務\n"
+"  (S)top - 停止重新啟動服務\n"
+"\n"
+
+#: perl/lib/NeedRestart/UI/stdio.pm:189
+#, perl-brace-format
+msgid "Restart «{rc}»?"
+msgstr "要重新啟動 «{rc}» 嗎？"
