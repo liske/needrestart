@@ -4,7 +4,7 @@ needrestart - interpreter support
 Needrestart checks running processes for using obsolete binaries. If no
 obsolete binary was found needrestart scans for known interpreters.
 There are special packages (NeedRestart::Interp::*) implementing the
-source code file list extraction. The executable (/proc/<pid>/exec) is
+source code file list extraction. The executable (`/proc/<pid>/exec`) is
 used to detect the running interpreter.
 
 Whenever source files where located their ctime values are retrieved. If
