@@ -1,0 +1,49 @@
+# Traditional Chinese translation for needrestart-notify.
+# Copyright (C) 2024 THE needrestart-notify'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the needrestart-notify package.
+# Peter Dave Hello <hsu@peterdavehello.org>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: needrestart-notify 2.12\n"
+"Report-Msgid-Bugs-To: thomas@fiasko-nw.net\n"
+"POT-Creation-Date: 2018-02-11 13:55+0100\n"
+"PO-Revision-Date: 2024-11-22 19:25+0800\n"
+"Last-Translator: Peter Dave Hello <hsu@peterdavehello.org>\n"
+"Language-Team: Traditional Chinese\n"
+"Language: zh_TW\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ex/notify.d/200-write:32
+msgid ""
+"Your session is running obsolete binaries or libraries as listed below.\n"
+"Please consider a relogin or restart of the affected processes!"
+msgstr ""
+"您的連線階段正在執行以下過時的執行檔或涵式庫。\n"
+"請考慮重新登入或重新啟動受影響的處理程序！"
+
+#: ex/notify.d/600-mail:41
+#, sh-format
+msgid ""
+"Your session on host $_NR_FQDN ($NR_SESSION) is running obsolete binaries or "
+"libraries as listed below."
+msgstr ""
+"您在主機 $_NR_FQDN ($NR_SESSION) 上的連線階段正在執行以下過時的執行檔或涵式庫。"
+
+#: ex/notify.d/600-mail:44
+msgid "Please consider a relogin or restart of the affected processes!"
+msgstr "請考慮重新登入或重新啟動受影響的處理程序！"
+
+#: ex/notify.d/400-notify-send:44
+msgid "Relogin or restarts required!"
+msgstr "需要重新登入或重新啟動！"
+
+#: ex/notify.d/400-notify-send:45
+msgid ""
+"Your session is running obsolete binaries or libraries as listed below.\n"
+"<i><b>Please consider a relogin or restart of the affected processes!</b></i>"
+msgstr ""
+"您的連線階段正在執行以下過時的執行檔或涵式庫。\n"
+"<i><b>請考慮重新登入或重新啟動受影響的處理程序！</b></i>"
