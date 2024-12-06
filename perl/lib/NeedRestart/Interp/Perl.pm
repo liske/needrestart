@@ -55,7 +55,7 @@ sub _scan($$$$$) {
     my $path = shift;
 
     my $fh;
-    open($fh, '<', $src) || return;
+    open($fh, '<', "/proc/$pid/root/$src") || return;
     # find used modules
     my %modules = map {
 	(/^\s*use\s+([a-zA-Z][\w:]+)/ ? ($1 => 1) : ())
@@ -200,12 +200,12 @@ sub files {
     # get include path from env
     my %e = nr_parse_env($pid);
     if(exists($e{PERL5LIB})) {
-	@path = map { "/proc/$pid/root/$_"; } split(':', $e{PERL5LIB});
+	@path = split(':', $e{PERL5LIB});
     }
 
     # get include path from @INC
     my $plread = nr_fork_pipe($self->{debug}, $ptable->{exec}, '-e', 'print(join("\n", @INC));');
-    push(@path, map { "/proc/$pid/root/$_"; } <$plread>);
+    push(@path, <$plread>);
     close($plread);
     chomp(@path);
 
