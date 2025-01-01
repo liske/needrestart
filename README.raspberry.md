@@ -29,7 +29,7 @@ EOF
 $ cat << 'EOF' > /etc/needrestart/conf.d/kernel.conf
 # Filter kernel image filenames by regex. This is required on Raspian having
 # multiple kernel image variants installed in parallel.
-$nrconf{kernelfilter} = qr(kernel7\.img);
+$nrconf{kernelfilter} = qr(vmlinuz-.*-v7$);
 EOF
 ```
 
