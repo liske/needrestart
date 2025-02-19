@@ -34,8 +34,8 @@ needrestart 3.8
 
 
   This release contains some critical security fixes in the interpreter module.
-  While the default configuration was vulnerable it is possible to migitate
-  the issues by disabling the interpeter heuristic: `$nrconf{interpscan} = 0;`
+  While the default configuration was vulnerable it is possible to mitigate
+  the issues by disabling the interpreter heuristic: `$nrconf{interpscan} = 0;`
 
   All CVEs received a CVSS core of:
     CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H [7.8 HIGH]
@@ -62,7 +62,7 @@ needrestart 3.7
       (github pull request #254 by @a1346054)
     - [Core] Ignore USBGuard.
       (github pull request #257 by Christoph Anton Mitterer @calestyo)
-    - [Core] Do not ignore dhclient but prevent restart ifup automaticly.
+    - [Core] Do not ignore dhclient but prevent restart ifup automatically.
       (github pull request #262 by @anarcat)
     - [Core] Add greetd to the list of restart exclusions.
       (github pull request #266 by Iván Zaera @ivan-zaera)
@@ -157,7 +157,7 @@ needrestart 3.6
     - [Core] Ignore Java Native Access mappings.
       (github issue #142 by @nirgal)
       (github issue #185 by Ivan Zaera @izaera)
-    - [Core] nagios: Do not print perfdata data in unkown state.
+    - [Core] nagios: Do not print perfdata data in unknown state.
       (github pull request #222 by Lorenz @RincewindsHat)
     - [uCode] Fix 'uninitialized value' on AMD.
       (github pull request #226 by Christian Garbs @mmitch)
@@ -211,7 +211,7 @@ needrestart 3.5
       chroot false positives.
       (github issue #158 by @mphilipps)
       (github issue #152 by Ivan Kurnosov @zerkms and @djl)
-    - [Core] Supress warnings from Proc::ProcessTable.
+    - [Core] Suppress warnings from Proc::ProcessTable.
       (github issue #170 by @mphilipps)
     - [CONT] Fix docker detection on CentOS 7.
       (github issue #165 by Christian Ruppert @idl0r)
@@ -265,7 +265,7 @@ needrestart 3.3
       (Debian Bug#902031 by Axel Beckert <abe@debian.org>)
       (Debian Bug#902049 by Jon <nuxi@vault24.org>)
       (github issue #121 by Sven Hartge @shartge)
-    - [Interp] Supress uninitalized value if abs_path fails.
+    - [Interp] Suppress uninitialized value if abs_path fails.
       (github issue #120 by Craig Andrews @candrews)
 
  -- Thomas Liske <thomas@fiasko-nw.net>  Sun, 24 Jun 2018 13:32:47 +0200
@@ -334,7 +334,7 @@ needrestart 3.0
     - [Core] Tune blacklist_mappings default setting to match on deleted maps.
     - [UI] Respect verbosity in UI::stdio, just like UI::Debconf.
       (github pull request #88 by @guillaume-uH57J9)
-    - [Core] Improve output formating.
+    - [Core] Improve output formatting.
       (github issue #84 by Stavros Ntentos @stdedos)
     - [Core] Improve container detection to skip kernel and microcode checks.
   * Fixes:
@@ -437,7 +437,7 @@ needrestart 2.10
   * Features:
     - [Interp] Allow ignoring of interpreted files.
       (github issue #39 by Wolfgang Karall @wolfgangkarall)
-    - [Core] Make verification of mapped files in fileystem configurable as a
+    - [Core] Make verification of mapped files in filesystem configurable as a
       workaround for broken grsecurity kernels.
       (github issue #46 by @jleroy @eigengrau)
     - [Core] Make ignore of mapped files configurable.
@@ -518,7 +518,7 @@ needrestart 2.8
       (github issue #23 by Lukas Pirl @lpirl)
     - [Interp] Fix incomplete skipping of scanning files in Interp/*.pm
       if cwd is unknown.
-    - [Interp] Improve getopts parsing (Interp::*) to remove "Uknown option:"
+    - [Interp] Improve getopts parsing (Interp::*) to remove "Unknown option:"
       warnings.
       (Debian Bug#817927 by F. Petitjean <francois.petitjean@bureauveritas.com>)
     - [notify.d] Fix bashisms in /etc/needrestart/notify.d/*.
@@ -546,7 +546,7 @@ needrestart 2.7
     (Debian Bug#815086 by Vladimir Kudrya <pzs-fs@yandex.ru>)
   * [Bug] Fix missing translations in debconf template file.
     (Debian Bug#815086 by Vladimir Kudrya <pzs-fs@yandex.ru>)
-  * [notify] Notification scripts can be disabled globaly (see notify.conf).
+  * [notify] Notification scripts can be disabled globally (see notify.conf).
     (Debian Bug#787297 by Christoph Anton Mitterer <calestyo@scientia.net>)
   * [Core] Improve output of restart commands.
 
@@ -849,7 +849,7 @@ needrestart 0.3
   * Provide a more sophisticated apt/dpkg trigger.
   * Fix ignored -r command line parameter.
     (Debian Bug#721809 by Axel Beckert <abe@debian.org>)
-  * Ignore forked/detached daemon childs (pidfile heuristic).
+  * Ignore forked/detached daemon children (pidfile heuristic).
     (Debian Bug#721810 by Axel Beckert <abe@debian.org>)
   * Provide modular UI including debconf and dialog based
     frontends.
