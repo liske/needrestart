@@ -182,7 +182,7 @@ esac <<- EOF
 	Command set to run as transient unit restart-dbus.service:
 	$(
 		IFS=';'
-		# consequent commands have a space after preceeding semicolons, compensate for that
+		# consequent commands have a space after preceding semicolons, compensate for that
 		printf '%s' ' '
 		printf ' %s\n' $COMMANDS
 	)

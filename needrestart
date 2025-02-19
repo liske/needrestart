@@ -475,7 +475,7 @@ my %ometric_kernel_values = (
 my %ometric_ucode_values = (
     status => q(unknown),
     current => q(unknown),
-    expected => q(unkown),
+    expected => q(unknown),
 );
 
 my %restart;
@@ -813,7 +813,7 @@ if(defined($opt_l)) {
 			# We don't call any rc.d script not started in the current run-level.
 			elsif($lsb{'default-start'} =~ /$runlevel/) {
 			    # If a pidfile has been found, try to look for the daemon and ignore
-			    # any forked/detached childs (just a heuristic due Debian Bug#721810).
+			    # any forked/detached children (just a heuristic due Debian Bug#721810).
 			    if(exists($lsb{pidfiles})) {
 				foreach my $pidfile (@{ $lsb{pidfiles} }) {
 				    open(HPID, '<', "$pidfile") || next;
@@ -1477,7 +1477,7 @@ if ($opt_o) {
         print "# HELP needrestart_kernel_status status of kernel as reported by needrestart\n";
         print "needrestart_kernel_status{needrestart_kernel_status=\"$ometric_kernel_values{kresult}\"} 1\n";
 	print "# TYPE needrestart_kernel_info gauge\n";
-	print "# HELP needrestart_kernel_info version information for currenly running and most up to date kernels\n";
+	print "# HELP needrestart_kernel_info version information for currently running and most up to date kernels\n";
 	print "needrestart_kernel{running=\"$ometric_kernel_values{krunning}\",expected=\"$ometric_kernel_values{kexpected}\"} 1\n";
     }
     if ($opt_w) {
@@ -1485,7 +1485,7 @@ if ($opt_o) {
         print "# HELP needrestart_ucode_status status of the host's CPU microcode as reported by needrestart\n";
         print "needrestart_ucode_status{needrestart_ucode_status=\"$ometric_ucode_values{status}\"} 1\n";
 	print "# TYPE needrestart_ucode_info gauge\n";
-	print "# HELP needrestart_ucode_info version informaion for currently used and available microcode\n";
+	print "# HELP needrestart_ucode_info version information for currently used and available microcode\n";
 	print "needrestart_ucode{running=\"$ometric_ucode_values{current}\",expected=\"$ometric_ucode_values{expected}\"} 1\n";
     }
     if ($opt_l) {
