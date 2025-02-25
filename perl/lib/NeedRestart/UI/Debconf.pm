@@ -158,13 +158,14 @@ sub command {
 }
 
 
-sub query_pkgs($$$$$$) {
+sub query_pkgs($$$$$$$) {
     my $self = shift;
     my $out = shift;
     my $defno = shift;
     my $pkgs = shift;
     my $overrides = shift;
     my $cb = shift;
+    my $exitWhenNoneSelected = shift;
 
     # prepare checklist array
     my @l = nsort keys %$pkgs;
@@ -172,17 +173,20 @@ sub query_pkgs($$$$$$) {
     # apply rc selection overrides
     my @selected = ();
     foreach my $pkg (@l) {
-	my $found;
-	foreach my $re (keys %$overrides) {
-	    next unless($pkg =~ /$re/);
-
-	    push(@selected, $pkg) if($overrides->{$re});
-	    $found++;
-	    last;
-	}
-
-	push(@selected, $pkg) unless($defno || $found);
+		my $found;
+		foreach my $re (keys %$overrides) {
+		    next unless($pkg =~ /$re/);
+	
+		    push(@selected, $pkg) if($overrides->{$re});
+		    $found++;
+		    last;
+		}
+	
+		push(@selected, $pkg) unless($defno || $found);
     }
+
+	return if $exitWhenNoneSelected && scalar(@selected) == 0;
+
     dcres(set('needrestart/ui-query_pkgs', join(', ', @selected)));
 
     dcres( subst('needrestart/ui-query_pkgs', 'OUT', $out) );

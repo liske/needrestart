@@ -84,7 +84,7 @@ sub HELP_MESSAGE {
     print <<USG;
 Usage:
 
-  needrestart [-vn] [-c <cfg>] [-r <mode>] [-f <fe>] [-u <ui>] [-(b|p|o)] [-klw]
+  needrestart [-vn] [-c <cfg>] [-r <mode>] [-f <fe>] [-u <ui>] [-(b|p|o)] [-x] [-klw]
 
     -v		be more verbose
     -q		be quiet
@@ -103,6 +103,7 @@ Usage:
     -f <fe>	override debconf frontend (DEBIAN_FRONTEND, debconf(7))
     -t <seconds> tolerate interpreter process start times within this value
     -u <ui>     use preferred UI package (-u ? shows available packages)
+    -x		exit GUI when no processes are selected by default
 
   By using the following options only the specified checks are performed:
     -k          check for obsolete kernel
@@ -169,6 +170,7 @@ our %nrconf = (
     },
     has_pam_systemd => 1,
     tolerance => 2,
+    exitWhenNoneSelected => 0,
 );
 
 # backup ARGV (required for Debconf)
@@ -189,7 +191,8 @@ our $opt_q;
 our $opt_t;
 our $opt_u;
 our $opt_w;
-unless(getopts('c:vr:nm:bf:klpoqt:u:w')) {
+our $opt_x;
+unless(getopts('c:vr:nm:bf:klpoqt:u:wx')) {
     HELP_MESSAGE;
     exit 1;
 }
@@ -244,6 +247,8 @@ $opt_t = $nrconf{tolerance} unless(defined($opt_t));
 $nrconf{defno}++ if($opt_n);
 die "Options -p and -o cannot be defined simultaneously\n" if ($opt_p && $opt_o);
 $opt_b++ if($opt_p || $opt_o);
+
+$nrconf{exitWhenNoneSelected}++ if($opt_x);
 
 needrestart_interp_configure({
     perl => {
@@ -1203,7 +1208,7 @@ if(defined($opt_l) && !$uid) {
 
 				$ui->command(join(' ', '', @cmd));
 				system(@cmd);
-			    });
+			    }, $nrconf{exitWhenNoneSelected});
 
 	    if($#systemd_restart > -1) {
 		my @cmd = (qw(systemctl restart), @systemd_restart);
