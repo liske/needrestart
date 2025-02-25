@@ -6,7 +6,7 @@ needrestart checks which daemons need to be restarted after library upgrades.
 .SH USAGE
 Usage:
 .IP
-needrestart [\-(v|q)] [\-n] [\-c <cfg>] [\-r <mode>] [\-f <fe>] [\-u <ui>] [\-(b|p|o)] [\-kl]
+needrestart [\-(v|q)] [\-n] [\-c <cfg>] [\-r <mode>] [\-f <fe>] [\-u <ui>] [\-(b|p|o)] [\-x] [\-kl]
 .TP
 \fB\-v\fR
 be more verbose
@@ -68,6 +68,9 @@ check for obsolete kernel
 .TP
 \fB\-l\fR
 check for obsolete libraries
+.TP
+\fB\-x\fR
+automatically exit the GUI when there is no process selected by default
 .SH ENVIRONMENT
 The following environment variables can be used to override the config file options. Command line parameters do always supersede them.
 .TP
