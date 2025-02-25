@@ -60,6 +60,9 @@ When checking running interpreter processes, allow process start times that are 
 .TP
 \fB\-u\fR <ui>
 use preferred UI package (-u ? shows available packages)
+.TP
+\fB\-x\fR
+automatically exit the GUI when there is no process selected by default
 .PP
 By using one of the following options only the specified checks are performed:
 .TP
@@ -68,9 +71,6 @@ check for obsolete kernel
 .TP
 \fB\-l\fR
 check for obsolete libraries
-.TP
-\fB\-x\fR
-automatically exit the GUI when there is no process selected by default
 .SH ENVIRONMENT
 The following environment variables can be used to override the config file options. Command line parameters do always supersede them.
 .TP
