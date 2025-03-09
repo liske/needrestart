@@ -562,6 +562,7 @@ if(defined($opt_l)) {
 		    # removed executable mapped files
 		    if($path =~ s/ \(deleted\)$// ||  # Linux
 		       $path =~ s/^\(deleted\)//) {   # Linux VServer
+			print STDERR "$LOGPREF #$pid is $exe\n" if($nrconf{verbosity} > 1);
 			print STDERR "$LOGPREF #$pid uses deleted $path\n" if($nrconf{verbosity} > 1);
 			$restart++;
 			last;
@@ -575,6 +576,7 @@ if(defined($opt_l)) {
 			my ($testp) = grep { -e $_; } @paths;
 			unless($testp) {
 			    unless($nrconf{skip_mapfiles} == -1) {
+				print STDERR "$LOGPREF #$pid is $exe\n" if($nrconf{verbosity} > 1);
 				print STDERR "$LOGPREF #$pid uses non-existing $path\n" if($nrconf{verbosity} > 1);
 				$restart++;
 				last;
@@ -614,6 +616,7 @@ if(defined($opt_l)) {
 						      # BTRFS breaks device ID mapping completely...
 						      # ignoring unnamed device IDs for now
 						      $mdev =~ /^0:/)) {
+			    print STDERR "$LOGPREF #$pid is $exe\n" if($nrconf{verbosity} > 1);
 			    print STDERR "$LOGPREF #$pid uses obsolete $path\n" if($nrconf{verbosity} > 1);
 			    $restart++;
 			    last;
