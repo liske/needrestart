@@ -1,3 +1,38 @@
+needrestart 3.9
+
+  * Changes:
+    - [Core] Add default override for qrtr-ns / rmtfs.
+      (github pull request #332 by Arnaud Ferraris @a-wai)
+    - [Core] Add override for bacula.
+      (Debian Bug#1017417 by Carsten Leonhardt <leo@debian.org>)
+    - [Core] Add override for lxc.
+      (Debian Bug#1030843 by Richard Hector <richard@walnut.gen.nz>)
+    - [Core] Add override for xrdp.
+      (Debian Bug#1042008 by Andrew Chadwick <a.t.chadwick@gmail.com>)
+    - [Core] Print executable in verbose mode.
+      (github issue #277 by Paul Wise @pabs3)
+    - [Docs] Update kernel naming in config example for RPi2/3.
+      (github pull request #330 by @Popkornium18)
+    - [Docs] Document -b a little more.
+      (github pull request #333 by @flisk)
+    - [L10N] Add zh-TW Traditional Chinese locale.
+      (github pull request #320 by Peter Dave Hello @PeterDaveHello)
+
+  * Fixes:
+    - [Core] Fix regression of false positives for processes running in
+      chroot or mountns (#317).
+      (github issue #317 by Ivan Kurnosov @zerkms)
+    - [Core] Fix typos.
+      (github pull request #335 by Viktor Szépe @szepeviktor)
+    - [Docs] Fix missing escapes in markdown files.
+      (github issue #312 by Mikko Rantalainen @mikkorantalainen)
+    - [Interp] Fix source file scanning for processes in another mountns.
+      (github pull request #327 by Corey Hickey @bugfood)
+    - [uCode] Do not print undef values in batch mode.
+      (github issue #322 by @guruguruguru)
+
+ -- Thomas Liske <thomas@fiasko-nw.net>  
+
 needrestart 3.8
 
   * Security:
