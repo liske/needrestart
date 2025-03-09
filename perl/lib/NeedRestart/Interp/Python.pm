@@ -57,7 +57,7 @@ sub _scan($$$$$) {
     my $path = shift;
 
     my $fh;
-    open($fh, '<', $src) || return;
+    open($fh, '<', "/proc/$pid/root/$src") || return;
     # find used modules
     my %modules = map {
 	(/^\s*import\s+(\S+)/ ? ($1 => 1) : (/^\s*from\s+(\S+)\s+import\s+/ ? ($1 => 1) : ()))
@@ -207,7 +207,7 @@ sub files {
     # get include path from env
     my %e = nr_parse_env($pid);
     if(exists($e{PYTHONPATH})) {
-	@path = map { "/proc/$pid/root/$_"; } split(':', $e{PYTHONPATH});
+	@path = split(':', $e{PYTHONPATH});
     }
 
     # get include path from sys.path
@@ -224,7 +224,7 @@ sub files {
 	chomp($path);
 	$path =~ s/^\['//;
 	$path =~ s/'\$//;
-	push(@path, map { "/proc/$pid/root/$_"; } split("', '", $path));
+	push(@path, split("', '", $path));
     }
     else {
 	print STDERR "$LOGPREF #$pid: failed to retrieve include path\n" if($self->{debug});

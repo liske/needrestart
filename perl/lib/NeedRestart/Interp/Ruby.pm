@@ -57,7 +57,7 @@ sub _scan($$$$$) {
     my $path = shift;
 
     my $fh;
-    open($fh, '<', $src) || return;
+    open($fh, '<', "/proc/$pid/root/$src") || return;
     # find used modules
     my %modules = map {
 	(/^\s*load\s+['"]([^'"]+)['"]/ ? ($1 => 1) : (/^\s*require\s+['"]([^'"]+)['"]/ ? ("$1.rb" => 1) : ()))
@@ -204,13 +204,13 @@ sub files {
     # get include path from env
     my %e = nr_parse_env($pid);
     if(exists($e{RUBYLIB})) {
-	@path = map { "/proc/$pid/root/$_"; } split(':', $e{RUBYLIB});
+	@path = split(':', $e{RUBYLIB});
     }
 
     # get include path
     chdir_empty();
     my $rbread = nr_fork_pipe($self->{debug}, $ptable->{exec}, '-e', 'puts $:');
-    push(@path, map { "/proc/$pid/root/$_"; } <$rbread>);
+    push(@path, <$rbread>);
     close($rbread);
     chomp(@path);
     chdir("/proc/$pid/root/$ptable->{cwd}");
