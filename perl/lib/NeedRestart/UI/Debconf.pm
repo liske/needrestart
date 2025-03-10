@@ -173,16 +173,16 @@ sub query_pkgs($$$$$$$) {
     # apply rc selection overrides
     my @selected = ();
     foreach my $pkg (@l) {
-		my $found;
-		foreach my $re (keys %$overrides) {
-		    next unless($pkg =~ /$re/);
-	
-		    push(@selected, $pkg) if($overrides->{$re});
-		    $found++;
-		    last;
-		}
-	
-		push(@selected, $pkg) unless($defno || $found);
+	my $found;
+	foreach my $re (keys %$overrides) {
+	    next unless($pkg =~ /$re/);
+
+	    push(@selected, $pkg) if($overrides->{$re});
+	    $found++;
+	    last;
+	}
+
+	push(@selected, $pkg) unless($defno || $found);
     }
 
 	return if $exitWhenNoneSelected && scalar(@selected) == 0;
