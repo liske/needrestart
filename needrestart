@@ -103,7 +103,7 @@ Usage:
     -f <fe>	override debconf frontend (DEBIAN_FRONTEND, debconf(7))
     -t <seconds> tolerate interpreter process start times within this value
     -u <ui>     use preferred UI package (-u ? shows available packages)
-    -x		exit GUI when no processes are selected by default
+    -x		do not ask for restarts if no process is selected by default
 
   By using the following options only the specified checks are performed:
     -k          check for obsolete kernel
