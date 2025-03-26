@@ -30,16 +30,18 @@ use NeedRestart::Utils;
 
 my $LOGPREF = '[CONT]';
 
-my $nspid = get_nspid(undef, 1);
+my $root_pidns = nr_get_pid_ns(1);
 my $ptable = nr_ptable();
 
 sub new {
     my $class = shift;
     my $debug = shift;
 
+    die "Could not get PID namespace of #1!\n" unless(defined($root_pidns));
+
     return bless {
 	debug => $debug,
-	nspid => $nspid,
+	pidns => $root_pidns,
     }, $class;
 }
 
@@ -55,15 +57,12 @@ sub get {
     return ();
 }
 
-sub get_nspid {
+sub in_pidns {
     my $self = shift;
     my $pid = shift;
 
-    my $stat = nr_stat(qq(/proc/$pid/ns/pid));
-
-    return $stat->{ino} if($stat);
-
-    return undef;
+    my $ns = nr_get_pid_ns($pid);
+    return $ns && $ns != $self->{pidns};
 }
 
 sub find_nsparent {
@@ -72,9 +71,9 @@ sub find_nsparent {
 
     return undef unless(exists($ptable->{$pid}));
 
-    my $ns = $self->get_nspid($ptable->{$pid}->{ppid});
+    my $ns = nr_get_pid_ns($ptable->{$pid}->{ppid});
 
-    return $ptable->{$pid}->{ppid} if($ns && $ns == $nspid);
+    return $ptable->{$pid}->{ppid} if($ns && $ns == $self->{pidns});
 
     return $self->find_nsparent($ptable->{$pid}->{ppid});
 }

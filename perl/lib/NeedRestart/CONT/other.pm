@@ -22,7 +22,7 @@
 #   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 #
 
-package NeedRestart::CONT::machined;
+package NeedRestart::CONT::other;
 
 use strict;
 use warnings;
@@ -31,9 +31,9 @@ use parent qw(NeedRestart::CONT);
 use NeedRestart qw(:cont);
 use NeedRestart::Utils;
 
-my $LOGPREF = '[machined]';
+my $LOGPREF = '[other]';
 
-needrestart_cont_register(__PACKAGE__)
+needrestart_cont_register_fallback(__PACKAGE__)
     unless($<);
 
 sub new {
@@ -41,7 +41,6 @@ sub new {
 
     my $self = $class->SUPER::new(@_);
 
-    $self->{machined} = {};
     return bless $self, $class;
 }
 
@@ -54,23 +53,7 @@ sub check {
     # stop here if no dedicated PID namespace is used
     return 0 unless $self->in_pidns($pid);
 
-    my $cg = nr_get_cgroup($pid);
-
-    # look for machined or systemd-nspawn cgroups
-    return 0 unless($cg =~ m@^/machine\.slice/(machine)-([^.]+)\.scope(/|$)@m ||
-                    $cg =~ m@^/machine\.slice/(systemd-nspawn)\@([^.]+)\.service(/|$)@);
-
-    my $name = $2;
-    my $mgr = ($1 eq "machine") ? "systemd-machined" : $1;
-
-    unless($norestart) {
-	print STDERR "$LOGPREF #$pid is part of $mgr container '$name' and should be restarted\n" if($self->{debug});
-
-	$self->{machined}->{$name}++;
-    }
-    else {
-	print STDERR "$LOGPREF #$pid is part of $mgr container '$name'\n" if($self->{debug});
-    }
+    print STDERR "$LOGPREF #$pid is part of a PID namespace and will be ignored\n" if($self->{debug});
 
     return 1;
 }
@@ -78,9 +61,7 @@ sub check {
 sub get {
     my $self = shift;
 
-    return map {
-	($_ => [qw(machinectl reboot), $_]);
-    } keys %{ $self->{machined} };
+    return ();
 }
 
 1;
