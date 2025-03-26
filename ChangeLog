@@ -17,8 +17,9 @@ needrestart 3.9
       (github issue #277 by Paul Wise @pabs3)
     - [Core] Better systemd --user integration.
       (github pull request #301 by Ivan Shapovalov @intelfx)
-    - [Core] Ignore special lxc-attach binary.
+    - [Core] Ignore /memfd: binaries.
       (github issue #283 by @flisk)
+      (github issue #287 by @moerkey)
     - [Docs] Update kernel naming in config example for RPi2/3.
       (github pull request #330 by @Popkornium18)
     - [Docs] Document -b a little more.
