@@ -1,5 +1,9 @@
 needrestart 3.9
 
+  * Features:
+    - [CONT] Detect systemd-nspawn and add a fallback module.
+      (github pull request #302 by Ivan Shapovalov @intelfx)
+
   * Changes:
     - [Core] Add default override for qrtr-ns / rmtfs.
       (github pull request #332 by Arnaud Ferraris @a-wai)
@@ -11,6 +15,10 @@ needrestart 3.9
       (Debian Bug#1042008 by Andrew Chadwick <a.t.chadwick@gmail.com>)
     - [Core] Print executable in verbose mode.
       (github issue #277 by Paul Wise @pabs3)
+    - [Core] Better systemd --user integration.
+      (github pull request #301 by Ivan Shapovalov @intelfx)
+    - [Core] Ignore special lxc-attach binary.
+      (github issue #283 by @flisk)
     - [Docs] Update kernel naming in config example for RPi2/3.
       (github pull request #330 by @Popkornium18)
     - [Docs] Document -b a little more.
