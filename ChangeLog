@@ -43,7 +43,7 @@ needrestart 3.9
     - [uCode] Do not print undef values in batch mode.
       (github issue #322 by @guruguruguru)
 
- -- Thomas Liske <thomas@fiasko-nw.net>  
+ -- Thomas Liske <thomas@fiasko-nw.net>  Thu, 27 Mar 2025 22:55:21 +0100
 
 needrestart 3.8
 
