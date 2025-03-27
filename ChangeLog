@@ -3,6 +3,9 @@ needrestart 3.9
   * Features:
     - [CONT] Detect systemd-nspawn and add a fallback module.
       (github pull request #302 by Ivan Shapovalov @intelfx)
+    - [Core] Add option '-x' to skip user interaction when no process is
+      selected for restart by default.
+      (github pull request #336 by @larsen0815)
 
   * Changes:
     - [Core] Add default override for qrtr-ns / rmtfs.
