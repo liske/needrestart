@@ -18,7 +18,9 @@ systemctl show --state=active --property=MainPID 'user@*.service' | while IFS='=
     # did not exist or could not be queried
     if [ -z "$pid" ]; then continue; fi
 
+    # use `env` to suppress the `kill` builtin, which might not know about
+    # RT signals (or about _enough_ RT signals, e.g., dash)
     # also possible as: `systemctl kill --kill-whom=main --signal='SIGRTMIN+25' "$unit"` (systemd 252+)
     # also possible as: `systemctl -M "$uid@.host" --user daemon-reexec` (systemd 248+)
-    command kill -SIGRTMIN+25 "$pid"
+    env kill -SIGRTMIN+25 "$pid"
 done
