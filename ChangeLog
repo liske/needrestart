@@ -1,3 +1,20 @@
+needrestart 3.10
+
+  * Changes:
+    - [core] add override for systemd-nspawn (Debian Bug #1101553)
+      (Debian Bug#1101553 by Raphaël Halimi <raphael.halimi@gmail.com>)
+    - [core] add another pattern to ignore java native access
+      (github issue #267 by @rdemongeot)
+
+  * Fixes:
+    - [core] unbreak systemd-user w/ dash
+      (Debian Bug#1101551 by Raphaël Halimi <raphael.halimi@gmail.com>)
+      (github pull request #338 by Ivan Shapovalov @intelfx)
+    - [metrics] fix undefined values warning if no expected ucode version
+      is available
+
+ -- Thomas Liske <thomas@fiasko-nw.net>  Sun, 06 Apr 2025 12:52:14 +0200
+
 needrestart 3.9
 
   * Features:
