@@ -1030,8 +1030,8 @@ if($opt_w) {
 		    &NRM_UNKNOWN => "unknown",
 		);
 		$ometric_ucode_values{status} = $ucode_states{$ucode_result};
-		$ometric_ucode_values{current} = $ucode_result != NRM_UNKNOWN ? $ucode_vars{CURRENT} : "unknown";
-		$ometric_ucode_values{expected} = $ucode_result != NRM_UNKNOWN ? $ucode_vars{AVAIL} : "unknown";
+		$ometric_ucode_values{current} = defined($ucode_vars{CURRENT}) ? $ucode_vars{CURRENT} : "unknown";
+		$ometric_ucode_values{expected} = defined($ucode_vars{AVAIL}) ? $ucode_vars{AVAIL} : "unknown";
 	    }
         }
 	}
