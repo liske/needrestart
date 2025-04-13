@@ -150,6 +150,7 @@ our %nrconf = (
     ui_mode => 'a',
     systemctl_combine => 0,
     blacklist => [],
+    blacklist_cont => [],
     blacklist_interp => [],
     blacklist_rc => [],
     blacklist_mappings => [],
@@ -1251,6 +1252,9 @@ if(defined($opt_l) && !$uid) {
     $ui->vspace();
     @systemd_restart = ();
     my %conts = needrestart_cont_get($nrconf{verbosity} > 1);
+    for my $re (@{$nrconf{blacklist_cont}}) {
+        delete $conts{$_} for grep /$re/, keys %conts;
+    }
     unless(scalar %conts) {
 	$ui->notice(__ 'No containers need to be restarted.') unless($opt_b || $opt_m eq 'e');
 	if($opt_p) {
