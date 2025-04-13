@@ -171,6 +171,8 @@ our %nrconf = (
     has_pam_systemd => 1,
     tolerance => 2,
     exitWhenNoneSelected => 0,
+    kernel_kfreebsd_glob => '/boot/kfreebsd-*',
+    kernel_linux_glob => '/boot/vmlinu* /boot/*.img /boot/kernel*',
 );
 
 # backup ARGV (required for Debconf)
@@ -908,7 +910,7 @@ if(defined($opt_w)) {
 }
 
 if(defined($opt_k)) {
-    my ($kresult, %kvars) = ($nrconf{kernelhints} || $opt_b ? nr_kernel_check($nrconf{verbosity} > 1, $nrconf{kernelfilter}, $ui) : ());
+    my ($kresult, %kvars) = ($nrconf{kernelhints} || $opt_b ? nr_kernel_check($nrconf{verbosity} > 1, $nrconf{kernelfilter}, $ui, \%nrconf) : ());
 
     if(defined($kresult)) {
 	if($opt_b) {

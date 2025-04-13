@@ -119,6 +119,7 @@ sub nr_kernel_check_real {
     my $debug = shift;
     my $filter = shift;
     my $ui = shift;
+    my $nrconf = shift;
     my %vars;
 
     my ($sysname, $nodename, $release, $version, $machine) = uname;
@@ -136,7 +137,7 @@ sub nr_kernel_check_real {
     grep {
 	# filter initrd images
 	(!m@^/boot/init@);
-    } (</boot/vmlinu*>, </boot/*.img>, </boot/kernel*>);
+    } (glob($nrconf->{kernel_linux_glob}));
 
     $ui->progress_prep(scalar keys %kfiles, __ 'Scanning linux images...');
 

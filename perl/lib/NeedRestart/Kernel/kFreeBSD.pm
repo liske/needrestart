@@ -39,6 +39,7 @@ sub nr_kernel_check_real {
     my $debug = shift;
     my $filter = shift;
     my $ui = shift;
+    my $nrconf = shift;
     my %vars;
 
     my ($sysname, $nodename, $release, $version, $machine) = uname;
@@ -46,7 +47,7 @@ sub nr_kernel_check_real {
 
     die "$LOGPREF Not running on GNU/kFreeBSD!\n" unless($sysname eq 'GNU/kFreeBSD');
 
-    my @kfiles = grep {m/$filter/;} reverse nsort </boot/kfreebsd-*>;
+    my @kfiles = grep {m/$filter/;} reverse nsort glob($nrconf->{kernel_kfreebsd_glob});
     $ui->progress_prep(scalar @kfiles, __ 'Scanning kfreebsd images...');
 
     my %kernels;
