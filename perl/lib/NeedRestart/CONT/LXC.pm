@@ -72,6 +72,7 @@ sub check {
     return 0 unless $self->in_pidns($pid);
 
     my $cg = nr_get_cgroup($pid);
+    return unless(defined($cg));
 
     # look for LXC cgroups
     return unless($cg =~ m@^/lxc(?:.payload)?[./]([^/\n]+)($|/)@);

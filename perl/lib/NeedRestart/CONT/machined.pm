@@ -55,6 +55,7 @@ sub check {
     return 0 unless $self->in_pidns($pid);
 
     my $cg = nr_get_cgroup($pid);
+    return 0 unless(defined($cg));
 
     # look for machined or systemd-nspawn cgroups
     return 0 unless($cg =~ m@^/machine\.slice/(machine)-([^.]+)\.scope(/|$)@m ||

@@ -705,6 +705,7 @@ if(defined($opt_l)) {
 	    if($is_systemd) {
 		# get unit name from /proc/<pid>/cgroup
 		my $cgroup = nr_get_cgroup($pid);
+		next unless(defined($cgroup));
 		# systemd manager
 		if($cgroup =~ m@^/init\.scope$@ || ($pid == 1 && $exe =~ m@^(/usr)?/lib/systemd/systemd@)) {
 		    print STDERR "$LOGPREF #$pid is systemd manager\n" if($nrconf{verbosity} > 1);

@@ -54,6 +54,7 @@ sub check {
     return 0 unless $self->in_pidns($pid);
 
     my $cg = nr_get_cgroup($pid);
+    return 0 unless(defined($cg));
 
     # look for docker cgroups
     return 0 unless($cg =~ m@^/system.slice/docker-(.+)\.scope$@ ||
