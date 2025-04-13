@@ -1,3 +1,17 @@
+needrestart 3.11
+
+  * Changes:
+    - [CONT] allow to ignore containers by name
+      (github issue #260 by Arnaud Rebillout @elboulangero)
+    - [Kernel] allow glob customization for find kernel image files
+      (github issue #297 by @tblancher)
+
+  * Fixes:
+    - [core] fix warnings if no cgroup could be determined
+      (github issue #339 by Aristarkh Zagorodnikov @onyxmaster)
+
+ -- Thomas Liske <thomas@fiasko-nw.net>  Sun, 13 Apr 2025 21:07:19 +0200
+
 needrestart 3.10
 
   * Changes:
