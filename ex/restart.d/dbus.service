@@ -140,6 +140,7 @@ while IFS='=' read -r match_unit add_units; do
 	*" $match_unit "*)
 		# shellcheck disable=SC2086
 		for add_unit in $add_units; do
+			systemctl is-active -q "$add_unit" || continue
 			case " $ACTIVE_DEPS " in
 			*" $add_unit "*) true ;;
 			*) ACTIVE_DEPS="${ACTIVE_DEPS}${ACTIVE_DEPS:+ }${add_unit}" ;;
