@@ -192,7 +192,6 @@ shcat() {
 	done
 }
 
-# shellcheck disable=SC2086
 case "$CONSOLE_MODE" in
 interactive) shcat ;;
 delay) shcat >&2 ;;
@@ -202,10 +201,16 @@ esac <<- EOF
 	!!! $DBUS_SERVICE_NAME restart will be performed !!!
 
 	Users to be terminated:
-	$(printf '  %s\n' $USERS)
+	$(
+		# shellcheck disable=SC2086
+		printf '  %s\n' $USERS
+	)
 
 	Services to be restarted:
-	$(printf '  %s\n' $ACTIVE_DEPS)
+	$(
+		# shellcheck disable=SC2086
+		printf '  %s\n' $ACTIVE_DEPS
+	)
 
 	Display manager to be restarted: ${DISPLAY_MANAGER:-no active DM found}
 
@@ -214,6 +219,7 @@ esac <<- EOF
 		IFS=';'
 		# consequent commands have a space after preceding semicolons, compensate for that
 		printf '%s' ' '
+		# shellcheck disable=SC2086
 		printf ' %s\n' $COMMANDS
 	)
 
@@ -236,4 +242,9 @@ esac
 # run restart sequence as transient unit...
 # it is possible to view its output in the log if any:
 # journalctl -u restart-dbus
-systemd-run -G --unit=restart-dbus --description="Transient dbus restarter" sh -c "$COMMANDS"
+systemd-run \
+	-G \
+	--unit=restart-dbus.service \
+	--description="Transient dbus restarter" \
+	--property=SyslogIdentifier=restart-dbus \
+	-- sh -xc "$COMMANDS"
