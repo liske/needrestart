@@ -14,6 +14,13 @@
 # delay in semi-interactive mode
 DELAY_SECONDS=10
 
+# extra dependencies to be conditionally appended to found dependencies
+# match.service=add1.service add2.service ...
+# no extra spaces
+EXTRA_DEPS='
+systemd-networkd.service=networkd-dispatcher.service
+'
+
 # enable xtrace if we should be verbose
 if [ "$NR_VERBOSE" = '1' ]; then
 	set -x
@@ -51,8 +58,8 @@ DBUS_SERVICE_NAME=$(
 
 # if DM is active, return canonical ID
 DISPLAY_MANAGER=$(
-	systemctl -q is-active display-manager.service \
-		&& systemctl show --value -p Id display-manager.service
+	systemctl -q is-active display-manager.service &&
+		systemctl show --value -p Id display-manager.service
 )
 
 # get active dependencies
@@ -76,28 +83,29 @@ done <<- EOF
 	)
 EOF
 
-# get active services with BusName
-current_busname=''
-current_id=''
+# get active services with BusName, or Type=dbus, or dbus-org.* in Names
+reset_iter_values() {
+	current_busname=''
+	current_id=''
+	current_names=''
+	current_type=''
+}
 while IFS='=' read -r option value; do
 	case "${option}" in
-	BusName)
-		current_busname="$value"
-		continue
-		;;
-	Id)
-		current_id="$value"
-		continue
-		;;
+	BusName) current_busname="$value" ;;
+	Id) current_id="$value" ;;
+	Type) current_type="$value" ;;
+	Names) current_names="$value" ;;
 	'')
-		if [ -z "$current_busname" ] || [ -z "$current_id" ]; then
-			current_busname=''
-			current_id=''
+		# skip if nothing matches
+		if [ -z "$current_busname" ] &&
+			[ "$current_type" != 'dbus' ] &&
+			case " $current_names " in *' dbus-org.'*) false ;; *) true ;; esac then
+			reset_iter_values
 			continue
 		fi
+
 		service=$current_id
-		current_busname=''
-		current_id=''
 		case "$service" in
 		"$DISPLAY_MANAGER" | dbus.service | "$DBUS_SERVICE_NAME") continue ;;
 		esac
@@ -105,20 +113,42 @@ while IFS='=' read -r option value; do
 		*" $service "*) true ;;
 		*) ACTIVE_DEPS="${ACTIVE_DEPS}${ACTIVE_DEPS:+ }${service}" ;;
 		esac
+		reset_iter_values
 		;;
-	*)
-		current_busname=''
-		current_id=''
-		;;
+	*) reset_iter_values ;;
 	esac
 done <<- EOF
 	$(
 		systemctl show --plain --all \
 			--type=service \
 			--state=active,reloading,failed,activating \
-			--property=BusName,Id
+			--property=BusName \
+			--property=Id \
+			--property=Names \
+			--property=Type \
+			'*'
 	)
 	=end
+EOF
+
+# conditionally chain additional deps
+while IFS='=' read -r match_unit add_units; do
+	if [ -z "$match_unit" ] || [ -z "$add_units" ]; then
+		continue
+	fi
+	case " $ACTIVE_DEPS " in
+	*" $match_unit "*)
+		# shellcheck disable=SC2086
+		for add_unit in $add_units; do
+			case " $ACTIVE_DEPS " in
+			*" $add_unit "*) true ;;
+			*) ACTIVE_DEPS="${ACTIVE_DEPS}${ACTIVE_DEPS:+ }${add_unit}" ;;
+			esac
+		done
+		;;
+	esac
+done <<- EOF
+	$EXTRA_DEPS
 EOF
 
 # get logind users
