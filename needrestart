@@ -72,12 +72,12 @@ elsif(eval "use ImVirt; 1;") {
 	$is_vm = $imvirt ne ImVirt->IMV_PHYSICAL;
 	$is_container = $imvirt eq ImVirt->IMV_CONTAINER;
 }
-elsif (-r "/proc/1/environ") {
+elsif (-r "/proc/" . getppid() . "/environ") {
 	# check if we are inside of a container (fallback)
-    local $/;
-    open(HENV, '<', '/proc/1/environ');
-    $is_container = scalar(grep {/^container=/;} unpack("(Z*)*", <HENV>));
-    close(HENV)
+	local $/;
+	open(HENV, '<', "/proc/" . getppid() . "/environ");
+	$is_container = scalar(grep {/^container=/;} unpack("(Z*)*", <HENV>));
+	close(HENV)
 }
 
 sub HELP_MESSAGE {
