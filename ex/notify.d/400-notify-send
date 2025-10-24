@@ -32,6 +32,8 @@ case "$NR_SESSION" in
     DBUS_SESSION_BUS_ADDRESS=$(sed -z -n s/^DBUS_SESSION_BUS_ADDRESS=//p "/proc/$NR_SESSPPID/environ")
     if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
         unset DBUS_SESSION_BUS_ADDRESS
+	else
+        export DBUS_SESSION_BUS_ADDRESS
     fi
 
     DISPLAY=$(sed -z -n s/^DISPLAY=//p "/proc/$NR_SESSPPID/environ")
