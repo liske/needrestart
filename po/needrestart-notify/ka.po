@@ -1,0 +1,55 @@
+# Georgian translation for needrestart-notify.
+# Copyright (C) 2026 needrestart-notify's authors
+# This file is distributed under the same license as the needrestart-notify package.
+# Ekaterine Papava <papava.e@gtu.ge>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: needrestart-notify 2.12\n"
+"Report-Msgid-Bugs-To: thomas@fiasko-nw.net\n"
+"POT-Creation-Date: 2018-02-11 13:55+0100\n"
+"PO-Revision-Date: 2026-01-14 08:48+0100\n"
+"Last-Translator: Ekaterine Papava <papava.e@gtu.ge>\n"
+"Language-Team: Georgian <(nothing)>\n"
+"Language: ka\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.8\n"
+
+#: ex/notify.d/200-write:32
+msgid ""
+"Your session is running obsolete binaries or libraries as listed below.\n"
+"Please consider a relogin or restart of the affected processes!"
+msgstr ""
+"თქვენს სესიაში გაშვებულია მოძველებული ბინარული ფაილები, ან ბიბლიოთეკები, "
+"რომლებიც ქვემოთაა ჩამოთვლილი.\n"
+"იფიქრეთ, თავიდან შეხვიდეთ სესიაში, ან გადატვირთოთ შესაბამისი პროცესები!"
+
+#: ex/notify.d/600-mail:41
+#, sh-format
+msgid ""
+"Your session on host $_NR_FQDN ($NR_SESSION) is running obsolete binaries or "
+"libraries as listed below."
+msgstr ""
+"თქვენი სესიაში ჰოსტზე $_NR_FQDN ($NR_SESSION) გაშვებულია მოძველებული "
+"ბინარული ფაილები, ან ბიბლიოთეკები, რომლებიც ქვემოთაა ჩამოთვლილი."
+
+#: ex/notify.d/600-mail:44
+msgid "Please consider a relogin or restart of the affected processes!"
+msgstr ""
+"იფიქრეთ, თავიდან შეხვიდეთ სესიაში, ან გადატვირთოთ შესაბამისი პროცესები!"
+
+#: ex/notify.d/400-notify-send:44
+msgid "Relogin or restarts required!"
+msgstr "საჭიროა სესიიდან გასვლა და თავიდან შესვლა, ან გადატვირთვა!"
+
+#: ex/notify.d/400-notify-send:45
+msgid ""
+"Your session is running obsolete binaries or libraries as listed below.\n"
+"<i><b>Please consider a relogin or restart of the affected processes!</b></i>"
+msgstr ""
+"თქვენს სესიაში გაშვებულია მოძველებული ბინარული ფაილები, ან ბიბლიოთეკები, "
+"რომლებიც ქვემოთაა ჩამოთვლილი.\n"
+"<i><b>იფიქრეთ, თავიდან შეხვიდეთ სესიაში, ან გადატვირთოთ შესაბამისი პროცესები!"
+"</b></i>"
