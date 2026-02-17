@@ -63,3 +63,5 @@ which unxz    > /dev/null && try_decompress '\3757zXZ\000' abcde unxz
 which bunzip2 > /dev/null && try_decompress 'BZh'          xy    bunzip2
 which unlzma  > /dev/null && try_decompress '\135\0\0\0'   xxx   unlzma
 which lzop    > /dev/null && try_decompress '\211\114\132' xy    'lzop -d'
+which lz4     > /dev/null && try_decompress '\002!L\030'   xxx   'lz4 -d'
+which unzstd  > /dev/null && try_decompress '(\265/\375'   xxx   unzstd
