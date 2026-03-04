@@ -520,7 +520,7 @@ if(defined($opt_l)) {
 
     $ui->progress_prep(scalar keys %$ptable, __ 'Scanning processes...');
     my %stage2;
-    for my $pid (sort {$a <=> $b} keys %$ptable) {
+    for my $pid (sort {$a <=> $b} grep { /^\d+$/ } keys %$ptable) {
 	$ui->progress_step;
 
 	# user-mode: skip foreign processes
