@@ -1,0 +1,259 @@
+# This file is distributed under the same license as the needrestart package.
+#
+# SPDX-FileCopyrightText: 2026 Sergiu Bivol <sergiu@cip.md>
+msgid ""
+msgstr ""
+"Project-Id-Version: needrestart 2.12\n"
+"Report-Msgid-Bugs-To: thomas@fiasko-nw.net\n"
+"POT-Creation-Date: 2018-03-29 13:45+0200\n"
+"PO-Revision-Date: 2026-03-12 12:04+0000\n"
+"Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
+"Language-Team: Romanian <translation-team-ro@lists.sourceforge.net>\n"
+"Language: ro\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
+"20)) ? 1 : 2;\n"
+"X-Generator: Lokalize 25.08.1\n"
+
+#: needrestart:234
+msgid "Available UI packages:"
+msgstr "Pachete cu interfață disponibile:"
+
+#: needrestart:438
+msgid "Scanning processes..."
+msgstr "Se citesc procesele…"
+
+#: needrestart:584
+msgid "Scanning candidates..."
+msgstr "Se caută candidați…"
+
+#: needrestart:758
+msgid "Your outdated processes:"
+msgstr "Procesele învechite:"
+
+#: needrestart:822
+msgid "Running kernel seems to be up-to-date."
+msgstr "Nucleul ce rulează pare a fi la zi."
+
+#: needrestart:822
+msgid "Running kernel seems to be up-to-date (ABI upgrades are not detected)."
+msgstr ""
+"Nucleul ce rulează pare a fi actual (nu sunt depistate înnoiri de ABI)."
+
+#: needrestart:826 needrestart:840
+msgid "an outdated kernel image"
+msgstr "o imagine de nucleu învechită"
+
+#: needrestart:831
+#, perl-brace-format
+msgid ""
+"The currently running kernel version is {kversion} and there is an ABI "
+"compatible upgrade pending."
+msgstr ""
+"Versiunea nucleului ce rulează acum e {kversion} și o înnoire cu ABI "
+"compatibil e în așteptare."
+
+#: needrestart:845
+#, perl-brace-format
+msgid ""
+"The currently running kernel version is {kversion} which is not the expected "
+"kernel version {eversion}."
+msgstr ""
+"Versiunea nucleului ce rulează acum e {kversion}, pe când versiunea "
+"așteptată a nucleului e {eversion}."
+
+#: needrestart:856
+msgid "Failed to retrieve available kernel versions."
+msgstr "Obținerea versiunilor de nucleu disponibile a eșuat."
+
+#: needrestart:895
+msgid "The processor microcode seems to be up-to-date."
+msgstr "Microcodul procesorului pare a fi la zi."
+
+#: needrestart:899
+msgid "outdated processor microcode"
+msgstr "microcod învechit pentru procesor"
+
+#: needrestart:907
+msgid "Failed to check for processor microcode upgrades."
+msgstr "Verificarea înnoirilor microcodului pentru procesor a eșuat."
+
+#: needrestart:916
+msgid "No services need to be restarted."
+msgstr "Niciun serviciu nu trebuie repornit."
+
+#: needrestart:925
+msgid "outdated binaries"
+msgstr "binare învechite"
+
+#: needrestart:931 needrestart:1041
+msgid "Services to be restarted:"
+msgstr "Servicii de repornit:"
+
+#: needrestart:932 needrestart:1040
+msgid "Restarting services..."
+msgstr "Se repornesc serviciile…"
+
+#: needrestart:995 needrestart:1067
+msgid "Service restarts being deferred:"
+msgstr "Reporniri de servicii amânate:"
+
+#: needrestart:1010 needrestart:1081
+msgid "Service restarts being refused by systemd:"
+msgstr "Reporniri de servicii refuzate de systemd:"
+
+#: needrestart:1095
+msgid "No containers need to be restarted."
+msgstr "Niciun container nu trebuie repornit."
+
+#: needrestart:1104
+msgid "outdated containers"
+msgstr "containere învechite"
+
+#: needrestart:1109 needrestart:1161
+msgid "Containers to be restarted:"
+msgstr "Containere de repornit:"
+
+#: needrestart:1110 needrestart:1160
+msgid "Restarting containers..."
+msgstr "Se repornesc containere…"
+
+#: needrestart:1151
+msgid "Container restarts being deferred:"
+msgstr "Reporniri de containere amânate:"
+
+#: needrestart:1174
+msgid "No user sessions are running outdated binaries."
+msgstr "Nicio sesiune de utilizator nu rulează binare învechite."
+
+#: needrestart:1183
+msgid "outdated sessions"
+msgstr "sesiuni învechite"
+
+#: needrestart:1186
+msgid "User sessions running outdated binaries:"
+msgstr "Sesiuni de utilizator ce rulează binare învechite:"
+
+#: needrestart:1234
+msgid "and"
+msgstr "și"
+
+#: perl/lib/NeedRestart/Kernel/Linux.pm:136
+msgid "Scanning linux images..."
+msgstr "Se citesc imaginile linux…"
+
+#: perl/lib/NeedRestart/Kernel/kFreeBSD.pm:49
+msgid "Scanning kfreebsd images..."
+msgstr "Se citesc imaginile kfreebsd…"
+
+#: perl/lib/NeedRestart/UI/stdio.pm:42
+#, perl-brace-format
+msgid ""
+"Pending kernel upgrade!\n"
+"\n"
+"Running kernel version:\n"
+"  {kversion}\n"
+"\n"
+"Diagnostics:\n"
+"  {message}\n"
+"\n"
+"Restarting the system to load the new kernel will not be handled "
+"automatically, so you should consider rebooting. [Return]\n"
+msgstr ""
+"Înnoire a nucleului în așteptare!\n"
+"\n"
+"Versiunea nucleului ce rulează:\n"
+"  {kversion}\n"
+"\n"
+"Diagnostice:\n"
+"  {message}\n"
+"\n"
+"Repornirea sistemului pentru a încărca noul nucleu nu se va face automat, se "
+"recomandă repornirea sistemului. [Retur]\n"
+
+#: perl/lib/NeedRestart/UI/stdio.pm:54
+msgid "The currently running kernel has an ABI compatible upgrade pending."
+msgstr "Nucleul ce rulează acum are o înnoire cu ABI compatibil în așteptare."
+
+#: perl/lib/NeedRestart/UI/stdio.pm:62
+#, perl-brace-format
+msgid ""
+"The currently running kernel version is not the expected kernel version "
+"{eversion}."
+msgstr ""
+"Versiunea nucleului ce rulează acum nu e versiunea așteptată a nucleului "
+"{eversion}."
+
+#: perl/lib/NeedRestart/UI/stdio.pm:73
+#, perl-brace-format
+msgid ""
+"\n"
+"This system runs {ehint}. For more details, run «needrestart -m a».\n"
+"\n"
+"You should consider rebooting!\n"
+"\n"
+msgstr ""
+"\n"
+"Acest sistem rulează {ehint}. Pentru detalii suplimentare, rulați "
+"„needrestart -m a”.\n"
+"\n"
+"Vi se recomandă repornirea sistemului!\n"
+"\n"
+
+#: perl/lib/NeedRestart/UI/stdio.pm:89
+#, perl-brace-format
+msgid ""
+"Pending processor microcode upgrade!\n"
+"\n"
+"Diagnostics:\n"
+"  The currently running processor microcode revision is {current} which is "
+"not the expected microcode revision {avail}.\n"
+"\n"
+"Restarting the system to load the new processor microcode will not be "
+"handled automatically, so you should consider rebooting. [Return]\n"
+msgstr ""
+"Înnoire a microcodului pentru procesor în așteptare!\n"
+"\n"
+"Diagnostice:\n"
+"  Revizia microcodului pentru procesor ce rulează acum e {current}, pe când "
+"revizia așteptată a microcodului e {avail}.\n"
+"\n"
+"Repornirea sistemului pentru a încărca noul microcod pentru procesor nu se "
+"va face automat, vi se recomandă repornirea sistemului. [Retur]\n"
+
+#: perl/lib/NeedRestart/UI/stdio.pm:156
+msgid ""
+"  (Y)es  - restart this service\n"
+"  (N)o   - do not restart this service\n"
+"  (A)uto - auto restart all remaining services\n"
+"  (S)top - stop restarting services\n"
+"\n"
+msgstr ""
+"  (Y) Da - repornește acest serviciu\n"
+"  (N)u   - nu reporni acest serviciu\n"
+"  (A)uto - repornește automat toate serviciile rămase\n"
+"  (S)tai - încetează repornirea serviciilor\n"
+"\n"
+
+#: perl/lib/NeedRestart/UI/stdio.pm:189
+#, perl-brace-format
+msgid "Restart «{rc}»?"
+msgstr "Reporniți „{rc}”?"
+
+#~ msgid "Services being skipped:"
+#~ msgstr "Servicii ce vor fi sărite:"
+
+#~ msgid "Containers being skipped:"
+#~ msgstr "Containere ce vor fi sărite:"
+
+#, perl-brace-format
+#~ msgid "{uid} @ {sess}: {fnames}"
+#~ msgstr "{uid} @ {sess}: {fnames}"
+
+#~ msgid "yes"
+#~ msgstr "da"
+
+#~ msgid "no"
+#~ msgstr "nu"

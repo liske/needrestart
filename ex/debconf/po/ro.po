@@ -1,0 +1,138 @@
+# This file is distributed under the same license as the needrestart package.
+#
+# SPDX-FileCopyrightText: 2026 Sergiu Bivol <sergiu@cip.md>
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-03-29 13:45+0200\n"
+"PO-Revision-Date: 2026-03-05 14:06+0000\n"
+"Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
+"Language-Team: Romanian <translation-team-ro@lists.sourceforge.net>\n"
+"Language: ro\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
+"20)) ? 1 : 2;\n"
+"X-Generator: Lokalize 25.08.1\n"
+
+#. Type: title
+#. Description
+#: ../needrestart.templates:1001
+msgid "Daemons using outdated libraries"
+msgstr "Demoni ce folosesc biblioteci învechite"
+
+#. Type: multiselect
+#. Description
+#: ../needrestart.templates:2001
+msgid "Which services should be restarted?"
+msgstr "Care servicii trebuiesc repornite?"
+
+#. Type: note
+#. Description
+#. Type: note
+#. Description
+#: ../needrestart.templates:3001 ../needrestart.templates:4001
+msgid "Newer kernel available"
+msgstr "E disponibil un nucleu mai nou"
+
+#. Type: note
+#. Description
+#: ../needrestart.templates:3001
+msgid ""
+"The currently running kernel version is ${KVERSION} and there is an ABI "
+"compatible upgrade pending."
+msgstr ""
+"Versiunea nucleului ce rulează acum e ${KVERSION} și o înnoire cu ABI "
+"compatibil e în așteptare."
+
+#. Type: note
+#. Description
+#. Type: note
+#. Description
+#: ../needrestart.templates:3001 ../needrestart.templates:4001
+msgid ""
+"Restarting the system to load the new kernel will not be handled "
+"automatically, so you should consider rebooting."
+msgstr ""
+"Repornirea sistemului pentru a încărca noul nucleu nu se va face automat, se "
+"recomandă repornirea sistemului."
+
+#. Type: note
+#. Description
+#: ../needrestart.templates:4001
+msgid ""
+"The currently running kernel version is ${KVERSION} which is not the "
+"expected kernel version ${EVERSION}."
+msgstr ""
+"Versiunea nucleului ce rulează acum e ${KVERSION}, pe când versiunea "
+"așteptată a nucleului e ${EVERSION}."
+
+#. Type: title
+#. Description
+#: ../needrestart.templates:5001
+msgid "Pending kernel upgrade"
+msgstr "Înnoire a nucleului în așteptare"
+
+#. Type: title
+#. Description
+#: ../needrestart.templates:6001
+msgid "Restart pending..."
+msgstr "Repornire în așteptare…"
+
+#. Type: note
+#. Description
+#: ../needrestart.templates:7001
+msgid "This system runs ${EHINT} - you should consider rebooting!"
+msgstr "Acest sistem rulează ${EHINT} - vi se recomandă să reporniți!"
+
+#. Type: note
+#. Description
+#: ../needrestart.templates:7001
+msgid "For more details, run «needrestart -m a»."
+msgstr "Pentru detalii suplimentare, rulați „needrestart -m a”."
+
+#. Type: title
+#. Description
+#: ../needrestart.templates:8001
+msgid "Outdated processor microcode"
+msgstr "Microcod învechit pentru procesor"
+
+#. Type: note
+#. Description
+#: ../needrestart.templates:9001
+msgid "Processor microcode update"
+msgstr "Actualizare de microcod pentru procesor"
+
+#. Type: note
+#. Description
+#: ../needrestart.templates:9001
+msgid ""
+"The currently running processor microcode revision is ${CURRENT} which is "
+"not the expected microcode revision ${AVAIL}."
+msgstr ""
+"Revizia microcodului pentru procesor ce rulează acum e ${CURRENT}, pe când "
+"revizia așteptată a microcodului e ${AVAIL}."
+
+#. Type: note
+#. Description
+#: ../needrestart.templates:9001
+msgid ""
+"Restarting the system to load the new processor microcode will not be "
+"handled automatically, so you should consider rebooting."
+msgstr ""
+"Repornirea sistemului pentru a încărca noul microcod pentru procesor nu se "
+"va face automat, vi se recomandă repornirea sistemului."
+
+#. Type: title
+#. Description
+#: ../needrestart.templates:10001
+msgid "Containers using outdated libraries"
+msgstr "Containere ce folosesc biblioteci învechite"
+
+#. Type: multiselect
+#. Description
+#: ../needrestart.templates:11001
+msgid "Which containers should be restarted?"
+msgstr "Care containere trebuiesc repornite?"
