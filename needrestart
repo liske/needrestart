@@ -212,14 +212,18 @@ die "ERROR: Could not read config file '$opt_c'!\n" unless(-r $opt_c || $opt_b);
 $ENV{DEBIAN_FRONTEND} = $opt_f if($opt_f);
 my $debian_noninteractive = (exists($ENV{DEBIAN_FRONTEND}) && $ENV{DEBIAN_FRONTEND} eq 'noninteractive');
 
-# be quiet
-if($opt_q) {
-    $nrconf{verbosity} = 0;
+sub set_verbosity {
+    # be quiet
+    if($opt_q) {
+	$nrconf{verbosity} = 0;
+    }
+    # be verbose
+    elsif($opt_v) {
+	$nrconf{verbosity} = 2;
+    }
 }
-# be verbose
-elsif($opt_v) {
-    $nrconf{verbosity} = 2;
-}
+
+set_verbosity;
 
 # slurp config file
 print STDERR "$LOGPREF eval $opt_c\n" if($nrconf{verbosity} > 1);
@@ -231,6 +235,9 @@ eval do {
     $cfg;
 };
 die "Error parsing $opt_c: $@" if($@);
+
+# enforce verbosity from command line option
+set_verbosity;
 
 # fallback to stdio on verbose mode
 $nrconf{ui} = qq(NeedRestart::UI::stdio) if($nrconf{verbosity} > 1);
