@@ -83,7 +83,7 @@ done <<- EOF
 	)
 EOF
 
-# get active services with BusName, or Type=dbus, or dbus-org.* in Names
+# get active services with BusName, or Type=dbus, or dbus-* in Names
 reset_iter_values() {
 	current_busname=''
 	current_id=''
@@ -100,15 +100,18 @@ while IFS='=' read -r option value; do
 		# skip if nothing matches
 		if [ -z "$current_busname" ] &&
 			[ "$current_type" != 'dbus' ] &&
-			case " $current_names " in *' dbus-org.'*) false ;; *) true ;; esac then
+			case " $current_names " in *' dbus-'*) false ;; *) true ;; esac then
 			reset_iter_values
 			continue
 		fi
 
 		service=$current_id
+		# skip dbus itself and display manager
 		case "$service" in
 		"$DISPLAY_MANAGER" | dbus.service | "$DBUS_SERVICE_NAME") continue ;;
 		esac
+
+		# append dependencies
 		case " $ACTIVE_DEPS " in
 		*" $service "*) true ;;
 		*) ACTIVE_DEPS="${ACTIVE_DEPS}${ACTIVE_DEPS:+ }${service}" ;;
