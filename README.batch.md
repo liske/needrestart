@@ -9,6 +9,9 @@ NEEDRESTART-VER: 2.1
 NEEDRESTART-KCUR: 3.19.3-tl1+
 NEEDRESTART-KEXP: 3.19.3-tl1+
 NEEDRESTART-KSTA: 1
+NEEDRESTART-UCSTA: 1
+NEEDRESTART-UCCUR: 0x0a20102d
+NEEDRESTART-UCEXP: 0x0a20102d
 NEEDRESTART-SVC: systemd-journald.service
 NEEDRESTART-SVC: systemd-machined.service
 NEEDRESTART-CONT: LXC web1
@@ -30,3 +33,10 @@ The kernel status (`NEEDRESTART-KSTA`) value has the following meaning:
 - *1*: no pending upgrade
 - *2*: ABI compatible upgrade pending
 - *3*: version upgrade pending
+
+
+The microcode status (`NEEDRESTART-UCSTA`) value has the following meaning:
+
+- *0*: unknown or failed to detect
+- *1*: current
+- *2*: obsolete
