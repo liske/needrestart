@@ -716,24 +716,24 @@ if(defined($opt_l)) {
 		    next;
 		}
 		# `systemd --user` manager
-		if($cgroup =~ m@/user\@(\d+)\.service/init\.scope$@ && $ptable->{$pid}->{fname} ne "(sd-pam)") {
+		if($cgroup =~ m@^(?:/[^/]+\.slice)*/user\@(\d+)\.service/init\.scope$@ && $ptable->{$pid}->{fname} ne "(sd-pam)") {
 		    print STDERR "$LOGPREF #$pid is user systemd manager: uid=$1\n" if($nrconf{verbosity} > 1);
 		    # TODO: restart specific `systemd --user` instance?
 		    $restart{q(systemd-user)}++;
 		    next;
 		}
 
-		if($cgroup =~ m@/user-(\d+)\.slice/session-(\d+)\.scope@) {
+		if($cgroup =~ m@^(?:/[^/]+\.slice)*/user-(\d+)\.slice/session-(\d+)\.scope@) {
 		    print STDERR "$LOGPREF #$pid part of user session: uid=$1 sess=$2\n" if($nrconf{verbosity} > 1);
 		    push(@{ $sessions{$1}->{"session #$2"}->{ $ptable->{$pid}->{fname} } }, $pid);
 		    next;
 		}
-		if($cgroup =~ m@/user\@(\d+)\.service(/.+\.slice)*/([^/]+\.service)$@) {
+		if($cgroup =~ m@^(?:/[^/]+\.slice)*/user\@(\d+)\.service(/.+\.slice)*/([^/]+\.service)$@) {
 		    print STDERR "$LOGPREF #$pid part of user service: uid=$1 unit=$3\n" if($nrconf{verbosity} > 1);
 		    push(@{ $sessions{$1}->{'user service'}->{ $3 } }, $pid);
 		    next;
 		}
-		if($cgroup =~ m@/user\@(\d+)\.service@) {
+		if($cgroup =~ m@^(?:/[^/]+\.slice)*/user\@(\d+)\.service@) {
 		    print STDERR "$LOGPREF #$pid part of user manager: uid=$1\n" if($nrconf{verbosity} > 1);
 		    push(@{ $sessions{$1}->{'user manager'}->{ $ptable->{$pid}->{fname} } }, $pid);
 		    next;
