@@ -872,7 +872,7 @@ if(defined($opt_l)) {
     if($uid && scalar %stage2) {
 	my %fnames;
 	foreach my $pid (keys %stage2) {
-	    push(@{$fnames{ $ptable->{$pid}->{fname} }}, $pid);
+	    push(@{$fnames{ $ptable->{$pid}->{fname} =~ s/[^\x20-\x7e]/?/gr }}, $pid);
 	}
 
 	if($opt_b) {
@@ -1365,7 +1365,7 @@ if(defined($opt_l) && !$uid) {
 	unless($opt_p || $opt_b) {
 	    foreach my $uid (sort { ncmp(uid2name($a), uid2name($b)); } keys %sessions) {
 		foreach my $sess (sort keys %{ $sessions{$uid} }) {
-		    my $fnames = join(', ',map { $_.'['.join(',', @{ $sessions{$uid}->{$sess}->{$_} }).']';  } nsort keys %{ $sessions{$uid}->{$sess} });
+		    my $fnames = join(', ',map { (s/[^\x20-\x7e]/?/gr).'['.join(',', @{ $sessions{$uid}->{$sess}->{$_} }).']';  } nsort keys %{ $sessions{$uid}->{$sess} });
 		    $ui->notice(' '.uid2name($uid)." @ $sess: $fnames") unless($opt_m eq 'e');
 		    if($nrconf{sendnotify}) {
 			local %ENV;
