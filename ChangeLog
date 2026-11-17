@@ -1,3 +1,15 @@
+needrestart 3.11.1
+
+  * Security Fixes:
+    - needrestart: replace non-ASCII and control characters in process names
+      (CVE-2026-124757 by Armaan Sandhu)
+    - needrestart: anchor the systemd cgroup matches
+      (CVE-2026-124757 by Armaan Sandhu)
+    - notify.d: pass the notification text to su through the environment
+      (CVE-2026-124757 by Armaan Sandhu)
+
+ -- Thomas Liske <thomas@fiasko-nw.net>  Tue, 17 Nov 2026 21:30:00 +0100
+
 needrestart 3.11
 
   * Changes:
