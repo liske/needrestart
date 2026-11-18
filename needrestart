@@ -148,7 +148,7 @@ our %nrconf = (
     restart => 'i',
     defno => 0,
     ui_mode => 'a',
-    systemctl_combine => 0,
+    systemctl_combine => 1,
     blacklist => [],
     blacklist_cont => [],
     blacklist_interp => [],
@@ -1112,8 +1112,8 @@ if(defined($opt_l) && !$uid) {
         my @sorted_override_rc_keys = sort keys %{$nrconf{override_rc}};
 
 	    foreach my $rc (sort { lc($a) cmp lc($b) } keys %restart) {
-		# always combine restarts in one systemctl command
-		local $nrconf{systemctl_combine} = 1 unless($opt_r eq 'l');
+		# keep service restarts separate in list mode
+		local $nrconf{systemctl_combine} = 0 if($opt_r eq 'l');
 
 		if($opt_b) {
 		    print "NEEDRESTART-SVC: $rc\n" unless($opt_p || $opt_o);
@@ -1208,9 +1208,6 @@ if(defined($opt_l) && !$uid) {
 	    $ui->notice(__ 'Restarting services...');
 	    $ui->query_pkgs(__('Services to be restarted:'), $nrconf{defno}, \%rs, $nrconf{override_rc},
 			    sub {
-				# always combine restarts in one systemctl command
-				local $nrconf{systemctl_combine} = 1;
-
 				my $rc = shift;
 				@skipped_services = grep { $_ ne $rc; } @skipped_services;
 
