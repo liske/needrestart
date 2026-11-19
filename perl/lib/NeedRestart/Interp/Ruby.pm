@@ -225,6 +225,12 @@ sub files {
 
     chdir($cwd);
 
+    # skip the process if it has exited during the scan
+    unless(-d "/proc/$pid/root") {
+	print STDERR "$LOGPREF #$pid: process exited during scan, skipping\n" if($self->{debug});
+	return ();
+    }
+
     $cache->{files}->{(__PACKAGE__)}->{$src} = \%ret;
     return %ret;
 }
