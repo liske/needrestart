@@ -1,0 +1,62 @@
+#!/bin/sh
+
+# needrestart - Restart daemons after library updates.
+#
+# Authors:
+#   Hans-Christoph Steiner <hans@eds.org>
+#
+# Copyright Holder:
+#   2026 (C) Hans-Christoph Steiner <hans@eds.org>
+#
+# License:
+#   This program is free software; you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation; either version 2 of the License, or
+#   (at your option) any later version.
+#
+
+# Use /usr/bin/curl to post a message to a Matrix room
+
+CURL=/usr/bin/curl
+test -x "$CURL" || exit 1
+
+. /usr/lib/needrestart/notify.d.sh
+
+if [ "$NR_NOTIFYD_DISABLE_MATRIX" = '1' ]; then
+    echo "[$0] disabled in global config" 1>&2
+    exit 1
+fi
+
+MATRIXCONF="$(dirname "$NOTIFYCONF")/matrix.conf"
+
+perms=$(stat --format=%a "$MATRIXCONF")
+if [ "$perms" -ne "600" ]; then
+    echo "[$0] $MATRIXCONF has unsafe permissions $perms - aborting!" 1>&2
+    exit 1;
+fi
+
+if [ ! -r "$MATRIXCONF" ]; then
+    echo "[$0] Unable to read $MATRIXCONF - aborting!" 1>&2
+    exit 1;
+fi
+
+. "$MATRIXCONF"
+
+echo "[$0] notify Matrix room $MATRIX_ROOM_ID on $MATRIX_SERVER" 1>&2
+
+body=$({
+    _NR_FQDN=$(hostname -f)
+    eval_gettext 'Your session on host $_NR_FQDN ($NR_SESSION) is running obsolete binaries or libraries as listed below.'
+    echo
+    echo
+    gettext "Please consider a relogin or restart of the affected processes!"
+    echo
+    echo
+    cat
+})
+
+$CURL \
+    --header "Authorization: Bearer $MATRIX_TOKEN" \
+    --header "Content-Type: application/json" \
+    --json "{\"msgtype\": \"m.text\", \"body\": \"$(echo $body)\"}" \
+    "${MATRIX_SERVER}_matrix/client/r0/rooms/${MATRIX_ROOM_ID}/send/m.room.message"

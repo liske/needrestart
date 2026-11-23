@@ -11,6 +11,8 @@ install: all
 	cp hooks/* "$(DESTDIR)/etc/needrestart/hook.d/"
 	cp ex/needrestart.conf "$(DESTDIR)/etc/needrestart/"
 	cp ex/notify.conf "$(DESTDIR)/etc/needrestart/"
+	cp ex/matrix.conf "$(DESTDIR)/etc/needrestart/"
+	chmod 0600 "$(DESTDIR)/etc/needrestart/matrix.conf"
 	cp ex/iucode.sh "$(DESTDIR)/etc/needrestart/"
 	mkdir -p "$(DESTDIR)/etc/needrestart/conf.d"
 	cp ex/conf.d/* "$(DESTDIR)/etc/needrestart/conf.d/"
