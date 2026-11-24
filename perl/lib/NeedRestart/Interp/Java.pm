@@ -62,6 +62,12 @@ sub files {
 	(defined($l) && $l =~ /\.(class|jar)( \(deleted\))?$/ ? $l : ());
     } grep {1;} </proc/$pid/fd/*>;
 
+    # skip the process if it has exited during the scan
+    unless(-d "/proc/$pid/root") {
+	print STDERR "$LOGPREF #$pid: process exited during scan, skipping\n" if($self->{debug});
+	return ();
+    }
+
     return %ret;
 }
 
